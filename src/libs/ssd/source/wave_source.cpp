@@ -23,7 +23,7 @@ Result WaveSource::Quit() {
     static_cast<SystemCore *>(SoundCore::instance_)->FreeAudioDataBuffer(unknown98);
     unknown98 = nullptr;
   }
-  unknowna0.FreeImpl();
+  m_string.FreeImpl();
   return static_cast<Result>(0);
 }
 
@@ -59,7 +59,7 @@ u32 WaveSource::GetDataSize() const {
 
 Result WaveSource::InitWithFile(const TextRef &name) {
   unknown19 = true;
-  static_cast<TextRef &>(unknowna0).Set(name);
+  static_cast<TextRef &>(m_string).Set(name);
   unknown70 = nullptr;
   unknown78 = 0;
   return static_cast<Result>(0);
@@ -73,6 +73,6 @@ u64 WaveSource::SampleToPosition(u32 sample) const {
   return unknown40 * position;
 }
 
-void WaveSource::SetName(const TextRef &text) { static_cast<TextRef &>(unknowna0).Set(text); }
+void WaveSource::SetName(const TextRef &text) { static_cast<TextRef &>(m_string).Set(text); }
 
 } // namespace ssd

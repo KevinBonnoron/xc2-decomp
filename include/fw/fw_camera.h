@@ -28,8 +28,6 @@ struct UpdateInfo;
 enum CAMERA_PRIO : int;
 enum CAMERA_TYPE : unsigned int;
 
-class CameraLayer;
-
 class CameraPlugin : public mm::mtl::ReferenceObject, public mm::mtl::IntrusiveListNode<CameraPlugin> {};
 
 class Camera : public mm::mtl::ReferenceObject, public mm::mtl::IntrusiveListNode<Camera> {
@@ -47,11 +45,11 @@ public:
   virtual void updateViewMatrix();
   void setLookAt(const mm::Vec3 &position, const mm::Vec3 &target, f32 roll);
 
-  CameraLayer *unknown20; // Inferred role: layer; original member name unknown.
-  CAMERA_PRIO unknown28;  // Inferred role: prio; original member name unknown.
+  ml::ScnObjCam *unknown20; // Inferred role: scn camera, copied from CameraLayer::unknown38 by CameraLayer::push; original member name unknown.
+  CAMERA_PRIO unknown28;    // Inferred role: prio; original member name unknown.
   f32 m_fov;
-  f32 unknown30;       // Inferred role: near clip; original member name unknown.
-  f32 unknown34;       // Inferred role: far clip; original member name unknown.
+  f32 m_nearClip;      // Inferred role: near clip; named after the game accessor gf::GimmickCamera::setNearClip.
+  f32 m_farClip;       // Inferred role: far clip; named after the game accessor gf::GimmickCamera::setFarClip.
   mm::Vec3 unknown40;  // Inferred role: position; original member name unknown.
   mm::Vec3 unknown50;  // Inferred role: target; original member name unknown.
   mm::Mat44 unknown60; // Inferred role: view matrix; original member name unknown.
@@ -112,11 +110,11 @@ public:
   public:
     virtual void onWkStandbyLogout();
 
-    CameraManager *unknown08; // Inferred role: owner; original member name unknown.
+    CameraManager *m_cameraManager; // Inferred role: owner; original member name unknown.
   };
 
   CameraManager(ml::Scn *scn) : unknown368(nullptr) {
-    unknown370.unknown08 = this;
+    m_listener.m_cameraManager = this;
     for (u32 i = 0; i < LAYER_UNKNOWN_4; i++) {
       unknown20[i].setup(scn, i);
     }
@@ -140,13 +138,13 @@ public:
   CameraLayer unknown20[LAYER_UNKNOWN_4];         // Inferred role: layers; original member name unknown.
   mm::mtl::IntrusivePtr<CameraTarget> unknown360; // Inferred role: target; original member name unknown.
   void *unknown368;                               // Inferred role: reset target; original member name unknown.
-  Listener unknown370;                            // Inferred role: standby listener; original member name unknown.
+  Listener m_listener;                            // Inferred role: standby listener; original member name unknown.
 };
 
 static_assert(offsetof(CameraManager, unknown20) == 0x20, "");
 static_assert(offsetof(CameraManager, unknown360) == 0x360, "");
 static_assert(offsetof(CameraManager, unknown368) == 0x368, "");
-static_assert(offsetof(CameraManager, unknown370) == 0x370, "");
+static_assert(offsetof(CameraManager, m_listener) == 0x370, "");
 static_assert(sizeof(CameraManager) == 0x380, "");
 
 } // namespace fw

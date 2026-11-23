@@ -70,12 +70,12 @@ static const unknown003 unknown007[] = {
     {9, 27},
 };
 
-GfMenuHanaAdapter::GfMenuHanaAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways) : GfMenuAdapter(plugin, false, isUpdateAlways), unknown50(nullptr), unknown58(0) {}
+GfMenuHanaAdapter::GfMenuHanaAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways) : GfMenuAdapter(plugin, false, isUpdateAlways), m_iConverter(nullptr), unknown58(0) {}
 
 GfMenuHanaAdapter::~GfMenuHanaAdapter() {
-  if (unknown50 != nullptr) {
-    delete unknown50;
-    unknown50 = nullptr;
+  if (m_iConverter != nullptr) {
+    delete m_iConverter;
+    m_iConverter = nullptr;
   }
 }
 
@@ -199,7 +199,7 @@ GfMenuHanaAdapter *GfMenuHanaAdapter::createFromReferenceIndex(u32 handle, u32 t
   ReferenceIndexConverter *converter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) ReferenceIndexConverter(index);
   GfMenuHanaAdapter *adapter = create(handle, type, converter->getHanaId(), isUpdateAlways);
   if (adapter != nullptr) {
-    adapter->unknown50 = converter;
+    adapter->m_iConverter = converter;
   }
   return adapter;
 }
@@ -210,14 +210,14 @@ GfMenuHanaAdapter *GfMenuHanaAdapter::createFromCoverter(u32 handle, u32 type, I
   }
   GfMenuHanaAdapter *adapter = create(handle, type, converter->getHanaId(), isUpdateAlways);
   if (adapter != nullptr) {
-    adapter->unknown50 = converter;
+    adapter->m_iConverter = converter;
   }
   return adapter;
 }
 
 void GfMenuHanaAdapter::update(const fw::UpdateInfo &info) {
-  if (unknown50 != nullptr) {
-    u32 newBlade = unknown50->getHanaId();
+  if (m_iConverter != nullptr) {
+    u32 newBlade = m_iConverter->getHanaId();
     if (unknown5c != newBlade) {
       unknown5c = newBlade;
       setChange();

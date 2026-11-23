@@ -122,16 +122,16 @@ public:
   void changePartyBlade(u8 partyId, u8 slot) override;
   GfObjPropertyEnemy *getEnProperty(GF_OBJ_HANDLE *handle);
 
-  GF_OBJ_HANDLE *unknown48;                           // Inferred role: object handle; original member name unknown.
+  GF_OBJ_HANDLE *m_GF_OBJ_HANDLE;                     // Inferred role: object handle; original member name unknown.
   mm::mtl::Delegate<bool(GF_OBJ_HANDLE *)> unknown50; // Inferred role: updater; original member name unknown.
   u32 unknown70;                                      // Inferred role: index into the enemy attribute list; original member name unknown.
-  IConverter *unknown78;                              // Inferred role: converter; original member name unknown.
+  IConverter *m_iConverter;                           // Inferred role: converter; original member name unknown.
 };
 
-static_assert(offsetof(GfMenuGfObjAdapter, unknown48) == 0x48, "");
+static_assert(offsetof(GfMenuGfObjAdapter, m_GF_OBJ_HANDLE) == 0x48, "");
 static_assert(offsetof(GfMenuGfObjAdapter, unknown50) == 0x50, "");
 static_assert(offsetof(GfMenuGfObjAdapter, unknown70) == 0x70, "");
-static_assert(offsetof(GfMenuGfObjAdapter, unknown78) == 0x78, "");
+static_assert(offsetof(GfMenuGfObjAdapter, m_iConverter) == 0x78, "");
 static_assert(sizeof(GfMenuGfObjAdapter) == 0x80, "");
 static_assert(offsetof(GfMenuGfObjAdapter::PartyBladeConverter, unknown0c) == 0x0c, "");
 static_assert(offsetof(GfMenuGfObjAdapter::PartyBladeConverter, unknown10) == 0x10, "");

@@ -31,12 +31,12 @@ public:
   };
 
   struct SEOBJ {
-    SoundHandle unknown00; // Inferred role: sound handle; original member name unknown.
-    int unknown08;         // Inferred role: object index; original member name unknown.
-    int unknown0c;         // Inferred role: matrix index; original member name unknown.
-    f32 unknown10;         // Inferred role: volume; original member name unknown.
-    SECOND unknown14;      // Inferred role: condition; original member name unknown.
-    u32 unknown1c;         // Inferred role: FLD_actorSE row; original member name unknown.
+    SoundHandle m_soundHandle; // Inferred role: sound handle; original member name unknown.
+    int unknown08;             // Inferred role: object index; original member name unknown.
+    int unknown0c;             // Inferred role: matrix index; original member name unknown.
+    f32 unknown10;             // Inferred role: volume; original member name unknown.
+    SECOND m_SECOND;           // Inferred role: condition; original member name unknown.
+    u32 unknown1c;             // Inferred role: FLD_actorSE row; original member name unknown.
   };
 
   struct SEDATA {
@@ -80,7 +80,7 @@ public:
 };
 
 static_assert(sizeof(GfFieldMapSe::SECOND) == 0x08, "");
-static_assert(offsetof(GfFieldMapSe::SEOBJ, unknown14) == 0x14, "");
+static_assert(offsetof(GfFieldMapSe::SEOBJ, m_SECOND) == 0x14, "");
 static_assert(sizeof(GfFieldMapSe::SEOBJ) == 0x20, "");
 static_assert(offsetof(GfFieldMapSe::SEDATA, unknown10) == 0x10, "");
 static_assert(offsetof(GfFieldMapSe::SEDATA, unknown98) == 0x98, "");

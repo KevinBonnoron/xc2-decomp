@@ -21,7 +21,7 @@ namespace gmk {
 
 template bool TGmkList<GmkGrave, GmkGrave::BdatInfo, 1447121479u, 4u, GmkGraveGob>::initGmkBdatInfo(GmkGrave::BdatInfo &, int &, const AGmkBase &);
 
-GmkGrave::GmkGrave() : unknown48(false), unknown50(gf::unknown020), unknown58(), unknown98(false) {}
+GmkGrave::GmkGrave() : unknown48(false), unknown50(gf::unknown020), m_gmkAcc(), unknown98(false) {}
 
 void GmkGrave::dispose() {
   disposeGobInst(false);
@@ -41,7 +41,7 @@ void GmkGrave::BdatInfo::create(u8 *bdat, int id, const AGmkBase &gmk) {
       u8 releaseRadius = Bdat::getValCheck(mapList, "ene_release_r", map, BDAT_TYPE_UNKNOWN_1);
       u8 releaseHeight = Bdat::getValCheck(mapList, "ene_release_h", map, BDAT_TYPE_UNKNOWN_1);
       unknown0c.set(displayRadius + releaseRadius, displayHeight + releaseHeight);
-      const GmkSet *set = gmk.unknown08.unknown00->getCreateInfo().unknown08;
+      const GmkSet *set = gmk.m_createBaseInfo.m_ownerGmkEnemyList->getCreateInfo().m_gmkSet;
       u8 *enemyBdat;
       if (set->unknown1b8[GMK_TYPE_ENEMY] == nullptr || (enemyBdat = set->unknown1b8[GMK_TYPE_ENEMY]->getBindedBdatFp()) == nullptr) {
         if (set->unknown1b8[GMK_TYPE_ROUTED_ENEMY] == nullptr) {
@@ -84,12 +84,12 @@ void GmkGrave::createGobInst() {
   }
   disposeGobInst(false);
   CBdatWrapper bdat = {getBindedBdatFp()};
-  unknown50 = gf::GfObjFactory::createGmkMapObj(bdat, unknown20.unknown18);
+  unknown50 = gf::GfObjFactory::createGmkMapObj(bdat, m_createInfo.unknown18);
   bindToGameObj(unknown50);
   unknown002(unknown50, true);
   setEventDisp(unknown50, debugIsDispGmkType(getGmkType()));
   gf::GfObjSetupGimmick *setup = gf::GfObjUtil::getObjSetup<gf::GfObjSetupGimmick>(unknown50);
-  unknown003(setup, unknown08.unknown08);
+  unknown003(setup, m_createBaseInfo.m_xform);
   setup->setInitialScale(getData()->unknown00 * 0.1f);
 }
 
@@ -118,10 +118,10 @@ void GmkGrave::validateTargetable() {
     return;
   }
   // The game calls getGmkType through the enemy pointer before testing the pointer, in both blocks (0x7100611ae8 + 0x38: blr, then cbz): the local places that call ahead of the null test (ruling 1).
-  const AGmkBase *gmk = unknown58.unknown38;
+  const AGmkBase *gmk = m_gmkAcc.m_aGmkBase;
   GmkType type = gmk->getGmkType();
   if (gmk != nullptr && type == GmkEnemy::GMK_TYPE) {
-    const GmkEnemyInsts &insts = static_cast<const GmkEnemy *>(gmk)->unknown48;
+    const GmkEnemyInsts &insts = static_cast<const GmkEnemy *>(gmk)->m_gmkEnemyInsts;
     if (insts.unknown141) {
       return;
     }
@@ -129,10 +129,10 @@ void GmkGrave::validateTargetable() {
       return;
     }
   }
-  gmk = unknown58.unknown38;
+  gmk = m_gmkAcc.m_aGmkBase;
   type = gmk->getGmkType();
   if (gmk != nullptr && type == GmkRoutedEnemy::GMK_TYPE) {
-    const GmkEnemyInsts &insts = static_cast<const GmkRoutedEnemy *>(gmk)->unknown50;
+    const GmkEnemyInsts &insts = static_cast<const GmkRoutedEnemy *>(gmk)->m_gmkEnemyInsts;
     if (insts.unknown141) {
       return;
     }
@@ -148,7 +148,7 @@ bool GmkGrave::canPopGobInst() const {
   if (unknown50 != gf::unknown020 || !unknown48) {
     return false;
   }
-  return getBdatInfo()->isPopCondMatched(unknown08.unknown08->unknown00);
+  return getBdatInfo()->isPopCondMatched(m_createBaseInfo.m_xform->unknown00);
 }
 
 bool GmkGrave::canDepopGobInst() const {
@@ -158,7 +158,7 @@ bool GmkGrave::canDepopGobInst() const {
   if (!unknown48) {
     return true;
   }
-  return getBdatInfo()->isDepopCondMatched(unknown08.unknown08->unknown00);
+  return getBdatInfo()->isDepopCondMatched(m_createBaseInfo.m_xform->unknown00);
 }
 
 void GmkGrave::debugDraw() const {
@@ -178,17 +178,17 @@ template <typename T> bool GmkGrave::reqPopEnemy() const {
   }
   GmkAcc::CreateInfo info;
   info.validate(*gmk);
-  unknown58.create(info);
+  m_gmkAcc.create(info);
   const GmkEnemyInsts &insts = unknown011(*static_cast<const T *>(gmk));
-  if (insts.unknown98.getGobInstNum() != 0 || (insts.unknown38.unknown03 && !(insts.unknown178 & GmkEnemyInsts::unknown004_2))) {
+  if (insts.m_popInfo.getGobInstNum() != 0 || (insts.m_bdatInfo.unknown03 && !(insts.unknown178 & GmkEnemyInsts::unknown004_2))) {
     return false;
   }
   insts.unknown141 = true;
-  insts.unknown144.unknown00 = 0;
-  insts.unknown144.unknown01 = 0;
-  insts.unknown144.unknown02 = 0;
-  insts.unknown144.unknown03 = 0;
-  insts.unknown144.unknown04 = 0x40000000;
+  insts.m_forcePopEnemyInfo.unknown00 = 0;
+  insts.m_forcePopEnemyInfo.unknown01 = 0;
+  insts.m_forcePopEnemyInfo.unknown02 = 0;
+  insts.m_forcePopEnemyInfo.unknown03 = 0;
+  insts.m_forcePopEnemyInfo.unknown04 = 0x40000000;
   unknown98 = true;
   unknown002(unknown50, false);
   return true;

@@ -93,8 +93,8 @@ CriticalSection &getWaitingJobLock() {
 // the two stay separate 32-bit stores like in the game's 0x710076effc and the function has the game's 672 instructions.
 WorkCpu::WorkCpu(const char *name, WorkObj *parent)
     : WorkObj(name, parent, 0x10), unknown1b0(0), unknown1b4(), unknown1b8(), m_cpuNum(0), unknown1738(DO_THREAD_UNKNOWN_1), m_thread(DO_THREAD_UNKNOWN_1), unknown1758(-1), unknown175c(-1),
-      unknown1760(false), m_even(0), unknown1798(nullptr), unknown1958(0), unknown195c(0), unknown2020(0), unknown2030(0.0f), unknown2034(0.0f), unknown2038(0.0f), unknown203c(0.0f),
-      unknown2040(false), unknown2088(0), unknown2090(0) {
+      unknown1760(false), m_even(0), m_TJOB(nullptr), unknown1958(0), unknown195c(0), unknown2020(0), unknown2030(0.0f), unknown2034(0.0f), unknown2038(0.0f), unknown203c(0.0f), unknown2040(false),
+      unknown2088(0), m_frameCount(0) {
   for (int i = 0; i < 2; i++) {
     m_jobTrans[i] = 0;
   }
@@ -249,9 +249,9 @@ bool WorkCpu::isShutdown() {
   return false;
 }
 
-u32 WorkCpu::getFrameCountU32() { return get()->unknown2090; }
+u32 WorkCpu::getFrameCountU32() { return get()->m_frameCount; }
 
-const unsigned long &WorkCpu::getFrameCount() { return get()->unknown2090; }
+const unsigned long &WorkCpu::getFrameCount() { return get()->m_frameCount; }
 
 u32 WorkCpu::getOdd() { return get()->m_even == 0; }
 
@@ -601,8 +601,8 @@ void WorkCpu::removeHomeMenuDisable(DEFHBM *&handle) {}
 void WorkCpu::removeImm(DEFIMM *&handle) {}
 
 void WorkCpu::attachJobCol(const mm::Col3 &color) {
-  if (get()->unknown1798 != nullptr) {
-    get()->unknown1798->unknown28 = unknown001(color);
+  if (get()->m_TJOB != nullptr) {
+    get()->m_TJOB->unknown28 = unknown001(color);
   }
 }
 
@@ -751,7 +751,7 @@ void WorkCpu::endFrame() {
     cpu->m_tailEndClock = cpu->unknown2048[2];
     cpu->m_syncClock = cpu->unknown2048[3];
     cpu->unknown195c++;
-    cpu->unknown2090++;
+    cpu->m_frameCount++;
     cpu->updateMessage();
     DevClock::getClockNow(_mlwcpu::s_aHearBeat[0]);
   }
@@ -989,7 +989,7 @@ bool WorkCpu::registErrorCB(IErrorCB *callback) {
   // the function ends with `return false` after it. With the lock for the whole function and `if (size() == 32) return false;` ours has 78
   // instructions instead of 79 (measured). The loop without a body is the game's list walk at 0x7100770814-0x7100770820.
   {
-    CSNC lock(cpu->unknown22e0);
+    CSNC lock(cpu->m_criticalSectionNC);
     for (mm::mtl::FixedList<IErrorCB *, 32>::iterator it = cpu->unknown20a0.begin(); it != cpu->unknown20a0.end(); ++it) {
     }
 
@@ -1008,7 +1008,7 @@ bool WorkCpu::unregistErrorCB(IErrorCB *callback) {
     return false;
   }
 
-  CSNC lock(cpu->unknown22e0);
+  CSNC lock(cpu->m_criticalSectionNC);
   mm::mtl::FixedList<IErrorCB *, 32>::iterator it = mm::mtl::find(cpu->unknown20a0.begin(), cpu->unknown20a0.end(), callback);
   if (it != cpu->unknown20a0.end()) {
     cpu->unknown20a0.erase(it);

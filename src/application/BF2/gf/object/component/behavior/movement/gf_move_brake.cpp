@@ -18,7 +18,7 @@ void GfMoveBrakeControler::createReflection(fw::Reflection *reflection, const ch
 }
 
 void GfMoveBrakeControler::update(const fw::UpdateInfo &info, Packet &packet) {
-  const Param *param = packet.unknown10.get<Param>();
+  const Param *param = packet.m_paramAdapter.get<Param>();
   mm::Vec3 &velocity = packet.unknown00;
   f32 speed = fmaxf(sqrtf(velocity.x * velocity.x + velocity.y * velocity.y + velocity.z * velocity.z) - param->brake * info.unknown04, 0.0f);
   if (!(fabsf(velocity.x) <= 0.000001f) || !(fabsf(velocity.y) <= 0.000001f) || !(fabsf(velocity.z) <= 0.000001f)) {

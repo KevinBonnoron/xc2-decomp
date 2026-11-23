@@ -15,9 +15,9 @@ public:
   void debugRender(int x, int y, int width, int height, bool isAlpha);
   void debugRenderCh(int x, int y, int width, int height, u32 channel);
 
-  DrMan *unknown488; // Inferred role: DrMan owner; original member name unknown.
+  DrMan *m_drMan; // Inferred role: DrMan owner; original member name unknown.
 };
 
-static_assert(offsetof(DrPixlRenderTargetMipMap, unknown488) == 0x488, "");
+static_assert(offsetof(DrPixlRenderTargetMipMap, m_drMan) == 0x488, "");
 
 } // namespace ml

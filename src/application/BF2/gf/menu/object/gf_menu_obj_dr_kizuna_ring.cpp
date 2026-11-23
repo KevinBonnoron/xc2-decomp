@@ -35,7 +35,7 @@ namespace gf {
 
 GfMenuObjDrKizunaRing::GfMenuObjDrKizunaRing(u32 handle)
     : GfMenuObject(handle), unknown28(nullptr), unknown30(nullptr), unknown38(false), unknown3c(0), unknown40(-1), unknown48(nullptr), unknown50(nullptr), unknown60(0), unknown68(this), unknown2f8(0),
-      unknown300(nullptr), unknown308(nullptr), unknown310(0) {}
+      unknown300(nullptr), m_menuItemList(nullptr), unknown310(0) {}
 
 GfMenuObjDrKizunaRing::~GfMenuObjDrKizunaRing() {
   mm::mtl::safeRelease(unknown50);
@@ -43,7 +43,7 @@ GfMenuObjDrKizunaRing::~GfMenuObjDrKizunaRing() {
   mm::mtl::safeRelease(unknown30);
   mm::mtl::safeRelease(unknown48);
   mm::mtl::safeRelease(unknown300);
-  mm::mtl::safeRelease(unknown308);
+  mm::mtl::safeRelease(m_menuItemList);
 }
 
 void GfMenuObjDrKizunaRing::initialize() {
@@ -100,9 +100,9 @@ void GfMenuObjDrKizunaRing::initialize() {
   unknown48 = GfMenuCallContext::create();
   unknown50 = GfMenuCallContext::create();
   unknown300 = GfMenuCallContext::create();
-  unknown308 = GfMenuItemList::create();
+  m_menuItemList = GfMenuItemList::create();
   ui::UIListInfoBase::SetupParam itemParam;
-  unknown308->setup(getAllocator(ALLOCATOR_UNKNOWN_0), itemParam);
+  m_menuItemList->setup(getAllocator(ALLOCATOR_UNKNOWN_0), itemParam);
   disableInput(acc.searchChild("LAY_dr_main"));
   disableInput(acc.searchChild("LAY_scale"));
   GfMenuObject::initialize();
@@ -423,7 +423,7 @@ void GfMenuObjDrKizunaRing::MainListener::reciveEvent(const ui::EventData &event
       GfMenuObjUtil::setPointSpeedRate(ui::UIObjectAcc(acc.searchChild("LAY_dr_main")), 1.0f);
       GfMenuObjOperationInfo::remove(acc.searchChild("LAY_scale"), acc.searchChild("LAY_dr_main"), 0, 0);
       GfMenuObjCharSelect::returnSubMenu();
-      GfMenuObject::returnFSSubLayer(unknown20);
+      GfMenuObject::returnFSSubLayer(m_menuObjDrKizunaRing);
     }
     break;
   case 0x21:
@@ -439,7 +439,7 @@ void GfMenuObjDrKizunaRing::MainListener::reciveEvent(const ui::EventData &event
 }
 
 void GfMenuObjDrKizunaRing::DriverStockSPListener::reciveEvent(const ui::EventData &event, u32 handle) {
-  ui::UIObjectAcc owner(unknown20->unknown18);
+  ui::UIObjectAcc owner(m_menuObjDrKizunaRing->unknown18);
   ui::UIObjectAcc acc(handle);
   switch (event.unknown00) {
   case 1:
@@ -456,18 +456,18 @@ void GfMenuObjDrKizunaRing::DriverStockSPListener::reciveEvent(const ui::EventDa
 }
 
 void GfMenuObjDrKizunaRing::SkillDetailListener::reciveEvent(const ui::EventData &event, u32 handle) {
-  ui::UIObjectAcc owner(unknown20->unknown18);
+  ui::UIObjectAcc owner(m_menuObjDrKizunaRing->unknown18);
   ui::UIObjectAcc acc(handle);
   switch (event.unknown00) {
   case 1:
     setupSkillDetail(acc);
-    unknown20->unknown38 = false;
+    m_menuObjDrKizunaRing->unknown38 = false;
     acc.setDisp(false);
     break;
   case GfMenuTypes::unknown003_33: {
     ui::UIObjectAcc caption(acc.searchChild("LAY_caption"));
     caption.setDisp(true);
-    const char *name = isScreenLR(unknown20->unknown40 % 6) ? "drskillinfo2_2" : "drskillinfo2_1";
+    const char *name = isScreenLR(m_menuObjDrKizunaRing->unknown40 % 6) ? "drskillinfo2_2" : "drskillinfo2_1";
     mm::Rect<s16> rect;
     ui::UIObjectAcc main(owner.searchChild("LAY_dr_main"));
     main.getLayoutRect(name, rect);
@@ -475,7 +475,7 @@ void GfMenuObjDrKizunaRing::SkillDetailListener::reciveEvent(const ui::EventData
     pos.x = rect.x;
     pos.y = rect.y;
     acc.setPos(pos);
-    if (unknown20->unknown3c == 0) {
+    if (m_menuObjDrKizunaRing->unknown3c == 0) {
       ui::UIObjectAcc skill(acc.searchChild("LAY_skif_skill"));
       skill.setDisp(true);
       ui::UIObjectAcc lock(acc.searchChild("LAY_skif_lock"));
@@ -486,9 +486,9 @@ void GfMenuObjDrKizunaRing::SkillDetailListener::reciveEvent(const ui::EventData
       ui::UIObjectAcc lock(acc.searchChild("LAY_skif_lock"));
       lock.setDisp(true);
     }
-    if (!unknown20->unknown38) {
+    if (!m_menuObjDrKizunaRing->unknown38) {
       setFadeIn(handle);
-      unknown20->unknown38 = true;
+      m_menuObjDrKizunaRing->unknown38 = true;
     }
     u32 driver = GfMenuReference::getReferenceDriverID(0);
     u32 row = GfMenuReference::getReferenceNumber(0);
@@ -509,15 +509,15 @@ void GfMenuObjDrKizunaRing::SkillDetailListener::reciveEvent(const ui::EventData
     break;
   }
   case GfMenuTypes::unknown003_34:
-    if (unknown20->unknown38) {
-      unknown20->unknown38 = false;
+    if (m_menuObjDrKizunaRing->unknown38) {
+      m_menuObjDrKizunaRing->unknown38 = false;
       setFadeOut(handle);
     }
     break;
   case GfMenuTypes::unknown003_257:
-    if (!unknown20->unknown38) {
+    if (!m_menuObjDrKizunaRing->unknown38) {
       setFadeIn(handle);
-      unknown20->unknown38 = true;
+      m_menuObjDrKizunaRing->unknown38 = true;
     }
     break;
   default:

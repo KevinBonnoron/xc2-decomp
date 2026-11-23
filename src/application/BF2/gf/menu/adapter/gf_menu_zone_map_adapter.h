@@ -51,7 +51,7 @@ public:
   void update(const fw::UpdateInfo &info) override;
 
   mm::mtl::Delegate<bool()> unknown30; // Inferred role: updater; original member name unknown.
-  IConverter *unknown50;               // Inferred role: converter; original member name unknown.
+  IConverter *m_iConverter;            // Inferred role: converter; original member name unknown.
   u32 unknown58;                       // Inferred role: map id; original member name unknown.
   u32 unknown5c;                       // Inferred role: param; original member name unknown.
   u8 _60[0x64 - 0x60];
@@ -59,7 +59,7 @@ public:
 };
 
 static_assert(offsetof(GfMenuZoneMapAdapter, unknown30) == 0x30, "");
-static_assert(offsetof(GfMenuZoneMapAdapter, unknown50) == 0x50, "");
+static_assert(offsetof(GfMenuZoneMapAdapter, m_iConverter) == 0x50, "");
 static_assert(offsetof(GfMenuZoneMapAdapter, unknown58) == 0x58, "");
 static_assert(offsetof(GfMenuZoneMapAdapter, unknown5c) == 0x5c, "");
 static_assert(offsetof(GfMenuZoneMapAdapter, unknown64) == 0x64, "");

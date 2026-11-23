@@ -1,5 +1,8 @@
 #include "dr/dr_mdo_ctl_mpf_inst.h"
 
+#include "dr/dr_mdo_ctl_mpf_work.h"
+#include "dr/dr_res_mdo_seam_wrk_pos_mpf.h"
+
 namespace ml {
 
 // Inferred role: header of an instance mpf resource; original type name unknown.
@@ -10,6 +13,33 @@ struct unknown064 {
 
 DrMdoCtlMpfInst::DrMdoCtlMpfInst() {}
 
-void DrMdoCtlMpfInst::setupInstMpf(const u8 *resource) { unknown00 = resource + reinterpret_cast<const unknown064 *>(resource)->unknown04; }
+void DrMdoCtlMpfInst::setupInstMpf(const u8 *resource) { m_mdsMpfObjData = reinterpret_cast<const MdsMpfObjData *>(resource + reinterpret_cast<const unknown064 *>(resource)->unknown04); }
+
+void DrMdoCtlMpfInst::calcInstMpf(DrCalcViewWork *view, DrMdoCtlMpfWork *work, DrResMdoSeamWrkPosMpf *pos) {
+  if (pos->unknown18 != 0) {
+    m_drMdoCtlMpfWork = work;
+    m_drResMdoSeamWrkPosMpf = pos;
+    for (int i = 0; i < pos->unknown18; i++) {
+      // The game loads m_mdsMpfObjData before the load of the node's object index (0x71007fa020: ldr x9, [x21], then ldrh w8, [x1, #28]); the local places
+      // that load.
+      const MdsMpfObjData *objects = m_mdsMpfObjData;
+      const MdsMpfObjTreeData *tree = &m_drResMdoSeamWrkPosMpf->m_mdsMpfObjTreeData[i];
+      calcMpfObjTree(tree, view, objects[tree->unknown1c].unknown0c);
+    }
+  }
+}
+
+void DrMdoCtlMpfInst::calcSeamInstMpf(DrCalcViewWork *view, DrMdoCtlMpfWork *work, DrResMdoSeamWrkPosMpf *pos) {
+  if (pos->unknown18 != 0) {
+    m_drMdoCtlMpfWork = work;
+    m_drResMdoSeamWrkPosMpf = pos;
+    for (int i = 0; i < pos->unknown18; i++) {
+      // Same load order as calcInstMpf, which this function repeats with the seam callee (the same instruction, 0x5c bytes into the function).
+      const MdsMpfObjData *objects = m_mdsMpfObjData;
+      const MdsMpfObjTreeData *tree = &m_drResMdoSeamWrkPosMpf->m_mdsMpfObjTreeData[i];
+      calcSeamMpfObjTree(tree, view, objects[tree->unknown1c].unknown0c);
+    }
+  }
+}
 
 } // namespace ml

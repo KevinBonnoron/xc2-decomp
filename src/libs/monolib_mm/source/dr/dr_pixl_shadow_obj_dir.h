@@ -22,7 +22,7 @@ public:
   bool setAddObjPos(const mm::Vec3 &position, f32 value);
   bool clipAddTypeChk(const mm::Vec3 &position, f32 value);
 
-  DrCalcClipWorkPlane unknown1a0; // Inferred role: clip planes; original member name unknown.
+  DrCalcClipWorkPlane m_drCalcClipWorkPlane; // Inferred role: clip planes; original member name unknown.
   u8 _270[0x2b0 - 0x270];
   f32 unknown2b0; // Inferred role: scale; original member name unknown.
   u8 _2b4[0x300 - 0x2b4];
@@ -36,7 +36,7 @@ public:
   f32 unknown340; // Inferred role: scale; original member name unknown.
 };
 
-static_assert(offsetof(DrPixlShadowObjDir, unknown1a0) == 0x1a0, "");
+static_assert(offsetof(DrPixlShadowObjDir, m_drCalcClipWorkPlane) == 0x1a0, "");
 static_assert(offsetof(DrPixlShadowObjDir, unknown2b0) == 0x2b0, "");
 static_assert(offsetof(DrPixlShadowObjDir, unknown300) == 0x300, "");
 static_assert(offsetof(DrPixlShadowObjDir, unknown338) == 0x338, "");

@@ -19,7 +19,7 @@ DataManager::OfsInfo::OfsInfo(const char *name) : unknown00(name) {
   unknown160 = mm::Vec3::zero;
 }
 
-DataManager::DataManager() : unknown98("default"), unknown120(nullptr) {}
+DataManager::DataManager() : unknown98("default"), m_ofsInfo(nullptr) {}
 
 DataManager::~DataManager() { clear(); }
 
@@ -33,7 +33,7 @@ void DataManager::clear() {
   unknown10.clear();
   unknown98 = "default";
   unknowndc = "";
-  unknown120 = nullptr;
+  m_ofsInfo = nullptr;
 }
 
 void DataManager::setupScene() {
@@ -45,11 +45,11 @@ void DataManager::updateCurrent() {
   if (__builtin_strcmp(unknown98.c_str(), unknowndc.c_str()) == 0) {
     return;
   }
-  unknown120 = searchScene(unknown98.c_str());
-  if (!unknown120) {
-    unknown120 = createScene(unknown98.c_str());
+  m_ofsInfo = searchScene(unknown98.c_str());
+  if (!m_ofsInfo) {
+    m_ofsInfo = createScene(unknown98.c_str());
   }
-  if (unknown120) {
+  if (m_ofsInfo) {
     unknowndc = unknown98.c_str();
   }
 }
@@ -61,7 +61,7 @@ void DataManager::startScene() {
 
 DataManager::OfsInfo *DataManager::getCurrent() {
   updateCurrent();
-  return unknown120;
+  return m_ofsInfo;
 }
 
 DataManager::OfsInfo *DataManager::searchScene(const char *name) const {
@@ -98,22 +98,22 @@ bool DataManager::checkRadianTar(u32 axis) {
 }
 
 void DataManager::setOffsetSrc(const mm::Vec3 &pos, f32 rotY, bool isKeep) {
-  unknown120->unknown50.setRotY(-rotY);
-  unknown120->unknown50.setTrans(mm::Vec3(-pos.x, -pos.y, -pos.z));
-  unknown120->unknownd0 = unknown120->unknown50 * unknown120->unknown90;
+  m_ofsInfo->unknown50.setRotY(-rotY);
+  m_ofsInfo->unknown50.setTrans(mm::Vec3(-pos.x, -pos.y, -pos.z));
+  m_ofsInfo->unknownd0 = m_ofsInfo->unknown50 * m_ofsInfo->unknown90;
   if (isKeep) {
-    unknown120->unknown120 = unknown120->unknownd0;
+    m_ofsInfo->unknown120 = m_ofsInfo->unknownd0;
   }
 }
 
 void DataManager::setOffsetDes(const mm::Vec3 &pos, f32 rotY, bool isKeep) {
-  unknown120->unknown90.setRotY(rotY);
-  unknown120->unknown90.setTrans(mm::Vec3(pos));
-  unknown120->unknownd0 = unknown120->unknown50 * unknown120->unknown90;
-  unknown120->unknown110 = mm::Vec3(0.0f, rotY, 0.0f);
+  m_ofsInfo->unknown90.setRotY(rotY);
+  m_ofsInfo->unknown90.setTrans(mm::Vec3(pos));
+  m_ofsInfo->unknownd0 = m_ofsInfo->unknown50 * m_ofsInfo->unknown90;
+  m_ofsInfo->unknown110 = mm::Vec3(0.0f, rotY, 0.0f);
   if (isKeep) {
-    unknown120->unknown120 = unknown120->unknownd0;
-    unknown120->unknown160 = unknown120->unknown110;
+    m_ofsInfo->unknown120 = m_ofsInfo->unknownd0;
+    m_ofsInfo->unknown160 = m_ofsInfo->unknown110;
   }
 }
 

@@ -26,12 +26,12 @@ public:
 
   struct sLog {
     sLog() : unknown00(0), unknown04(0), unknown20(0) {}
-    sLog(int order, u32 handle, const ui::EventData &event) : unknown00(order), unknown04(handle), unknown08(event) {}
+    sLog(int order, u32 handle, const ui::EventData &event) : unknown00(order), unknown04(handle), m_eventData(event) {}
 
-    int unknown00;           // Inferred role: order; original member name unknown.
-    u32 unknown04;           // Inferred role: object handle; original member name unknown.
-    ui::EventData unknown08; // Inferred role: object event; original member name unknown.
-    int unknown20;           // Inferred role: priority; original member name unknown.
+    int unknown00;             // Inferred role: order; original member name unknown.
+    u32 unknown04;             // Inferred role: object handle; original member name unknown.
+    ui::EventData m_eventData; // Inferred role: object event; original member name unknown.
+    int unknown20;             // Inferred role: priority; original member name unknown.
   };
 
   GfMenuOrderMgr(const GfSetupParam &param) : unknown368(0) { initialize(param); }
@@ -52,14 +52,14 @@ public:
 
   bool unknown08;                                      // Inferred role: initialized; original member name unknown.
   mm::mtl::FixedQueue<sLog, LOG_UNKNOWN_20> unknown10; // Inferred role: queued orders; original member name unknown.
-  sLog unknown340;                                     // Inferred role: current order; original member name unknown.
+  sLog m_sLog;                                         // Inferred role: current order; original member name unknown.
   int unknown368;                                      // Inferred role: current order running; original member name unknown.
 };
 
 static_assert(sizeof(GfMenuOrderMgr::sLog) == 0x28, "");
 static_assert(offsetof(GfMenuOrderMgr, unknown08) == 0x08, "");
 static_assert(offsetof(GfMenuOrderMgr, unknown10) == 0x10, "");
-static_assert(offsetof(GfMenuOrderMgr, unknown340) == 0x340, "");
+static_assert(offsetof(GfMenuOrderMgr, m_sLog) == 0x340, "");
 static_assert(offsetof(GfMenuOrderMgr, unknown368) == 0x368, "");
 static_assert(sizeof(GfMenuOrderMgr) == 0x370, "");
 

@@ -12,9 +12,9 @@ public:
   void *allocate(size_t size, size_t alignment) override;
   void deallocate(void *pointer) override;
 
-  mtl::ALLOC_HANDLE unknown08; // Inferred role: handle; original member name unknown.
+  mtl::ALLOC_HANDLE m_ALLOC_HANDLE; // Inferred role: handle; original member name unknown.
 };
 
-static_assert(offsetof(DrMemHandleAllocator, unknown08) == 0x08, "");
+static_assert(offsetof(DrMemHandleAllocator, m_ALLOC_HANDLE) == 0x08, "");
 
 } // namespace ml

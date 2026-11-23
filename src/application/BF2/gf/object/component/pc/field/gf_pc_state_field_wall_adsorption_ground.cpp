@@ -26,9 +26,9 @@ void StateFieldWallAdsorptionGround::update(GfComBehaviorPc *behavior, const fw:
   unknown009(*property, locomotion);
   // Statement without effect the game holds (0x710055a1b8, ruling 5): it loads the param list pointer at 0x318 and asserts
   // `_ptr != 0` before the height update; nothing uses the pointer and the original statement that did is gone.
-  property->unknown310.unknown08.operator->();
-  property->unknown310.unknown18 -= locomotion.unknown00.z;
-  property->unknown310.unknown18 = property->unknown310.unknown18 > property->unknown310.unknown4c ? property->unknown310.unknown18 : property->unknown310.unknown4c;
+  property->m_propertyField.unknown08.operator->();
+  property->m_propertyField.unknown18 -= locomotion.unknown00.z;
+  property->m_propertyField.unknown18 = property->m_propertyField.unknown18 > property->m_propertyField.unknown4c ? property->m_propertyField.unknown18 : property->m_propertyField.unknown4c;
   if (comAsm->isEnd(ANIM_LAYER_UNKNOWN_0) && StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_CLIMBIDLE)) {
     reqState(STATE_ID_UNKNOWN_46);
   }

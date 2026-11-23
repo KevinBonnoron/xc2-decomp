@@ -32,7 +32,7 @@ bool GfDataParty::isExistBlade(u32 blade) {
   return false;
 }
 
-u32 GfDataParty::getDriver(u32 member) { return GfDataManager::getDataGame()->unknowne9884.unknown00[member].unknown00; }
+u32 GfDataParty::getDriver(u32 member) { return GfDataManager::getDataGame()->m_sDataParty.m_partyMember[member].m_driver; }
 
 int GfDataParty::getDriverPartyID(u32 driver) {
   if (driver == 0) {
@@ -49,15 +49,15 @@ int GfDataParty::getDriverPartyID(u32 driver) {
 }
 
 bool GfDataParty::setDriver(u32 member, u32 driver) {
-  unknown123 &partyMember = GfDataManager::getDataGame()->unknowne9884.unknown00[member];
-  u16 previousDriver = partyMember.unknown00;
-  partyMember.unknown00 = driver;
-  partyMember.unknown02 = 0;
-  partyMember.unknown04 = 0;
+  unknown123 &partyMember = GfDataManager::getDataGame()->m_sDataParty.m_partyMember[member];
+  u16 previousDriver = partyMember.m_driver;
+  partyMember.m_driver = driver;
+  partyMember.m_hierarchyDriver = 0;
+  partyMember.m_hierarchyBlade = 0;
   return previousDriver != static_cast<u16>(driver);
 }
 
-unknown124 *GfDataParty::getSDataParty() { return &GfDataManager::getDataGame()->unknowne9884; }
+unknown124 *GfDataParty::getSDataParty() { return &GfDataManager::getDataGame()->m_sDataParty; }
 
 bool GfDataParty::isExistDriver(u32 driver) {
   for (u32 member = 0; member < PARTY_UNKNOWN_3; member++) {
@@ -69,24 +69,24 @@ bool GfDataParty::isExistDriver(u32 driver) {
   return false;
 }
 
-unknown123 *GfDataParty::getPartyMember(u32 member) { return &GfDataManager::getDataGame()->unknowne9884.unknown00[member]; }
+unknown123 *GfDataParty::getPartyMember(u32 member) { return &GfDataManager::getDataGame()->m_sDataParty.m_partyMember[member]; }
 
 mm::Vec3 *GfDataParty::getSavePos(u32 member, bool isDriver) {
   SDataGame *dataGame = GfDataManager::getDataGame();
   if (isDriver) {
-    return &dataGame->unknown1097f0.unknown00[member];
+    return &dataGame->m_sDataMap.unknown00[member];
   }
 
-  return &dataGame->unknown1097f0.unknown30[member];
+  return &dataGame->m_sDataMap.unknown30[member];
 }
 
 mm::Vec3 *GfDataParty::getSaveRot(u32 member, bool isDriver) {
   SDataGame *dataGame = GfDataManager::getDataGame();
   if (isDriver) {
-    return &dataGame->unknown1097f0.unknown60[member];
+    return &dataGame->m_sDataMap.unknown60[member];
   }
 
-  return &dataGame->unknown1097f0.unknown90[member];
+  return &dataGame->m_sDataMap.unknown90[member];
 }
 
 bool GfDataParty::isEmptyDriver() {
@@ -100,13 +100,13 @@ bool GfDataParty::isEmptyDriver() {
 }
 
 bool GfDataParty::isExistBlade(u32 member, u32 blade) {
-  unknown123 &partyMember = GfDataManager::getDataGame()->unknowne9884.unknown00[member];
-  if (partyMember.unknown00 == 0) {
+  unknown123 &partyMember = GfDataManager::getDataGame()->m_sDataParty.m_partyMember[member];
+  if (partyMember.m_driver == 0) {
     return false;
   }
 
-  for (int slot = 0; slot < GfDataDriver::getMaxSetBladeNum(partyMember.unknown00); slot++) {
-    if (GfDataDriver::getBlade(partyMember.unknown00, slot) == blade) {
+  for (int slot = 0; slot < GfDataDriver::getMaxSetBladeNum(partyMember.m_driver); slot++) {
+    if (GfDataDriver::getBlade(partyMember.m_driver, slot) == blade) {
       return true;
     }
   }
@@ -144,14 +144,14 @@ bool GfDataParty::isNiaByakko(u32 member) {
   }
 
   SDataGame *dataGame = GfDataManager::getDataGame();
-  if (dataGame->unknowne9884.unknown00[member].unknown00 != DRIVER_UNKNOWN_2) {
+  if (dataGame->m_sDataParty.m_partyMember[member].m_driver != DRIVER_UNKNOWN_2) {
     return false;
   }
 
   DataParamAcc paramAcc(OBJECT_TYPE_PC, DRIVER_UNKNOWN_2, static_cast<GimmickType>(0));
   bool isByakko = false;
   if (paramAcc.getBlade(-1, false) == BLADE_BYAKKO) {
-    isByakko = isRideChar(dataGame->unknowne9884.unknown40);
+    isByakko = isRideChar(dataGame->m_sDataParty.m_leaderBdatID);
   }
 
   return isByakko;
@@ -164,7 +164,7 @@ bool GfDataParty::isLeader(u32 chara) {
     return false;
   }
 
-  return GfDataManager::getDataGame()->unknowne9884.unknown40 == chara;
+  return GfDataManager::getDataGame()->m_sDataParty.m_leaderBdatID == chara;
 }
 
 bool GfDataParty::isActivateMember(u32 chara) {

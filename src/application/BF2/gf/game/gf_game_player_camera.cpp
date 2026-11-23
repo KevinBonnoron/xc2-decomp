@@ -151,7 +151,7 @@ void GfGamePlayerCamera::setTargetPlayer(GF_OBJ_HANDLE *handle) {
 
   PlayerCameraTarget *playerTarget = mm::mtl::dynamicCast<PlayerCameraTarget>(target);
   if (playerTarget != nullptr) {
-    playerTarget->unknown70 = handle;
+    playerTarget->m_GF_OBJ_HANDLE = handle;
   }
 }
 

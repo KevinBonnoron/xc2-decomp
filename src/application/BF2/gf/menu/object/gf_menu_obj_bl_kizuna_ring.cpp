@@ -46,8 +46,8 @@ constexpr u32 KIZUNARING_UNKNOWN_10 = 10;
 
 GfMenuObjBlKizunaRing::GfMenuObjBlKizunaRing(u32 handle)
     : GfMenuObject(handle), unknown28(nullptr), unknown30(nullptr), unknown38(false), unknown39(false), unknown3c(0), unknown40(-1), unknown48(nullptr), unknown50(0), unknown58(nullptr),
-      unknown198(0), unknown1a0(this), unknown430(0), unknown434(0), unknown438(0), unknown43c(0), unknown440(nullptr), unknown448(nullptr), unknown450(0), unknown454(0), unknown458(nullptr),
-      unknown460(0), unknown468(reinterpret_cast<GF_SCOM_HANDLE *>(-1)) {
+      unknown198(0), unknown1a0(this), unknown430(0), unknown434(0), unknown438(0), unknown43c(0), unknown440(nullptr), m_menuItemList(nullptr), unknown450(0), unknown454(0),
+      m_GAME_VOICE_HANDLE(nullptr), unknown460(0), m_GF_SCOM_HANDLE(reinterpret_cast<GF_SCOM_HANDLE *>(-1)) {
   unknown58 = GfMenuCallContext::create();
 }
 
@@ -57,7 +57,7 @@ GfMenuObjBlKizunaRing::~GfMenuObjBlKizunaRing() {
   mm::mtl::safeRelease(unknown30);
   mm::mtl::safeRelease(unknown48);
   mm::mtl::safeRelease(unknown440);
-  mm::mtl::safeRelease(unknown448);
+  mm::mtl::safeRelease(m_menuItemList);
 }
 
 void GfMenuObjBlKizunaRing::initialize() {
@@ -122,9 +122,9 @@ void GfMenuObjBlKizunaRing::initialize() {
   param.allocator = getAllocator(ALLOCATOR_UNKNOWN_0);
   unknown28 = ui::UISelectObjList::create(param);
   unknown440 = GfMenuCallContext::create();
-  unknown448 = GfMenuItemList::create();
+  m_menuItemList = GfMenuItemList::create();
   ui::UIListInfoBase::SetupParam itemParam;
-  unknown448->setup(getAllocator(ALLOCATOR_UNKNOWN_0), itemParam);
+  m_menuItemList->setup(getAllocator(ALLOCATOR_UNKNOWN_0), itemParam);
   unknown48 = GfMenuCallContext::create();
   disableInput(acc.searchChild("LAY_kizunaring"));
   disableInput(acc.searchChild("LAY_kizunaring_base"));
@@ -382,7 +382,7 @@ bool GfMenuObjBlKizunaRing::seqComplete() {
     param.unknown14 = 10;
     GfMenuObjUtil::startCtrl(text.unknown10, param, nullptr);
     GfMenuObjUtil::playJingle(0x10);
-    unknown468 = SCOM_FIELD_VOICE::createAchievementAll(blade);
+    m_GF_SCOM_HANDLE = SCOM_FIELD_VOICE::createAchievementAll(blade);
     unknown434++;
     break;
   }
@@ -390,29 +390,29 @@ bool GfMenuObjBlKizunaRing::seqComplete() {
     ui::UIObjectAcc image(complete.searchChild("IMG_complete"));
     if (!image.isPlayingAnimation()) {
       complete.setDisp(false);
-      unknown448->clear();
+      m_menuItemList->clear();
       GfQuestReward reward;
       if (!GfKizunaringUtil::getCompleteKizunaringReward(reward, blade)) {
         return true;
       }
       for (u32 i = 8; i < 12; i++) {
-        u16 item = reward.unknown00[i].unknown44;
+        u16 item = reward.m_param[i].unknown44;
         if (item != 0) {
           MenuItemInfo info;
           info.unknown00 = GfItemUtil::getType(item);
           info.unknown04 = item;
-          info.unknown08 = reward.unknown00[i].m_developZone;
-          unknown448->addContents(info);
+          info.unknown08 = reward.m_param[i].m_developZone;
+          m_menuItemList->addContents(info);
         }
       }
       unknown440->reset();
-      GfMenuObjCommonText::openGetItem(unknown440, unknown448);
+      GfMenuObjCommonText::openGetItem(unknown440, m_menuItemList);
       unknown434++;
     }
     break;
   }
   case 2:
-    if (!GfReqSmallCom::get()->isValid(unknown468) && unknown440->isTerm()) {
+    if (!GfReqSmallCom::get()->isValid(m_GF_SCOM_HANDLE) && unknown440->isTerm()) {
       GfDataBlade::setKizunaringComplete(blade);
       unknown434 = 0;
       return true;
@@ -529,7 +529,7 @@ bool GfMenuObjBlKizunaRing::seqEnd() {
 }
 
 bool GfMenuObjBlKizunaRing::seqWaitVoice() {
-  u32 result = GfGameVoice::getResult(unknown458);
+  u32 result = GfGameVoice::getResult(m_GAME_VOICE_HANDLE);
   if (result == CV_RESULT_UNKNOWN_1 || result == CV_RESULT_UNKNOWN_2) {
     return false;
   }
@@ -539,7 +539,7 @@ bool GfMenuObjBlKizunaRing::seqWaitVoice() {
 }
 
 void GfMenuObjBlKizunaRing::RingPadListener::reciveEvent(const ui::EventData &event, u32 handle) {
-  ui::UIObjectAcc owner(unknown20->unknown18);
+  ui::UIObjectAcc owner(m_menuObjBlKizunaRing->unknown18);
   ui::UIObjectAcc acc(handle);
   switch (event.unknown00) {
   case 1:
@@ -554,13 +554,13 @@ void GfMenuObjBlKizunaRing::RingPadListener::reciveEvent(const ui::EventData &ev
     case 2:
       unknown140(owner.searchChild("LAY_main"), GfMenuTypes::unknown003_34, 0, 0.0f);
       GfMenuObject::disableInput(handle);
-      if (unknown20->unknown438 == 0) {
+      if (m_menuObjBlKizunaRing->unknown438 == 0) {
         GfMenuObjMainMenu2::disableCharChange();
       }
       GfMenuObjUtil::playSECommonCancel();
       return;
     case 10: {
-      int index = unknown20->unknown40;
+      int index = m_menuObjBlKizunaRing->unknown40;
       if (index < 0) {
         return;
       }
@@ -580,7 +580,7 @@ void GfMenuObjBlKizunaRing::RingPadListener::reciveEvent(const ui::EventData &ev
       break;
     }
     case 9: {
-      int index = unknown20->unknown40;
+      int index = m_menuObjBlKizunaRing->unknown40;
       if (index < 0) {
         return;
       }
@@ -600,7 +600,7 @@ void GfMenuObjBlKizunaRing::RingPadListener::reciveEvent(const ui::EventData &ev
       break;
     }
     case 12: {
-      int index = unknown20->unknown40;
+      int index = m_menuObjBlKizunaRing->unknown40;
       if (index < 0 || index % KIZUNARING_UNKNOWN_10 == 0) {
         return;
       }
@@ -608,7 +608,7 @@ void GfMenuObjBlKizunaRing::RingPadListener::reciveEvent(const ui::EventData &ev
       break;
     }
     case 11: {
-      int index = unknown20->unknown40;
+      int index = m_menuObjBlKizunaRing->unknown40;
       if (index < 0 || index % KIZUNARING_UNKNOWN_10 > 8) {
         return;
       }
@@ -619,15 +619,15 @@ void GfMenuObjBlKizunaRing::RingPadListener::reciveEvent(const ui::EventData &ev
       return;
     }
     GfMenuObject::changePointerPos(owner.searchChild("LAY_kizunaring"), mm::Pnt<s16>(0, 0));
-    movePointer(owner.searchChild("LAY_kizunaring"), next, unknown20->unknown28);
+    movePointer(owner.searchChild("LAY_kizunaring"), next, m_menuObjBlKizunaRing->unknown28);
     GfMenuObjUtil::playSECommonTab();
     unknown140(handle, 0x101, 0, 0.0f);
     break;
   }
   case 0x101:
-    unknown20->unknown1a0.unknown005();
-    unknown20->unknown1a0.unknown004(1);
-    unknown20->unknown1a0.unknown002(&GfMenuObjBlKizunaRing::seqWait);
+    m_menuObjBlKizunaRing->unknown1a0.unknown005();
+    m_menuObjBlKizunaRing->unknown1a0.unknown004(1);
+    m_menuObjBlKizunaRing->unknown1a0.unknown002(&GfMenuObjBlKizunaRing::seqWait);
     GfMenuObject::disableInput(handle);
     break;
   default:
@@ -637,7 +637,7 @@ void GfMenuObjBlKizunaRing::RingPadListener::reciveEvent(const ui::EventData &ev
 }
 
 void GfMenuObjBlKizunaRing::BladeSkillInfoListener::reciveEvent(const ui::EventData &event, u32 handle) {
-  ui::UIObjectAcc owner(unknown20->unknown18);
+  ui::UIObjectAcc owner(m_menuObjBlKizunaRing->unknown18);
   ui::UIObjectAcc acc(handle);
   if (event.unknown00 == 1) {
     setupBladeSkillInfo(acc);
@@ -648,7 +648,7 @@ void GfMenuObjBlKizunaRing::BladeSkillInfoListener::reciveEvent(const ui::EventD
 }
 
 void GfMenuObjBlKizunaRing::SkillDetailListener::reciveEvent(const ui::EventData &event, u32 handle) {
-  ui::UIObjectAcc owner(unknown20->unknown18);
+  ui::UIObjectAcc owner(m_menuObjBlKizunaRing->unknown18);
   ui::UIObjectAcc acc(handle);
   switch (event.unknown00) {
   case 1:
@@ -716,15 +716,15 @@ void GfMenuObjBlKizunaRing::SkillDetailListener::reciveEvent(const ui::EventData
       }
       base.setMulColor("gray");
     }
-    if (!unknown20->unknown39) {
-      unknown20->unknown39 = true;
+    if (!m_menuObjBlKizunaRing->unknown39) {
+      m_menuObjBlKizunaRing->unknown39 = true;
       GfMenuObject::hookCtrlEvent(handle, GfMenuObjUtil::setCommonFadeIn(handle, 1, 0));
     }
     break;
   }
   case GfMenuTypes::unknown003_34:
-    if (unknown20->unknown39) {
-      unknown20->unknown39 = false;
+    if (m_menuObjBlKizunaRing->unknown39) {
+      m_menuObjBlKizunaRing->unknown39 = false;
       GfMenuObject::hookCtrlEvent(handle, GfMenuObjUtil::setCommonFadeOut(handle, 2, 0));
     }
     break;

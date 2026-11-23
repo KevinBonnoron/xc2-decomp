@@ -105,7 +105,7 @@ grlib::CGLibDecShader *LayerShdManager::setupShader() { return (this->*s_CallSel
 
 grlib::CGLibDecShader *LayerShdManager::selectGamma() {
   s16 index = unknown4f0;
-  grlib::CGLibDecShader *shader = unknown1e0.unknown40 + static_cast<u32>(index);
+  grlib::CGLibDecShader *shader = m_cGLibShdListData.unknown40 + static_cast<u32>(index);
   if (index != unknown4fe) {
     grlib::CGLibCtlShader::setShader(*shader, unknown70[s_eFetchTbl[index]]);
     unknown4fe = unknown4f0;
@@ -115,7 +115,7 @@ grlib::CGLibDecShader *LayerShdManager::selectGamma() {
 
 grlib::CGLibDecShader *LayerShdManager::selectFlowMap() {
   s16 index = unknown4f0;
-  grlib::CGLibDecShader *shader = unknown1e0.unknown40 + static_cast<u32>(index);
+  grlib::CGLibDecShader *shader = m_cGLibShdListData.unknown40 + static_cast<u32>(index);
   if (index != unknown4fe) {
     grlib::CGLibCtlShader::setShader(*shader, unknown70[s_eFetchTbl[index]]);
     unknown4fe = unknown4f0;
@@ -125,7 +125,7 @@ grlib::CGLibDecShader *LayerShdManager::selectFlowMap() {
 
 grlib::CGLibDecShader *LayerShdManager::selectGsBlur() {
   s16 index = unknown4f0;
-  grlib::CGLibDecShader *shader = unknown1e0.unknown40 + static_cast<u32>(index);
+  grlib::CGLibDecShader *shader = m_cGLibShdListData.unknown40 + static_cast<u32>(index);
   unknown001 &entry = unknown48[index];
   if (index != unknown4fe || unknown4f8 != unknown506) {
     shader->setDeclarationIdx(entry.unknown06, unknown4f8);
@@ -138,7 +138,7 @@ grlib::CGLibDecShader *LayerShdManager::selectGsBlur() {
 
 grlib::CGLibDecShader *LayerShdManager::selectTest() {
   s16 index = unknown4f0;
-  grlib::CGLibDecShader *shader = unknown1e0.unknown40 + static_cast<u32>(index);
+  grlib::CGLibDecShader *shader = m_cGLibShdListData.unknown40 + static_cast<u32>(index);
   unknown001 &entry = unknown48[index];
   if (index == unknown4fe && unknown506 == unknown4f8) {
     return shader;
@@ -151,7 +151,7 @@ grlib::CGLibDecShader *LayerShdManager::selectTest() {
 
 grlib::CGLibDecShader *LayerShdManager::selectMemWrite() {
   s16 index = unknown4f0;
-  grlib::CGLibDecShader *shader = unknown1e0.unknown40 + static_cast<u32>(index);
+  grlib::CGLibDecShader *shader = m_cGLibShdListData.unknown40 + static_cast<u32>(index);
   if (index == unknown4fe && unknown506 == unknown4f8) {
     return shader;
   }
@@ -163,7 +163,7 @@ grlib::CGLibDecShader *LayerShdManager::selectMemWrite() {
 }
 
 grlib::CGLibDecShader *LayerShdManager::selectDebug() {
-  grlib::CGLibDecShader *shader = unknown1e0.unknown40 + static_cast<u32>(unknown4f0);
+  grlib::CGLibDecShader *shader = m_cGLibShdListData.unknown40 + static_cast<u32>(unknown4f0);
   unknown001 &entry = unknown48[unknown4f0];
   if (unknown4f0 != unknown4fe || unknown4f4 != unknown502 || unknown506 != unknown4f8) {
     shader->setDeclarationIdx(entry.unknown02, unknown4f4);
@@ -177,7 +177,7 @@ grlib::CGLibDecShader *LayerShdManager::selectDebug() {
 }
 
 grlib::CGLibDecShader *LayerShdManager::selectFont() {
-  grlib::CGLibDecShader *shader = unknown1e0.unknown40 + static_cast<u32>(unknown4f0);
+  grlib::CGLibDecShader *shader = m_cGLibShdListData.unknown40 + static_cast<u32>(unknown4f0);
   unknown001 &entry = unknown48[unknown4f0];
   if (unknown4f0 != unknown4fe || unknown504 != unknown4f6 || unknown4f4 != unknown502 || unknown508 != unknown4fa) {
     shader->setDeclarationIdx(entry.unknown02, unknown4f4);
@@ -196,7 +196,7 @@ grlib::CGLibDecShader *LayerShdManager::selectFont() {
 }
 
 grlib::CGLibDecShader *LayerShdManager::selectNumber() {
-  grlib::CGLibDecShader *shader = unknown1e0.unknown40 + static_cast<u32>(unknown4f0);
+  grlib::CGLibDecShader *shader = m_cGLibShdListData.unknown40 + static_cast<u32>(unknown4f0);
   unknown001 &entry = unknown48[unknown4f0];
   if (unknown4f0 != unknown4fe || unknown4f4 != unknown502 || unknown508 != unknown4fa || unknown50a != unknown4fc) {
     shader->setDeclarationIdx(entry.unknown02, unknown4f4);
@@ -215,7 +215,7 @@ grlib::CGLibDecShader *LayerShdManager::selectNumber() {
 }
 
 grlib::CGLibDecShader *LayerShdManager::selectPoly() {
-  grlib::CGLibDecShader *shader = unknown1e0.unknown40 + static_cast<u32>(unknown4f0);
+  grlib::CGLibDecShader *shader = m_cGLibShdListData.unknown40 + static_cast<u32>(unknown4f0);
   unknown001 &entry = unknown48[unknown4f0];
   if (unknown4f0 == unknown4fe && unknown4f4 == unknown502 && unknown506 == unknown4f8 && unknown508 == unknown4fa && unknown50a == unknown4fc) {
     return shader;
@@ -235,7 +235,7 @@ grlib::CGLibDecShader *LayerShdManager::selectPoly() {
 
 grlib::CGLibDecShader *LayerShdManager::selectWin() {
   s16 index = unknown4f0;
-  grlib::CGLibDecShader *shader = unknown1e0.unknown40 + static_cast<u32>(index);
+  grlib::CGLibDecShader *shader = m_cGLibShdListData.unknown40 + static_cast<u32>(index);
   unknown001 &entry = unknown48[index];
   if (index != unknown4fe || unknown500 != unknown4f2 || unknown4f4 != unknown502 || unknown508 != unknown4fa || unknown50a != unknown4fc) {
     shader->setDeclarationIdx(entry.unknown00, unknown4f2);
@@ -257,7 +257,7 @@ grlib::CGLibDecShader *LayerShdManager::selectWin() {
 
 grlib::CGLibDecShader *LayerShdManager::selectIcon() {
   s16 index = unknown4f0;
-  grlib::CGLibDecShader *shader = unknown1e0.unknown40 + static_cast<u32>(index);
+  grlib::CGLibDecShader *shader = m_cGLibShdListData.unknown40 + static_cast<u32>(index);
   unknown001 &entry = unknown48[index];
   if (index != unknown4fe || unknown500 != unknown4f2 || unknown4f4 != unknown502 || unknown508 != unknown4fa || unknown50a != unknown4fc) {
     shader->setDeclarationIdx(entry.unknown00, unknown4f2);
@@ -279,7 +279,7 @@ grlib::CGLibDecShader *LayerShdManager::selectIcon() {
 
 grlib::CGLibDecShader *LayerShdManager::selectColor() {
   s16 index = unknown4f0;
-  grlib::CGLibDecShader *shader = unknown1e0.unknown40 + static_cast<u32>(index);
+  grlib::CGLibDecShader *shader = m_cGLibShdListData.unknown40 + static_cast<u32>(index);
   unknown001 &entry = unknown48[index];
   if (index == unknown4fe && unknown500 == unknown4f2 && unknown4f4 == unknown502 && unknown508 == unknown4fa && unknown506 == unknown4f8 && unknown50a == unknown4fc) {
     return shader;
@@ -304,7 +304,7 @@ grlib::CGLibDecShader *LayerShdManager::selectColor() {
 
 grlib::CGLibDecShader *LayerShdManager::selectTex() {
   s16 index = unknown4f0;
-  grlib::CGLibDecShader *shader = unknown1e0.unknown40 + static_cast<u32>(index);
+  grlib::CGLibDecShader *shader = m_cGLibShdListData.unknown40 + static_cast<u32>(index);
   unknown001 &entry = unknown48[index];
   if (index == unknown4fe && unknown500 == unknown4f2 && unknown4f4 == unknown502 && unknown508 == unknown4fa && unknown506 == unknown4f8 && unknown50a == unknown4fc) {
     return shader;
@@ -328,7 +328,7 @@ grlib::CGLibDecShader *LayerShdManager::selectTex() {
 }
 
 void LayerShdManager::shaderRelease() {
-  unknown1e0.release();
+  m_cGLibShdListData.release();
   unknown368.release();
   if (unknown08 != nullptr) {
     mtl::MemManager::deallocate(unknown08, 0, false);
@@ -356,7 +356,7 @@ void LayerShdManager::shaderRelease() {
 void LayerShdManager::readShader() {
   shaderRelease();
   ml::DevFileParamTh param;
-  param._08 = unknown20->unknown24;
+  param._08 = m_layerManager->unknown24;
   param._54 = 0x1000;
   param.unknown60 = this;
   param._6d = false;
@@ -367,11 +367,11 @@ void LayerShdManager::readShader() {
 }
 
 void LayerShdManager::createShader() {
-  unknown1e0.createPacShader(unknown08, 0x3ea, true);
-  u32 size = unknown1e0.unknown50 * sizeof(unknown001);
-  unknown48 = static_cast<unknown001 *>(mtl::MemManager::allocate(unknown20->unknown2c, size, 0x10, false, "no name", 0));
+  m_cGLibShdListData.createPacShader(unknown08, 0x3ea, true);
+  u32 size = m_cGLibShdListData.unknown50 * sizeof(unknown001);
+  unknown48 = static_cast<unknown001 *>(mtl::MemManager::allocate(m_layerManager->unknown2c, size, 0x10, false, "no name", 0));
   memset(unknown48, 0xff, size);
-  s32 count = unknown1e0.unknown50;
+  s32 count = m_cGLibShdListData.unknown50;
   for (s32 i = 0; i < count; i++) {
     (this->*s_CallSetup[i])(i);
   }
@@ -447,13 +447,13 @@ void LayerShdManager::createRenderWork() {
 }
 
 LayerShdManager::~LayerShdManager() {
-  if (unknown38 != nullptr) {
-    delete unknown38;
-    unknown38 = nullptr;
+  if (m_layerVertexMan != nullptr) {
+    delete m_layerVertexMan;
+    m_layerVertexMan = nullptr;
   }
-  if (unknown40 != nullptr) {
-    delete unknown40;
-    unknown40 = nullptr;
+  if (m_layerTextureMan != nullptr) {
+    delete m_layerTextureMan;
+    m_layerTextureMan = nullptr;
   }
   allRelease();
 }
@@ -467,7 +467,7 @@ void LayerShdManager::createResWork() { grlib::CGLibTexture::createTextureImageP
 void LayerShdManager::setSecTexture(LayerResSecTexture *secTexture) {
   if (secTexture != nullptr && secTexture->unknown14 > 0.0f) {
     unknown58 = secTexture->getTexture();
-    unknown60 = &secTexture->unknown18;
+    unknown60 = &secTexture->m_cGLibDblUniformBlock;
     unknown4fc = 2;
   } else {
     unknown58 = nullptr;
@@ -476,7 +476,7 @@ void LayerShdManager::setSecTexture(LayerResSecTexture *secTexture) {
 }
 
 void LayerShdManager::initColor(u32 index) {
-  grlib::CGLibDecShader &shader = unknown1e0.unknown40[index];
+  grlib::CGLibDecShader &shader = m_cGLibShdListData.unknown40[index];
   unknown001 &entry = unknown48[index];
   entry.unknown00 = shader.getDeclarationOfs("MENU_GAUGE_TYPE");
   entry.unknown02 = shader.getDeclarationOfs("MENU_WORLD_TYPE");
@@ -486,7 +486,7 @@ void LayerShdManager::initColor(u32 index) {
 }
 
 void LayerShdManager::initTex(u32 index) {
-  grlib::CGLibDecShader &shader = unknown1e0.unknown40[index];
+  grlib::CGLibDecShader &shader = m_cGLibShdListData.unknown40[index];
   unknown001 &entry = unknown48[index];
   entry.unknown00 = shader.getDeclarationOfs("MENU_GAUGE_TYPE");
   entry.unknown02 = shader.getDeclarationOfs("MENU_WORLD_TYPE");
@@ -496,7 +496,7 @@ void LayerShdManager::initTex(u32 index) {
 }
 
 void LayerShdManager::initFont(u32 index) {
-  grlib::CGLibDecShader &shader = unknown1e0.unknown40[index];
+  grlib::CGLibDecShader &shader = m_cGLibShdListData.unknown40[index];
   unknown001 &entry = unknown48[index];
   entry.unknown02 = shader.getDeclarationOfs("MENU_WORLD_TYPE");
   entry.unknown04 = shader.getDeclarationOfs("MENU_ICON_TYPE");
@@ -504,7 +504,7 @@ void LayerShdManager::initFont(u32 index) {
 }
 
 void LayerShdManager::initWin(u32 index) {
-  grlib::CGLibDecShader &shader = unknown1e0.unknown40[index];
+  grlib::CGLibDecShader &shader = m_cGLibShdListData.unknown40[index];
   unknown001 &entry = unknown48[index];
   entry.unknown00 = shader.getDeclarationOfs("MENU_GAUGE_TYPE");
   entry.unknown02 = shader.getDeclarationOfs("MENU_WORLD_TYPE");
@@ -513,7 +513,7 @@ void LayerShdManager::initWin(u32 index) {
 }
 
 void LayerShdManager::initNumber(u32 index) {
-  grlib::CGLibDecShader &shader = unknown1e0.unknown40[index];
+  grlib::CGLibDecShader &shader = m_cGLibShdListData.unknown40[index];
   unknown001 &entry = unknown48[index];
   entry.unknown02 = shader.getDeclarationOfs("MENU_WORLD_TYPE");
   entry.unknown08 = shader.getDeclarationOfs("MENU_MASKOBJ_TYPE");
@@ -521,7 +521,7 @@ void LayerShdManager::initNumber(u32 index) {
 }
 
 void LayerShdManager::initPoly(u32 index) {
-  grlib::CGLibDecShader &shader = unknown1e0.unknown40[index];
+  grlib::CGLibDecShader &shader = m_cGLibShdListData.unknown40[index];
   unknown001 &entry = unknown48[index];
   entry.unknown02 = shader.getDeclarationOfs("MENU_WORLD_TYPE");
   entry.unknown06 = shader.getDeclarationOfs("MENU_USE_TEX");
@@ -531,11 +531,11 @@ void LayerShdManager::initPoly(u32 index) {
 
 void LayerShdManager::initMemWrite(u32 index) {
   unknown001 &entry = unknown48[index];
-  entry.unknown06 = unknown1e0.unknown40[index].getDeclarationOfs("MENU_DECODE_TYPE");
+  entry.unknown06 = m_cGLibShdListData.unknown40[index].getDeclarationOfs("MENU_DECODE_TYPE");
 }
 
 void LayerShdManager::initDebug(u32 index) {
-  grlib::CGLibDecShader &shader = unknown1e0.unknown40[index];
+  grlib::CGLibDecShader &shader = m_cGLibShdListData.unknown40[index];
   unknown001 &entry = unknown48[index];
   entry.unknown02 = shader.getDeclarationOfs("MENU_WORLD_TYPE");
   entry.unknown06 = shader.getDeclarationOfs("MENU_USE_TEX");
@@ -543,12 +543,12 @@ void LayerShdManager::initDebug(u32 index) {
 
 void LayerShdManager::initGsBlur(u32 index) {
   unknown001 &entry = unknown48[index];
-  entry.unknown06 = unknown1e0.unknown40[index].getDeclarationOfs("MENU_USE_TEX");
+  entry.unknown06 = m_cGLibShdListData.unknown40[index].getDeclarationOfs("MENU_USE_TEX");
 }
 
 void LayerShdManager::initTest(u32 index) {
   unknown001 &entry = unknown48[index];
-  entry.unknown06 = unknown1e0.unknown40[index].getDeclarationOfs("MENU_USE_TEX");
+  entry.unknown06 = m_cGLibShdListData.unknown40[index].getDeclarationOfs("MENU_USE_TEX");
 }
 
 void LayerShdManager::resetViewPort() {
@@ -556,10 +556,10 @@ void LayerShdManager::resetViewPort() {
     unknown360 = nullptr;
     unknown528 = false;
     unknown52a = false;
-    unknown50c.unknown00 = 0.0f;
-    unknown50c.unknown04 = 0.0f;
-    unknown50c.unknown08 = unknown550;
-    unknown50c.unknown0c = unknown554;
+    m_layerViewPort.unknown00 = 0.0f;
+    m_layerViewPort.unknown04 = 0.0f;
+    m_layerViewPort.unknown08 = unknown550;
+    m_layerViewPort.unknown0c = unknown554;
     grlib::CGLibState::setViewport(grlib::LibMainStateViewPort(0.0f, 0.0f, unknown550 * unknown55c, unknown554 * unknown560, 0.0f, 1.0f));
   }
 }
@@ -585,9 +585,9 @@ bool LayerShdManager::OnFileEvent(ml::EventFileTh *event) {
 }
 
 void LayerShdManager::selectViewPort(const LayerViewPort &viewPort) {
-  if (unknown52a || unknown50c.unknown00 != viewPort.unknown00 || unknown50c.unknown04 != viewPort.unknown04 || unknown50c.unknown08 != viewPort.unknown08 ||
-      unknown50c.unknown0c != viewPort.unknown0c) {
-    unknown50c = viewPort;
+  if (unknown52a || m_layerViewPort.unknown00 != viewPort.unknown00 || m_layerViewPort.unknown04 != viewPort.unknown04 || m_layerViewPort.unknown08 != viewPort.unknown08 ||
+      m_layerViewPort.unknown0c != viewPort.unknown0c) {
+    m_layerViewPort = viewPort;
     unknown528 = true;
     unknown52a = false;
     f32 width = unknown558 * viewPort.unknown08;
@@ -602,7 +602,7 @@ void LayerShdManager::setViewPort(LayerResViewPortInfo *viewPort) {
   grlib::CGLibRenderTarget *target = viewPort->unknown10;
   if (target == nullptr) {
     unknown360 = nullptr;
-    selectViewPort(viewPort->unknown00);
+    selectViewPort(viewPort->m_layerViewPort);
   } else if (unknown360 != target) {
     if (!(viewPort->unknown30 & 1)) {
       target->clearTexture(viewPort->unknown20, static_cast<GrlClaerMask>(0xf));
@@ -613,25 +613,25 @@ void LayerShdManager::setViewPort(LayerResViewPortInfo *viewPort) {
     unknown52a = true;
     unknown528 = true;
     unknown360 = viewPort->unknown10;
-    unknown50c.unknown00 = 0.0f;
-    unknown50c.unknown04 = 0.0f;
-    unknown50c.unknown08 = static_cast<f32>(viewPort->unknown10->unknownbc) / unknown558;
-    unknown50c.unknown0c = static_cast<f32>(viewPort->unknown10->unknownc0) / unknown558;
+    m_layerViewPort.unknown00 = 0.0f;
+    m_layerViewPort.unknown04 = 0.0f;
+    m_layerViewPort.unknown08 = static_cast<f32>(viewPort->unknown10->unknownbc) / unknown558;
+    m_layerViewPort.unknown0c = static_cast<f32>(viewPort->unknown10->unknownc0) / unknown558;
   }
   unknown358 = viewPort->unknown18;
   unknown4fa = 3;
 }
 
 void LayerShdManager::setShaderMaskMode(const LayerObjTopMaskObj *mask) {
-  unknown50 = mask;
+  m_layerObjTopMaskObj = mask;
   unknown358 = nullptr;
   unknown4fa = 2;
-  selectViewPort(mask->unknown258);
+  selectViewPort(mask->m_layerViewPort);
 }
 
 void LayerShdManager::setShaderMaskOff() {
   unknown358 = nullptr;
-  unknown50 = nullptr;
+  m_layerObjTopMaskObj = nullptr;
   unknown4fa = 1;
 }
 
@@ -665,9 +665,9 @@ void LayerShdManager::set3DSpaceMode(grlib::CGLibDblUniformBlock *uniform) {
 grlib::CGLibDecShader *LayerShdManager::setupShader(grlib::CGLibDblUniformBlock *uniform) {
   grlib::CGLibDecShader *shader = setupShader();
   uniform->setUniformBlock(0);
-  const LayerObjTopMaskObj *mask = unknown50;
+  const LayerObjTopMaskObj *mask = m_layerObjTopMaskObj;
   if (mask != nullptr) {
-    const_cast<LayerObjTopMaskObj *>(mask)->unknown290.setUniformBlock(2);
+    const_cast<LayerObjTopMaskObj *>(mask)->m_cGLibDblUniformBlock.setUniformBlock(2);
     grlib::CGLibCtlTexture::setTexture(mask->getTexture(), unknownc0[6], 3);
   } else if (unknown358 != nullptr) {
     unknown358->setUniformBlock(2);
@@ -742,13 +742,13 @@ void LayerShdManager::initGamma(u32 index) {}
 
 LayerHandleAllocator::LayerHandleAllocator() {}
 
-LayerHandleAllocator::LayerHandleAllocator(mtl::ALLOC_HANDLE handle) : unknown08(handle) {}
+LayerHandleAllocator::LayerHandleAllocator(mtl::ALLOC_HANDLE handle) : m_memHandle(handle) {}
 
-void LayerHandleAllocator::setMemHandle(mtl::ALLOC_HANDLE handle) { unknown08 = handle; }
+void LayerHandleAllocator::setMemHandle(mtl::ALLOC_HANDLE handle) { m_memHandle = handle; }
 
-mtl::ALLOC_HANDLE LayerHandleAllocator::getMemHandle() const { return unknown08; }
+mtl::ALLOC_HANDLE LayerHandleAllocator::getMemHandle() const { return m_memHandle; }
 
-void *LayerHandleAllocator::allocate(size_t size, size_t alignment) { return mtl::MemManager::allocate(unknown08, size, alignment, false, "no name", 0); }
+void *LayerHandleAllocator::allocate(size_t size, size_t alignment) { return mtl::MemManager::allocate(m_memHandle, size, alignment, false, "no name", 0); }
 
 void LayerHandleAllocator::deallocate(void *pointer) {
   if (pointer != nullptr) {

@@ -35,7 +35,7 @@ public:
   void dispose();
   void update(f32 deltaTime);
 
-  CreateInfo unknown00;              // Inferred role: create info; original member name unknown.
+  CreateInfo m_createInfo;           // Inferred role: create info; original member name unknown.
   fw::SoundPack *unknown08;          // Inferred role: se pack; original member name unknown.
   mm::mtl::Vector<SeInfo> unknown10; // Inferred role: playing se; original member name unknown.
   mm::mtl::Map<u16, f32> unknown38;  // Inferred role: elapsed time since the last play of each se; original member name unknown.

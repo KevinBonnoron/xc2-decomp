@@ -59,10 +59,10 @@ public:
   static int m_maxRefCount;
   static u32 MAX_ALLOCATE_SIZE;
 
-  ml::CriticalSection unknown18; // Inferred role: lock of the list; original member name unknown.
+  ml::CriticalSection m_criticalSection; // Inferred role: lock of the list; original member name unknown.
 };
 
-static_assert(offsetof(CallStackManager, unknown18) == 0x18, "");
+static_assert(offsetof(CallStackManager, m_criticalSection) == 0x18, "");
 static_assert(sizeof(CallStackManager) == 0x40, "");
 
 } // namespace mtl

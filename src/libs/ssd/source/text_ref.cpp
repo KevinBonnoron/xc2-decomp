@@ -8,7 +8,7 @@ enum Result : long;
 TextRef::TextRef(const TextRef &text) {
   this->unknown10 = text.unknown10;
   unknown18 = text.unknown18;
-  unknown08 = text.unknown08;
+  m_hash = text.m_hash;
 }
 
 TextRef::TextRef(const char *text) { InitImpl(text); }
@@ -16,7 +16,7 @@ TextRef::TextRef(const char *text) { InitImpl(text); }
 TextRef::TextRef(const char16_t *text) { InitImpl(text); }
 
 void TextRef::Clear() {
-  unknown08 = Hash();
+  m_hash = Hash();
   unknown10 = nullptr;
   unknown18 = TEXT_ENCODE_NONE;
 }
@@ -24,15 +24,15 @@ void TextRef::Clear() {
 void TextRef::InitImpl(const char *text) {
   this->unknown10 = text;
   unknown18 = TEXT_ENCODE_UTF8;
-  unknown08 = Hash();
-  unknown08.CalcTextHash(text);
+  m_hash = Hash();
+  m_hash.CalcTextHash(text);
 }
 
 void TextRef::InitImpl(const char16_t *text) {
   this->unknown10 = text;
   unknown18 = TEXT_ENCODE_UTF16;
-  unknown08 = Hash();
-  unknown08.CalcTextHash(text);
+  m_hash = Hash();
+  m_hash.CalcTextHash(text);
 }
 
 void TextRef::Set(const TextRef &text) { log_error(static_cast<Result>(-1), Debug::LogFlag::All, u"TextRef::Set は使用できません。", EmptyText); }
@@ -57,14 +57,14 @@ void TextRef::GetText(void *buffer, unsigned long size, TextEncodeType type) con
 
 void TextFixedBase::Set(const char *text) {
   Utf8ToUTF16(text, unknown001(), unknown20);
-  unknown08 = Hash();
-  unknown08.CalcTextHash(static_cast<const char16_t *>(unknown10));
+  m_hash = Hash();
+  m_hash.CalcTextHash(static_cast<const char16_t *>(unknown10));
 }
 
 void TextFixedBase::Set(const char16_t *text) {
   unknown003(unknown001(), text, unknown20);
-  unknown08 = Hash();
-  unknown08.CalcTextHash(static_cast<const char16_t *>(unknown10));
+  m_hash = Hash();
+  m_hash.CalcTextHash(static_cast<const char16_t *>(unknown10));
 }
 
 void TextFixedBase::Set(const TextRef &text) {
@@ -73,8 +73,8 @@ void TextFixedBase::Set(const TextRef &text) {
   } else {
     unknown003(unknown001(), static_cast<const char16_t *>(text.unknown10), unknown20);
   }
-  unknown08 = Hash();
-  unknown08.CalcTextHash(static_cast<const char16_t *>(unknown10));
+  m_hash = Hash();
+  m_hash.CalcTextHash(static_cast<const char16_t *>(unknown10));
 }
 
 } // namespace ssd

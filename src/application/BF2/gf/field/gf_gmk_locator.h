@@ -28,11 +28,11 @@ public:
 
   // Layout evidence: the element copies of Vector<GfGmkLocator>::push_back (0x71002e0b18) and expand copy the
   // 8 bytes at 0x08 as a whole, the padding of a CreateInfo.
-  CreateInfo unknown00;  // Inferred role: creation parameters; original member name unknown.
-  gmk::GmkAcc unknown10; // Inferred role: gimmick accessor; original member name unknown.
+  CreateInfo m_createInfo; // Inferred role: creation parameters; original member name unknown.
+  gmk::GmkAcc m_gmkAcc;    // Inferred role: gimmick accessor; original member name unknown.
 };
 
-static_assert(offsetof(GfGmkLocator, unknown10) == 0x10, "");
+static_assert(offsetof(GfGmkLocator, m_gmkAcc) == 0x10, "");
 static_assert(sizeof(GfGmkLocator) == 0x50, "");
 
 } // namespace gf

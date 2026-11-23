@@ -23,8 +23,8 @@ ScriptCameraEntity::ScriptCameraEntity(const mm::Vec3 &position, const mm::Vec3 
     : fw::Camera(CAMERA_PRIO_UNKNOWN_55), unknownb0(position), unknownc0(rotation), unknownd0(position), unknowne0(rotation), unknownf0(position), unknown100(rotation), unknown110(0.0f),
       unknown114(0.0f) {
   m_fov = 45.0f;
-  unknown30 = 0.4f;
-  unknown34 = 80000.0f;
+  m_nearClip = 0.4f;
+  m_farClip = 80000.0f;
   mm::Vec3 target = unknown171(unknown100.x, unknown100.y, 0.0f);
   target += unknownf0;
   setLookAt(unknownf0, target, unknown100.z);

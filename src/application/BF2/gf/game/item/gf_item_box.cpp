@@ -65,18 +65,18 @@ template <u32 N> static void setItems(GfItemBoxBase *itemBoxBase, ItemBox *itemB
 }
 
 item_iterator item_iterator::operator++() {
-  GfItemInfo *last = unknown00->getItemTypeInfo(unknown18)->unknown08;
-  if (unknown08 != last) {
+  GfItemInfo *last = m_itemBoxBase->getItemTypeInfo(unknown18)->unknown08;
+  if (m_itemInfo != last) {
     do {
-      unknown08 = reinterpret_cast<GfItemInfo *>(reinterpret_cast<u8 *>(unknown08) + unknown10);
-    } while (unknown08 != last && unknown08->unknown00_0 != 0 && unknown08->getType() != unknown18);
+      m_itemInfo = reinterpret_cast<GfItemInfo *>(reinterpret_cast<u8 *>(m_itemInfo) + unknown10);
+    } while (m_itemInfo != last && m_itemInfo->m_itemID != 0 && m_itemInfo->getType() != unknown18);
   }
   return *this;
 }
 
 item_iterator GfItemBoxBase::end(ItemType::Type type) {
   unknown081 *info = getItemTypeInfo(type);
-  return item_iterator(this, info->unknown08, info->unknown22, info->unknown10, type);
+  return item_iterator(this, info->unknown08, info->unknown22, info->m_multi, type);
 }
 
 ItemType::Type GfItemInfo::getType() const { return static_cast<ItemType::Type>(m_type); }
@@ -113,13 +113,13 @@ void GfItemBoxBase::setItemBox(ItemBox *itemBox, bool isClear) {
 }
 
 void GfItemBoxBase::setItemTypeInfo(ItemBox *itemBox, u32 index, GfItemInfo *first, GfItemInfo *last, u32 capacity, u32 itemSize, u32 maxStock, bool isMulti) {
-  unknown081 &info = unknown08[index];
+  unknown081 &info = m_itemTypeInfo[index];
   info.unknown00 = first;
   info.unknown08 = last;
   info.unknown20 = capacity;
   info.unknown22 = itemSize;
   info.unknown24 = maxStock;
-  info.unknown10 = isMulti;
+  info.m_multi = isMulti;
   setSerialInfo(itemBox, index);
 }
 
@@ -133,11 +133,11 @@ void GfItemBoxBase::setupSerial(ItemBox *itemBox) {
   }
 }
 
-void GfItemBoxBase::setSerialInfo(ItemBox *itemBox, u32 index) { unknown08[index].unknown18 = &itemBox->unknown122a0[index]; }
+void GfItemBoxBase::setSerialInfo(ItemBox *itemBox, u32 index) { m_itemTypeInfo[index].m_serialInfo = &itemBox->unknown122a0[index]; }
 
-unknown081 *GfItemBoxBase::getItemTypeInfo(ItemType::Type type) { return &unknown08[getItemBoxIndex(type)]; }
+unknown081 *GfItemBoxBase::getItemTypeInfo(ItemType::Type type) { return &m_itemTypeInfo[getItemBoxIndex(type)]; }
 
-const unknown081 *GfItemBoxBase::getItemTypeInfo(ItemType::Type type) const { return &unknown08[getItemBoxIndex(type)]; }
+const unknown081 *GfItemBoxBase::getItemTypeInfo(ItemType::Type type) const { return &m_itemTypeInfo[getItemBoxIndex(type)]; }
 
 item_iterator GfItemBoxBase::begin(ItemType::Type type) {
   if (type >= ITEM_UNKNOWN_64) {
@@ -145,17 +145,17 @@ item_iterator GfItemBoxBase::begin(ItemType::Type type) {
   }
 
   unknown081 *info = getItemTypeInfo(type);
-  item_iterator it(this, info->unknown00, info->unknown22, info->unknown10, type);
+  item_iterator it(this, info->unknown00, info->unknown22, info->m_multi, type);
   item_iterator last = end(type);
   for (; it != last; ++it) {
-    if (it->unknown00_0 == 0 || it->getType() == type) {
+    if (it->m_itemID == 0 || it->getType() == type) {
       return it;
     }
   }
   return last;
 }
 
-bool GfItemBoxBase::isMulti(ItemType::Type type) { return getItemTypeInfo(type)->unknown10; }
+bool GfItemBoxBase::isMulti(ItemType::Type type) { return getItemTypeInfo(type)->m_multi; }
 
 void GfItemBoxBase::setEquipFlag(u32 item, GfItemHandle handle, bool isEquip) {
   if (item == 0) {
@@ -173,7 +173,7 @@ GfItemInfo *GfItemBoxBase::findItemHandle(u32 item, GfItemHandle handle) {
   u32 index;
   GfDataItem::getItemType(type, index, item);
   for (item_iterator it = begin(type), last = end(type); it != last; ++it) {
-    if (it->getType() == type && it->unknown00_0 == index && it->getHandle().value == handle.value) {
+    if (it->getType() == type && it->m_itemID == index && it->getHandle().value == handle.value) {
       return &*it;
     }
   }
@@ -187,10 +187,10 @@ GfItemHandle GfItemInfo::getHandle() const {
   return handle;
 }
 
-u32 GfItemBoxBase::getSerial(ItemType::Type type) { return *getItemTypeInfo(type)->unknown18; }
+u32 GfItemBoxBase::getSerial(ItemType::Type type) { return *getItemTypeInfo(type)->m_serialInfo; }
 
 u32 GfItemBoxBase::updateSerialLocal(ItemType::Type type) {
-  u32 *serial = getItemTypeInfo(type)->unknown18;
+  u32 *serial = getItemTypeInfo(type)->m_serialInfo;
   u32 next = (*serial + 1) & ITEM_UNKNOWN_67108863;
   if (next == 0) {
     next++;
@@ -201,12 +201,12 @@ u32 GfItemBoxBase::updateSerialLocal(ItemType::Type type) {
 
 void GfItemBoxBase::setSerial(ItemType::Type type, u32 serial) {
   unknown081 *info = getItemTypeInfo(type);
-  *info->unknown18 = serial & ITEM_UNKNOWN_67108863;
+  *info->m_serialInfo = serial & ITEM_UNKNOWN_67108863;
 }
 
 bool GfItemBoxBase::findSerial(ItemType::Type type, u32 serial) {
   for (item_iterator it = begin(type), last = end(type); it != last; ++it) {
-    if (it->unknown00_0 != 0 && it->unknown08_0 == serial) {
+    if (it->m_itemID != 0 && it->unknown08_0 == serial) {
       return true;
     }
   }
@@ -227,7 +227,7 @@ GfItemInfo *GfItemBoxBase::findItem(u32 item) {
   u32 index;
   GfDataItem::getItemType(type, index, item);
   for (item_iterator it = begin(type), last = end(type); it != last; ++it) {
-    if (it->getType() == type && it->unknown00_0 == index) {
+    if (it->getType() == type && it->m_itemID == index) {
       return &*it;
     }
   }
@@ -248,15 +248,15 @@ bool GfItemBoxBase::canAddItem(u32 item) {
   item_iterator it = begin(type);
   GfItemInfo *last = getItemTypeInfo(type)->unknown08;
   if (isMulti(type)) {
-    for (; it.unknown08 != last; ++it) {
-      if (it->unknown00_0 != 0 && it->unknown00_0 == index && it->getType() == type) {
+    for (; it.m_itemInfo != last; ++it) {
+      if (it->m_itemID != 0 && it->m_itemID == index && it->getType() == type) {
         return it->unknown02_3 < stock;
       }
     }
   }
 
-  for (it = begin(type); it.unknown08 != last; ++it) {
-    if (it->unknown00_0 == 0) {
+  for (it = begin(type); it.m_itemInfo != last; ++it) {
+    if (it->m_itemID == 0) {
       return true;
     }
   }
@@ -272,7 +272,7 @@ void GfItemBoxBase::makeItem(GfItemInfo &info, u32 item) {
     GfFieldTime::get()->getGameTime();
   }
   info.m_type = type;
-  info.unknown00_0 = index;
+  info.m_itemID = index;
   info.unknown02_3 = 1;
   info.unknown04 = 0;
 }
@@ -286,7 +286,7 @@ int GfItemBoxBase::countItem(u32 item) {
   item_iterator last = end(type);
   if (item != 0) {
     for (; it != last; ++it) {
-      if (it->unknown00_0 != 0 && it->unknown00_0 == index && it->getType() == type) {
+      if (it->m_itemID != 0 && it->m_itemID == index && it->getType() == type) {
         count += it->unknown02_3;
       }
     }
@@ -300,7 +300,7 @@ GfItemHandle GfItemBoxBase::getNoEquipItemHandle(u32 item) {
     u32 index;
     GfDataItem::getItemType(type, index, item);
     for (item_iterator it = begin(type), last = end(type); it != last; ++it) {
-      if (it->getType() == type && it->unknown00_0 == index && !it->unknown03_6) {
+      if (it->getType() == type && it->m_itemID == index && !it->unknown03_6) {
         return it->getHandle();
       }
     }
@@ -311,7 +311,7 @@ GfItemHandle GfItemBoxBase::getNoEquipItemHandle(u32 item) {
 int GfItemBoxBase::countItemCategory(ItemType::Type type) {
   int count = 0;
   for (item_iterator it = begin(type), last = end(type); it != last; ++it) {
-    if (it->unknown00_0 != 0) {
+    if (it->m_itemID != 0) {
       count += it->unknown02_3;
     }
   }
@@ -357,7 +357,7 @@ bool GfItemBoxBase::existItem(u32 item) {
   item_iterator last = end(type);
   if (item != 0) {
     for (; it != last; ++it) {
-      if (it->unknown00_0 != 0 && it->unknown00_0 == index && it->getType() == type) {
+      if (it->m_itemID != 0 && it->m_itemID == index && it->getType() == type) {
         return true;
       }
     }
@@ -366,7 +366,7 @@ bool GfItemBoxBase::existItem(u32 item) {
 }
 
 u32 GfItemBoxBase::getBoxIndex(const GfItemInfo *info) {
-  if (info == nullptr || info->unknown00_0 == 0) {
+  if (info == nullptr || info->m_itemID == 0) {
     return -1;
   }
 
@@ -391,7 +391,7 @@ void GfItemBoxBase::removeItem(GfItemInfo *info) {
 int GfItemBoxBase::getFreeSlotCount(ItemType::Type type) {
   int count = 0;
   for (item_iterator it = begin(type), last = end(type); it != last; ++it) {
-    if (it->unknown00_0 == 0) {
+    if (it->m_itemID == 0) {
       count++;
     }
   }
@@ -416,7 +416,7 @@ u32 GfItemBoxBase::getFreeStackCount(u32 item) {
 }
 
 GfItemInfo::GfItemInfo() {
-  unknown00_0 = 0;
+  m_itemID = 0;
   m_type = 0;
   unknown02_3 = 0;
   _00_29 = 0;
@@ -437,9 +437,9 @@ u16 GfItemInfo::getMaxStock() const {
   return GfItemBox::get()->getItemTypeInfo(itemType)->unknown24;
 }
 
-u16 GfItemInfo::getItemID() const { return GfDataItem::getItemStartID(getType()) + unknown00_0 - 1; }
+u16 GfItemInfo::getItemID() const { return GfDataItem::getItemStartID(getType()) + m_itemID - 1; }
 
-void GfItemInfo::setItemID(u16 item) { unknown00_0 = item - GfDataItem::getItemStartID(getType()); }
+void GfItemInfo::setItemID(u16 item) { m_itemID = item - GfDataItem::getItemStartID(getType()); }
 
 GfItemHandle GfItemBox::addItem(u32 item) {
   GfItemHandle handle(0);

@@ -3,10 +3,10 @@
 
 namespace dir {
 
-SingleListNode::SingleListNode() : unknown08(nullptr), unknown10(0), unknown14(-1) {}
+SingleListNode::SingleListNode() : m_singleListNode(nullptr), unknown10(0), unknown14(-1) {}
 
 void SingleListNode::InitVariable() {
-  unknown08 = nullptr;
+  m_singleListNode = nullptr;
   unknown10 = 0;
   unknown14 = -1;
 }
@@ -15,44 +15,44 @@ void SingleListNode::Reset() { InitVariable(); }
 
 SingleListNode *SingleListHeader::InsertTop(SingleListNode *node) {
   if (node != nullptr) {
-    if (unknown08 == nullptr) {
-      unknown08 = node;
-      node->unknown08 = node;
+    if (m_singleListNode == nullptr) {
+      m_singleListNode = node;
+      node->m_singleListNode = node;
       return node;
     }
-    node->unknown08 = unknown08->unknown08;
-    unknown08->unknown08 = node;
+    node->m_singleListNode = m_singleListNode->m_singleListNode;
+    m_singleListNode->m_singleListNode = node;
   }
   return node;
 }
 
 SingleListNode *SingleListHeader::InsertEnd(SingleListNode *node) {
   if (node != nullptr) {
-    if (unknown08 == nullptr) {
-      unknown08 = node;
-      node->unknown08 = node;
+    if (m_singleListNode == nullptr) {
+      m_singleListNode = node;
+      node->m_singleListNode = node;
     } else {
-      node->unknown08 = unknown08->unknown08;
-      unknown08->unknown08 = node;
+      node->m_singleListNode = m_singleListNode->m_singleListNode;
+      m_singleListNode->m_singleListNode = node;
     }
-    unknown08 = node;
+    m_singleListNode = node;
   }
   return node;
 }
 
 SingleListNode *SingleListHeader::InsertNext(SingleListNode *position, SingleListNode *node) {
   if (position != nullptr && node != nullptr) {
-    SingleListNode *next = position->unknown08;
+    SingleListNode *next = position->m_singleListNode;
     if (next == nullptr) {
       return nullptr;
     }
-    SingleListNode *head = unknown08;
+    SingleListNode *head = m_singleListNode;
     if (head == nullptr) {
-      unknown08 = node;
-      node->unknown08 = node;
+      m_singleListNode = node;
+      node->m_singleListNode = node;
       return nullptr;
     }
-    SingleListNode *current = head->unknown08;
+    SingleListNode *current = head->m_singleListNode;
     SingleListNode *prev = head;
     if (current == nullptr) {
       return nullptr;
@@ -62,15 +62,15 @@ SingleListNode *SingleListHeader::InsertNext(SingleListNode *position, SingleLis
         return nullptr;
       }
       prev = current;
-      current = current->unknown08;
+      current = current->m_singleListNode;
       if (current == nullptr) {
         return nullptr;
       }
     }
-    prev->unknown08 = node;
-    node->unknown08 = next;
-    if (unknown08 == position) {
-      unknown08 = node;
+    prev->m_singleListNode = node;
+    node->m_singleListNode = next;
+    if (m_singleListNode == position) {
+      m_singleListNode = node;
     }
     return node;
   }
@@ -79,29 +79,29 @@ SingleListNode *SingleListHeader::InsertNext(SingleListNode *position, SingleLis
 
 SingleListNode *SingleListHeader::Remove(SingleListNode *node) {
   if (node != nullptr) {
-    SingleListNode *head = unknown08;
+    SingleListNode *head = m_singleListNode;
     if (head != nullptr) {
-      SingleListNode *first = head->unknown08;
+      SingleListNode *first = head->m_singleListNode;
       SingleListNode *current = first;
       if (first == node) {
         if (head == node) {
-          unknown08 = nullptr;
+          m_singleListNode = nullptr;
         } else {
-          head->unknown08 = node->unknown08;
+          head->m_singleListNode = node->m_singleListNode;
         }
       } else {
-        while (current->unknown08 != node) {
-          current = current->unknown08;
+        while (current->m_singleListNode != node) {
+          current = current->m_singleListNode;
           if (current == first) {
             return nullptr;
           }
         }
-        current->unknown08 = node->unknown08;
-        if (unknown08 == node) {
-          unknown08 = current;
+        current->m_singleListNode = node->m_singleListNode;
+        if (m_singleListNode == node) {
+          m_singleListNode = current;
         }
       }
-      node->unknown08 = nullptr;
+      node->m_singleListNode = nullptr;
     }
   }
   return node;
@@ -120,9 +120,9 @@ void DoubleListNode::Reset() { InitVariable(); }
 
 DoubleListNode *DoubleListHeader::InsertTop(DoubleListNode *node) {
   if (node != nullptr) {
-    DoubleListNode *head = unknown08;
+    DoubleListNode *head = m_doubleListNode;
     if (head == nullptr) {
-      unknown08 = node;
+      m_doubleListNode = node;
       node->unknown08 = node;
       node->unknown10 = node;
       return node;
@@ -131,16 +131,16 @@ DoubleListNode *DoubleListHeader::InsertTop(DoubleListNode *node) {
     node->unknown08 = head;
     node->unknown10 = tail;
     tail->unknown08 = node;
-    unknown08->unknown10 = node;
+    m_doubleListNode->unknown10 = node;
   }
   return node;
 }
 
 DoubleListNode *DoubleListHeader::InsertEnd(DoubleListNode *node) {
   if (node != nullptr) {
-    DoubleListNode *head = unknown08;
+    DoubleListNode *head = m_doubleListNode;
     if (head == nullptr) {
-      unknown08 = node;
+      m_doubleListNode = node;
       node->unknown08 = node;
       node->unknown10 = node;
     } else {
@@ -148,9 +148,9 @@ DoubleListNode *DoubleListHeader::InsertEnd(DoubleListNode *node) {
       node->unknown08 = head;
       node->unknown10 = tail;
       tail->unknown08 = node;
-      unknown08->unknown10 = node;
+      m_doubleListNode->unknown10 = node;
     }
-    unknown08 = node;
+    m_doubleListNode = node;
   }
   return node;
 }
@@ -158,8 +158,8 @@ DoubleListNode *DoubleListHeader::InsertEnd(DoubleListNode *node) {
 DoubleListNode *DoubleListHeader::InsertPrev(DoubleListNode *position, DoubleListNode *node) {
   DoubleListNode *result = nullptr;
   if (position != nullptr && node != nullptr) {
-    if (unknown08 == nullptr) {
-      unknown08 = node;
+    if (m_doubleListNode == nullptr) {
+      m_doubleListNode = node;
       node->unknown08 = node;
       node->unknown10 = node;
       return node;
@@ -181,8 +181,8 @@ DoubleListNode *DoubleListHeader::InsertNext(DoubleListNode *position, DoubleLis
     if (prev == nullptr) {
       return nullptr;
     }
-    if (unknown08 == nullptr) {
-      unknown08 = node;
+    if (m_doubleListNode == nullptr) {
+      m_doubleListNode = node;
       node->unknown08 = node;
       node->unknown10 = node;
     } else {
@@ -193,8 +193,8 @@ DoubleListNode *DoubleListHeader::InsertNext(DoubleListNode *position, DoubleLis
       next->unknown10 = node;
     }
     result = node;
-    if (unknown08 == position) {
-      unknown08 = node;
+    if (m_doubleListNode == position) {
+      m_doubleListNode = node;
     }
   }
   return result;
@@ -202,13 +202,13 @@ DoubleListNode *DoubleListHeader::InsertNext(DoubleListNode *position, DoubleLis
 
 DoubleListNode *DoubleListHeader::Remove(DoubleListNode *node) {
   if (node != nullptr) {
-    DoubleListNode *head = unknown08;
+    DoubleListNode *head = m_doubleListNode;
     if (head != nullptr) {
       if (head == head->unknown10) {
         if (head != node) {
           return nullptr;
         }
-        unknown08 = nullptr;
+        m_doubleListNode = nullptr;
       } else {
         if (node->unknown08 != nullptr) {
           node->unknown08->unknown10 = node->unknown10;
@@ -216,8 +216,8 @@ DoubleListNode *DoubleListHeader::Remove(DoubleListNode *node) {
         if (node->unknown10 != nullptr) {
           node->unknown10->unknown08 = node->unknown08;
         }
-        if (unknown08 == node) {
-          unknown08 = node->unknown08;
+        if (m_doubleListNode == node) {
+          m_doubleListNode = node->unknown08;
         }
       }
       node->unknown08 = nullptr;

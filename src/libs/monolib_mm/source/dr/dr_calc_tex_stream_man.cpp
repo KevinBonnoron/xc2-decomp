@@ -7,6 +7,7 @@
 #include "ml/critical_section.h"
 #include "ml/dev_graph.h"
 #include "ml/work_cpu.h"
+#include "mtl/alloc_handle.h"
 #include "mtl/mem_manager.h"
 #include "nn/os.h"
 
@@ -20,7 +21,7 @@ DrCalcTexStreamMan::DrCalcTexStreamMan() : unknown08(), unknown18(), unknown28()
   unknown2058[1] = 0;
   unknown2058[0] = 0;
   unknown2064 = 0;
-  unknown2068 = 0;
+  m_cacherClearMode = 0;
   unknown206c = 0;
   unknown2070 = nullptr;
   unknown2078 = nullptr;
@@ -128,10 +129,10 @@ void DrCalcTexStreamMan::calcPieceMem(int &pieceCount, u32 &freeSize, u32 &objec
 }
 
 void DrCalcTexStreamMan::cntMemUpdate() {
-  if (unknown2068 & 1) {
+  if (m_cacherClearMode & 1) {
     if (unknown2480++ > 0) {
       unknown2480 = 0;
-      unknown2068 &= ~1;
+      m_cacherClearMode &= ~1;
       for (int i = 0; i < unknown2484; i++) {
         if (unknown2080[i] != nullptr) {
           clearMemObj(unknown2080[i]);
@@ -153,7 +154,7 @@ void DrCalcTexStreamMan::cntMemUpdate() {
       if (count == unknown2484) {
         unknown2480 = 0;
         unknown2484 = 0;
-        unknown2068 &= ~1;
+        m_cacherClearMode &= ~1;
       }
     }
   }
@@ -285,12 +286,40 @@ void DrCalcTexStreamMan::releaseFreeObj(DrCalcTexStmObj *&object) {
 
 void DrCalcTexStreamMan::jobWait() { WorkCpu::sync(unknown2498, WKCPU_SYNC_UNKNOWN_0, CPUID_UNKNOWN_0); }
 
+// 1.0.0: 0x71008b257c (145 instructions). Loop forms that matter (measured, docs/lessons.md "for_each form"): the loops are `while` loops over a pointer declared
+// before them, a `for (T *obj = ...;;)` leaves the empty for.cond.cleanup block of the loop variable and the exit block ends up ahead of the loop, so early Tail
+// Duplication copies the latch into the update arm (the game keeps one shared latch); the entry list is emptied by value-initialisation, as DrMan does, which
+// is one memset of the entry: two member stores make GVN insert a PRE phi for the address of the last member (hoisted by the loop) and the stores stop merging.
+void DrCalcTexStreamMan::calcUpdateList() {
+  CS cs(getCriticalSection());
+  DrCalcStmListObj *obj = unknown38[DrMan::s_nDblIdx].unknown00;
+  while (obj != nullptr) {
+    DrCalcStmListObj *next = obj->unknown10;
+    unknown38[DrMan::s_nDblIdx].unknown001(obj);
+    unknown28.unknown004(obj);
+    obj = next;
+  }
+  unknown38[DrMan::s_nDblIdx] = DrResChankList<DrCalcStmListObj>();
+  obj = unknown28.unknown00;
+  while (obj != nullptr) {
+    if (obj->unknown80 & 2) {
+      DrCalcStmListObj *next = obj->unknown10;
+      unknown28.unknown001(obj);
+      delete obj;
+      obj = next;
+    } else {
+      obj->updateHeaderInfo();
+      obj = obj->unknown10;
+    }
+  }
+}
+
 void DrCalcTexStreamMan::callHlvTexOptimization() { unknown248c = 0xa0; }
 
 void DrCalcTexStreamMan::callOptimization(u32 value) { unknown2488 += value; }
 
 void DrCalcTexStreamMan::callReadStopMode() {
-  unknown2068 |= 0x20;
+  m_cacherClearMode |= 0x20;
   unknown248c = 0xa0;
   unknown248e = 0x000a;
 }
@@ -301,6 +330,52 @@ bool DrCalcTexStreamMan::callReadType(DrTxtmType type) {
   }
   unknown2490 = type;
   return type <= unknown2494;
+}
+
+// 0x71008b2868. calcPieceMem, memSeachOptimization and memTempCopy are inlined (the loops at 0x71008b28a0, 0x71008b29dc and 0x71008b2a68). `poolSize` and `limit` are read before the ratio: the game
+// loads 0x2060 (ldr w12 at 0x71008b2900) ahead of the `lsr` of the free size and 0x2064 (ldr w20 at 0x71008b2908) before the first `ucvtf`; without the locals clang schedules both loads behind
+// the first `ucvtf` (measured, first difference at 0x71008b2900). The read mode is decremented in the member (`sub; sxth; csel` at 0x71008b28ec): a local `s16 readMode = unknown248c - 1`
+// is lowered to `lsl; sub; lsr`. One result variable: the game's returns share one epilogue that follows the two return stubs (0x71008b29ac), and the search result is negated into it
+// (`eor w22, w11, #1` at 0x71008b2a30); separate `return` statements put the epilogue behind the loops.
+bool DrCalcTexStreamMan::calcMemOptimization() {
+  cntMemUpdate();
+  int pieceCount;
+  u32 freeSize;
+  u32 objectCount;
+  calcPieceMem(pieceCount, freeSize, objectCount);
+  unknown248c--;
+  if (unknown248c < 1) {
+    unknown248c = 0;
+  }
+  u32 poolSize = unknown2060;
+  u32 limit = unknown2064;
+  f32 ratio = 1.0f - static_cast<f32>(freeSize >> 12) / static_cast<f32>(poolSize >> 12);
+  if (ratio >= 0.85f) {
+    m_cacherClearMode |= 8;
+  } else if (unknown248c > 0 || ratio >= 0.7f) {
+    m_cacherClearMode |= 4;
+  } else {
+    m_cacherClearMode &= ~4;
+  }
+  if (unknown2488 != 0) {
+    m_cacherClearMode |= 2;
+  } else {
+    m_cacherClearMode &= ~2;
+  }
+  bool result = false;
+  if (!(m_cacherClearMode & 1)) {
+    if (pieceCount < 2 && !(m_cacherClearMode & 2)) {
+      result = true;
+    } else {
+      unknown2484 = 0;
+      bool found = memSeachOptimization(limit);
+      result = !found;
+      if (found) {
+        result = memTempCopy(limit);
+      }
+    }
+  }
+  return result;
 }
 
 void DrCalcTexStreamMan::apiUpdate() {
@@ -340,7 +415,7 @@ void DrCalcTexStreamMan::release() {
       unknown2078 = nullptr;
     }
   }
-  unknown2068 = 0;
+  m_cacherClearMode = 0;
 }
 
 bool DrCalcTexStreamMan::memTempCopy(u32 size) {
@@ -354,7 +429,7 @@ bool DrCalcTexStreamMan::memTempCopy(u32 size) {
     if (unknown2080[unknown2484] != nullptr) {
       isEmpty = false;
       copySize += unknown2080[unknown2484]->unknown20;
-      unknown2068 |= 1;
+      m_cacherClearMode |= 1;
       unknown2484++;
       if (size < copySize) {
         return false;
@@ -364,14 +439,28 @@ bool DrCalcTexStreamMan::memTempCopy(u32 size) {
   return isEmpty;
 }
 
+DrCalcStmListObj *DrCalcTexStreamMan::createBufferListObj(u32 size) {
+  CS cs(getCriticalSection());
+  DrCalcStmListObj *list = new (DrMan::get()->unknown18) DrCalcStmListObj(size);
+  list->unknowna6++;
+  unknown38[DrMan::s_nDblStockIdx].unknown004(list);
+  return list;
+}
+
 DrCalcTexStmObj::DrCalcTexStmObj() : unknown18(nullptr), unknown20(0), unknown24(0), unknown28(0) {}
 
 } // namespace ml
 
 // The game compiles DrCalcStmWork and DrCalcStmListObj in this unit (their functions are interleaved with the DrCalcTexStreamMan ones from 0x71008b2c8c on):
 // release inlines DrCalcTexStreamMan::getCriticalSection and the destructor inlines releaseFreeObj and DrCalcStmWork::workRelease.
-#include "dr_calc_stm_list_obj.cpp"
+// In the order of their last functions: DrCalcStmWork ends at 0x71008b5280 (getTexObj), DrCalcStmListObj at 0x71008b7eb4 (OnFileEvent).
+// clang-format off
 #include "dr_calc_stm_work.cpp"
+#include "dr_calc_stm_list_obj.cpp"
+// The clip work base class (0x71008b7f18 to 0x71008b7f3c) comes after the last list object function, before the deferred destructor of DrCalcTexStmObj
+// (0x71008b7f44).
+#include "dr_calc_clip_work.cpp"
+// clang-format on
 
 template mm::mtl::PtrSingleton<ml::DrCalcTexStreamMan>::~PtrSingleton();
 template void ml::DrResChankList<ml::DrCalcTexStmObj>::changeList(ml::DrCalcTexStmObj *first, ml::DrCalcTexStmObj *second);

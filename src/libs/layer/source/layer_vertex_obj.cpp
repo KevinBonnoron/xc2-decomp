@@ -10,7 +10,7 @@
 
 namespace layer {
 
-LayerVertexMan::LayerVertexMan(LayerManager *manager) : unknown18(manager) {}
+LayerVertexMan::LayerVertexMan(LayerManager *manager) : m_layerManager(manager) {}
 
 LayerVertexObj::LayerVertexObj(const u8 *data, LayerManager *manager, LayerVertexMan *vertexMan) : unknown00(nullptr), unknown08(nullptr), unknown10(data), unknown18(1), unknown60(vertexMan) {
   unknown1c = -1;
@@ -82,7 +82,7 @@ LayerVertexObj *LayerVertexMan::createVertexObj(const u8 *data) {
     }
   }
 
-  LayerVertexObj *vertexObj = new (unknown18->unknown28) LayerVertexObj(data, unknown18, this);
+  LayerVertexObj *vertexObj = new (m_layerManager->unknown28) LayerVertexObj(data, m_layerManager, this);
   if (vertexObj != nullptr) {
     unknown002(vertexObj);
   }

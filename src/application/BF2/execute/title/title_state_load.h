@@ -15,15 +15,15 @@ class TitleMain;
 
 class TitleStateLoad : public ai::State {
   GF_STATE_CLASS(TitleStateLoad, TitleMain)
-  TitleStateLoad() { unknown18.start(); }
+  TitleStateLoad() { m_timeCount.start(); }
   void enter(TitleMain *, ai::State *) {}
   void leave(TitleMain *, ai::State *) {}
   void update(TitleMain *main, const fw::UpdateInfo &info);
 
-  ml::TimeCount unknown18; // Inferred role: time since the state started; original member name unknown.
+  ml::TimeCount m_timeCount; // Inferred role: time since the state started; original member name unknown.
 };
 
-static_assert(offsetof(TitleStateLoad, unknown18) == 0x18, "");
+static_assert(offsetof(TitleStateLoad, m_timeCount) == 0x18, "");
 static_assert(sizeof(TitleStateLoad) == 0x20, "");
 
 } // namespace tl

@@ -8,7 +8,7 @@
 
 namespace ml {
 
-DrMdoSamplerMan::DrMdoSamplerMan(DrMan *drMan) : unknown00(nullptr), unknown08(nullptr), unknown10(drMan) {}
+DrMdoSamplerMan::DrMdoSamplerMan(DrMan *drMan) : unknown00(nullptr), unknown08(nullptr), m_drMan(drMan) {}
 
 DrMdoSamplerMan::~DrMdoSamplerMan() {
   DrResMdoSampler *sampler = unknown00;
@@ -22,7 +22,7 @@ DrMdoSamplerMan::~DrMdoSamplerMan() {
 }
 
 void DrMdoSamplerMan::begin() {
-  if (DrMan::get()->unknown188->update()) {
+  if (DrMan::get()->m_drPixlMdlSampler->update()) {
     for (DrResMdoSampler *sampler = unknown00; sampler != nullptr; sampler = sampler->unknown08) {
       sampler->setup();
     }
@@ -34,7 +34,7 @@ DrResMdoSampler *DrMdoSamplerMan::createSamplerObj(const u8 *data) {
   if (sampler != nullptr) {
     return sampler;
   }
-  sampler = new (unknown10->unknown10) DrResMdoSampler(data);
+  sampler = new (m_drMan->unknown10) DrResMdoSampler(data);
   if (sampler != nullptr) {
     unknown101(unknown00, unknown08, sampler);
   }
@@ -42,7 +42,7 @@ DrResMdoSampler *DrMdoSamplerMan::createSamplerObj(const u8 *data) {
 }
 
 DrResMdoSampler *DrMdoSamplerMan::createSamplerSeamObj(const u8 *data) {
-  DrResMdoSampler *sampler = new (unknown10->unknown10) DrResMdoSampler(data);
+  DrResMdoSampler *sampler = new (m_drMan->unknown10) DrResMdoSampler(data);
   if (sampler != nullptr) {
     unknown101(unknown00, unknown08, sampler);
   }

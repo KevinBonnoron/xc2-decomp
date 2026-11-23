@@ -8,26 +8,26 @@
 
 namespace event {
 
-CharaWinkPlayer::CharaWinkPlayer() : unknown08(), unknown10(nullptr), unknown18(nullptr), unknown30("") {}
+CharaWinkPlayer::CharaWinkPlayer() : unknown08(), m_charaWeightPlayer(nullptr), unknown18(nullptr), unknown30("") {}
 
 void CharaWinkPlayer::create(CharaWeightPlayer *weight) {
   unknown18 = nullptr;
-  unknown10 = weight;
+  m_charaWeightPlayer = weight;
 }
 
 void CharaWinkPlayer::destroy() {
   unknown18 = nullptr;
-  unknown10 = nullptr;
+  m_charaWeightPlayer = nullptr;
 }
 
 void CharaWinkPlayer::open(bool isDirect) {
-  unknown10->easeOut(gf::ANIM_LAYER_UNKNOWN_3, "S_eye_close", isDirect ? 0.0f : 4.0f, CV_TYPE_UNKNOWN_1, WEIGHT_LAYER_UNKNOWN_1);
+  m_charaWeightPlayer->easeOut(gf::ANIM_LAYER_UNKNOWN_3, "S_eye_close", isDirect ? 0.0f : 4.0f, CV_TYPE_UNKNOWN_1, WEIGHT_LAYER_UNKNOWN_1);
   unknown30 = "open";
   unknown18 = nullptr;
 }
 
 void CharaWinkPlayer::idle(bool isDirect) {
-  unknown10->easeOut(gf::ANIM_LAYER_UNKNOWN_3, "S_eye_close", isDirect ? 0.0f : 4.0f, CV_TYPE_UNKNOWN_1, WEIGHT_LAYER_UNKNOWN_1);
+  m_charaWeightPlayer->easeOut(gf::ANIM_LAYER_UNKNOWN_3, "S_eye_close", isDirect ? 0.0f : 4.0f, CV_TYPE_UNKNOWN_1, WEIGHT_LAYER_UNKNOWN_1);
   unknown30 = "open";
   unknown18 = &CharaWinkPlayer::idle_start;
 }
@@ -38,7 +38,7 @@ void CharaWinkPlayer::idle_start() {
 }
 
 void CharaWinkPlayer::close(bool isDirect) {
-  unknown10->easeIn(gf::ANIM_LAYER_UNKNOWN_3, "S_eye_close", isDirect ? 0.0f : 4.0f, 1.0f, 1.0f, CV_TYPE_UNKNOWN_1, WEIGHT_LAYER_UNKNOWN_1);
+  m_charaWeightPlayer->easeIn(gf::ANIM_LAYER_UNKNOWN_3, "S_eye_close", isDirect ? 0.0f : 4.0f, 1.0f, 1.0f, CV_TYPE_UNKNOWN_1, WEIGHT_LAYER_UNKNOWN_1);
   unknown30 = "close";
   unknown18 = nullptr;
 }
@@ -50,7 +50,7 @@ void CharaWinkPlayer::idle_waiting() {
   if (unknown28-- > 0) {
     return;
   }
-  unknown10->easeIn(gf::ANIM_LAYER_UNKNOWN_3, "S_eye_close", 4.0f, 1.0f, 1.0f, CV_TYPE_UNKNOWN_1, WEIGHT_LAYER_UNKNOWN_1);
+  m_charaWeightPlayer->easeIn(gf::ANIM_LAYER_UNKNOWN_3, "S_eye_close", 4.0f, 1.0f, 1.0f, CV_TYPE_UNKNOWN_1, WEIGHT_LAYER_UNKNOWN_1);
   unknown30 = "close";
   unknown18 = &CharaWinkPlayer::idle_wink;
   unknown28 = 7;
@@ -59,7 +59,7 @@ void CharaWinkPlayer::idle_waiting() {
 void CharaWinkPlayer::idle_wink() {
   if (unknown28-- > 0)
     return;
-  unknown10->easeOut(gf::ANIM_LAYER_UNKNOWN_3, "S_eye_close", 4.0f, CV_TYPE_UNKNOWN_1, WEIGHT_LAYER_UNKNOWN_1);
+  m_charaWeightPlayer->easeOut(gf::ANIM_LAYER_UNKNOWN_3, "S_eye_close", 4.0f, CV_TYPE_UNKNOWN_1, WEIGHT_LAYER_UNKNOWN_1);
   unknown30 = "open";
   unknown18 = &CharaWinkPlayer::idle_start;
 }

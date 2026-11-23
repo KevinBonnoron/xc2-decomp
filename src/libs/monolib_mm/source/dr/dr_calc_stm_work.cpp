@@ -9,16 +9,16 @@
 
 namespace ml {
 
-DrCalcStmWork::DrCalcStmWork() : unknown00(nullptr), unknown08(0), unknown10(nullptr) {}
+DrCalcStmWork::DrCalcStmWork() : m_texObj(nullptr), unknown08(0), m_drResMdoVertex(nullptr) {}
 
 DrCalcStmWork::~DrCalcStmWork() { workRelease(); }
 
 void DrCalcStmWork::workRelease() {
   texRelease();
   unknown08 = 0;
-  if (unknown10 != nullptr) {
-    DrMan::get()->unknown88->unknown008->releaseVertexObj(unknown10);
-    unknown10 = nullptr;
+  if (m_drResMdoVertex != nullptr) {
+    DrMan::get()->m_drMdlMan->m_drMdoVertexMan->releaseVertexObj(m_drResMdoVertex);
+    m_drResMdoVertex = nullptr;
   }
 }
 
@@ -26,18 +26,18 @@ int DrCalcStmWork::getWorkSize(u32 count) { return count * sizeof(grlib::CGLibTe
 
 int DrCalcStmWork::createWork(u8 *work, u32 count) {
   unknown08 = count;
-  unknown00 = reinterpret_cast<grlib::CGLibTextureBuffer *>(work);
+  m_texObj = reinterpret_cast<grlib::CGLibTextureBuffer *>(work);
   for (int i = 0; i < unknown08; i++) {
-    new (&unknown00[i]) grlib::CGLibTextureBuffer;
+    new (&m_texObj[i]) grlib::CGLibTextureBuffer;
   }
   return getWorkSize(count);
 }
 
-grlib::CGLibTextureBuffer *DrCalcStmWork::getTexObj(u32 index) { return &unknown00[index]; }
+grlib::CGLibTextureBuffer *DrCalcStmWork::getTexObj(u32 index) { return &m_texObj[index]; }
 
 void DrCalcStmWork::texRelease() {
   for (int i = 0; i < unknown08; i++) {
-    unknown00[i].release();
+    m_texObj[i].release();
   }
 }
 

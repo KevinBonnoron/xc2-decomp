@@ -42,16 +42,16 @@ public:
   void changeWallMode(bool isWall);
   void notifyExcludeMovementRider(const fw::Transform &transform);
 
-  u32 unknown0c;              // Inferred role: flags; original member name unknown.
-  GF_OBJ_HANDLE *unknown10;   // Inferred role: attached object; original member name unknown.
-  GfComBehaviorPc *unknown18; // Inferred role: behavior; original member name unknown.
-  mm::Vec3 unknown20;         // Inferred role: attached position; original member name unknown.
-  mm::Quat unknown30;         // Inferred role: attached rotation; original member name unknown.
+  u32 unknown0c;                    // Inferred role: flags; original member name unknown.
+  GF_OBJ_HANDLE *m_GF_OBJ_HANDLE;   // Inferred role: attached object; original member name unknown.
+  GfComBehaviorPc *m_comBehaviorPc; // Inferred role: behavior; original member name unknown.
+  mm::Vec3 unknown20;               // Inferred role: attached position; original member name unknown.
+  mm::Quat unknown30;               // Inferred role: attached rotation; original member name unknown.
 };
 
 static_assert(offsetof(AttachPlugin, unknown0c) == 0x0c, "");
-static_assert(offsetof(AttachPlugin, unknown10) == 0x10, "");
-static_assert(offsetof(AttachPlugin, unknown18) == 0x18, "");
+static_assert(offsetof(AttachPlugin, m_GF_OBJ_HANDLE) == 0x10, "");
+static_assert(offsetof(AttachPlugin, m_comBehaviorPc) == 0x18, "");
 static_assert(offsetof(AttachPlugin, unknown20) == 0x20, "");
 static_assert(offsetof(AttachPlugin, unknown30) == 0x30, "");
 static_assert(sizeof(AttachPlugin) == 0x40, "");

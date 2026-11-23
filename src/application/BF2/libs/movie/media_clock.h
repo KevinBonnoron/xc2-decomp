@@ -10,6 +10,7 @@ public:
   MediaClock();
   movie::Status SetMediaStartTime(s64 mediaStartTimeUs);
   movie::Status ClearAnchorTime();
+  movie::Status GetMediaTime(s64 currentTimeUs, s64 *mediaTimeUs, bool ignoreClamp) const;
 
   nn::os::MutexType unknown00; // Inferred role: mutex; original member name unknown.
   s64 unknown20;               // Inferred role: anchor media time us, -1 when unset; original member name unknown.

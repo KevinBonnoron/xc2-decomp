@@ -15,12 +15,12 @@ static GfMenuFieldSkillAdapter::TypeInfo TYPE_INFOS[] = {
     {&GfMenuFieldSkillAdapter::update_Lv, {GfMenuAdapter::unknown004_0, 0, 99}},
 };
 
-GfMenuFieldSkillAdapter::GfMenuFieldSkillAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways) : GfMenuAdapter(plugin, false, isUpdateAlways), unknown50(nullptr) {}
+GfMenuFieldSkillAdapter::GfMenuFieldSkillAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways) : GfMenuAdapter(plugin, false, isUpdateAlways), m_iConverter(nullptr) {}
 
 GfMenuFieldSkillAdapter::~GfMenuFieldSkillAdapter() {
-  if (unknown50 != nullptr) {
-    delete unknown50;
-    unknown50 = nullptr;
+  if (m_iConverter != nullptr) {
+    delete m_iConverter;
+    m_iConverter = nullptr;
   }
 }
 
@@ -34,7 +34,7 @@ GfMenuFieldSkillAdapter *GfMenuFieldSkillAdapter::create(u32 handle, u32 type, c
 #line 176
       GfMenuFieldSkillAdapter *adapter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfMenuFieldSkillAdapter(plugin, false);
       adapter->unknown30.bind(adapter, info.update);
-      adapter->unknown58 = fieldSkill;
+      adapter->m_menuFieldSkill = fieldSkill;
       plugin->release();
       return adapter;
     }
@@ -65,7 +65,7 @@ GfMenuFieldSkillAdapter *GfMenuFieldSkillAdapter::createFromCoverter(u32 handle,
   converter->getFieldSkill(fieldSkill);
   GfMenuFieldSkillAdapter *adapter = create(handle, type, fieldSkill);
   if (adapter != nullptr) {
-    adapter->unknown50 = converter;
+    adapter->m_iConverter = converter;
   }
   return adapter;
 }
@@ -92,21 +92,21 @@ GfMenuFieldSkillAdapter *GfMenuFieldSkillAdapter::createFromReference(u32 handle
 }
 
 void GfMenuFieldSkillAdapter::update(const fw::UpdateInfo &info) {
-  if (unknown50 != nullptr) {
+  if (m_iConverter != nullptr) {
     MenuFieldSkill newFieldSkill;
-    unknown50->getFieldSkill(newFieldSkill);
-    if (unknown58.unknown00 != newFieldSkill.unknown00) {
-      unknown58.unknown00 = newFieldSkill.unknown00;
+    m_iConverter->getFieldSkill(newFieldSkill);
+    if (m_menuFieldSkill.unknown00 != newFieldSkill.unknown00) {
+      m_menuFieldSkill.unknown00 = newFieldSkill.unknown00;
       setChange();
     }
-    if (unknown58.unknown02 != newFieldSkill.unknown02) {
-      unknown58.unknown02 = newFieldSkill.unknown02;
+    if (m_menuFieldSkill.unknown02 != newFieldSkill.unknown02) {
+      m_menuFieldSkill.unknown02 = newFieldSkill.unknown02;
       setChange();
     }
   }
 
   if ((unknown20 & (FLAG_UNKNOWN_0 | FLAG_UNKNOWN_1)) != 0 && unknown30.isValid()) {
-    setDisp(unknown58.unknown00 != 0 && unknown30(unknown58));
+    setDisp(m_menuFieldSkill.unknown00 != 0 && unknown30(m_menuFieldSkill));
     unknown20 &= ~FLAG_UNKNOWN_0;
   }
 }

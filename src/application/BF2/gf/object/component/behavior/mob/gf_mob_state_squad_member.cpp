@@ -42,15 +42,16 @@ void StateSquadMember::seqUpdateMove(GfComBehaviorMob &behavior, const fw::Updat
     rate = (distance - 0.1f) / unknown18;
     rate = rate < 0.0f ? 0.0f : rate;
   } else if (distance < 1.0f) {
-    rate = (distance - unknown18) / (1.0f - unknown18) * (behavior.unknown1e0.unknown08 < 0.000001f ? -1.0f : behavior.unknown1e0.unknown0c / behavior.unknown1e0.unknown08 - 1.0f) + 1.0f;
+    rate = (distance - unknown18) / (1.0f - unknown18) * (behavior.m_fieldMoveSpeed.unknown08 < 0.000001f ? -1.0f : behavior.m_fieldMoveSpeed.unknown0c / behavior.m_fieldMoveSpeed.unknown08 - 1.0f) +
+           1.0f;
   } else {
-    if (behavior.unknown1e0.unknown08 < 0.000001f) {
+    if (behavior.m_fieldMoveSpeed.unknown08 < 0.000001f) {
       rate = 0.0f;
     } else {
-      rate = behavior.unknown1e0.unknown0c / behavior.unknown1e0.unknown08;
+      rate = behavior.m_fieldMoveSpeed.unknown0c / behavior.m_fieldMoveSpeed.unknown08;
     }
   }
-  behavior.unknown1e0.setSpeedKmph(rate * behavior.unknown1e0.unknown08, 0.5f);
+  behavior.m_fieldMoveSpeed.setSpeedKmph(rate * behavior.m_fieldMoveSpeed.unknown08, 0.5f);
   behavior.moveToGoal(info.unknown04);
 }
 

@@ -16,7 +16,7 @@ class GfAssetLog : public mm::mtl::PtrSingleton<GfAssetLog> {
 public:
   struct AssetInfo {
     AssetInfo() : unknown24(0.0f), unknown28(0) {
-      unknown30.start();
+      m_timeCount.start();
       unknown38 = 0;
     }
 
@@ -24,8 +24,8 @@ public:
     f32 unknown24;                 // Inferred role: load time in seconds; original member name unknown.
     u32 unknown28;                 // Inferred role: asset name hash; original member name unknown.
     u8 _2c[0x30 - 0x2c];
-    ml::TimeCount unknown30; // Inferred role: load timer; original member name unknown.
-    u32 unknown38;           // Inferred role: zero-initialised; original member name unknown.
+    ml::TimeCount m_timeCount; // Inferred role: load timer; original member name unknown.
+    u32 unknown38;             // Inferred role: zero-initialised; original member name unknown.
   };
 
   GfAssetLog();

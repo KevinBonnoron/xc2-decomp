@@ -21,8 +21,8 @@ namespace event {
 CharaPlayMotionABC::CharaPlayMotionABC() {
   unknown08 = 0;
   unknown10 = reinterpret_cast<gf::GF_OBJ_HANDLE *>(-1);
-  unknown18 = 0;
-  unknown20 = 0;
+  m_charaIKUpdater = 0;
+  m_charaDysUpdater = 0;
   unknown28 = 0;
   unknown58 = 0.0f;
   unknown5c = 0.0f;
@@ -43,7 +43,7 @@ void CharaPlayMotionABC::stopMotion(gf::GfObj *obj) {
     anim->stopMulti();
     anim->setSpeed(1.0f, gf::ANIM_LAYER_UNKNOWN_0);
   }
-  unknown20->resetDynamics(0);
+  m_charaDysUpdater->resetDynamics(0);
 }
 
 void CharaPlayMotionABC::render(const mm::Vec3 &position, f32 eyeOffset) {
@@ -78,7 +78,7 @@ void CharaPlayMotionABC::term() {
     if (obj != nullptr) {
       stopMotion(obj);
     }
-    unknown18->setFootIK(true, CharaIKUpdater::FOOT_TYPE_UNKNOWN_2);
+    m_charaIKUpdater->setFootIK(true, CharaIKUpdater::FOOT_TYPE_UNKNOWN_2);
     unknown08 &= ~1;
   }
 }

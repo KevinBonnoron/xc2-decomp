@@ -17,9 +17,9 @@ public:
   bool clipChk(const mm::Vec3 &position, f32 value, bool flag) override;
   int clipTypeChk(const mm::Vec3 &position, f32 value) override;
 
-  DrCalcClipWorkSphere unknown1a0; // Inferred role: clip sphere; original member name unknown.
+  DrCalcClipWorkSphere m_drCalcClipWorkSphere; // Inferred role: clip sphere; original member name unknown.
 };
 
-static_assert(offsetof(DrPixlShadowObjPnt, unknown1a0) == 0x1a0, "");
+static_assert(offsetof(DrPixlShadowObjPnt, m_drCalcClipWorkSphere) == 0x1a0, "");
 
 } // namespace ml

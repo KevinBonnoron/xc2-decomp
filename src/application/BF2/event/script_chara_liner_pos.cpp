@@ -18,7 +18,7 @@ void ScriptCharaLinerPos::doit(const Param &param) {
   }
   PosAxis axis(param.val(0).getS32(), param.val(1).getF32(), param.val(2).getF32(), param.val(3).getF32());
   ObjectChara *chara = static_cast<ObjectChara *>(object);
-  unknown10 = chara->getPosAxis();
+  m_posAxis = chara->getPosAxis();
   chara->linerPosAxis(axis, param.val(4).getBool(), param.val(5).getF32(), static_cast<CV_TYPE>(param.val(6).getS32()));
 }
 
@@ -27,7 +27,7 @@ void ScriptCharaLinerPos::undo(const Param &param) {
   if (ScriptUtil::getObjType(object) != OBJTYPE_UNKNOWN_2) {
     return;
   }
-  static_cast<ObjectChara *>(object)->setPosAxis(unknown10);
+  static_cast<ObjectChara *>(object)->setPosAxis(m_posAxis);
 }
 
 void ScriptCharaLinerPos::redo(const Param &param) {

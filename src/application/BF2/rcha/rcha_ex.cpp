@@ -28,14 +28,14 @@ void CRchaEx::clear() {
 
 f32 CRchaEx::getValue(int slot, f32 frame, f32 defaultValue) const {
   if (unknown19a4[slot] >= 0) {
-    return unknown10[unknown19a4[slot]].getValue(frame);
+    return m_rchaAnm[unknown19a4[slot]].getValue(frame);
   }
   return defaultValue;
 }
 
 int CRchaEx::getValueInt(int slot, f32 frame, int defaultValue) const {
   if (unknown19a4[slot] >= 0) {
-    return unknown10[unknown19a4[slot]].getValueInt(frame);
+    return m_rchaAnm[unknown19a4[slot]].getValueInt(frame);
   }
   return defaultValue;
 }
@@ -46,8 +46,8 @@ bool CRchaEx::getVisible(int &visible, const char *name, f32 frame) const {
   key += name;
   u32 hash = hashStr(key.c_str());
   for (int i = 0; i < unknown1990; i++) {
-    if (unknown10[i].unknown84 == hash) {
-      visible = unknown10[i].getValue(frame);
+    if (m_rchaAnm[i].unknown84 == hash) {
+      visible = m_rchaAnm[i].getValue(frame);
       return true;
     }
   }
@@ -57,7 +57,7 @@ bool CRchaEx::getVisible(int &visible, const char *name, f32 frame) const {
 bool CRchaEx::getDynamicsBlend(f32 &blend, f32 frame) const {
   int index = unknown19a4[ANM_UNKNOWN_1];
   if (index >= 0) {
-    blend = unknown10[index].getValue(frame);
+    blend = m_rchaAnm[index].getValue(frame);
     return true;
   }
   return false;
@@ -71,7 +71,7 @@ bool CRchaEx::getWeaponBattle(int &battle, f32 frame) const { return unknown001(
 
 bool CRchaEx::getWeaponSpMotion(f32 frame) const {
   if (unknown19a4[ANM_UNKNOWN_5] >= 0) {
-    return unknown10[unknown19a4[ANM_UNKNOWN_5]].getValueInt(frame) != 0;
+    return m_rchaAnm[unknown19a4[ANM_UNKNOWN_5]].getValueInt(frame) != 0;
   }
   return false;
 }
@@ -116,7 +116,7 @@ void CRchaEx::getObjScl(f32 &scale, f32 frame) const { scale = getValue(ANM_UNKN
 
 bool CRchaEx::isTargetEnable(f32 frame) const {
   if (unknown19a4[ANM_UNKNOWN_25] >= 0) {
-    return unknown10[unknown19a4[ANM_UNKNOWN_25]].getValueInt(frame) == 1;
+    return m_rchaAnm[unknown19a4[ANM_UNKNOWN_25]].getValueInt(frame) == 1;
   }
   return false;
 }

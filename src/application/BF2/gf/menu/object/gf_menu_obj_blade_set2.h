@@ -28,31 +28,31 @@ class GfMenuObjBladeSet2 : public GfMenuObject {
 public:
   class MainListener : public ui::UIObjectListener {
   public:
-    MainListener(GfMenuObjBladeSet2 *owner) : _0c(), unknown20(owner) {}
+    MainListener(GfMenuObjBladeSet2 *owner) : _0c(), m_menuObjBladeSet2(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
-    GfMenuObjBladeSet2 *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjBladeSet2 *m_menuObjBladeSet2; // Inferred role: owner; original member name unknown.
   };
 
   class BladeSlotListener : public ui::UIObjectListener {
   public:
-    BladeSlotListener(GfMenuObjBladeSet2 *owner) : _0c(), unknown20(owner) {}
+    BladeSlotListener(GfMenuObjBladeSet2 *owner) : _0c(), m_menuObjBladeSet2(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
-    GfMenuObjBladeSet2 *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjBladeSet2 *m_menuObjBladeSet2; // Inferred role: owner; original member name unknown.
   };
 
   class BladeListListener : public ui::UIObjectListener {
   public:
-    BladeListListener(GfMenuObjBladeSet2 *owner) : unknown0c(0), unknown10(0), _14(), unknown20(owner) {}
+    BladeListListener(GfMenuObjBladeSet2 *owner) : unknown0c(0), unknown10(0), _14(), m_menuObjBladeSet2(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u32 unknown0c; // Inferred role: selected blade index; original member name unknown.
     u32 unknown10; // Role and original member name unknown, cleared by the constructor.
     u8 _14[0x1c - 0x14];
-    GfMenuObjBladeSet2 *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjBladeSet2 *m_menuObjBladeSet2; // Inferred role: owner; original member name unknown.
   };
 
   GfMenuObjBladeSet2(u32 handle);
@@ -86,7 +86,7 @@ public:
   ui::UICtrlCursorSelect *unknown30;   // Inferred role: blade cursor; original member name unknown.
   GfMenuBladeList *unknown38;          // Inferred role: blades; original member name unknown.
   ui::UICtrlCursorSelect *unknown40;   // Inferred role: blade cursor; original member name unknown.
-  GfMenuDriverList *unknown48;         // Inferred role: drivers; original member name unknown.
+  GfMenuDriverList *m_menuDriverList;  // Inferred role: drivers; original member name unknown.
   mm::mtl::ReferenceObject *unknown50; // Inferred role: reference-counted object; type and original member name unknown.
   u32 unknown58;                       // Role and original member name unknown, cleared by the constructor.
   u8 _5c[0x60 - 0x5c];
@@ -104,7 +104,7 @@ public:
   u32 unknown98;                                    // Inferred role: owner mode; original member name unknown, cleared by the constructor.
   u32 unknown9c;                                    // Inferred role: number of blade face layouts; original member name unknown.
   GfMenuSequence<GfMenuObjBladeSet2, 8> unknowna0;  // Inferred role: blade set steps; original member name unknown.
-  GF_SCOM_HANDLE *unknown330;                       // Inferred role: pending blade set command; original member name unknown.
+  GF_SCOM_HANDLE *m_GF_SCOM_HANDLE;                 // Inferred role: pending blade set command; original member name unknown.
   GfMenuSequence<GfMenuObjBladeSet2, 4> unknown338; // Inferred role: image steps; original member name unknown.
 };
 
@@ -112,7 +112,7 @@ static_assert(offsetof(GfMenuObjBladeSet2, unknown28) == 0x28, "");
 static_assert(offsetof(GfMenuObjBladeSet2, unknown30) == 0x30, "");
 static_assert(offsetof(GfMenuObjBladeSet2, unknown38) == 0x38, "");
 static_assert(offsetof(GfMenuObjBladeSet2, unknown40) == 0x40, "");
-static_assert(offsetof(GfMenuObjBladeSet2, unknown48) == 0x48, "");
+static_assert(offsetof(GfMenuObjBladeSet2, m_menuDriverList) == 0x48, "");
 static_assert(offsetof(GfMenuObjBladeSet2, unknown50) == 0x50, "");
 static_assert(offsetof(GfMenuObjBladeSet2, unknown58) == 0x58, "");
 static_assert(offsetof(GfMenuObjBladeSet2, unknown60) == 0x60, "");
@@ -126,16 +126,16 @@ static_assert(offsetof(GfMenuObjBladeSet2, unknown94) == 0x94, "");
 static_assert(offsetof(GfMenuObjBladeSet2, unknown98) == 0x98, "");
 static_assert(offsetof(GfMenuObjBladeSet2, unknown9c) == 0x9c, "");
 static_assert(offsetof(GfMenuObjBladeSet2, unknowna0) == 0xa0, "");
-static_assert(offsetof(GfMenuObjBladeSet2, unknown330) == 0x330, "");
+static_assert(offsetof(GfMenuObjBladeSet2, m_GF_SCOM_HANDLE) == 0x330, "");
 static_assert(offsetof(GfMenuObjBladeSet2, unknown338) == 0x338, "");
 static_assert(sizeof(GfMenuObjBladeSet2) == 0x498, "");
-static_assert(offsetof(GfMenuObjBladeSet2::MainListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjBladeSet2::MainListener, m_menuObjBladeSet2) == 0x20, "");
 static_assert(sizeof(GfMenuObjBladeSet2::MainListener) == 0x28, "");
-static_assert(offsetof(GfMenuObjBladeSet2::BladeSlotListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjBladeSet2::BladeSlotListener, m_menuObjBladeSet2) == 0x20, "");
 static_assert(sizeof(GfMenuObjBladeSet2::BladeSlotListener) == 0x28, "");
 static_assert(offsetof(GfMenuObjBladeSet2::BladeListListener, unknown0c) == 0x0c, "");
 static_assert(offsetof(GfMenuObjBladeSet2::BladeListListener, unknown10) == 0x10, "");
-static_assert(offsetof(GfMenuObjBladeSet2::BladeListListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjBladeSet2::BladeListListener, m_menuObjBladeSet2) == 0x20, "");
 static_assert(sizeof(GfMenuObjBladeSet2::BladeListListener) == 0x28, "");
 
 } // namespace gf

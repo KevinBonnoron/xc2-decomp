@@ -51,7 +51,7 @@ bool LookAtIkSolver::setupLimit(const ParamAdapter &param, const char *boneName,
     u16 index = this->unknown18->unknown18->getBoneID(boneName);
     if (index != anm::Skeleton::INVALID_BONE) {
       unknownc8 = index;
-      unknownc0 = param;
+      m_paramAdapter = param;
       resetLimit();
       return true;
     }
@@ -72,7 +72,7 @@ void LookAtIkSolver::resetLimit() {
 }
 
 LookAtIkSolver::LookAtIkSolver()
-    : unknowna0(mm::Vec3::zero), unknownb0(mm::Vec3::zero), unknownc0(), unknownc8(0xffff), unknowncc(1.0f), unknownd0(1.0f), unknownd4(false), unknowne0(mm::Quat::identity), unknownf0(0.0f),
+    : unknowna0(mm::Vec3::zero), unknownb0(mm::Vec3::zero), m_paramAdapter(), unknownc8(0xffff), unknowncc(1.0f), unknownd0(1.0f), unknownd4(false), unknowne0(mm::Quat::identity), unknownf0(0.0f),
       unknownf4(0.0f) {}
 
 LookAtIkSolver::~LookAtIkSolver() {}
@@ -87,7 +87,7 @@ void LookAtIkSolver::startTargetFade(f32 time) {
 }
 
 void LookAtIkSolver::resetLimitParam() {
-  const f32 *limit = unknownc0.get<f32>();
+  const f32 *limit = m_paramAdapter.get<f32>();
   unknown80 = limit[0] * mm::DEG_TO_RAD;
   unknown84 = limit[1] * mm::DEG_TO_RAD;
   unknown88 = limit[2] * mm::DEG_TO_RAD;

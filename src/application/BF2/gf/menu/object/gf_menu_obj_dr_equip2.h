@@ -31,7 +31,7 @@ public:
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x20 - 0x0c];
-    GfMenuObjDrEquip2 *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjDrEquip2 *m_menuObjDrEquip2; // Inferred role: owner; original member name unknown.
   };
 
   class EquipItemListener : public ui::UIObjectListener {
@@ -39,7 +39,7 @@ public:
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x20 - 0x0c];
-    GfMenuObjDrEquip2 *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjDrEquip2 *m_menuObjDrEquip2; // Inferred role: owner; original member name unknown.
   };
 
   GfMenuObjDrEquip2(u32 handle);
@@ -65,14 +65,14 @@ public:
   mm::mtl::ReferenceObject *unknown50;                  // Inferred role: reference-counted object; type and original member name unknown.
   mm::mtl::IntrusivePtr<GfMenuReferenceItem> unknown58; // Inferred role: reference item; original member name unknown.
   GfMenuCallContext *unknown60;                         // Inferred role: call context; original member name unknown.
-  GfMenuDriverList *unknown68;                          // Inferred role: drivers; original member name unknown.
+  GfMenuDriverList *m_menuDriverList;                   // Inferred role: drivers; original member name unknown.
   GfMenuCallContext *unknown70;                         // Inferred role: call context; original member name unknown.
   u8 _78[0x7c - 0x78];
   u32 unknown7c; // Role and original member name unknown, cleared by the constructor.
 };
 
-static_assert(offsetof(GfMenuObjDrEquip2::MainListener, unknown20) == 0x20, "");
-static_assert(offsetof(GfMenuObjDrEquip2::EquipItemListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjDrEquip2::MainListener, m_menuObjDrEquip2) == 0x20, "");
+static_assert(offsetof(GfMenuObjDrEquip2::EquipItemListener, m_menuObjDrEquip2) == 0x20, "");
 static_assert(offsetof(GfMenuObjDrEquip2, unknown24) == 0x24, "");
 static_assert(offsetof(GfMenuObjDrEquip2, unknown28) == 0x28, "");
 static_assert(offsetof(GfMenuObjDrEquip2, unknown30) == 0x30, "");
@@ -82,7 +82,7 @@ static_assert(offsetof(GfMenuObjDrEquip2, unknown48) == 0x48, "");
 static_assert(offsetof(GfMenuObjDrEquip2, unknown50) == 0x50, "");
 static_assert(offsetof(GfMenuObjDrEquip2, unknown58) == 0x58, "");
 static_assert(offsetof(GfMenuObjDrEquip2, unknown60) == 0x60, "");
-static_assert(offsetof(GfMenuObjDrEquip2, unknown68) == 0x68, "");
+static_assert(offsetof(GfMenuObjDrEquip2, m_menuDriverList) == 0x68, "");
 static_assert(offsetof(GfMenuObjDrEquip2, unknown70) == 0x70, "");
 static_assert(offsetof(GfMenuObjDrEquip2, unknown7c) == 0x7c, "");
 static_assert(sizeof(GfMenuObjDrEquip2) == 0x80, "");

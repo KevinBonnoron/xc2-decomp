@@ -2,7 +2,7 @@
 
 namespace ml {
 
-DrPixlRenderCubeMap::DrPixlRenderCubeMap(DrMan *man) { unknown208 = man; }
+DrPixlRenderCubeMap::DrPixlRenderCubeMap(DrMan *man) { m_drMan = man; }
 
 DrPixlRenderCubeMap::~DrPixlRenderCubeMap() { releaseWork(); }
 

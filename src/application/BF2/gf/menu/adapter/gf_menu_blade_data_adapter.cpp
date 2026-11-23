@@ -22,12 +22,12 @@ static GfMenuBladeDataAdapter::TypeInfo TYPE_INFOS[] = {
 };
 
 GfMenuBladeDataAdapter::GfMenuBladeDataAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways)
-    : GfMenuAdapter(plugin, false, isUpdateAlways), unknown58(nullptr), unknown60(0), unknown64(0), unknown68(0) {}
+    : GfMenuAdapter(plugin, false, isUpdateAlways), m_iConverter(nullptr), unknown60(0), unknown64(0), unknown68(0) {}
 
 GfMenuBladeDataAdapter::~GfMenuBladeDataAdapter() {
-  if (unknown58 != nullptr) {
-    delete unknown58;
-    unknown58 = nullptr;
+  if (m_iConverter != nullptr) {
+    delete m_iConverter;
+    m_iConverter = nullptr;
   }
 }
 
@@ -94,7 +94,7 @@ GfMenuBladeDataAdapter *GfMenuBladeDataAdapter::createFromCoverter(u32 handle, u
   converter->getID(blade, driver);
   GfMenuBladeDataAdapter *adapter = create(handle, type, blade, driver, isUpdateAlways);
   if (adapter != nullptr) {
-    adapter->unknown58 = converter;
+    adapter->m_iConverter = converter;
   }
   return adapter;
 }
@@ -121,10 +121,10 @@ GfMenuBladeDataAdapter *GfMenuBladeDataAdapter::createFromReferenceBladeSet(u32 
 }
 
 void GfMenuBladeDataAdapter::update(const fw::UpdateInfo &info) {
-  if (unknown58 != nullptr) {
+  if (m_iConverter != nullptr) {
     u32 newDriver;
     u32 newBlade;
-    unknown58->getID(newBlade, newDriver);
+    m_iConverter->getID(newBlade, newDriver);
     if (unknown60 != newBlade) {
       unknown60 = newBlade;
       setChange();

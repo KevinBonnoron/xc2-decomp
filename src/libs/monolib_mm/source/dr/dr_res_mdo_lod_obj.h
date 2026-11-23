@@ -27,6 +27,7 @@ public:
     s32 unknown10; // Inferred role: lod group count; original member name unknown.
   };
 
+  DrResMdoLodObj();
   ~DrResMdoLodObj();
   static int calcWorkSize(const u8 *resource);
   int setup(const u8 *resource, u8 *work);
@@ -34,12 +35,12 @@ public:
   static void release(DrResMdoLodObj *&lodObj);
   bool update(DrResMdlLodArg &arg);
 
-  DrResMdoLodParts *unknown00; // Inferred role: lod parts; original member name unknown.
-  DrResMdoLodGrp *unknown08;   // Inferred role: lod groups; original member name unknown.
-  s32 unknown10;               // Inferred role: lod parts count; original member name unknown.
-  u32 unknown14;               // Inferred role: lod group count; original member name unknown.
-  s32 unknown18;               // Inferred role: state; original member name unknown.
-  u32 unknown1c;               // Inferred role: lod flags; original member name unknown.
+  DrResMdoLodParts *m_drResMdoLodParts; // Inferred role: lod parts; original member name unknown.
+  DrResMdoLodGrp *m_drResMdoLodGrp;     // Inferred role: lod groups; original member name unknown.
+  s32 unknown10;                        // Inferred role: lod parts count; original member name unknown.
+  u32 unknown14;                        // Inferred role: lod group count; original member name unknown.
+  s32 unknown18;                        // Inferred role: state; original member name unknown.
+  u32 unknown1c;                        // Inferred role: lod flags; original member name unknown.
   u8 _20[0x30 - 0x20];
 };
 
@@ -48,7 +49,7 @@ static_assert(offsetof(DrResMdoLodObj::unknown001, unknown8c) == 0x8c, "");
 static_assert(offsetof(DrResMdoLodObj::unknown002, unknown08) == 0x08, "");
 static_assert(offsetof(DrResMdoLodObj::unknown002, unknown10) == 0x10, "");
 
-static_assert(offsetof(DrResMdoLodObj, unknown08) == 0x08, "");
+static_assert(offsetof(DrResMdoLodObj, m_drResMdoLodGrp) == 0x08, "");
 static_assert(offsetof(DrResMdoLodObj, unknown10) == 0x10, "");
 static_assert(offsetof(DrResMdoLodObj, unknown14) == 0x14, "");
 static_assert(offsetof(DrResMdoLodObj, unknown18) == 0x18, "");

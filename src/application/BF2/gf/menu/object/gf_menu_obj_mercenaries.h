@@ -32,65 +32,65 @@ class GfMenuObjMercenaries : public GfMenuObject {
 public:
   class MainListener : public ui::UIObjectListener {
   public:
-    MainListener(GfMenuObjMercenaries *owner) : _0c(), unknown20(owner) {}
+    MainListener(GfMenuObjMercenaries *owner) : _0c(), m_menuObjMercenaries(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x20 - 0x0c];
-    GfMenuObjMercenaries *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjMercenaries *m_menuObjMercenaries; // Inferred role: owner; original member name unknown.
   };
 
   class LocationSelectListener : public ui::UIObjectListener {
   public:
-    LocationSelectListener(GfMenuObjMercenaries *owner) : _0c(), unknown20(owner) {}
+    LocationSelectListener(GfMenuObjMercenaries *owner) : _0c(), m_menuObjMercenaries(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x20 - 0x0c];
-    GfMenuObjMercenaries *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjMercenaries *m_menuObjMercenaries; // Inferred role: owner; original member name unknown.
   };
 
   class MissionFieldSkillListener : public ui::UIObjectListener {
   public:
-    MissionFieldSkillListener(GfMenuObjMercenaries *owner) : _0c(), unknown20(owner) {}
+    MissionFieldSkillListener(GfMenuObjMercenaries *owner) : _0c(), m_menuObjMercenaries(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x20 - 0x0c];
-    GfMenuObjMercenaries *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjMercenaries *m_menuObjMercenaries; // Inferred role: owner; original member name unknown.
   };
 
   class MissionListener : public ui::UIObjectListener {
   public:
-    MissionListener(GfMenuObjMercenaries *owner) : _0c(), unknown20(owner) {}
+    MissionListener(GfMenuObjMercenaries *owner) : _0c(), m_menuObjMercenaries(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x20 - 0x0c];
-    GfMenuObjMercenaries *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjMercenaries *m_menuObjMercenaries; // Inferred role: owner; original member name unknown.
   };
 
   class MissionRewardListener : public ui::UIObjectListener {
   public:
-    MissionRewardListener(GfMenuObjMercenaries *owner) : _0c(), unknown20(owner) {}
+    MissionRewardListener(GfMenuObjMercenaries *owner) : _0c(), m_menuObjMercenaries(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x20 - 0x0c];
-    GfMenuObjMercenaries *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjMercenaries *m_menuObjMercenaries; // Inferred role: owner; original member name unknown.
   };
 
   class MissionListListener : public ui::UIObjectListener {
   public:
-    MissionListListener(GfMenuObjMercenaries *owner) : _0c(), unknown20(owner) {}
+    MissionListListener(GfMenuObjMercenaries *owner) : _0c(), m_menuObjMercenaries(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
-    u8 _0c[0x1c - 0x0c];             // Actively zero-initialized unknown byte range, NOT padding; original name/role unknown.
-    GfMenuObjMercenaries *unknown20; // Inferred role: owner; original member name unknown.
+    u8 _0c[0x1c - 0x0c];                        // Actively zero-initialized unknown byte range, NOT padding; original name/role unknown.
+    GfMenuObjMercenaries *m_menuObjMercenaries; // Inferred role: owner; original member name unknown.
   };
 
   class LaunchListener : public ui::UIObjectListener {
   public:
-    LaunchListener(GfMenuObjMercenaries *owner) : _0c(), unknown20(owner) {}
+    LaunchListener(GfMenuObjMercenaries *owner) : _0c(), m_menuObjMercenaries(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
-    u8 _0c[0x1c - 0x0c];             // Actively zero-initialized unknown byte range, NOT padding; original name/role unknown.
-    GfMenuObjMercenaries *unknown20; // Inferred role: owner; original member name unknown.
+    u8 _0c[0x1c - 0x0c];                        // Actively zero-initialized unknown byte range, NOT padding; original name/role unknown.
+    GfMenuObjMercenaries *m_menuObjMercenaries; // Inferred role: owner; original member name unknown.
   };
 
   GfMenuObjMercenaries(u32 handle);
@@ -131,24 +131,24 @@ public:
   bool seqRewardComp5();
 
   u8 _24[0x28 - 0x24];
-  GfMenuCallContext *unknown28;        // Inferred role: call context; original member name unknown.
-  ui::UISelectObjList *unknown30;      // Inferred role: list objects, not cleared by the constructor; original member name unknown.
-  mm::mtl::ReferenceObject *unknown38; // Inferred role: reference-counted object; type and original member name unknown.
-  ui::UISelectObjList *unknown40;      // Inferred role: list objects; original member name unknown.
-  mm::mtl::ReferenceObject *unknown48; // Inferred role: reference-counted object; type and original member name unknown.
-  GfMenuBladeList *unknown50;          // Inferred role: blades; original member name unknown.
-  GfMenuFieldSkillList *unknown58;     // Inferred role: field skills; original member name unknown.
-  GfMenuBladeList *unknown60;          // Inferred role: blades; original member name unknown.
-  GfMenuMissionList *unknown68;        // Inferred role: missions; original member name unknown.
-  GfMenuTeamList *unknown70;           // Inferred role: teams; original member name unknown.
-  mm::mtl::ReferenceObject *unknown78; // Inferred role: reference-counted object; type and original member name unknown.
-  mm::mtl::ReferenceObject *unknown80; // Inferred role: reference-counted object; type and original member name unknown.
-  mm::mtl::ReferenceObject *unknown88; // Inferred role: reference-counted object; type and original member name unknown.
-  ui::UICtrlCursorSelect *unknown90;   // Inferred role: mission list cursor, made by GfMenuObjUtil::createCursor in MissionListListener::reciveEvent; original member name unknown.
-  u32 unknown98;                       // Role and original member name unknown, cleared by the constructor.
-  u16 unknown9c;                       // Role and original member name unknown, set to 1 by the constructor.
-  u16 unknown9e;                       // Role and original member name unknown, cleared by the constructor.
-  u16 unknowna0;                       // Role and original member name unknown, cleared by the constructor.
+  GfMenuCallContext *m_menuCallContext; // Inferred role: call context; original member name unknown.
+  ui::UISelectObjList *unknown30;       // Inferred role: list objects, not cleared by the constructor; original member name unknown.
+  mm::mtl::ReferenceObject *unknown38;  // Inferred role: reference-counted object; type and original member name unknown.
+  ui::UISelectObjList *unknown40;       // Inferred role: list objects; original member name unknown.
+  mm::mtl::ReferenceObject *unknown48;  // Inferred role: reference-counted object; type and original member name unknown.
+  GfMenuBladeList *unknown50;           // Inferred role: blades; original member name unknown.
+  GfMenuFieldSkillList *unknown58;      // Inferred role: field skills; original member name unknown.
+  GfMenuBladeList *unknown60;           // Inferred role: blades; original member name unknown.
+  GfMenuMissionList *m_menuMissionList; // Inferred role: missions; original member name unknown.
+  GfMenuTeamList *m_menuTeamList;       // Inferred role: teams; original member name unknown.
+  mm::mtl::ReferenceObject *unknown78;  // Inferred role: reference-counted object; type and original member name unknown.
+  mm::mtl::ReferenceObject *unknown80;  // Inferred role: reference-counted object; type and original member name unknown.
+  mm::mtl::ReferenceObject *unknown88;  // Inferred role: reference-counted object; type and original member name unknown.
+  ui::UICtrlCursorSelect *unknown90;    // Inferred role: mission list cursor, made by GfMenuObjUtil::createCursor in MissionListListener::reciveEvent; original member name unknown.
+  u32 unknown98;                        // Role and original member name unknown, cleared by the constructor.
+  u16 unknown9c;                        // Role and original member name unknown, set to 1 by the constructor.
+  u16 unknown9e;                        // Role and original member name unknown, cleared by the constructor.
+  u16 unknowna0;                        // Role and original member name unknown, cleared by the constructor.
   u8 _a2[0xa8 - 0xa2];
   GfMenuBladeList *unknown0a8;      // Inferred role: blades; original member name unknown.
   GfMenuFieldSkillList *unknown0b0; // Inferred role: field skills; original member name unknown.
@@ -166,13 +166,13 @@ public:
   u32 unknown388;                                          // Role and original member name unknown, cleared by the constructor.
 };
 
-static_assert(offsetof(GfMenuObjMercenaries, unknown28) == 0x28, "");
-static_assert(offsetof(GfMenuObjMercenaries::MainListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjMercenaries, m_menuCallContext) == 0x28, "");
+static_assert(offsetof(GfMenuObjMercenaries::MainListener, m_menuObjMercenaries) == 0x20, "");
 static_assert(offsetof(GfMenuObjMercenaries, unknown30) == 0x30, "");
 static_assert(offsetof(GfMenuObjMercenaries, unknown90) == 0x90, "");
-static_assert(offsetof(GfMenuObjMercenaries::MissionListListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjMercenaries::MissionListListener, m_menuObjMercenaries) == 0x20, "");
 static_assert(sizeof(GfMenuObjMercenaries::MissionListListener) == 0x28, "");
-static_assert(offsetof(GfMenuObjMercenaries::LaunchListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjMercenaries::LaunchListener, m_menuObjMercenaries) == 0x20, "");
 static_assert(sizeof(GfMenuObjMercenaries::LaunchListener) == 0x28, "");
 static_assert(offsetof(GfMenuObjMercenaries, unknown98) == 0x98, "");
 static_assert(offsetof(GfMenuObjMercenaries, unknown0a8) == 0xa8, "");

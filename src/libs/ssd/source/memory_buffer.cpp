@@ -100,7 +100,7 @@ void MemoryBuffer::Alloc(size_t size, size_t alignment, Allocator *allocator) {
   if (allocator != nullptr) {
     buffer = allocator;
   }
-  unknown18 = buffer;
+  m_allocator = buffer;
   Allocator::Block *block = buffer->NewBufferImpl(size, 1, alignment);
   void *data;
   if (block != nullptr) {
@@ -114,11 +114,11 @@ void MemoryBuffer::Alloc(size_t size, size_t alignment, Allocator *allocator) {
 
 void MemoryBuffer::Free() {
   if (unknown08 != nullptr) {
-    Allocator *allocator = unknown18;
+    Allocator *allocator = m_allocator;
     Allocator::Block *block = allocator->GetMemoryBlock(unknown08);
     allocator->DeleteBufferImpl(block);
     unknown10 = 0;
-    unknown18 = nullptr;
+    m_allocator = nullptr;
     unknown08 = nullptr;
   }
 }

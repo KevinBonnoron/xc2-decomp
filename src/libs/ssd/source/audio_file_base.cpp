@@ -45,7 +45,7 @@ Result MediaContentsHeader::CheckFileType(IoStreamBase *stream, MediaFileType *f
 }
 
 AudioFileBase::AudioFileBase()
-    : unknown08(nullptr), unknown10(nullptr), unknown18(false), unknown19(false), unknown1a(false), unknown1b(false), unknown1c(0), unknown20(0), unknown24(0), unknown28(0), unknown2c(48000.0f),
+    : m_ioStreamBase(nullptr), unknown10(nullptr), unknown18(false), unknown19(false), unknown1a(false), unknown1b(false), unknown1c(0), unknown20(0), unknown24(0), unknown28(0), unknown2c(48000.0f),
       unknown30(0), unknown34(0), unknown35(0), unknown38(0), unknown3c(0), unknown40(0), unknown44(0), unknown48(0), unknown4c(0), unknown4e(0), unknown50(false) {}
 
 AudioFileBase::~AudioFileBase() { DeleteReadBuffer(); }
@@ -65,9 +65,9 @@ Result AudioFileBase::CloseFileBase(AudioFileBase **file) {
   if (file != nullptr && *file != nullptr) {
     AudioFileBase *base = *file;
     base->Close();
-    if (base->unknown1a && base->unknown08 != nullptr) {
-      base->unknown08->Close();
-      base->unknown08 = nullptr;
+    if (base->unknown1a && base->m_ioStreamBase != nullptr) {
+      base->m_ioStreamBase->Close();
+      base->m_ioStreamBase = nullptr;
     }
     if (base->unknown19) {
       delete base;
@@ -80,7 +80,7 @@ Result AudioFileBase::CloseFileBase(AudioFileBase **file) {
 }
 
 Result AudioFileBase::Open(IoStreamBase *stream) {
-  unknown08 = nullptr;
+  m_ioStreamBase = nullptr;
   return static_cast<Result>(-1);
 }
 
@@ -123,13 +123,13 @@ void AudioFileBase::NewReadBuffer(size_t size) {
 
 int AudioFileBase::ReadBySamples(s16 *buffer, int count) {
   u64 size = static_cast<u64>(unknown40) * count;
-  unknown08->Read(size, buffer, nullptr);
+  m_ioStreamBase->Read(size, buffer, nullptr);
   return 0;
 }
 
 int AudioFileBase::WriteBySamples(const s16 *buffer, int count) {
   u64 size = static_cast<u64>(unknown40) * count;
-  unknown08->Write(size, buffer, nullptr);
+  m_ioStreamBase->Write(size, buffer, nullptr);
   return 0;
 }
 

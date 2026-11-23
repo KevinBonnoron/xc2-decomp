@@ -39,7 +39,7 @@ public:
     unknown001() : unknown00(false), unknown38(nullptr), unknown40(nullptr), unknown48(false), unknown50(nullptr) {}
 
     bool unknown00;                                         // Inferred role: created flag; original member name unknown.
-    CreateParam unknown04;                                  // Inferred role: param of the detail; original member name unknown.
+    CreateParam m_createParam;                              // Inferred role: param of the detail; original member name unknown.
     mm::mtl::IntrusivePtr<GfMenuReferenceNumber> unknown28; // Inferred role: current page; original member name unknown.
     mm::mtl::IntrusivePtr<GfMenuReferenceNumber> unknown30; // Inferred role: number of pages; original member name unknown.
     ui::UISelectObjList *unknown38;                         // Inferred role: page layouts; original member name unknown.
@@ -52,13 +52,13 @@ public:
   public:
     DetailListener() {
       unknown0c = unknown142();
-      unknown20 = nullptr;
+      m_menuObjDrDetail = nullptr;
     }
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
-    unknown142 unknown0c;         // Inferred role: work values; original member name unknown.
-    GfMenuObjDrDetail *unknown20; // Inferred role: owner, always null; original member name unknown.
-    unknown001 unknown28;         // Inferred role: pages; original member name unknown.
+    unknown142 unknown0c;                 // Inferred role: work values; original member name unknown.
+    GfMenuObjDrDetail *m_menuObjDrDetail; // Inferred role: owner, always null; original member name unknown.
+    unknown001 unknown28;                 // Inferred role: pages; original member name unknown.
   };
 
   GfMenuObjDrDetail(u32 handle);
@@ -82,7 +82,7 @@ static_assert(offsetof(GfMenuObjDrDetail::CreateParam, unknown18) == 0x18, "");
 static_assert(offsetof(GfMenuObjDrDetail::CreateParam, unknown1c) == 0x1c, "");
 static_assert(offsetof(GfMenuObjDrDetail::CreateParam, unknown20) == 0x20, "");
 static_assert(sizeof(GfMenuObjDrDetail::CreateParam) == 0x24, "");
-static_assert(offsetof(GfMenuObjDrDetail::unknown001, unknown04) == 0x04, "");
+static_assert(offsetof(GfMenuObjDrDetail::unknown001, m_createParam) == 0x04, "");
 static_assert(offsetof(GfMenuObjDrDetail::unknown001, unknown28) == 0x28, "");
 static_assert(offsetof(GfMenuObjDrDetail::unknown001, unknown30) == 0x30, "");
 static_assert(offsetof(GfMenuObjDrDetail::unknown001, unknown38) == 0x38, "");
@@ -90,7 +90,7 @@ static_assert(offsetof(GfMenuObjDrDetail::unknown001, unknown40) == 0x40, "");
 static_assert(offsetof(GfMenuObjDrDetail::unknown001, unknown48) == 0x48, "");
 static_assert(offsetof(GfMenuObjDrDetail::unknown001, unknown50) == 0x50, "");
 static_assert(sizeof(GfMenuObjDrDetail::unknown001) == 0x58, "");
-static_assert(offsetof(GfMenuObjDrDetail::DetailListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjDrDetail::DetailListener, m_menuObjDrDetail) == 0x20, "");
 static_assert(offsetof(GfMenuObjDrDetail::DetailListener, unknown28) == 0x28, "");
 static_assert(sizeof(GfMenuObjDrDetail::DetailListener) == 0x80, "");
 

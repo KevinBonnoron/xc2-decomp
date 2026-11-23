@@ -18,13 +18,13 @@ class GfMenuObjTitle : public GfMenuObject {
 public:
   class ListListener : public ui::UIObjectListener {
   public:
-    ListListener(GfMenuObjTitle *owner) : unknown0c(0), _10(), unknown20(owner) {}
+    ListListener(GfMenuObjTitle *owner) : unknown0c(0), _10(), m_menuObjTitle(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     int unknown0c; // Inferred role: input state (0 key wait, 1 list, 2 decided); original member name unknown.
     u8 _10[0x1c - 0x10];
     u8 _1c[0x20 - 0x1c];
-    GfMenuObjTitle *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjTitle *m_menuObjTitle; // Inferred role: owner; original member name unknown.
   };
 
   GfMenuObjTitle(u32 handle);
@@ -62,7 +62,7 @@ static_assert(offsetof(GfMenuObjTitle, unknown58) == 0x58, "");
 static_assert(offsetof(GfMenuObjTitle, unknown1b8) == 0x1b8, "");
 static_assert(sizeof(GfMenuObjTitle) == 0x1c0, "");
 static_assert(offsetof(GfMenuObjTitle::ListListener, unknown0c) == 0xc, "");
-static_assert(offsetof(GfMenuObjTitle::ListListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjTitle::ListListener, m_menuObjTitle) == 0x20, "");
 static_assert(sizeof(GfMenuObjTitle::ListListener) == 0x28, "");
 
 } // namespace gf

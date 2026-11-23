@@ -43,13 +43,13 @@ void DrPixlShadowMan::afterUpdate() {
 }
 
 void DrPixlShadowMan::shadowRender() {
-  int size = unknown8908->unknown5b8->unknown28 / 5;
+  int size = m_drMan->unknown5b8->unknown28 / 5;
   int y = 0;
   int x = 0;
   int column = 0;
   for (int i = 0; i < unknown8900; i++) {
     if (unknown0000[i]->dispChk()) {
-      unknown8910->debugRender(*unknown0000[i]->unknown40->unknown128, x, y, size, size, false, false, 1.0f, true);
+      m_drPixlMan->debugRender(*unknown0000[i]->m_mdoShdPxlWrkTex->unknown128, x, y, size, size, false, false, 1.0f, true);
       x += size;
       column++;
       if (column > 3) {
@@ -57,8 +57,8 @@ void DrPixlShadowMan::shadowRender() {
         x = 0;
         y += size;
       }
-      for (DrPixlShadowObj *shadow = unknown0000[i]->unknown190; shadow != nullptr; shadow = shadow->unknown190) {
-        unknown8910->debugRender(*shadow->unknown40->unknown128, x, y, size, size, false, false, 1.0f, true);
+      for (DrPixlShadowObj *shadow = unknown0000[i]->m_drPixlShadowObj; shadow != nullptr; shadow = shadow->m_drPixlShadowObj) {
+        m_drPixlMan->debugRender(*shadow->m_mdoShdPxlWrkTex->unknown128, x, y, size, size, false, false, 1.0f, true);
         x += size;
         column++;
         if (column > 3) {
@@ -73,7 +73,7 @@ void DrPixlShadowMan::shadowRender() {
 
 bool DrPixlShadowMan::renderShadowObj() {
   bool result = false;
-  DrMdlMan *mdlMan = unknown8908->unknown88;
+  DrMdlMan *mdlMan = m_drMan->m_drMdlMan;
   for (int i = 0; i < unknown8900; i++) {
     if (unknown0000[i]->dispChk() && unknown0000[i]->unknown4c != 0) {
       if (mdlMan->shadowRender(unknown0000[i])) {
@@ -89,7 +89,7 @@ bool DrPixlShadowMan::renderShadowObj() {
 
 bool DrPixlShadowMan::renderDirShadowObj() {
   bool result = false;
-  DrMdlMan *mdlMan = unknown8908->unknown88;
+  DrMdlMan *mdlMan = m_drMan->m_drMdlMan;
   for (int i = 0; i < unknown8900; i++) {
     if (unknown0000[i]->dispChk() && unknown0000[i]->unknown4c == 0) {
       result |= mdlMan->shadowRender(unknown0000[i]);
@@ -99,7 +99,7 @@ bool DrPixlShadowMan::renderDirShadowObj() {
 }
 
 bool DrPixlShadowMan::setAddObjPos(const mm::Vec3 &position, f32 value) {
-  if (unknown8908->unknown120[unknown8908->unknown1c98]->unknown103e && m_addShadowObj != nullptr) {
+  if (m_drMan->unknown120[m_drMan->unknown1c98]->m_charDirShadow && m_addShadowObj != nullptr) {
     return m_addShadowObj->setAddObjPos(position, value);
   }
   return false;
@@ -119,7 +119,7 @@ MdoShdPxlWrkTex *DrPixlShadowMan::createShdTexWrk(int index, int type) {
   f32 size = getShadowTexSize(index);
   MdoShdPxlWrkTex *freeWork = nullptr;
   for (int i = 0; i < 16; i++) {
-    MdoShdPxlWrkTex *work = &unknown0800[i];
+    MdoShdPxlWrkTex *work = &m_mdoShdPxlWrkTex[i];
     if (work->unknown804 == 0) {
       if (freeWork == nullptr) {
         freeWork = work;
@@ -158,8 +158,8 @@ void DrPixlShadowMan::releaseTexWorkOne(MdoShdPxlWrkTex *work) {
 
 void DrPixlShadowMan::releaseTexWork() {
   for (int i = 0; i < 16; i++) {
-    if (unknown0800[i].unknown804 != 0) {
-      unknown0800[i].release();
+    if (m_mdoShdPxlWrkTex[i].unknown804 != 0) {
+      m_mdoShdPxlWrkTex[i].release();
     }
   }
 }
@@ -167,7 +167,7 @@ void DrPixlShadowMan::releaseTexWork() {
 void DrPixlShadowMan::releaseShadow(DrPixlShadowObj *shadow) {
   for (int i = 0; i < unknown8900; i++) {
     if (unknown0000[i] == shadow) {
-      releaseTexWorkOne(shadow->unknown40);
+      releaseTexWorkOne(shadow->m_mdoShdPxlWrkTex);
       delete shadow;
       for (int j = i + 1; j < unknown8900; j++) {
         unknown0000[j - 1] = unknown0000[j];
@@ -180,13 +180,13 @@ void DrPixlShadowMan::releaseShadow(DrPixlShadowObj *shadow) {
 
 void DrPixlShadowMan::setAddShadowObj(DrPixlShadowObjDir *shadow) { m_addShadowObj = shadow; }
 
-DrPixlShadowMan::DrPixlShadowMan(DrMan *man, DrPixlMan *pixlMan) : unknown8900(0), unknown8908(man), unknown8910(pixlMan), m_addShadowObj(nullptr) {
+DrPixlShadowMan::DrPixlShadowMan(DrMan *man, DrPixlMan *pixlMan) : unknown8900(0), m_drMan(man), m_drPixlMan(pixlMan), m_addShadowObj(nullptr) {
   memset(unknown0000, 0, sizeof(unknown0000));
   for (int i = 0; i < 16; i++) {
-    unknown0800[i].unknown808 = 0;
-    unknown0800[i].unknown80a = 0;
-    unknown0800[i].unknown800 = 0.0f;
-    unknown0800[i].unknown804 = 0;
+    m_mdoShdPxlWrkTex[i].unknown808 = 0;
+    m_mdoShdPxlWrkTex[i].unknown80a = 0;
+    m_mdoShdPxlWrkTex[i].unknown800 = 0.0f;
+    m_mdoShdPxlWrkTex[i].unknown804 = 0;
   }
 }
 
@@ -199,7 +199,7 @@ DrPixlShadowObj *DrPixlShadowMan::createDirShadow(DrLightObj *light, int index) 
   if (work == nullptr) {
     return nullptr;
   }
-  DrPixlShadowObjDir *shadow = new (unknown8908->unknown10) DrPixlShadowObjDir(unknown8908);
+  DrPixlShadowObjDir *shadow = new (m_drMan->unknown10) DrPixlShadowObjDir(m_drMan);
   shadow->createWork(light, 0, work);
   unknown0000[unknown8900++] = shadow;
   return shadow;
@@ -210,15 +210,15 @@ DrPixlShadowObj *DrPixlShadowMan::createDirCacheShadow(DrLightObj *light, int in
   if (work == nullptr) {
     return nullptr;
   }
-  DrPixlShadowObjDir *shadow = new (unknown8908->unknown10) DrPixlShadowObjDir(unknown8908);
+  DrPixlShadowObjDir *shadow = new (m_drMan->unknown10) DrPixlShadowObjDir(m_drMan);
   shadow->createWork(light, 0, work);
   unknown0000[unknown8900++] = shadow;
   return shadow;
 }
 
 DrPixlShadowObj *DrPixlShadowMan::createPntShadow(DrLightObj *light, int index) {
-  DrPixlShadowObjPnt *shadow = new (unknown8908->unknown10) DrPixlShadowObjPnt(unknown8908, 0);
-  shadow->unknown190 = new (unknown8908->unknown10) DrPixlShadowObjPnt(unknown8908, 1);
+  DrPixlShadowObjPnt *shadow = new (m_drMan->unknown10) DrPixlShadowObjPnt(m_drMan, 0);
+  shadow->m_drPixlShadowObj = new (m_drMan->unknown10) DrPixlShadowObjPnt(m_drMan, 1);
   unknown0000[unknown8900++] = shadow;
   return shadow;
 }
@@ -228,7 +228,7 @@ DrPixlShadowObj *DrPixlShadowMan::createSptShadow(DrLightObj *light, int index) 
   if (work == nullptr) {
     return nullptr;
   }
-  DrPixlShadowObjSpt *shadow = new (unknown8908->unknown10) DrPixlShadowObjSpt(unknown8908);
+  DrPixlShadowObjSpt *shadow = new (m_drMan->unknown10) DrPixlShadowObjSpt(m_drMan);
   shadow->createWork(light, 0, work);
   unknown0000[unknown8900++] = shadow;
   return shadow;
@@ -237,7 +237,7 @@ DrPixlShadowObj *DrPixlShadowMan::createSptShadow(DrLightObj *light, int index) 
 void DrPixlShadowMan::shadowDebugInfRender() {
   for (int i = 0; i < unknown8900; i++) {
     unknown0000[i]->debugInfo();
-    for (DrPixlShadowObj *shadow = unknown0000[i]->unknown190; shadow != nullptr; shadow = shadow->unknown190) {
+    for (DrPixlShadowObj *shadow = unknown0000[i]->m_drPixlShadowObj; shadow != nullptr; shadow = shadow->m_drPixlShadowObj) {
       if (shadow->dispChk() && (shadow->unknown50 & DrPixlShadowObj::FLAG_UNKNOWN_0) != 0) {
         shadow->debugInfo();
       }

@@ -143,8 +143,8 @@ bool GfMenuBladeList::sortRarityDescending(const MenuBladeInfo &info, const Menu
 }
 
 bool GfMenuBladeList::sortWeaponAscending(const MenuBladeInfo &info, const MenuBladeInfo &other) {
-  u8 weaponType = GfDataBlade::getSDataBlade(info.unknown00).unknown821;
-  u8 otherWeaponType = GfDataBlade::getSDataBlade(other.unknown00).unknown821;
+  u8 weaponType = GfDataBlade::getSDataBlade(info.unknown00).m_weaponType;
+  u8 otherWeaponType = GfDataBlade::getSDataBlade(other.unknown00).m_weaponType;
   if (weaponType == otherWeaponType) {
     return info.unknown00 < other.unknown00;
   }
@@ -152,8 +152,8 @@ bool GfMenuBladeList::sortWeaponAscending(const MenuBladeInfo &info, const MenuB
 }
 
 bool GfMenuBladeList::sortWeaponDescending(const MenuBladeInfo &info, const MenuBladeInfo &other) {
-  u8 weaponType = GfDataBlade::getSDataBlade(info.unknown00).unknown821;
-  u8 otherWeaponType = GfDataBlade::getSDataBlade(other.unknown00).unknown821;
+  u8 weaponType = GfDataBlade::getSDataBlade(info.unknown00).m_weaponType;
+  u8 otherWeaponType = GfDataBlade::getSDataBlade(other.unknown00).m_weaponType;
   if (weaponType == otherWeaponType) {
     return info.unknown00 < other.unknown00;
   }
@@ -193,8 +193,8 @@ bool GfMenuBladeList::sortCreatorDescending(const MenuBladeInfo &info, const Men
 }
 
 bool GfMenuBladeList::sortGenderDescending(const MenuBladeInfo &info, const MenuBladeInfo &other) {
-  u8 gender = GfDataBlade::getSDataBlade(info.unknown00).unknown709;
-  u8 otherGender = GfDataBlade::getSDataBlade(other.unknown00).unknown709;
+  u8 gender = GfDataBlade::getSDataBlade(info.unknown00).m_gender;
+  u8 otherGender = GfDataBlade::getSDataBlade(other.unknown00).m_gender;
   if (gender == otherGender) {
     return info.unknown00 < other.unknown00;
   }
@@ -202,8 +202,8 @@ bool GfMenuBladeList::sortGenderDescending(const MenuBladeInfo &info, const Menu
 }
 
 bool GfMenuBladeList::sortGenderAscending(const MenuBladeInfo &info, const MenuBladeInfo &other) {
-  u8 gender = GfDataBlade::getSDataBlade(info.unknown00).unknown709;
-  u8 otherGender = GfDataBlade::getSDataBlade(other.unknown00).unknown709;
+  u8 gender = GfDataBlade::getSDataBlade(info.unknown00).m_gender;
+  u8 otherGender = GfDataBlade::getSDataBlade(other.unknown00).m_gender;
   if (gender == otherGender) {
     return info.unknown00 < other.unknown00;
   }
@@ -255,7 +255,7 @@ void GfMenuBladeList::getBladeFromDriver(u32 driver, mm::mtl::FixedVector<u16, 4
 }
 
 void GfMenuBladeList::setupFromBladeList(const BladeListSetup &setup) {
-  SetupParam param = setup.unknown00;
+  SetupParam param = setup.m_setupParam;
   const mm::mtl::FixedVector<u16, 422> *blades = setup.unknown18;
   UIListInfo<MenuBladeInfo>::setup(getAllocator(ALLOCATOR_UNKNOWN_0), param);
   if (isValid()) {
@@ -269,7 +269,7 @@ void GfMenuBladeList::setupFromBladeList(const BladeListSetup &setup) {
 }
 
 void GfMenuBladeList::setupFromBook(const BladeBookSetup &setup) {
-  SetupParam param = setup.unknown00;
+  SetupParam param = setup.m_setupParam;
   mm::mtl::FixedVector<u16, 422> blades;
   for (u32 blade = BLADE_HOMURA; blade < BLADE_UNKNOWN_1012; blade++) {
     if (blade != BLADE_HOMURI) {

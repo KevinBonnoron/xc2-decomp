@@ -29,7 +29,8 @@ void FootPlacementIKSolver::Param::createReflection(Reflection *reflection, cons
   reflection->setReflectionStruct(index, value);
 }
 
-FootPlacementIKSolver::FootPlacementIKSolver() : unknown20(nullptr), unknown58(0xffff), unknown60(mm::Vec3::zero), unknownb0(mm::Quat::identity), unknownc0(mm::Quat::identity), unknownd0(nullptr) {}
+FootPlacementIKSolver::FootPlacementIKSolver()
+    : unknown20(nullptr), unknown58(0xffff), unknown60(mm::Vec3::zero), unknownb0(mm::Quat::identity), unknownc0(mm::Quat::identity), m_iKFootGroundInterface(nullptr) {}
 
 FootPlacementIKSolver *FootPlacementIKSolver::create(const Description &description, mm::mtl::IntrusivePtr<ReferenceFrame> &frame, anm::Pose &pose, IKFootGroundInterface *ground) {
 #line 66
@@ -50,10 +51,10 @@ FootPlacementIKSolver::~FootPlacementIKSolver() {
 }
 
 void FootPlacementIKSolver::solve(const UpdateInfo &info) {
-  IKFootGroundInterface *ground = unknownd0;
+  IKFootGroundInterface *ground = m_iKFootGroundInterface;
   if (ground != nullptr) {
-    ground->unknown08.bind(*ground);
-    solveImpl(ground->unknown08);
+    ground->m_planeRayCaster.bind(*ground);
+    solveImpl(ground->m_planeRayCaster);
   } else {
     static Raycaster defaultRaycaster;
     solveImpl(defaultRaycaster);

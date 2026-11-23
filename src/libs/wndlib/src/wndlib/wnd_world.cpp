@@ -167,10 +167,8 @@ void WindWorld::delayErace() {
 void WindWorld::update(f32 deltaTime) {
   delayErace();
   unknown0c += deltaTime;
-  UpdateInfo info;
-  info.unknown00 = unknown0c;
-  info.unknown04 = deltaTime;
-  info.unknown08 = unknown1d0;
+  UpdateInfo info = {unknown0c, deltaTime, unknown1d0};
+  // The inlined `updateGlobalWind` keeps its no-op store here (0x710098a6a4, see `updateGlobalWind`).
   updateGlobalWind(info);
   updateProbe(info);
 }

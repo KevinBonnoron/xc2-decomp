@@ -7,6 +7,7 @@ namespace ml {
 
 class DrShdMdoDecExtTbl;
 class DrShdMdoDecShdObj;
+struct MdsMatTechnique;
 
 class DrShdMdoExtTblObj {
 public:
@@ -27,15 +28,16 @@ public:
 
   DrShdMdoExtTblObj();
   static int getDecWorkSize(int declarationNum, const u8 *data);
+  int setDecObj(DrShdMdoDecShdObj *obj, u8 *work, const u8 *data, int declarationNum, const MdsMatTechnique *technique, const u8 *extData);
 
-  DrShdMdoDecShdObj *unknown00; // Inferred role: shader object; original member name unknown.
-  DrShdMdoDecExtTbl *unknown08; // Inferred role: extension tables; original member name unknown.
+  DrShdMdoDecShdObj *m_drShdMdoDecShdObj; // Inferred role: shader object; original member name unknown.
+  DrShdMdoDecExtTbl *m_drShdMdoDecExtTbl; // Inferred role: extension tables; original member name unknown.
 };
 
 static_assert(offsetof(DrShdMdoExtTblObj::unknown001, unknown08) == 0x08, "");
 static_assert(offsetof(DrShdMdoExtTblObj::unknown001, unknown0c) == 0x0c, "");
 static_assert(offsetof(DrShdMdoExtTblObj::unknown001, unknown18) == 0x18, "");
 static_assert(sizeof(DrShdMdoExtTblObj::unknown002) == 0x08, "");
-static_assert(offsetof(DrShdMdoExtTblObj, unknown08) == 0x08, "");
+static_assert(offsetof(DrShdMdoExtTblObj, m_drShdMdoDecExtTbl) == 0x08, "");
 
 } // namespace ml

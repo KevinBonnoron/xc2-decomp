@@ -30,7 +30,7 @@ public:
 
   class MainListener : public ui::UIObjectListener {
   public:
-    MainListener(GfMenuObjButtonChallenge *owner) : unknown0c(0), unknown10(0), unknown14(0), unknown18(0), unknown20(owner) {}
+    MainListener(GfMenuObjButtonChallenge *owner) : unknown0c(0), unknown10(0), unknown14(0), unknown18(0), m_menuObjButtonChallenge(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u32 unknown0c; // Inferred role: state; original member name unknown.
@@ -38,9 +38,9 @@ public:
     u32 unknown14; // Inferred role: timer; original member name unknown.
     int unknown18; // Inferred role: result, 0 miss, 1 good and 2 perfect; original member name unknown.
     u8 _1c[0x20 - 0x1c];
-    GfMenuObjButtonChallenge *unknown20; // Inferred role: owner; original member name unknown.
-    unknown003 unknown28;                // Inferred role: copy of the challenge data; original member name unknown.
-    u8 _34[0x38 - 0x34];                 // Not initialized by the constructor; original members unknown.
+    GfMenuObjButtonChallenge *m_menuObjButtonChallenge; // Inferred role: owner; original member name unknown.
+    unknown003 unknown28;                               // Inferred role: copy of the challenge data; original member name unknown.
+    u8 _34[0x38 - 0x34];                                // Not initialized by the constructor; original members unknown.
   };
 
   GfMenuObjButtonChallenge(u32 handle);
@@ -55,7 +55,7 @@ public:
 };
 
 static_assert(sizeof(GfMenuObjButtonChallenge::unknown003) == 0xc, "");
-static_assert(offsetof(GfMenuObjButtonChallenge::MainListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjButtonChallenge::MainListener, m_menuObjButtonChallenge) == 0x20, "");
 static_assert(offsetof(GfMenuObjButtonChallenge::MainListener, unknown28) == 0x28, "");
 static_assert(sizeof(GfMenuObjButtonChallenge::MainListener) == 0x38, "");
 

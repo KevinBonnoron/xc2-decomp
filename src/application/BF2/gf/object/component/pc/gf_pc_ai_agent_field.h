@@ -43,11 +43,11 @@ public:
 
   // Inline: the game only has the base object constructor symbol (C2).
   BlackBoardField()
-      : unknown08(nullptr), unknown10(nullptr), unknown18(nullptr), unknown20(mm::Vec3::zero), unknown30(0.0f), unknown40(mm::Vec3::zero), unknown50(0.0f), unknown60(mm::Vec3::zero),
+      : m_comPropertyPc(nullptr), unknown10(nullptr), unknown18(nullptr), unknown20(mm::Vec3::zero), unknown30(0.0f), unknown40(mm::Vec3::zero), unknown50(0.0f), unknown60(mm::Vec3::zero),
         unknown70(mm::Vec3::unitY, 0.0f), unknown90(mm::Vec3::zero), unknown1f0(mm::Vec3::zero), unknown204(0.0f) {}
   const mm::mtl::RTTI *getRTTI() const override;
 
-  GfComPropertyPc *unknown08;                       // Inferred role: property during the update; original member name unknown.
+  GfComPropertyPc *m_comPropertyPc;                 // Inferred role: property during the update; original member name unknown.
   navi::NvmshAcObj *unknown10;                      // Inferred role: navi mesh object during the update; original member name unknown.
   const fw::UpdateInfo *unknown18;                  // Inferred role: update info during the update; original member name unknown.
   mm::Vec3 unknown20;                               // Role and original member name unknown.
@@ -64,7 +64,7 @@ public:
   f32 unknown204;                     // Inferred role: wait time of the forced warp; original member name unknown.
 };
 
-static_assert(offsetof(BlackBoardField, unknown08) == 0x08, "");
+static_assert(offsetof(BlackBoardField, m_comPropertyPc) == 0x08, "");
 static_assert(offsetof(BlackBoardField, unknown20) == 0x20, "");
 static_assert(offsetof(BlackBoardField, unknown30) == 0x30, "");
 static_assert(offsetof(BlackBoardField, unknown40) == 0x40, "");
@@ -110,12 +110,12 @@ public:
   void procMsgPcFieldNotifyWallJumpStart(fw::MessageObject *sender, MsgPcFieldNotifyWallJumpStart &message);
 
   navi::NvmshAcObj *unknown00;                    // Inferred role: navi mesh object; original member name unknown.
-  ai::BehaviorTree unknown08;                     // Inferred role: behavior tree; original member name unknown.
+  ai::BehaviorTree m_behaviorTree;                // Inferred role: behavior tree; original member name unknown.
   mm::mtl::IntrusivePtr<fw::ParamList> unknown88; // Inferred role: field AI param list; original member name unknown.
 };
 
 static_assert(offsetof(AIAgentField, unknown00) == 0x00, "");
-static_assert(offsetof(AIAgentField, unknown08) == 0x08, "");
+static_assert(offsetof(AIAgentField, m_behaviorTree) == 0x08, "");
 static_assert(offsetof(AIAgentField, unknown88) == 0x88, "");
 static_assert(sizeof(AIAgentField) == 0x90, "");
 

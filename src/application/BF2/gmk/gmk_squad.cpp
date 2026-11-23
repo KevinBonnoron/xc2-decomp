@@ -14,7 +14,7 @@ template bool TGmkList<GmkSquadMember, GmkSquadMember::BdatInfo, 1112363347u, 1u
 
 GmkType GmkSquadLeader::getGmkType() const { return GMK_TYPE; }
 
-bool GmkSquadLeader::isValid() const { return unknown08.unknown00 != nullptr && unknown20.unknown08 != nullptr; }
+bool GmkSquadLeader::isValid() const { return m_createBaseInfo.m_ownerGmkEnemyList != nullptr && m_createInfo.unknown08 != nullptr; }
 
 void GmkSquadLeader::create(const CreateInfo &info) { AGmkBase::create(info); }
 
@@ -24,11 +24,11 @@ void GmkSquadLeader::debugDraw() const {}
 
 void GmkSquadLeader::debugUpdateMmf() {}
 
-const IGmkList *GmkSquadLeader::getBindedSquadMemberList() const { return unknown08.unknown00->getCreateInfo().unknown08->unknown1b8[GMK_TYPE_SQUAD_MEMBER]; }
+const IGmkList *GmkSquadLeader::getBindedSquadMemberList() const { return m_createBaseInfo.m_ownerGmkEnemyList->getCreateInfo().m_gmkSet->unknown1b8[GMK_TYPE_SQUAD_MEMBER]; }
 
 GmkType GmkSquadMember::getGmkType() const { return GMK_TYPE; }
 
-bool GmkSquadMember::isValid() const { return unknown08.unknown00 != nullptr && unknown20.unknown08 != nullptr; }
+bool GmkSquadMember::isValid() const { return m_createBaseInfo.m_ownerGmkEnemyList != nullptr && m_createInfo.unknown08 != nullptr; }
 
 void GmkSquadMember::create(const CreateInfo &info) { AGmkBase::create(info); }
 
@@ -112,19 +112,19 @@ void GmkSquad::removeGmkSquadNavi(GmkSquadNavi *navi) {
 
 void GmkSquadNavi::create(const CreateInfo &info) {
   dispose();
-  unknown10 = info;
-  unknown10.unknown00->addGmkSquadNavi(this);
+  m_createInfo = info;
+  m_createInfo.m_gmkSquad->addGmkSquadNavi(this);
 }
 
 void GmkSquadNavi::dispose() {
-  if (unknown10.unknown00 != nullptr && unknown10.unknown08 != gf::unknown020) {
-    unknown10.unknown00->removeGmkSquadNavi(this);
+  if (m_createInfo.m_gmkSquad != nullptr && m_createInfo.unknown08 != gf::unknown020) {
+    m_createInfo.m_gmkSquad->removeGmkSquadNavi(this);
     unknown002();
   }
 }
 
 u32 GmkSquadNavi::getMemberDefType() const {
-  const GmkSquadLeader *leader = unknown10.unknown00->getBindedGmkSquadLeader();
+  const GmkSquadLeader *leader = m_createInfo.m_gmkSquad->getBindedGmkSquadLeader();
   if (leader == nullptr) {
     return 0;
   }
@@ -132,8 +132,8 @@ u32 GmkSquadNavi::getMemberDefType() const {
 }
 
 bool GmkSquadNavi::getPosRotY(mm::Vec3 &position, f32 &rotY) const {
-  if (unknown001() && unknown10.unknown00->isValid()) {
-    unknown10.unknown00->getPosRotY(position, rotY, unknown28);
+  if (unknown001() && m_createInfo.m_gmkSquad->isValid()) {
+    m_createInfo.m_gmkSquad->getPosRotY(position, rotY, unknown28);
     position += unknown30;
     return true;
   }
@@ -147,13 +147,13 @@ bool GmkSquadNavi::isArrived(const mm::Vec3 &position) const {
     return false;
   }
   f32 height = naviPosition.y - position.y;
-  if (unknown10.unknown14 < height) {
+  if (m_createInfo.unknown14 < height) {
     return false;
   }
   f32 x = naviPosition.x - position.x;
   f32 z = naviPosition.z - position.z;
   f32 distSq = x * x + z * z;
-  return !(unknown10.unknown10 * unknown10.unknown10 < distSq);
+  return !(m_createInfo.unknown10 * m_createInfo.unknown10 < distSq);
 }
 
 void GmkSquad::updateMemberPosRotY_MemberDef_Circle(u32 index) {
@@ -173,12 +173,12 @@ void GmkSquad::updateMemberPosRotY_MemberDef_Circle(u32 index) {
 }
 
 void GmkSquadNavi::update(const UpdateInfo &info) {
-  GmkSquad *squad = unknown10.unknown00;
+  GmkSquad *squad = m_createInfo.m_gmkSquad;
   if (!unknown001() || !squad->isValid()) {
     return;
   }
   if (squad->unknown003() != nullptr && squad->unknown003()->getData()->unknown00 == 2 && unknown28 != 0 && isArrived(info.position)) {
-    unknown10.unknown00->updateMemberPosRotY_MemberDef_Circle(unknown28);
+    m_createInfo.m_gmkSquad->updateMemberPosRotY_MemberDef_Circle(unknown28);
   }
 }
 
@@ -193,7 +193,7 @@ void GmkSquad::create(const CreateInfo &info) {
   if (GmkManager::get()->findGmkSet(info.unknown00) == nullptr) {
     return;
   }
-  unknown20 = info;
+  m_createInfo = info;
   GmkAcc::CreateInfo accInfo;
   accInfo.unknown00 = info.unknown00;
   accInfo.unknown04 = GMK_TYPE_SQUAD_LEADER;
@@ -214,7 +214,7 @@ void GmkSquad::dispose() {
   unknown70 = 0;
   unknown78 = nullptr;
   m_bindedGmkSquadLeader.dispose();
-  unknown20 = CreateInfo();
+  m_createInfo = CreateInfo();
 }
 
 void GmkSquad::seqInit(f32 deltaTime) {
@@ -235,7 +235,7 @@ void GmkSquad::seqInit(f32 deltaTime) {
     unknown70 = data->unknown0c + 1 - data->unknown08;
     break;
   case 2:
-    unknown70 = unknown20.unknown08;
+    unknown70 = m_createInfo.unknown08;
     break;
   }
   unknowna0.destroy();

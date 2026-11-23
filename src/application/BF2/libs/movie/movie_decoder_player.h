@@ -29,6 +29,8 @@ public:
   void StartAudioInputReaderThread();
   void StartAudioVideoWorkerThread();
   void ResetPlaybackComplete();
+  bool IsPlaybackComplete();
+  bool StartPlayback();
   movie::Status AudioFormatChangedEvent();
 
   u8 _000[0x18 - 0x000];
@@ -60,12 +62,18 @@ public:
   nn::os::MessageQueueType
       unknowna68; // Inferred role: video input reader message queue; messages sent by SignalVideoInputReadThreadExit and SignalVideoInputBufferAvailable; original member name unknown.
   nn::os::MessageQueueType
-      unknownab8; // Inferred role: audio input reader message queue; messages sent by SignalAudioInputReadThreadExit and SignalAudioInputBufferAvailable; original member name unknown.
-  u8 _b08[0xb30 - 0xb08];
+      unknownab8;  // Inferred role: audio input reader message queue; messages sent by SignalAudioInputReadThreadExit and SignalAudioInputBufferAvailable; original member name unknown.
+  bool unknownb08; // Inferred role: cleared by the constructor and set by CreateDecoders; start of the two decoder flags; original member name unknown.
+  bool unknownb09; // Inferred role: set by CreateDecoders; original member name unknown.
+  u8 _b0a[0xb30 - 0xb0a];
   bool unknownb30; // Inferred role: playback finished; original member name unknown.
   u8 _b31[0xb48 - 0xb31];
   bool unknownb48; // Inferred role: cleared by ResetPlaybackComplete; original member name unknown.
   bool unknownb49; // Inferred role: cleared by ResetPlaybackComplete; original member name unknown.
+  int unknownb4c;  // Inferred role: count of audio output buffers delivered; incremented by AudioOutputBufferAvailableEvent; original member name unknown.
+  int unknownb50;  // Inferred role: count of video output buffers delivered; incremented by VideoOutputBufferAvailableEvent; original member name unknown.
+  int unknownb54;  // Inferred role: audio output buffer target, 6 from the constructor; compared by StartPlayback; original member name unknown.
+  int unknownb58;  // Inferred role: video output buffer target, 4 from the constructor; compared by StartPlayback; original member name unknown.
 };
 
 static_assert(offsetof(MovieDecoderPlayer, unknown9e8) == 0x9e8, "");
@@ -89,3 +97,9 @@ static_assert(offsetof(MovieDecoderPlayer, unknown821) == 0x821, "");
 static_assert(offsetof(MovieDecoderPlayer, unknown828) == 0x828, "");
 static_assert(offsetof(MovieDecoderPlayer, unknowna68) == 0xa68, "");
 static_assert(offsetof(MovieDecoderPlayer, unknownab8) == 0xab8, "");
+static_assert(offsetof(MovieDecoderPlayer, unknownb08) == 0xb08, "");
+static_assert(offsetof(MovieDecoderPlayer, unknownb09) == 0xb09, "");
+static_assert(offsetof(MovieDecoderPlayer, unknownb4c) == 0xb4c, "");
+static_assert(offsetof(MovieDecoderPlayer, unknownb50) == 0xb50, "");
+static_assert(offsetof(MovieDecoderPlayer, unknownb54) == 0xb54, "");
+static_assert(offsetof(MovieDecoderPlayer, unknownb58) == 0xb58, "");

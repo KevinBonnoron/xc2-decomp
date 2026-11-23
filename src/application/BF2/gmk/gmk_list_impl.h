@@ -13,7 +13,7 @@ bool TGmkList<T, BDAT_INFO, MAGIC, VERSION, GOB>::initGmkBdatInfo(BDAT_INFO &bda
   if (createInfo.unknown114.empty()) {
     return false;
   }
-  const char *name = gmk.unknown08.unknown10->unknown00;
+  const char *name = gmk.m_createBaseInfo.unknown10->unknown00;
   if (name == nullptr || name[0] == '\0') {
     return false;
   }

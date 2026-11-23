@@ -58,12 +58,12 @@ static GfMenuItemAdapter::TypeInfo TYPE_INFOS[] = {
     {&GfMenuItemAdapter::update_canStack, {GfMenuAdapter::unknown004_3, 0, 0}},
 };
 
-GfMenuItemAdapter::GfMenuItemAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways) : GfMenuAdapter(plugin, false, isUpdateAlways), unknown68(nullptr) {}
+GfMenuItemAdapter::GfMenuItemAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways) : GfMenuAdapter(plugin, false, isUpdateAlways), m_iConverter(nullptr) {}
 
 GfMenuItemAdapter::~GfMenuItemAdapter() {
-  if (unknown68 != nullptr) {
-    delete unknown68;
-    unknown68 = nullptr;
+  if (m_iConverter != nullptr) {
+    delete m_iConverter;
+    m_iConverter = nullptr;
   }
 }
 
@@ -77,7 +77,7 @@ GfMenuItemAdapter *GfMenuItemAdapter::create(u32 handle, u32 type, const MenuIte
 #line 641
       GfMenuItemAdapter *adapter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfMenuItemAdapter(plugin, isUpdateAlways);
       adapter->unknown48.bind(adapter, typeInfo.update);
-      adapter->unknown38 = info;
+      adapter->m_menuItemInfo = info;
       plugin->release();
       return adapter;
     }
@@ -87,7 +87,7 @@ GfMenuItemAdapter *GfMenuItemAdapter::create(u32 handle, u32 type, const MenuIte
 
 bool GfMenuItemAdapter::update_Name(const MenuItemInfo &info) {
   bool result = false;
-  if (unknown38.unknown04 != 0 && unknown38.unknown00 != ItemType::ITEM_TYPE_UNKNOWN_0) {
+  if (m_menuItemInfo.unknown04 != 0 && m_menuItemInfo.unknown00 != ItemType::ITEM_TYPE_UNKNOWN_0) {
     ui::UIStr name;
     GfMenuItemUtil::getItemName(info.unknown00, info.unknown04, name);
     if (name.isValid()) {
@@ -99,7 +99,7 @@ bool GfMenuItemAdapter::update_Name(const MenuItemInfo &info) {
 }
 
 bool GfMenuItemAdapter::update_IconAll(const MenuItemInfo &info) {
-  if (unknown38.unknown04 == 0 || unknown38.unknown00 == ItemType::ITEM_TYPE_UNKNOWN_0 || info.unknown00 == ItemType::ITEM_TYPE_UNKNOWN_0) {
+  if (m_menuItemInfo.unknown04 == 0 || m_menuItemInfo.unknown00 == ItemType::ITEM_TYPE_UNKNOWN_0 || info.unknown00 == ItemType::ITEM_TYPE_UNKNOWN_0) {
     return false;
   }
   u32 param = 0;
@@ -128,7 +128,7 @@ bool GfMenuItemAdapter::update_IconAll(const MenuItemInfo &info) {
 }
 
 bool GfMenuItemAdapter::update_Count(const MenuItemInfo &info) {
-  if (unknown38.unknown04 != 0 && unknown38.unknown00 != ItemType::ITEM_TYPE_UNKNOWN_0) {
+  if (m_menuItemInfo.unknown04 != 0 && m_menuItemInfo.unknown00 != ItemType::ITEM_TYPE_UNKNOWN_0) {
     setNumber(info.unknown08);
   } else {
     setNumber(0);
@@ -137,7 +137,7 @@ bool GfMenuItemAdapter::update_Count(const MenuItemInfo &info) {
 }
 
 bool GfMenuItemAdapter::update_CountMax(const MenuItemInfo &info) {
-  if (unknown38.unknown04 != 0 && unknown38.unknown00 != ItemType::ITEM_TYPE_UNKNOWN_0) {
+  if (m_menuItemInfo.unknown04 != 0 && m_menuItemInfo.unknown00 != ItemType::ITEM_TYPE_UNKNOWN_0) {
     setNumber(GfItemUtil::getEnableStock(info.unknown04));
   } else {
     setNumber(0);
@@ -146,7 +146,7 @@ bool GfMenuItemAdapter::update_CountMax(const MenuItemInfo &info) {
 }
 
 bool GfMenuItemAdapter::update_Price(const MenuItemInfo &info) {
-  if (unknown38.unknown04 != 0 && unknown38.unknown00 != ItemType::ITEM_TYPE_UNKNOWN_0) {
+  if (m_menuItemInfo.unknown04 != 0 && m_menuItemInfo.unknown00 != ItemType::ITEM_TYPE_UNKNOWN_0) {
     ItemPrice price;
     price.clear();
     GfItemUtil::getPrice(price, info.unknown04, GfMenuReference::getReferenceShopID());
@@ -158,7 +158,7 @@ bool GfMenuItemAdapter::update_Price(const MenuItemInfo &info) {
 }
 
 bool GfMenuItemAdapter::update_SellPrice(const MenuItemInfo &info) {
-  if (unknown38.unknown04 != 0 && unknown38.unknown00 != ItemType::ITEM_TYPE_UNKNOWN_0) {
+  if (m_menuItemInfo.unknown04 != 0 && m_menuItemInfo.unknown00 != ItemType::ITEM_TYPE_UNKNOWN_0) {
     if (info.unknown00 != ItemType::ITEM_TYPE_UNKNOWN_6 && info.unknown00 != ItemType::ITEM_TYPE_UNKNOWN_14 && info.unknown00 != ItemType::ITEM_TYPE_UNKNOWN_15) {
       ItemPrice price;
       price.clear();
@@ -173,7 +173,7 @@ bool GfMenuItemAdapter::update_SellPrice(const MenuItemInfo &info) {
 }
 
 bool GfMenuItemAdapter::update_RareIcon(const MenuItemInfo &info) {
-  if (unknown38.unknown04 != 0 && unknown38.unknown00 != ItemType::ITEM_TYPE_UNKNOWN_0) {
+  if (m_menuItemInfo.unknown04 != 0 && m_menuItemInfo.unknown00 != ItemType::ITEM_TYPE_UNKNOWN_0) {
     if (info.unknown00 != ItemType::ITEM_TYPE_UNKNOWN_6 && info.unknown00 != ItemType::ITEM_TYPE_UNKNOWN_14 && info.unknown00 != ItemType::ITEM_TYPE_UNKNOWN_15) {
       setNumber(GfDataItem::getRarity(info.unknown04));
       return true;
@@ -184,9 +184,9 @@ bool GfMenuItemAdapter::update_RareIcon(const MenuItemInfo &info) {
 }
 
 bool GfMenuItemAdapter::update_EquipableColor(const MenuItemInfo &info) {
-  if (unknown38.unknown04 != 0 && unknown38.unknown00 != ItemType::ITEM_TYPE_UNKNOWN_0) {
-    if (unknown38.unknown00 != ItemType::ITEM_TYPE_UNKNOWN_3) {
-      if (unknown38.unknown00 != ItemType::ITEM_TYPE_UNKNOWN_2) {
+  if (m_menuItemInfo.unknown04 != 0 && m_menuItemInfo.unknown00 != ItemType::ITEM_TYPE_UNKNOWN_0) {
+    if (m_menuItemInfo.unknown00 != ItemType::ITEM_TYPE_UNKNOWN_3) {
+      if (m_menuItemInfo.unknown00 != ItemType::ITEM_TYPE_UNKNOWN_2) {
         return true;
       }
       if (GfMenuItemUtil::canEquipAcc(info.unknown04, 0, 0) != 0) {
@@ -201,7 +201,7 @@ bool GfMenuItemAdapter::update_EquipableColor(const MenuItemInfo &info) {
 }
 
 bool GfMenuItemAdapter::update_CategoryIcon(const MenuItemInfo &info) {
-  if (unknown38.unknown04 == 0 || unknown38.unknown00 == ItemType::ITEM_TYPE_UNKNOWN_0 || info.unknown00 != ItemType::ITEM_TYPE_UNKNOWN_3 || info.unknown04 == 0) {
+  if (m_menuItemInfo.unknown04 == 0 || m_menuItemInfo.unknown00 == ItemType::ITEM_TYPE_UNKNOWN_0 || info.unknown00 != ItemType::ITEM_TYPE_UNKNOWN_3 || info.unknown04 == 0) {
     return false;
   }
   setNumber(1);
@@ -209,10 +209,10 @@ bool GfMenuItemAdapter::update_CategoryIcon(const MenuItemInfo &info) {
 }
 
 bool GfMenuItemAdapter::update_GetAreaText(const MenuItemInfo &info) {
-  if (unknown38.unknown04 == 0) {
+  if (m_menuItemInfo.unknown04 == 0) {
     return false;
   }
-  if (unknown38.unknown00 == ItemType::ITEM_TYPE_UNKNOWN_0) {
+  if (m_menuItemInfo.unknown00 == ItemType::ITEM_TYPE_UNKNOWN_0) {
     return false;
   }
   u8 *mapInfoBdat = GfDataBdat::getFP(BDAT_FLD_MAPINFO);
@@ -269,7 +269,7 @@ bool GfMenuItemAdapter::update_GetAreaText(const MenuItemInfo &info) {
 }
 
 bool GfMenuItemAdapter::update_SubCategoryText(const MenuItemInfo &info) {
-  if (unknown38.unknown04 != 0 && unknown38.unknown00 != ItemType::ITEM_TYPE_UNKNOWN_0 && info.unknown00 == ItemType::ITEM_TYPE_UNKNOWN_10) {
+  if (m_menuItemInfo.unknown04 != 0 && m_menuItemInfo.unknown00 != ItemType::ITEM_TYPE_UNKNOWN_0 && info.unknown00 == ItemType::ITEM_TYPE_UNKNOWN_10) {
     ItemProperty property;
     GfItemUtil::getProperty(property, info.unknown04, 0);
     int index = property.unknown4e - 11;
@@ -283,7 +283,7 @@ bool GfMenuItemAdapter::update_SubCategoryText(const MenuItemInfo &info) {
 }
 
 bool GfMenuItemAdapter::update_EffectTime(const MenuItemInfo &info) {
-  if (unknown38.unknown04 == 0 || unknown38.unknown00 == ItemType::ITEM_TYPE_UNKNOWN_0 || info.unknown00 != ItemType::ITEM_TYPE_UNKNOWN_10) {
+  if (m_menuItemInfo.unknown04 == 0 || m_menuItemInfo.unknown00 == ItemType::ITEM_TYPE_UNKNOWN_0 || info.unknown00 != ItemType::ITEM_TYPE_UNKNOWN_10) {
     return false;
   }
   ItemProperty property;
@@ -296,7 +296,7 @@ bool GfMenuItemAdapter::update_EffectTime(const MenuItemInfo &info) {
 }
 
 bool GfMenuItemAdapter::update_EffectText(const MenuItemInfo &info) {
-  if (unknown38.unknown04 == 0 || unknown38.unknown00 == ItemType::ITEM_TYPE_UNKNOWN_0 || info.unknown00 != ItemType::ITEM_TYPE_UNKNOWN_10 || unknown70 > 2) {
+  if (m_menuItemInfo.unknown04 == 0 || m_menuItemInfo.unknown00 == ItemType::ITEM_TYPE_UNKNOWN_0 || info.unknown00 != ItemType::ITEM_TYPE_UNKNOWN_10 || unknown70 > 2) {
     return false;
   }
   ItemProperty property;
@@ -323,7 +323,8 @@ bool GfMenuItemAdapter::update_EffectText(const MenuItemInfo &info) {
 }
 
 bool GfMenuItemAdapter::update_useEnergy(const MenuItemInfo &info) {
-  if (unknown38.unknown04 != 0 && unknown38.unknown00 != ItemType::ITEM_TYPE_UNKNOWN_0 && info.unknown00 >= ItemType::ITEM_TYPE_UNKNOWN_16 && info.unknown00 <= ItemType::ITEM_TYPE_UNKNOWN_20) {
+  if (m_menuItemInfo.unknown04 != 0 && m_menuItemInfo.unknown00 != ItemType::ITEM_TYPE_UNKNOWN_0 && info.unknown00 >= ItemType::ITEM_TYPE_UNKNOWN_16 &&
+      info.unknown00 <= ItemType::ITEM_TYPE_UNKNOWN_20) {
     setNumber(GfDataHana::getPartsPower(info.unknown04));
     return true;
   }
@@ -331,7 +332,8 @@ bool GfMenuItemAdapter::update_useEnergy(const MenuItemInfo &info) {
 }
 
 bool GfMenuItemAdapter::update_needEther(const MenuItemInfo &info) {
-  if (unknown38.unknown04 != 0 && unknown38.unknown00 != ItemType::ITEM_TYPE_UNKNOWN_0 && info.unknown00 >= ItemType::ITEM_TYPE_UNKNOWN_16 && info.unknown00 <= ItemType::ITEM_TYPE_UNKNOWN_20) {
+  if (m_menuItemInfo.unknown04 != 0 && m_menuItemInfo.unknown00 != ItemType::ITEM_TYPE_UNKNOWN_0 && info.unknown00 >= ItemType::ITEM_TYPE_UNKNOWN_16 &&
+      info.unknown00 <= ItemType::ITEM_TYPE_UNKNOWN_20) {
     ItemProperty property;
     GfItemUtil::getProperty(property, info.unknown04, 0);
     setNumber(property.unknown68);
@@ -341,7 +343,8 @@ bool GfMenuItemAdapter::update_needEther(const MenuItemInfo &info) {
 }
 
 bool GfMenuItemAdapter::update_dustEther(const MenuItemInfo &info) {
-  if (unknown38.unknown04 != 0 && unknown38.unknown00 != ItemType::ITEM_TYPE_UNKNOWN_0 && info.unknown00 >= ItemType::ITEM_TYPE_UNKNOWN_16 && info.unknown00 <= ItemType::ITEM_TYPE_UNKNOWN_20) {
+  if (m_menuItemInfo.unknown04 != 0 && m_menuItemInfo.unknown00 != ItemType::ITEM_TYPE_UNKNOWN_0 && info.unknown00 >= ItemType::ITEM_TYPE_UNKNOWN_16 &&
+      info.unknown00 <= ItemType::ITEM_TYPE_UNKNOWN_20) {
     ItemProperty property;
     GfItemUtil::getProperty(property, info.unknown04, 0);
     setNumber(property.unknown6c);
@@ -351,7 +354,7 @@ bool GfMenuItemAdapter::update_dustEther(const MenuItemInfo &info) {
 }
 
 bool GfMenuItemAdapter::update_PArmor(const MenuItemInfo &info) {
-  if (unknown38.unknown04 != 0 && unknown38.unknown00 != ItemType::ITEM_TYPE_UNKNOWN_0 && info.unknown00 == ItemType::ITEM_TYPE_UNKNOWN_16) {
+  if (m_menuItemInfo.unknown04 != 0 && m_menuItemInfo.unknown00 != ItemType::ITEM_TYPE_UNKNOWN_0 && info.unknown00 == ItemType::ITEM_TYPE_UNKNOWN_16) {
     ItemProperty property;
     GfItemUtil::getProperty(property, info.unknown04, 0);
     setNumber(property.unknown76);
@@ -361,7 +364,7 @@ bool GfMenuItemAdapter::update_PArmor(const MenuItemInfo &info) {
 }
 
 bool GfMenuItemAdapter::update_EArmor(const MenuItemInfo &info) {
-  if (unknown38.unknown04 != 0 && unknown38.unknown00 != ItemType::ITEM_TYPE_UNKNOWN_0 && info.unknown00 == ItemType::ITEM_TYPE_UNKNOWN_16) {
+  if (m_menuItemInfo.unknown04 != 0 && m_menuItemInfo.unknown00 != ItemType::ITEM_TYPE_UNKNOWN_0 && info.unknown00 == ItemType::ITEM_TYPE_UNKNOWN_16) {
     ItemProperty property;
     GfItemUtil::getProperty(property, info.unknown04, 0);
     setNumber(property.unknown77);
@@ -371,7 +374,7 @@ bool GfMenuItemAdapter::update_EArmor(const MenuItemInfo &info) {
 }
 
 bool GfMenuItemAdapter::update_revise(const MenuItemInfo &info) {
-  if (unknown38.unknown04 != 0 && unknown38.unknown00 != ItemType::ITEM_TYPE_UNKNOWN_0 && info.unknown00 == ItemType::ITEM_TYPE_UNKNOWN_16) {
+  if (m_menuItemInfo.unknown04 != 0 && m_menuItemInfo.unknown00 != ItemType::ITEM_TYPE_UNKNOWN_0 && info.unknown00 == ItemType::ITEM_TYPE_UNKNOWN_16) {
     ItemProperty property;
     GfItemUtil::getProperty(property, info.unknown04, 0);
     u32 revise = property.unknown78;
@@ -394,7 +397,7 @@ bool GfMenuItemAdapter::update_revise(const MenuItemInfo &info) {
 }
 
 bool GfMenuItemAdapter::update_dispRevise(const MenuItemInfo &info) {
-  if (unknown38.unknown04 == 0 || unknown38.unknown00 == ItemType::ITEM_TYPE_UNKNOWN_0 || info.unknown00 != ItemType::ITEM_TYPE_UNKNOWN_16) {
+  if (m_menuItemInfo.unknown04 == 0 || m_menuItemInfo.unknown00 == ItemType::ITEM_TYPE_UNKNOWN_0 || info.unknown00 != ItemType::ITEM_TYPE_UNKNOWN_16) {
     return false;
   }
   ItemProperty property;
@@ -422,7 +425,7 @@ bool GfMenuItemAdapter::update_dispRevise(const MenuItemInfo &info) {
 
 bool GfMenuItemAdapter::update_roleText(const MenuItemInfo &info) {
   bool result = false;
-  if (unknown38.unknown04 != 0 && unknown38.unknown00 != ItemType::ITEM_TYPE_UNKNOWN_0 && info.unknown00 == ItemType::ITEM_TYPE_UNKNOWN_16) {
+  if (m_menuItemInfo.unknown04 != 0 && m_menuItemInfo.unknown00 != ItemType::ITEM_TYPE_UNKNOWN_0 && info.unknown00 == ItemType::ITEM_TYPE_UNKNOWN_16) {
     ItemProperty property;
     GfItemUtil::getProperty(property, info.unknown04, 0);
     u8 role = property.unknown75;
@@ -445,7 +448,7 @@ GfMenuItemAdapter *GfMenuItemAdapter::createFromCoverter(u32 handle, u32 type, I
   converter->getItemInfo(info);
   GfMenuItemAdapter *adapter = create(handle, type, info, isUpdateAlways);
   if (adapter != nullptr) {
-    adapter->unknown68 = converter;
+    adapter->m_iConverter = converter;
   }
   return adapter;
 }
@@ -461,7 +464,7 @@ GfMenuItemAdapter *GfMenuItemAdapter::createFromList(u32 handle, u32 type, GfMen
   converter->getItemInfo(info);
   GfMenuItemAdapter *adapter = create(handle, type, info, isUpdateAlways);
   if (adapter != nullptr) {
-    adapter->unknown68 = converter;
+    adapter->m_iConverter = converter;
   }
   return adapter;
 }
@@ -477,7 +480,7 @@ GfMenuItemAdapter *GfMenuItemAdapter::createFromReference(u32 handle, u32 type, 
   converter->getItemInfo(info);
   GfMenuItemAdapter *adapter = create(handle, type, info, isUpdateAlways);
   if (adapter != nullptr) {
-    adapter->unknown68 = converter;
+    adapter->m_iConverter = converter;
   }
   return adapter;
 }
@@ -493,7 +496,7 @@ GfMenuItemAdapter *GfMenuItemAdapter::createFromRefernceList(u32 handle, u32 typ
   converter->getItemInfo(info);
   GfMenuItemAdapter *adapter = create(handle, type, info, isUpdateAlways);
   if (adapter != nullptr) {
-    adapter->unknown68 = converter;
+    adapter->m_iConverter = converter;
   }
   return adapter;
 }
@@ -511,7 +514,7 @@ GfMenuItemAdapter *GfMenuItemAdapter::createFromPouch(u32 handle, u32 type, u32 
   if (adapter == nullptr) {
     return nullptr;
   }
-  adapter->unknown68 = converter;
+  adapter->m_iConverter = converter;
   return adapter;
 }
 
@@ -526,7 +529,7 @@ GfMenuItemAdapter *GfMenuItemAdapter::createFromPouchReferenceIndex(u32 handle, 
   converter->getItemInfo(info);
   GfMenuItemAdapter *adapter = create(handle, type, info, isUpdateAlways);
   if (adapter != nullptr) {
-    adapter->unknown68 = converter;
+    adapter->m_iConverter = converter;
   }
   return adapter;
 }
@@ -544,7 +547,7 @@ GfMenuItemAdapter *GfMenuItemAdapter::createFromPouchReferenceDriver(u32 handle,
   if (adapter == nullptr) {
     return nullptr;
   }
-  adapter->unknown68 = converter;
+  adapter->m_iConverter = converter;
   return adapter;
 }
 
@@ -559,7 +562,7 @@ GfMenuItemAdapter *GfMenuItemAdapter::createFromPouchReferenceIndexReferenceDriv
   converter->getItemInfo(info);
   GfMenuItemAdapter *adapter = create(handle, type, info, isUpdateAlways);
   if (adapter != nullptr) {
-    adapter->unknown68 = converter;
+    adapter->m_iConverter = converter;
   }
   return adapter;
 }
@@ -577,7 +580,7 @@ GfMenuItemAdapter *GfMenuItemAdapter::createFromMission(u32 handle, u32 type, u3
   if (adapter == nullptr) {
     return nullptr;
   }
-  adapter->unknown68 = converter;
+  adapter->m_iConverter = converter;
   return adapter;
 }
 
@@ -592,7 +595,7 @@ GfMenuItemAdapter *GfMenuItemAdapter::createFromReferenceMission(u32 handle, u32
   converter->getItemInfo(info);
   GfMenuItemAdapter *adapter = create(handle, type, info, isUpdateAlways);
   if (adapter != nullptr) {
-    adapter->unknown68 = converter;
+    adapter->m_iConverter = converter;
   }
   return adapter;
 }
@@ -610,7 +613,7 @@ GfMenuItemAdapter *GfMenuItemAdapter::createFromDriverEquip(u32 handle, u32 type
   if (adapter == nullptr) {
     return nullptr;
   }
-  adapter->unknown68 = converter;
+  adapter->m_iConverter = converter;
   return adapter;
 }
 
@@ -627,7 +630,7 @@ GfMenuItemAdapter *GfMenuItemAdapter::createFromReferenceDriverEquip(u32 handle,
   if (adapter == nullptr) {
     return nullptr;
   }
-  adapter->unknown68 = converter;
+  adapter->m_iConverter = converter;
   return adapter;
 }
 
@@ -644,7 +647,7 @@ GfMenuItemAdapter *GfMenuItemAdapter::createFromBladeEquip(u32 handle, u32 type,
   if (adapter == nullptr) {
     return nullptr;
   }
-  adapter->unknown68 = converter;
+  adapter->m_iConverter = converter;
   return adapter;
 }
 
@@ -661,27 +664,27 @@ GfMenuItemAdapter *GfMenuItemAdapter::createFromReferenceBladeEquip(u32 handle, 
   if (adapter == nullptr) {
     return nullptr;
   }
-  adapter->unknown68 = converter;
+  adapter->m_iConverter = converter;
   return adapter;
 }
 
 void GfMenuItemAdapter::changeItem(const MenuItemInfo &info) {
-  if (unknown38.unknown00 == info.unknown00 && unknown38.unknown04 == info.unknown04 && unknown38.unknown08 == info.unknown08) {
+  if (m_menuItemInfo.unknown00 == info.unknown00 && m_menuItemInfo.unknown04 == info.unknown04 && m_menuItemInfo.unknown08 == info.unknown08) {
     return;
   }
-  unknown38 = info;
+  m_menuItemInfo = info;
   setChange();
 }
 
 void GfMenuItemAdapter::update(const fw::UpdateInfo &updateInfo) {
-  if (unknown68 != nullptr) {
+  if (m_iConverter != nullptr) {
     MenuItemInfo info;
-    unknown68->getItemInfo(info);
+    m_iConverter->getItemInfo(info);
     changeItem(info);
   }
 
   if (unknown48.isValid() && (unknown20 & (FLAG_UNKNOWN_0 | FLAG_UNKNOWN_1)) != 0) {
-    setDisp(unknown48(unknown38));
+    setDisp(unknown48(m_menuItemInfo));
     unknown20 &= ~FLAG_UNKNOWN_0;
   }
 }

@@ -1,5 +1,8 @@
 #include "gf/menu/object/gf_menu_obj_operation_info.h"
 
+#include "bdat.h"
+#include "gf/data/gf_bdat_id.h"
+#include "gf/data/gf_data_bdat.h"
 #include "gf/gf_allocator.h"
 #include "gf/menu/gf_menu_types.h"
 #include "types.h"
@@ -44,6 +47,34 @@ void GfMenuObjOperationInfo::dispOffIconTable(mm::mtl::FixedVector<DupItem, 16> 
       acc.setDisp(false);
     }
   }
+}
+
+bool GfMenuObjOperationInfo::setupIconTable(mm::mtl::FixedVector<DupItem, 16> &table, u32 index, u32 key, u32 value, u32 isSecond) {
+  if (index >= table.size()) {
+    return false;
+  }
+
+  for (u32 i = 0; i < index; i++) {
+    if (table[i].unknown04 == key && table[i].unknown0e) {
+      return false;
+    }
+  }
+
+  table[index].unknown04 = key;
+  table[index].unknown08 = value;
+  // The game picks the column name (csel) before the call of getFP; written inside the getVal call the function has 132 instructions instead of 133.
+  const char *order = isSecond == 0 ? "order" : "order2";
+  u8 *bdat = GfDataBdat::getFP(BDAT_MNU_KEY_ORDER);
+  u16 sortKey = 0;
+  for (int id = Bdat::getIdTop(bdat); id <= Bdat::getIdEnd(bdat); id++) {
+    if (Bdat::getVal(bdat, "key", id).valueU16 == key) {
+      sortKey = Bdat::getVal(bdat, order, id).valueU16;
+      break;
+    }
+  }
+  table[index].unknown0c = sortKey;
+  table[index].unknown0e = 1;
+  return true;
 }
 
 void GfMenuObjOperationInfo::finalize() { GfMenuObject::finalize(); }

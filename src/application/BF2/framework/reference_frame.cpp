@@ -7,7 +7,7 @@
 
 namespace fw {
 
-ReferenceFrame::ReferenceFrame() : unknowna0(0), unknowna8(nullptr) {
+ReferenceFrame::ReferenceFrame() : unknowna0(0), m_referenceFrame(nullptr) {
   unknown20.unknown00 = mm::Vec3::zero;
   unknown20.unknown10 = mm::Quat::identity;
   unknown40.unknown00 = mm::Vec3::zero;
@@ -24,12 +24,12 @@ ReferenceFrame::~ReferenceFrame() { ; }
 
 void ReferenceFrame::addChild(ReferenceFrame &child) {
   unknownb0.push_back(&child);
-  child.unknowna8 = this;
+  child.m_referenceFrame = this;
 }
 
 void ReferenceFrame::removeChild(ReferenceFrame &child) {
   unknownb0.erase(&child);
-  child.unknowna8 = nullptr;
+  child.m_referenceFrame = nullptr;
 }
 
 static void toLocalTransform(const Transform &parentWorld, const Transform &world, Transform *local) {
@@ -40,8 +40,8 @@ static void toLocalTransform(const Transform &parentWorld, const Transform &worl
 
 void ReferenceFrame::syncLocalTransform() {
   if ((unknowna0 & FLAG_UNKNOWN_0) == 0) {
-    if (unknowna8 != nullptr) {
-      toLocalTransform(unknowna8->getSyncedWorldTransform(), unknown40, &unknown20);
+    if (m_referenceFrame != nullptr) {
+      toLocalTransform(m_referenceFrame->getSyncedWorldTransform(), unknown40, &unknown20);
     } else {
       unknown20 = unknown40;
     }
@@ -52,8 +52,8 @@ void ReferenceFrame::syncLocalTransform() {
 
 void ReferenceFrame::syncWorldTransform() {
   if ((unknowna0 & FLAG_UNKNOWN_1) == 0) {
-    if (unknowna8 != nullptr) {
-      Transform::mul(unknowna8->getSyncedWorldTransform(), unknown20, &unknown40);
+    if (m_referenceFrame != nullptr) {
+      Transform::mul(m_referenceFrame->getSyncedWorldTransform(), unknown20, &unknown40);
     } else {
       unknown40 = unknown20;
     }
@@ -74,8 +74,8 @@ void TransformUtil::mul(const Transform &transform, const anm::QsTransform &othe
 }
 
 void ReferenceFrame::unlinkParent(ReferenceFrame &frame) {
-  if (frame.unknowna8 != nullptr) {
-    frame.unknowna8->removeChild(frame);
+  if (frame.m_referenceFrame != nullptr) {
+    frame.m_referenceFrame->removeChild(frame);
   }
 }
 
@@ -83,11 +83,11 @@ void ReferenceFrame::unlinkChild(ReferenceFrame &frame) {
   const Transform &world = frame.getSyncedWorldTransform();
   for (mm::mtl::IntrusiveList<ReferenceFrame>::iterator it = frame.unknownb0.begin(); it != frame.unknownb0.end(); ++it) {
     ReferenceFrame &child = *it;
-    if (child.unknowna8 == &frame) {
+    if (child.m_referenceFrame == &frame) {
       child.invalidateWorld();
       child.unknown20.unknown00 += world.unknown00;
       child.unknown20.unknown10 = mm::Quat::mul(world.unknown10, child.unknown20.unknown10);
-      child.unknowna8 = nullptr;
+      child.m_referenceFrame = nullptr;
     }
   }
   frame.unknownb0.clear();

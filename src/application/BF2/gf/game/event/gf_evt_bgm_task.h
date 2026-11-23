@@ -36,7 +36,7 @@ public:
   static EvtBgmTaskVolume *create(const EventBgmSetup &setup);
 
   f32 unknown08;  // Inferred role: seconds left; copy of EventBgmSetup::unknown48 (ldr/str at 0x7100307df4+8); original member name unknown.
-  f32 unknown0c;  // Inferred role: target volume; copy of EventBgmSetup::unknown44; original member name unknown.
+  f32 unknown0c;  // Inferred role: target volume; copy of EventBgmSetup::m_playBgmVolume; original member name unknown.
   bool unknown10; // Inferred role: cancelled; set by cancel (strb at 0x7100307eb4), tested first by update; original member name unknown.
 };
 
@@ -53,12 +53,12 @@ public:
   void cancel(GfEvtBgm *bgm) override;
   static EvtBgmTaskDelay *create(const EventBgmSetup &setup);
 
-  EventBgmSetup
-      unknown08;  // Inferred role: setup to play; the constructor copies it the way the implicit EventBgmSetup copy does (name at 0x08, memcpy of 0x22 bytes at 0x4c); original member name unknown.
-  bool unknown70; // Inferred role: cancelled; set by cancel (strb at 0x7100307c54), tested first by update; original member name unknown.
+  EventBgmSetup m_eventBgmSetup; // Inferred role: setup to play; the constructor copies it the way the implicit EventBgmSetup copy does (name at 0x08, memcpy of 0x22 bytes at 0x4c); original member
+                                 // name unknown.
+  bool unknown70;                // Inferred role: cancelled; set by cancel (strb at 0x7100307c54), tested first by update; original member name unknown.
 };
 
-static_assert(offsetof(EvtBgmTaskDelay, unknown08) == 0x08, "");
+static_assert(offsetof(EvtBgmTaskDelay, m_eventBgmSetup) == 0x08, "");
 static_assert(offsetof(EvtBgmTaskDelay, unknown70) == 0x70, "");
 static_assert(sizeof(EvtBgmTaskDelay) == 0x78, ""); // operator new(0x78) in create, 0x71003074a0
 
@@ -70,12 +70,12 @@ public:
   void cancel(GfEvtBgm *bgm) override;
   static EvtBgmTaskDelayStop *create(const EventBgmSetup &setup);
 
-  EventBgmSetup unknown08; // Inferred role: setup of the bgm to play after the stop; same copy as EvtBgmTaskDelay::unknown08; original member name unknown.
-  f32 unknown70;           // Inferred role: seconds left; copy of EventBgmSetup::unknown58 (create, 0x71003073f4); original member name unknown.
-  bool unknown74;          // Inferred role: cancelled; set by cancel (strb at 0x7100307de8), tested first by update; original member name unknown.
+  EventBgmSetup m_eventBgmSetup; // Inferred role: setup of the bgm to play after the stop; same copy as EvtBgmTaskDelay::m_eventBgmSetup; original member name unknown.
+  f32 unknown70;                 // Inferred role: seconds left; copy of EventBgmSetup::unknown58 (create, 0x71003073f4); original member name unknown.
+  bool unknown74;                // Inferred role: cancelled; set by cancel (strb at 0x7100307de8), tested first by update; original member name unknown.
 };
 
-static_assert(offsetof(EvtBgmTaskDelayStop, unknown08) == 0x08, "");
+static_assert(offsetof(EvtBgmTaskDelayStop, m_eventBgmSetup) == 0x08, "");
 static_assert(offsetof(EvtBgmTaskDelayStop, unknown70) == 0x70, "");
 static_assert(offsetof(EvtBgmTaskDelayStop, unknown74) == 0x74, "");
 static_assert(sizeof(EvtBgmTaskDelayStop) == 0x78, ""); // operator new(0x78) in create, 0x71003073f4

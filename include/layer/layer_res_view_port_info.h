@@ -13,7 +13,7 @@ class CGLibRenderTarget;
 namespace layer {
 
 struct LayerResViewPortInfo {
-  LayerViewPort unknown00;                // Inferred role: view port; original member name unknown.
+  LayerViewPort m_layerViewPort;          // Inferred role: view port; original member name unknown.
   grlib::CGLibRenderTarget *unknown10;    // Inferred role: render target; original member name unknown.
   grlib::CGLibDblUniformBlock *unknown18; // Inferred role: view port uniform; original member name unknown.
   mm::Col4 unknown20;                     // Inferred role: clear color; original member name unknown.

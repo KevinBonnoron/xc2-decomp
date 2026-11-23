@@ -3,17 +3,96 @@
 
 #include <string.h>
 
+#include "bdat.h"
 #include "framework/resource/common_resource.h"
+#include "gf/gf_allocator.h"
 #include "mm_math/mm_pnt.h"
+#include "mm_mtl/fixstr.h"
+#include "mm_mtl/str_util.h"
 
 namespace gf {
 
+GfMenuMapInfo::GfMenuMapInfo(const GfSetupParam &param) : unknown08(false), unknown60(-1), unknown64(-1), unknown6c(0), unknown70(0), unknown74(0), unknown78(0) { initialize(param); }
+
+void GfMenuMapInfo::initialize(const GfSetupParam &param) {
+  u8 *bdat = Bdat::getFP("MNU_MapInfoFile");
+  mm::mtl::FixStr<128> path;
+  u32 count = Bdat::getIdCount(bdat);
+  if (count != 0) {
+    unknown10.setAllocator(getAllocator(ALLOCATOR_UNKNOWN_0));
+    unknown10.reserve(count);
+    unknown38.setAllocator(getAllocator(ALLOCATOR_UNKNOWN_0));
+    for (int i = 0; i < 5; i++) {
+      unknown80[i].setAllocator(getAllocator(ALLOCATOR_UNKNOWN_0));
+      unknown80[i].reserve(64, 16);
+    }
+    for (int i = 0; i < Bdat::getIdCount(bdat); i++) {
+      path.format("/menu/minimap/%s.mi", Bdat::getVal(bdat, "file_name", Bdat::getIdTop(bdat) + i).valueString);
+      mm::mtl::unknown002(path);
+      fw::CommonResource *resource = fw::CommonResource::request(getAllocator(ALLOCATOR_UNKNOWN_0), path.c_str(), 10, false);
+      if (resource != nullptr) {
+        unknown10.push_back(resource);
+      }
+    }
+    unknown08 = true;
+  }
+}
+
 GfMenuMapInfo::~GfMenuMapInfo() {}
+
+void GfMenuMapInfo::build(const GfSetupParam &param) {
+// __LINE__ must be 92 as in the original file: it is the line argument of operator new.
+#line 92
+  new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) GfMenuMapInfo(param);
+}
 
 void GfMenuMapInfo::destroy() {
   GfMenuMapInfo *info = get();
   info->finalize();
   delete info;
+}
+
+void GfMenuMapInfo::finalize() {
+  if (unknown10.capacity() != 0) {
+    for (u32 i = 0; i < unknown10.size(); i++) {
+      if (unknown10[i] != nullptr) {
+        unknown10[i]->release();
+        unknown10[i] = nullptr;
+      }
+    }
+    unknown10.destroy();
+  }
+  if (unknown38.capacity() != 0) {
+    for (u32 i = 0; i < unknown38.size(); i++) {
+      if (unknown38[i].unknown00 != nullptr) {
+        unknown38[i].unknown00->release();
+        unknown38[i].unknown00 = nullptr;
+      }
+    }
+    unknown38.destroy();
+  }
+  for (int i = 0; i < 5; i++) {
+    unknown80[i].destroy();
+  }
+  unknown08 = false;
+}
+
+int GfMenuMapInfo::getMapInfoIndex(const char *name) {
+  GfMenuMapInfo *info = get();
+  int index = -1;
+  if (name != nullptr && info != nullptr && name[0] != '\0') {
+    mm::mtl::FixStr<128> path;
+    path.format("/menu/minimap/%s.mi", name);
+    mm::mtl::unknown002(path);
+    for (u32 i = 0; i < info->unknown10.size(); i++) {
+      const char *assetName = info->unknown10[i]->getAssetName();
+      if (info->unknown10[i]->valid() && strcmp(assetName, path.c_str()) == 0) {
+        index = i;
+        break;
+      }
+    }
+  }
+  return index;
 }
 
 bool GfMenuMapInfo::isInitialized() {
@@ -63,7 +142,7 @@ bool GfMenuMapInfo::getMapArea(int index, u32 areaIndex, MapAreaInfo &area) {
   if (info != nullptr && index < info->unknown10.size() && info->unknown10[index]->valid()) {
     const unknown001 *data = static_cast<const unknown001 *>(info->unknown10[index]->getAssetData());
     if (areaIndex < data->unknown04) {
-      area = data->unknown08[areaIndex];
+      area = data->m_mapAreaInfo[areaIndex];
       return true;
     }
   }
@@ -75,7 +154,7 @@ const GfMenuMapInfo::MapAreaInfo *GfMenuMapInfo::getMapArea(int index, u32 areaI
   GfMenuMapInfo *info = get();
   if (info != nullptr && index < info->unknown10.size() && info->unknown10[index]->valid()) {
     const unknown001 *data = static_cast<const unknown001 *>(info->unknown10[index]->getAssetData());
-    return areaIndex < data->unknown04 ? &data->unknown08[areaIndex] : nullptr;
+    return areaIndex < data->unknown04 ? &data->m_mapAreaInfo[areaIndex] : nullptr;
   }
 
   return nullptr;
@@ -86,8 +165,8 @@ bool GfMenuMapInfo::getMapAreaFromName(int index, const char *name, MapAreaInfo 
   if (info != nullptr && index < info->unknown10.size() && info->unknown10[index]->valid()) {
     const unknown001 *data = static_cast<const unknown001 *>(info->unknown10[index]->getAssetData());
     for (u32 i = 0; i < data->unknown04; i++) {
-      if (strcmp(data->unknown08[i].unknown00, name) == 0) {
-        area = data->unknown08[i];
+      if (strcmp(data->m_mapAreaInfo[i].unknown00, name) == 0) {
+        area = data->m_mapAreaInfo[i];
         return true;
       }
     }
@@ -101,8 +180,8 @@ const GfMenuMapInfo::MapAreaInfo *GfMenuMapInfo::getMapAreaFromName(int index, c
   if (info != nullptr && index < info->unknown10.size() && info->unknown10[index]->valid()) {
     const unknown001 *data = static_cast<const unknown001 *>(info->unknown10[index]->getAssetData());
     for (u32 i = 0; i < data->unknown04; i++) {
-      if (strcmp(data->unknown08[i].unknown00, name) == 0) {
-        return &data->unknown08[i];
+      if (strcmp(data->m_mapAreaInfo[i].unknown00, name) == 0) {
+        return &data->m_mapAreaInfo[i];
       }
     }
   }

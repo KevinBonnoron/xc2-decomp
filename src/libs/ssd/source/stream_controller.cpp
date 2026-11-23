@@ -41,14 +41,14 @@ int StreamController::PositionToFrame(u64 position) {
 
 void StreamController::ExecAdpcmDecode() {}
 
-void StreamController::ClearReadBuffer() { unknown158.Clear(); }
+void StreamController::ClearReadBuffer() { m_streamBuffer.Clear(); }
 
 int StreamController::OutData(u8 *buffer, u64 size, u64 *outSize, bool *isMark) {
-  switch (unknown18.unknown1a) {
+  switch (m_waveSource.unknown1a) {
   case 4:
     if (unknown1f0 == 1) {
       unknown1c8 = buffer;
-      unknown1d0 = size >> (unknown18.unknown35 == 1);
+      unknown1d0 = size >> (m_waveSource.unknown35 == 1);
       unknown1d8 = 0;
       unknown1f0 = 2;
       *outSize = 0;
@@ -62,12 +62,12 @@ int StreamController::OutData(u8 *buffer, u64 size, u64 *outSize, bool *isMark) 
     return unknown1f0;
   case 3:
     SoundCore::instance_->LockAudio();
-    unknown158.OutData64(buffer, size, outSize, isMark);
+    m_streamBuffer.OutData64(buffer, size, outSize, isMark);
     SoundCore::instance_->UnlockAudio();
     return 4;
   default:
     SoundCore::instance_->LockAudio();
-    unknown158.OutData16(buffer, size, outSize, isMark);
+    m_streamBuffer.OutData16(buffer, size, outSize, isMark);
     SoundCore::instance_->UnlockAudio();
     return 4;
   }
@@ -86,7 +86,7 @@ s64 StreamController::CloseStream() {
 void StreamController::ExecCloseStream() {
   unknown148 = nullptr;
   unknown138 = nullptr;
-  unknown100.Close();
+  m_fileStream.Close();
   Allocator *allocator = SoundMemory::allocator_;
   if (unknown1b8 != nullptr) {
     Allocator::Block *block = allocator->GetMemoryBlock(unknown1b8);
@@ -109,31 +109,31 @@ void StreamController::ExecCloseStream() {
 }
 
 void StreamController::ExecSetPosition() {
-  unknown158.Clear();
+  m_streamBuffer.Clear();
   if (unknown1f0 == 4) {
     unknown1f0 = 1;
   }
   unknownf1 = false;
   unknownf3 = false;
   unknownf4 = false;
-  u64 dataSize = unknown18.unknown24;
+  u64 dataSize = m_waveSource.unknown24;
   u64 readPosition;
-  switch (unknown18.unknown34) {
+  switch (m_waveSource.unknown34) {
   case WaveSource::unknown001_4: {
     int frame = 0;
-    if (unknown18.unknown40 != 0) {
-      frame = unknown208 / unknown18.unknown40;
+    if (m_waveSource.unknown40 != 0) {
+      frame = unknown208 / m_waveSource.unknown40;
     }
-    int index = frame / unknown18.unknown5c;
-    if (index >= unknown18.unknown68) {
-      index = unknown18.unknown68;
+    int index = frame / m_waveSource.unknown5c;
+    if (index >= m_waveSource.unknown68) {
+      index = m_waveSource.unknown68;
     }
     unknown1ec = index;
     readPosition = unknown1c0[index];
     break;
   }
   case WaveSource::unknown001_3:
-    readPosition = (unknown208 & ~0xfULL) * unknown18.unknown35;
+    readPosition = (unknown208 & ~0xfULL) * m_waveSource.unknown35;
     if (readPosition >= dataSize) {
       readPosition = dataSize;
     }
@@ -160,10 +160,10 @@ s64 StreamController::QuitStream() {
   unknownef = false;
   unknownf8 = 0;
   static_cast<SystemCore *>(SoundCore::instance_)->RemoveStreamController(this);
-  unknown258.Free();
-  unknown158.Free();
-  unknown100.Close();
-  unknown18.Quit();
+  m_memoryBuffer.Free();
+  m_streamBuffer.Free();
+  m_fileStream.Close();
+  m_waveSource.Quit();
   return 0;
 }
 
@@ -171,11 +171,11 @@ void StreamController::ExecReadStream(Result (StreamBuffer::*read)(const void *d
   if (unknownf6) {
     return;
   }
-  if (unknown158.m_dataSize >= 0x20000) {
+  if (m_streamBuffer.m_dataSize >= 0x20000) {
     unknownf1 = true;
   }
   SoundCore::instance_->LockAudio();
-  u64 freeSize = unknown158.m_bufferSize - unknown158.m_dataSize;
+  u64 freeSize = m_streamBuffer.m_bufferSize - m_streamBuffer.m_dataSize;
   SoundCore::instance_->UnlockAudio();
   if (freeSize >= 0x10000 && !unknownf6) {
     u64 remain = unknown230 - unknown218;
@@ -200,10 +200,10 @@ void StreamController::ExecReadStream(Result (StreamBuffer::*read)(const void *d
       }
       u64 offset = unknown210 + unknown218;
       u64 readSize;
-      unknown100.GetData(offset, size, unknown258.unknown08, &readSize);
+      m_fileStream.GetData(offset, size, m_memoryBuffer.unknown08, &readSize);
       if (!unknownf6) {
         SoundCore::instance_->LockAudio();
-        (unknown158.*read)(unknown258.unknown08, size, mark);
+        (m_streamBuffer.*read)(m_memoryBuffer.unknown08, size, mark);
         SoundCore::instance_->UnlockAudio();
         unknown218 += size;
         if (unknownf2 && unknown250 != 0 && unknown218 >= unknown230) {
@@ -219,15 +219,15 @@ void StreamController::ExecReadStream(Result (StreamBuffer::*read)(const void *d
 }
 
 u64 StreamController::SizeToReadPosition(u64 size) {
-  if (unknown18.unknown34 == WaveSource::unknown001_3) {
-    return unknown18.unknown35 * (size & ~0xfULL);
+  if (m_waveSource.unknown34 == WaveSource::unknown001_3) {
+    return m_waveSource.unknown35 * (size & ~0xfULL);
   }
-  if (unknown18.unknown34 == WaveSource::unknown001_4) {
+  if (m_waveSource.unknown34 == WaveSource::unknown001_4) {
     int frame = 0;
-    if (unknown18.unknown40 != 0) {
-      frame = size / unknown18.unknown40;
+    if (m_waveSource.unknown40 != 0) {
+      frame = size / m_waveSource.unknown40;
     }
-    int index = frame / unknown18.unknown5c;
+    int index = frame / m_waveSource.unknown5c;
     unknown1ec = index;
     size = unknown1c0[index];
   }
@@ -235,9 +235,9 @@ u64 StreamController::SizeToReadPosition(u64 size) {
 }
 
 u32 StreamController::PlayTimeToPosition(f32 time) {
-  int index = static_cast<int>(unknown18.unknown2c * time) / unknown18.unknown5c;
-  if (index > unknown18.unknown68) {
-    index = unknown18.unknown68;
+  int index = static_cast<int>(m_waveSource.unknown2c * time) / m_waveSource.unknown5c;
+  if (index > m_waveSource.unknown68) {
+    index = m_waveSource.unknown68;
   }
   return unknown1c0[index];
 }

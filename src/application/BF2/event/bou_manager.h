@@ -61,13 +61,13 @@ private:
   // BouManager::startActive (1.0.0: 0x7100105ef4) reloads the origin x it has just stored: the two subtractions were compiled as a function of their own (one 64-bit load of the origin) before they
   // were inlined.
   void unknown003(const mm::Pnt<int> &point) {
-    unknown20.width = point.x - unknown20.x;
-    unknown20.height = point.y - unknown20.y;
+    m_bouRect.width = point.x - m_bouRect.x;
+    m_bouRect.height = point.y - m_bouRect.y;
   }
 
   mm::mtl::unknown027<32> unknown18;                                       // Inferred role: flags; original member name unknown.
   mm::mtl::unknown027<32> unknown1c;                                       // Inferred role: debug flags; original member name unknown.
-  BouRect unknown20;                                                       // Inferred role: rect; original member name unknown.
+  BouRect m_bouRect;                                                       // Inferred role: rect; original member name unknown.
   mm::mtl::FixedVector<IBouCallback *, CALLBACK_UNKNOWN_1024> unknown38;   // Inferred role: callbacks; original member name unknown.
   mm::mtl::FixedVector<IBouCallback *, CALLBACK_UNKNOWN_1024> unknown2040; // Inferred role: selected; original member name unknown.
 };

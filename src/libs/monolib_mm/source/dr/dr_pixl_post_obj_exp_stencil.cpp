@@ -2,7 +2,7 @@
 
 namespace ml {
 
-DrPixlPostObjExpStencil::DrPixlPostObjExpStencil(DrMan *drMan) : unknown00(drMan) {}
+DrPixlPostObjExpStencil::DrPixlPostObjExpStencil(DrMan *drMan) : m_drMan(drMan) {}
 
 DrPixlPostObjExpStencil::~DrPixlPostObjExpStencil() {}
 

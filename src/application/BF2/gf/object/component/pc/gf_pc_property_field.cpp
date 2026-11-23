@@ -42,11 +42,11 @@ void GfPropertyField::procMsgObjectFlushProperty(const GfComPropertyPc &property
 }
 
 GfPropertyField::GfPropertyField()
-    : unknown08(nullptr), unknown10_0(false), unknown10_1(false), unknown10_2(false), unknown10_3(false), unknown10_4(false), unknown10_5(false), unknown10_6(false), unknown10_7(false),
+    : unknown08(nullptr), m_walkMode(false), unknown10_1(false), unknown10_2(false), unknown10_3(false), unknown10_4(false), unknown10_5(false), unknown10_6(false), unknown10_7(false),
       unknown11_0(false), unknown11_1(false), unknown11_2(false), unknown11_3(false), unknown11_4(false), unknown11_5(false), unknown11_6(false), unknown11_7(false), unknown12_0(false),
       unknown12_1(false), unknown12_2(0), unknown14(WALL_MOVE_MODE_UNKNOWN_FFFFFFFF), unknown18(0.25f), unknown1c(0.0f), unknown20(0.0f), unknown24(0.0f), unknown28(0.0f), unknown2c(0.0f),
       unknown30(0.0f), unknown34(0.0f), unknown38(0.0f), unknown3c(0.0f), unknown40(0.0f), unknown44(0.0f), unknown48(0.0f), unknown4c(0.25f), unknown50(5.0f), unknown54(0.0f),
-      unknown60(mm::Vec3::zero), unknown70(0), unknown78(unknown020) {}
+      unknown60(mm::Vec3::zero), unknown70(0), m_GF_OBJ_HANDLE(unknown020) {}
 
 void GfPropertyField::setup(const GfComPropertyPc &property) {
   resetStatus(property);
@@ -163,35 +163,35 @@ void GfPropertyField::flush(const GfComPropertyPc &property) {
 void GfPropertyField::setBigJumpInfo(const MsgPcFieldNotifyBigJump *message) {
   if (message != nullptr) {
     unknown11_4 = true;
-    unknown80 = *message;
+    m_msgPcFieldNotifyBigJump = *message;
   } else {
     unknown11_4 = false;
   }
 }
 
-const MsgPcFieldNotifyBigJump *GfPropertyField::getBigJumpInfo() const { return unknown11_4 ? &unknown80 : nullptr; }
+const MsgPcFieldNotifyBigJump *GfPropertyField::getBigJumpInfo() const { return unknown11_4 ? &m_msgPcFieldNotifyBigJump : nullptr; }
 
 void GfPropertyField::setWarpInfo(const MsgPcFieldNotifyWarp *message) {
   if (message != nullptr) {
     unknown11_5 = true;
-    unknownc0 = *message;
+    m_msgPcFieldNotifyWarp = *message;
   } else {
     unknown11_5 = false;
   }
 }
 
-const MsgPcFieldNotifyWarp *GfPropertyField::getWarpInfo() const { return unknown11_5 ? &unknownc0 : nullptr; }
+const MsgPcFieldNotifyWarp *GfPropertyField::getWarpInfo() const { return unknown11_5 ? &m_msgPcFieldNotifyWarp : nullptr; }
 
 void GfPropertyField::setWallJump(const MsgPcFieldNotifyWallJump *message) {
   if (message != nullptr) {
     unknown11_6 = true;
-    unknown100 = *message;
+    m_msgPcFieldNotifyWallJump = *message;
   } else {
     unknown11_6 = false;
   }
 }
 
-const MsgPcFieldNotifyWallJump *GfPropertyField::getWallJumpInfo() const { return unknown11_6 ? &unknown100 : nullptr; }
+const MsgPcFieldNotifyWallJump *GfPropertyField::getWallJumpInfo() const { return unknown11_6 ? &m_msgPcFieldNotifyWallJump : nullptr; }
 
 f32 GfPropertyField::getWallHeightOffset() const { return static_cast<const WallCommonParam *>(unknown08->unknown10[15].param)->wallHeightRatio * unknown28; }
 

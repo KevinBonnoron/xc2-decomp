@@ -138,23 +138,23 @@ void SoundCore::StopSound(f32 fadeTime) { static_cast<SystemCore *>(this)->StopS
 
 void SoundCore::PauseSound(bool isPause, f32 fadeTime) { static_cast<SystemCore *>(this)->PauseSound(isPause, fadeTime); }
 
-u64 SoundCore::GetGameFrameCounter() const { return static_cast<const SystemCore *>(this)->unknown270; }
+u64 SoundCore::GetGameFrameCounter() const { return static_cast<const SystemCore *>(this)->m_gameFrameCounter; }
 
-f64 SoundCore::GetAudioTimerCounter() const { return static_cast<const SystemCore *>(this)->unknown280; }
+f64 SoundCore::GetAudioTimerCounter() const { return static_cast<const SystemCore *>(this)->m_audioTimerCounter; }
 
 u64 SoundCore::GetAudioFrameCounter() const { return static_cast<const SystemCore *>(this)->unknown278; }
 
 u64 SoundCore::GetAudioProcessCounter() const { return static_cast<const SystemCore *>(this)->unknown278; }
 
-int SoundCore::GetInstanceAllocCount() const { return MemoryManager::memoryManager_.unknown94; }
+int SoundCore::GetInstanceAllocCount() const { return MemoryManager::memoryManager_.m_instanceAllocCount; }
 
-int SoundCore::GetBufferAllocCount() const { return MemoryManager::memoryManager_.unknown98; }
+int SoundCore::GetBufferAllocCount() const { return MemoryManager::memoryManager_.m_bufferAllocCount; }
 
-int SoundCore::GetStreamAllocCount() const { return MemoryManager::memoryManager_.unknown9c; }
+int SoundCore::GetStreamAllocCount() const { return MemoryManager::memoryManager_.m_streamAllocCount; }
 
 int SoundCore::GetVoiceHandleCount() const { return static_cast<const SystemCore *>(this)->unknown3a0.count; }
 
-int SoundCore::GetHWAllocVoiceCount() const { return static_cast<const SystemCore *>(this)->unknown410; }
+int SoundCore::GetHWAllocVoiceCount() const { return static_cast<const SystemCore *>(this)->m_hWAllocVoiceCount; }
 
 int SoundCore::GetAllocMemoryCount() const { return MemoryManager::memoryManager_.unknown38.count; }
 

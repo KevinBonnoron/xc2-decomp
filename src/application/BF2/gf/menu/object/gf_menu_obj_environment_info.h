@@ -17,13 +17,13 @@ public:
       int unknown04; // Inferred role: fade control, -1 when none; original member name unknown.
     };
 
-    ListListener(GfMenuObjEnvironmentInfo *owner) : unknown0c(0), unknown10(), _18(), unknown20(owner) {}
+    ListListener(GfMenuObjEnvironmentInfo *owner) : unknown0c(0), unknown10(), _18(), m_menuObjEnvironmentInfo(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     int unknown0c; // Inferred role: opened flag; original member name unknown.
     unknown004 unknown10;
     u8 _18[0x1c - 0x18];
-    GfMenuObjEnvironmentInfo *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjEnvironmentInfo *m_menuObjEnvironmentInfo; // Inferred role: owner; original member name unknown.
   };
 
   static void close();
@@ -42,7 +42,7 @@ public:
 static_assert(offsetof(GfMenuObjEnvironmentInfo::ListListener, unknown0c) == 0x0c, "");
 static_assert(offsetof(GfMenuObjEnvironmentInfo::ListListener, unknown10) == 0x10, "");
 static_assert(offsetof(GfMenuObjEnvironmentInfo::ListListener::unknown004, unknown04) == 0x04, "");
-static_assert(offsetof(GfMenuObjEnvironmentInfo::ListListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjEnvironmentInfo::ListListener, m_menuObjEnvironmentInfo) == 0x20, "");
 static_assert(sizeof(GfMenuObjEnvironmentInfo::ListListener) == 0x28, "");
 
 } // namespace gf

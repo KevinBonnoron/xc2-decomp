@@ -159,18 +159,18 @@ void IDColiInputUtil::getRay(IDColiInput &input, const mm::Vec3 &start, const mm
 }
 
 void IDColiPrimitive::createRay(CLRayWork &ray, const mm::Vec3 &start, const mm::Vec3 &direction, f32 length, f32 backLength) {
-  ray.unknown00[0].unknown20.x = direction.x * length;
-  ray.unknown00[0].unknown20.y = direction.y * length;
-  ray.unknown00[0].unknown20.z = direction.z * length;
-  ray.unknown00[1].unknown20.x = direction.x * -backLength;
-  ray.unknown00[1].unknown20.y = direction.y * -backLength;
-  ray.unknown00[1].unknown20.z = direction.z * -backLength;
-  ray.unknown00[0].unknown30 = direction;
-  ray.unknown00[1].unknown30 = mm::Vec3(-direction.x, -direction.y, -direction.z);
-  ray.unknown00[0].unknown64 = length;
-  ray.unknown00[1].unknown64 = backLength;
+  ray.m_cLLineWork[0].unknown20.x = direction.x * length;
+  ray.m_cLLineWork[0].unknown20.y = direction.y * length;
+  ray.m_cLLineWork[0].unknown20.z = direction.z * length;
+  ray.m_cLLineWork[1].unknown20.x = direction.x * -backLength;
+  ray.m_cLLineWork[1].unknown20.y = direction.y * -backLength;
+  ray.m_cLLineWork[1].unknown20.z = direction.z * -backLength;
+  ray.m_cLLineWork[0].unknown30 = direction;
+  ray.m_cLLineWork[1].unknown30 = mm::Vec3(-direction.x, -direction.y, -direction.z);
+  ray.m_cLLineWork[0].unknown64 = length;
+  ray.m_cLLineWork[1].unknown64 = backLength;
   for (s32 i = 0; i < 2; i++) {
-    CLLineWork &line = ray.unknown00[i];
+    CLLineWork &line = ray.m_cLLineWork[i];
     line.unknown10.x = start.x + line.unknown20.x;
     line.unknown10.y = start.y + line.unknown20.y;
     line.unknown10.z = start.z + line.unknown20.z;
@@ -604,7 +604,7 @@ void IDColiPrimitive::createSubBaseCharacter(void *data, IDColiBaseType &type, c
 
 void IDColiPrimitive::createBasePoli(void *data, IDColiBaseType &type, const mm::Mat44 &matrix, const mm::Vec3 &size) {
   unknown085 *poli = static_cast<unknown010 *>(data)->unknown00;
-  calcPosDataSetup(&poli->unknown00, matrix, poli->unknowna8[0], poli->unknowna8[1]);
+  calcPosDataSetup(&poli->m_iDCmfPosData, matrix, poli->unknowna8[0], poli->unknowna8[1]);
   type = IDColiBaseType_UNKNOWN_5;
 }
 
@@ -696,7 +696,7 @@ void IDColiPrimitive::createBaPosCapsule(mm::Vec3 &position, mm::Vec3 &unknown, 
 }
 
 void IDColiPrimitive::createBaPosPoli(mm::Vec3 &position, mm::Vec3 &unknown, bool &isRotate, f32 &radius, f32 &length, const void *data) {
-  const IDCmfPosData *poli = &static_cast<const unknown010 *>(data)->unknown00->unknown00;
+  const IDCmfPosData *poli = &static_cast<const unknown010 *>(data)->unknown00->m_iDCmfPosData;
   position = mm::Vec3(poli->unknown00[0][3], poli->unknown00[1][3], poli->unknown00[2][3]);
   radius = (poli->unknown80.x - poli->unknown90.x) * 0.5f;
   length = radius + radius;

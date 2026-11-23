@@ -1,5 +1,7 @@
 #include "gf/menu/model_view/gf_menu_model_view_camera.h"
 
+#include "mm_math/mm_quat.h"
+
 namespace fw {
 enum CAMERA_PRIO : int;
 } // namespace fw
@@ -13,6 +15,21 @@ GfMenuModelViewCamera::GfMenuModelViewCamera(const GimmickCameraParams::Param &p
   unknownb0 = mm::Vec3(param.unknown00, param.unknown04, param.unknown08);
   unknownc0 = mm::Vec3(param.unknown0c, param.unknown10, param.unknown14);
   updateLookAt();
+}
+
+// Game address 0x71003e6914 (219 instructions). Looks from the position along the forward axis turned by the euler angles of the rotation, like
+// GfMenuBladeCreateCamera::updateLookAt (the same quaternion mm::unknown005 and the in-place rotation mm::unknown010, each measured there). Evidence for the rest:
+// - The identity quaternion is copied into a local before the euler quaternion is built (its loads come before the first sinf call).
+// - `position` is a copy of the member whose three loads come before its three stores (ldp, ldr, stp, str at the top): the copy constructor gives ldp, stp, ldr, str.
+//   The rotation is read from the member: a copy of it also gives 219 instructions but loads it before the identity quaternion.
+void GfMenuModelViewCamera::updateLookAt() {
+  mm::Vec3 position(unknownb0.x, unknownb0.y, unknownb0.z);
+  mm::Vec3 target(0.0f, 0.0f, 1.0f);
+  mm::Quat current = mm::Quat::identity;
+  mm::Quat quat = mm::Quat::mul(current, mm::unknown005(unknownc0));
+  mm::unknown010(quat, target);
+  target += position;
+  setLookAt(position, target, 0.0f);
 }
 
 GfMenuModelViewCamera::~GfMenuModelViewCamera() { ; }

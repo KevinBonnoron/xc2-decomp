@@ -36,7 +36,7 @@ public:
   const u8 *unknown00; // Inferred role: time data; original member name unknown.
   const u8 *unknown08; // Inferred role: time table; original member name unknown.
   s32 unknown10;       // Inferred role: time count; original member name unknown.
-  f32 unknown14;       // Inferred role: time, copied from DrMan::unknown1cac by DrEnvironmentObjLgt::update; original member name unknown.
+  f32 unknown14;       // Inferred role: time, copied from DrMan::m_timerVal by DrEnvironmentObjLgt::update; original member name unknown.
   f32 unknown18;       // Inferred role: blend rate toward the time color; original member name unknown.
   f32 unknown1c;       // Inferred role: unknown constant; original member name unknown.
   f32 unknown20;       // Inferred role: blend frames left, the time color is blended while not zero; original member name unknown.

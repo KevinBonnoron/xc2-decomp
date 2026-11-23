@@ -19,25 +19,11 @@
 
 namespace gf {
 
-// Inferred role: rotates a vector in place by a quaternion; original name unknown. The statements are the ones of mm::Aabb::transform (loop body),
-// anm::TransformUtil::invert and TransformUtil::mul, written out again (ruling 8: no existing helper reproduces the game's code). Evidence: ChainAttackCamera::updateParam
-// (1.0.0: 0x71001d3ce8) stores each component of the rotated vector before it computes the next one and reloads the quaternion after each store (the transform
-// may alias the vector). mm::Quat::rotate, called as `v = q.rotate(v)`, stores the three components at the end and gives 237 instructions against the game's 260.
-static inline void unknown001(const mm::Quat &q, mm::Vec3 &v) {
-  f32 tx = q.y * v.z - q.z * v.y + q.w * v.x;
-  f32 ty = q.z * v.x - v.z * q.x + v.y * q.w;
-  f32 tz = v.y * q.x - q.y * v.x + v.z * q.w;
-  f32 tw = -v.x * q.x - q.y * v.y - v.z * q.z;
-  v.x = -(q.z * ty) + q.y * tz - q.x * tw + q.w * tx;
-  v.y = -(q.x * tz) + q.z * tx - q.y * tw + q.w * ty;
-  v.z = -(q.y * tx) + q.x * ty - q.z * tw + q.w * tz;
-}
-
 // Inferred role: moves a point of the camera in front of the collision of the level when it is not at the position; original name unknown. Helper for the
 // four identical blocks of ChainAttackCamera::change (0x71001d4210); the four blocks written out also match (212 instructions), the helper is the shorter form.
 static inline void unknown002(const ChainAttackCamera &camera, mm::Vec3 &point, const mm::Vec3 &position) {
   if (!(fabsf(position.x - point.x) <= 0.000001f) || !(fabsf(position.y - point.y) <= 0.000001f) || !(fabsf(position.z - point.z) <= 0.000001f)) {
-    CameraUtilities::updateCollision(camera.unknown80, point, position, 45.0f, 0.4f);
+    CameraUtilities::updateCollision(camera.m_coliCheckConfig, point, position, 45.0f, 0.4f);
   }
 }
 
@@ -74,10 +60,10 @@ void ChainAttackCameraEntity::update(const fw::UpdateInfo &info) {
     unknownf0 = unknownf0 + (unknownd0 - unknownf0) * unknown110;
     unknown100 = unknown100 + (unknowne0 - unknown100) * unknown110;
   } else if (unknown114 > 0.0f) {
-    // The game dispatches on unknown118 through a jump table of four entries (1.0.0: `cmp w8, #3` at 0x71001d225c, table at 0x7100f68fa8) whose entries 0 and "above 3" reach the same block
+    // The game dispatches on m_moveType through a jump table of four entries (1.0.0: `cmp w8, #3` at 0x71001d225c, table at 0x7100f68fa8) whose entries 0 and "above 3" reach the same block
     // (0x71001d227c). Only two separate cases with the same body give that table: `case 0:` stacked on `default:` (in either order), a switch without case 0 and an if chain all compile to a compare
     // chain (194 or 192 instructions against the game's 197). The game calls calcSpeedTypeSlowInSlowOut (0x71001d22ec, 0x1fc bytes) and inlines the other three.
-    switch (unknown118) {
+    switch (m_moveType) {
     case 0:
       calcSpeedTypeLinearSpacing();
       break;
@@ -131,20 +117,20 @@ void ChainAttackCameraEntity::setPlayTimeDuration(f32 duration) {
   unknown11c = 0.0f;
 }
 
-void ChainAttackCameraEntity::setMoveType(int moveType) { unknown118 = moveType; }
+void ChainAttackCameraEntity::setMoveType(int moveType) { m_moveType = moveType; }
 
 const mm::mtl::RTTI *ChainAttackCameraEntity::getRTTI() const { return &m_rtti; }
 
 const char *ChainAttackCameraEntity::getName() const { return "ChainAttackCameraEntity"; }
 
-ChainAttackCamera::ChainAttackCamera() : unknown70(0xf), unknown78(unknown020) {
-  unknown80.unknown08 = 0.0f;
-  unknown80.unknown0c = 0.0f;
-  unknown80.unknown14 = false;
-  unknown80.unknown15 = false;
-  unknown80.unknown10 = 1;
-  unknown80.unknown00 = 9;
-  unknown80.unknown04 = -9;
+ChainAttackCamera::ChainAttackCamera() : unknown70(0xf), m_GF_OBJ_HANDLE(unknown020) {
+  m_coliCheckConfig.unknown08 = 0.0f;
+  m_coliCheckConfig.unknown0c = 0.0f;
+  m_coliCheckConfig.unknown14 = false;
+  m_coliCheckConfig.unknown15 = false;
+  m_coliCheckConfig.unknown10 = 1;
+  m_coliCheckConfig.unknown00 = 9;
+  m_coliCheckConfig.unknown04 = -9;
 }
 
 ChainAttackCamera::~ChainAttackCamera() {}
@@ -225,10 +211,10 @@ void ChainAttackCamera::getParam(int id, Param &param) {
 }
 
 void ChainAttackCamera::updateParam(Param &param, const fw::Transform &transform, const mm::Vec3 &position, const mm::Vec3 &target) {
-  unknown001(transform.unknown10, param.unknown10);
-  unknown001(transform.unknown10, param.unknown20);
-  unknown001(transform.unknown10, param.unknown40);
-  unknown001(transform.unknown10, param.unknown50);
+  mm::unknown010(transform.unknown10, param.unknown10);
+  mm::unknown010(transform.unknown10, param.unknown20);
+  mm::unknown010(transform.unknown10, param.unknown40);
+  mm::unknown010(transform.unknown10, param.unknown50);
   param.unknown10 += position;
   param.unknown20 += param.unknown09 == 0 ? position : target;
   param.unknown40 += position;
@@ -247,7 +233,7 @@ void ChainAttackCamera::change(GF_OBJ_HANDLE *handle) {
     mm::Vec3 position;
     CameraUtilities::getCameraLookBonePosition(handle, position);
     mm::Vec3 look;
-    CameraUtilities::getCameraLookBonePosition(unknown78, look);
+    CameraUtilities::getCameraLookBonePosition(m_GF_OBJ_HANDLE, look);
     const fw::Transform &transform = acc.getWorldTransform();
     updateParam(start, transform, position, look);
     updateParam(end, transform, position, look);

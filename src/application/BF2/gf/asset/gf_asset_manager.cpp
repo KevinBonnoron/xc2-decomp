@@ -52,7 +52,7 @@ void GfAssetManager::destroy() {
 void GfAssetManager::finalize() {
   unknowne04c1 = true;
   GfFileSizePool::destroy();
-  while (unknownce0b8.size() != 0) {
+  while (m_loadingAsset.size() != 0) {
     GfSleep(1);
   }
   for (mm::mtl::FixedList<GF_ASSET_HANDLE *, 1024>::iterator it = unknownd70f8.begin(); it != unknownd70f8.end(); ++it) {
@@ -129,8 +129,8 @@ void GfAssetManager::destroy(GF_ASSET_HANDLE *handle) {
     GfAssetManager *manager = get();
     mm::mtl::FixedList<GF_ASSET_HANDLE *, 1024>::iterator it = mm::mtl::find(manager->unknownd70f8.begin(), manager->unknownd70f8.end(), handle);
     if (it == manager->unknownd70f8.end()) {
-      it = mm::mtl::find(manager->unknownce0b8.begin(), manager->unknownce0b8.end(), handle);
-      if (it == manager->unknownce0b8.end()) {
+      it = mm::mtl::find(manager->m_loadingAsset.begin(), manager->m_loadingAsset.end(), handle);
+      if (it == manager->m_loadingAsset.end()) {
         return;
       }
     }
@@ -168,8 +168,8 @@ GF_ASSET_HANDLE *GfAssetManager::createAssetHandle(const GfInitParam &) {
     serial = manager->unknowndb918++;
   }
   GF_ASSET_HANDLE *handle = reinterpret_cast<GF_ASSET_HANDLE *>(static_cast<u64>((index & ASSET_HANDLE_UNKNOWN_1023) | serial << 10));
-  info->unknown08 = handle;
-  manager->unknownce0b8.push_back(handle);
+  info->m_GF_ASSET_HANDLE = handle;
+  manager->m_loadingAsset.push_back(handle);
   return handle;
 }
 
@@ -179,7 +179,7 @@ GfAssetPack *GfAssetManager::createAssetFiles(const GfAssetFilesInfo &info) {
   GfAssetPack *pack = nullptr;
   for (GfAssetPack *other : manager->unknowndb920) {
     if (other->unknown10 == value && !other->unknown238) {
-      if (info.unknown00 == unknown018) {
+      if (info.m_GF_ASSET_HANDLE == unknown018) {
         return nullptr;
       }
       pack = other;
@@ -191,13 +191,13 @@ GfAssetPack *GfAssetManager::createAssetFiles(const GfAssetFilesInfo &info) {
     manager->unknowndb920.push_back(pack);
     pack->addRef();
   }
-  AssetPackInfo *packInfo = getAssetPackInfo(info.unknown00);
+  AssetPackInfo *packInfo = getAssetPackInfo(info.m_GF_ASSET_HANDLE);
   if (packInfo != nullptr) {
     packInfo->setAssetPack(info.unknown08, pack);
     packInfo->unknown300 = info.unknown38;
   }
   if (info.unknown08 != ASSET_TYPE_UNKNOWN_0 && pack->isNeedLoad()) {
-    manager->m_slotMapping->requestSlotLoad(info.unknown00, pack);
+    manager->m_slotMapping->requestSlotLoad(info.m_GF_ASSET_HANDLE, pack);
   }
   callEventAssetPack(pack);
   return pack;
@@ -215,7 +215,7 @@ void GfAssetManager::releaseSlotHandle(GF_SLOT_HANDLE *handle) { get()->m_slotMa
 
 GfAssetPack *GfAssetManager::getAssetPack(GF_SLOT_HANDLE *handle) {
   for (GfAssetPack *pack : get()->unknowndb920) {
-    if (pack->unknown230 == handle) {
+    if (pack->m_GF_SLOT_HANDLE == handle) {
       return pack;
     }
   }
@@ -310,7 +310,7 @@ GF_ASSET_HANDLE *GfAssetManager::getAssetHandle(const char *name) {
     }
   }
 
-  for (mm::mtl::FixedList<GF_ASSET_HANDLE *, 1024>::iterator it = manager->unknownce0b8.begin(); it != manager->unknownce0b8.end(); ++it) {
+  for (mm::mtl::FixedList<GF_ASSET_HANDLE *, 1024>::iterator it = manager->m_loadingAsset.begin(); it != manager->m_loadingAsset.end(); ++it) {
     AssetPackInfo *info = getAssetPackInfo(*it);
     if (info == nullptr) {
       continue;
@@ -324,7 +324,7 @@ GF_ASSET_HANDLE *GfAssetManager::getAssetHandle(const char *name) {
   return unknown018;
 }
 
-bool GfAssetManager::isLoading() { return get()->unknownce0b8.size() > 0; }
+bool GfAssetManager::isLoading() { return get()->m_loadingAsset.size() > 0; }
 
 bool GfAssetManager::isLoading(const GfAssetPack *pack) {
   mm::mtl::FixedList<GF_ASSET_HANDLE *, 1024> *list = getLoadingAsset();
@@ -361,7 +361,7 @@ bool GfAssetManager::isLoaded(GF_ASSET_HANDLE *handle, mm::mtl::FixStr<128> *nam
       if (!info->isLoaded(name)) {
         loaded = false;
       } else {
-        loaded = !info->unknown307;
+        loaded = !info->m_loadComplete;
       }
     }
   }
@@ -400,7 +400,7 @@ bool GfAssetManager::isReload(GF_ASSET_HANDLE *handle) {
   if (info == nullptr) {
     return false;
   }
-  return info->unknown307;
+  return info->m_loadComplete;
 }
 
 GF_OBJ_HANDLE *GfAssetManager::getObj(GF_ASSET_HANDLE *handle) {
@@ -408,7 +408,7 @@ GF_OBJ_HANDLE *GfAssetManager::getObj(GF_ASSET_HANDLE *handle) {
   if (info == nullptr) {
     return unknown020;
   }
-  return info->unknown2d8;
+  return info->m_GF_OBJ_HANDLE;
 }
 
 bool GfAssetManager::isExist(GF_ASSET_HANDLE *handle, GfFileIdx index) {
@@ -434,7 +434,7 @@ GfExtendResource *GfAssetManager::getExtentResource(GF_ASSET_HANDLE *handle, u32
   if (info == nullptr) {
     return nullptr;
   }
-  return info->unknown2e0[index];
+  return info->m_extendResource[index];
 }
 
 void GfAssetManager::destroyExtResource(GF_ASSET_HANDLE *handle) {
@@ -512,7 +512,7 @@ bool GfAssetManager::isExistOuterResource() {
   return false;
 }
 
-mm::mtl::FixedList<GF_ASSET_HANDLE *, 1024> *GfAssetManager::getLoadingAsset() { return &get()->unknownce0b8; }
+mm::mtl::FixedList<GF_ASSET_HANDLE *, 1024> *GfAssetManager::getLoadingAsset() { return &get()->m_loadingAsset; }
 
 bool GfAssetManager::getObjectByUsingAssetPackLocal(mm::mtl::FixedList<GF_OBJ_HANDLE *, 1024> &objects, const mm::mtl::FixedList<GF_ASSET_HANDLE *, 1024> &handles, GF_ASSET_HANDLE *handle) const {
   AssetPackInfo *info = getAssetPackInfo(handle);
@@ -536,7 +536,7 @@ bool GfAssetManager::getObjectByUsingAssetHandle(mm::mtl::FixedList<GF_OBJ_HANDL
   // expression cannot be checked; the singleton instance is the plausible one.
   GfAssetManager *manager = get();
   manager->getObjectByUsingAssetPackLocal(objects, manager->unknownd70f8, handle);
-  manager->getObjectByUsingAssetPackLocal(objects, manager->unknownce0b8, handle);
+  manager->getObjectByUsingAssetPackLocal(objects, manager->m_loadingAsset, handle);
   return objects.size() != 0;
 }
 
@@ -653,18 +653,18 @@ void GfAssetManager::updateCheckLoading() {
     }
   }
 
-  for (mm::mtl::FixedList<GF_ASSET_HANDLE *, 1024>::iterator it = unknownce0b8.begin(); it != unknownce0b8.end();) {
+  for (mm::mtl::FixedList<GF_ASSET_HANDLE *, 1024>::iterator it = m_loadingAsset.begin(); it != m_loadingAsset.end();) {
     AssetPackInfo *info = getAssetPackInfo(*it);
     if (info == nullptr) {
-      it = unknownce0b8.erase(it);
+      it = m_loadingAsset.erase(it);
     } else if (info->unknown304) {
       unknownd70f8.push_back(*it);
-      it = unknownce0b8.erase(it);
+      it = m_loadingAsset.erase(it);
     } else if (info->isLoaded(nullptr) && info->isPreSizeSizeValid()) {
       info->releaseEmptySlot();
       info->setLoadComplete();
       unknownd70f8.push_back(*it);
-      it = unknownce0b8.erase(it);
+      it = m_loadingAsset.erase(it);
     } else {
       ++it;
     }

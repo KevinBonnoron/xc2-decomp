@@ -5,6 +5,7 @@
 #include "fw/fw_debug.h"
 #include "ml/dev_graph.h"
 #include "mm_math/mm_col4.h"
+#include "mm_math/mm_math.h"
 #include "mm_math/mm_rect.h"
 
 namespace event {
@@ -26,20 +27,22 @@ void TodoManager::clear() {
   unknown10 = 0;
 }
 
+// The countdown `for (int i = size; i-- > 0;)` keeps the 64-bit counter that the game's copy inlined in undoredo (1.0.0: 0x710010d04c) decrements with
+// `subs; b.lt`; `for (int i = size; i > 0; i--)` with `[i - 1]` gives the same standalone function (69 instructions) but 169 to 172 in undoredo.
 size_t TodoManager::searchSp(f32 frame, bool isAfter) {
   if (unknown18.empty()) {
     return 0;
   }
   if (isAfter) {
-    for (int i = unknown18.size(); i > 0; i--) {
-      if (unknown18[i - 1].getFrame() <= frame) {
-        return i;
+    for (int i = unknown18.size(); i-- > 0;) {
+      if (unknown18[i].getFrame() <= frame) {
+        return i + 1;
       }
     }
   } else {
-    for (int i = unknown18.size(); i > 0; i--) {
-      if (unknown18[i - 1].getFrame() < frame) {
-        return i;
+    for (int i = unknown18.size(); i-- > 0;) {
+      if (unknown18[i].getFrame() < frame) {
+        return i + 1;
       }
     }
   }
@@ -133,6 +136,24 @@ void TodoManager::redo() {
   if (unknown18.size() > unknown8c20) {
     unknown18[unknown8c20].getTodo()->redo(unknown18[unknown8c20].getParam());
     unknown8c20++;
+  }
+}
+
+// The undo loop is written with the target on the left (`target < current`): the game compares `cmp target, current; b.hs` there (0x710010d04c).
+void TodoManager::undoredo(f32 frame, bool isDoit, bool isAfter) {
+  size_t target = searchSp(frame, isAfter);
+  target = mm::min(target, unknown18.size());
+  while (target < unknown8c20) {
+    undo();
+  }
+  if (isDoit) {
+    while (unknown8c20 < target) {
+      doit();
+    }
+  } else {
+    while (unknown8c20 < target) {
+      redo();
+    }
   }
 }
 

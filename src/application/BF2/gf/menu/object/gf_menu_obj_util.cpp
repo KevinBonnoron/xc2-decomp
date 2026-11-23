@@ -7,6 +7,7 @@
 #include "framework/sound/sound_manager.h"
 #include "fw/fw_pad.h"
 #include "fw/fw_param_manager.h"
+#include "gf/data/gf_bdat_bgm.h"
 #include "gf/data/gf_bdat_id.h"
 #include "gf/data/gf_bdat_quest.h"
 #include "gf/data/gf_character_id.h"
@@ -73,6 +74,7 @@
 #include "ui/motion/ui_motion_library.h"
 #include "ui/plugin/ui_object_disp_plugin.h"
 #include "ui/plugin/ui_object_dock_plugin.h"
+#include "ui/plugin/ui_object_fit_plugin.h"
 #include "ui/plugin/ui_object_number_plugin.h"
 #include "ui/plugin/ui_object_scroll_bar_plugin.h"
 #include "ui/plugin/ui_object_sync_plugin.h"
@@ -412,7 +414,7 @@ int GfMenuObjUtil::getLeaderPartyType() {
   return -1;
 }
 
-bool GfMenuObjUtil::isExitDriver(u32 partyId) {
+int GfMenuObjUtil::isExitDriver(u32 partyId) {
   if (partyId >= PARTY_DRIVER_UNKNOWN_3) {
     partyId %= PARTY_DRIVER_UNKNOWN_3;
   }
@@ -738,21 +740,21 @@ int GfMenuObjUtil::getDriverPartyID(u32 driver) {
 u16 GfMenuObjUtil::getBladeFaceIconID(GF_OBJ_HANDLE *handle) {
   u32 blade = GfObjAcc(handle).getBdatId();
   if (GfDataBlade::isValid(blade)) {
-    return GfDataBlade::getSDataBlade(blade).unknown70a;
+    return GfDataBlade::getSDataBlade(blade).m_iconData;
   }
   return GfMenuBdat::getTopBladeIconID();
 }
 
 u16 GfMenuObjUtil::getBladeFaceIconID(u32 blade) {
   if (GfDataBlade::isValid(blade)) {
-    return GfDataBlade::getSDataBlade(blade).unknown70a;
+    return GfDataBlade::getSDataBlade(blade).m_iconData;
   }
   return GfMenuBdat::getTopBladeIconID();
 }
 
 u32 GfMenuObjUtil::getBladeWeaponTypeIconID(u32 blade) {
   if (GfDataBlade::isValid(blade)) {
-    return GfDataBlade::getSDataBlade(blade).unknown821 + ICON_WEAPON_TYPE_UNKNOWN_138;
+    return GfDataBlade::getSDataBlade(blade).m_weaponType + ICON_WEAPON_TYPE_UNKNOWN_138;
   }
   return ICON_WEAPON_TYPE_UNKNOWN_139;
 }
@@ -1146,6 +1148,24 @@ void GfMenuObjUtil::stopSE(u32 handle, f32 time) {
   }
 }
 
+// The game tests the u16 resource as `and w8, w0, #0xffff; cbz w8` (0x71004e4520) and zero-extends it again, `and w1, w0, #0xffff` (0x71004e452c), for the
+// getBgmListfilename argument after loading the GfBdatBgm instance; the zero test keeps the i16 compare, see GfAutoTalk::BdatInfo::create. Both singletons are read
+// again after the calls (ldr x8, [x23] at 0x71004e4528, ldr x0, [x22] at 0x71004e4564), as the game's PtrSingleton::get() does.
+u32 GfMenuObjUtil::playBGM(u32 bgm, bool ignorePause, fw::SoundCategory category) {
+  if (fw::SoundManager::get() != nullptr && GfBdatBgm::get() != nullptr) {
+    u16 resource = Bdat::getVal(GfDataBdat::getFP(BDAT_MNU_SOUND_BGM), "resource", bgm).valueU16;
+    if (resource) {
+      const char *name = GfBdatBgm::get()->getBgmListfilename(resource);
+      if (name != nullptr && name[0] != '\0') {
+        mm::mtl::FixStr<128> path;
+        path.format("stream/bgm/%s", name);
+        return fw::SoundManager::get()->playBgm(path.c_str(), 1.0f, ignorePause, -1, category);
+      }
+    }
+  }
+  return 0;
+}
+
 bool GfMenuObjUtil::startBGM(u32 handle) {
   if (handle != 0 && fw::SoundManager::get() != nullptr) {
     return fw::SoundManager::get()->startBgm(handle);
@@ -1458,6 +1478,22 @@ void GfMenuObjUtil::createDockPluginEx(u32 handle, u32 target, u32 dockType, con
   }
 }
 
+// Each flag is one csel between the cleared and the set word, the `and` computed first and `ne` selecting the `orr` (0x71004e0a3c, flags at 0x71004e0a58). Only the negated test gives that order:
+// the positive ternary computes the `orr` first, `if`/`else` with `|=` and `&=` selects with `eq`, and clearing then setting gives branches with intermediate stores.
+void GfMenuObjUtil::createFitPlugin(u32 handle, u32 target, int marginX, int marginY, const FitOption &option) {
+  ui::UIObjectFitPlugin *plugin = ui::UIObjectFitPlugin::create(handle, target, marginX, marginY);
+  if (plugin != nullptr) {
+    plugin->unknown28 = !option.unknown00 ? (plugin->unknown28 & ~ui::UIObjectFitPlugin::FLAG_HALF_SIZE_MARGIN) : (plugin->unknown28 | ui::UIObjectFitPlugin::FLAG_HALF_SIZE_MARGIN);
+    plugin->unknown28 = !option.unknown01 ? (plugin->unknown28 & ~ui::UIObjectFitPlugin::FLAG_KEEP_SCALE_X) : (plugin->unknown28 | ui::UIObjectFitPlugin::FLAG_KEEP_SCALE_X);
+    plugin->unknown28 = !option.unknown02 ? (plugin->unknown28 & ~ui::UIObjectFitPlugin::FLAG_KEEP_SCALE_Y) : (plugin->unknown28 | ui::UIObjectFitPlugin::FLAG_KEEP_SCALE_Y);
+    plugin->unknown20.x = option.unknown04.x;
+    plugin->unknown20.y = option.unknown04.y;
+    plugin->unknown24.x = option.unknown08.x;
+    plugin->unknown24.y = option.unknown08.y;
+    plugin->release();
+  }
+}
+
 void GfMenuObjUtil::createVScrollBarPlugin(u32 handle, ui::UIListInfoBase *list, const char *barName, bool isScaleEnable) {
   ui::UIObjectScrollBarPlugin *plugin = ui::UIObjectScrollBarPlugin::create(handle, 0, list, barName);
   if (plugin != nullptr) {
@@ -1697,8 +1733,8 @@ ui::UICtrlCursorSelect *GfMenuObjUtil::createCursor(CursorParam &param) {
     }
   }
   list->getSize();
-  param.unknown20.setType(param.unknown1a);
-  ui::UICtrlCursorSelect *cursor = ui::UICtrlCursorSelect::create(param.unknown04, param.unknown20, list);
+  param.m_cursorSetting.setType(param.unknown1a);
+  ui::UICtrlCursorSelect *cursor = ui::UICtrlCursorSelect::create(param.unknown04, param.m_cursorSetting, list);
   list->release();
   return cursor;
 }

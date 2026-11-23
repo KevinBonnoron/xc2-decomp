@@ -4,10 +4,10 @@
 
 namespace ml {
 
-DrResMdoLodGrp::DrResMdoLodGrp() : unknown00(nullptr), unknown08(0), unknown0c(0), unknown10(0) {}
+DrResMdoLodGrp::DrResMdoLodGrp() : m_drResMdoLodParts(nullptr), unknown08(0), unknown0c(0), unknown10(0) {}
 
 void DrResMdoLodGrp::setup(DrResMdoLodParts *parts, int partsNum, bool isFixed, bool isChange) {
-  unknown00 = parts;
+  m_drResMdoLodParts = parts;
   unknown08 = partsNum;
   unknown10 = 0;
   if (isFixed) {
@@ -16,7 +16,7 @@ void DrResMdoLodGrp::setup(DrResMdoLodParts *parts, int partsNum, bool isFixed, 
       unknown10 |= 0x10;
     }
   } else {
-    switch (parts->unknown18->unknown16) {
+    switch (parts->m_mdsMdlLodData->unknown16) {
     case 1:
       unknown10 |= 4;
       break;

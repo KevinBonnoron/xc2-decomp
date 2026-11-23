@@ -29,7 +29,7 @@ void GfMoveRunControler::createReflection(fw::Reflection *reflection, const char
 
 // The game multiplies the direction in each branch (0x71004fd6f8, 23 instructions); one product after the test compiles to 20.
 void GfMoveRunControler::enter(Packet &packet, bool isInherit) {
-  const Param *param = packet.unknown18.get<Param>();
+  const Param *param = packet.m_paramAdapter.get<Param>();
   f32 speed = param->velocityMin;
   if (isInherit) {
     speed = speed + (param->velocityMax * packet.unknown50 - speed) * packet.unknown20;
@@ -40,7 +40,7 @@ void GfMoveRunControler::enter(Packet &packet, bool isInherit) {
 }
 
 void GfMoveRunControler::calcAngularVelocity(f32 deltaTime, Packet &packet) {
-  const Param *param = packet.unknown18.get<Param>();
+  const Param *param = packet.m_paramAdapter.get<Param>();
   const mm::Vec3 &target = packet.unknown30;
   const mm::Vec3 &current = packet.unknown40;
   f32 cosine = mm::clamp(current.x * target.x + current.y * target.y + current.z * target.z, -1.0f, 1.0f);
@@ -54,7 +54,7 @@ void GfMoveRunControler::calcAngularVelocity(f32 deltaTime, Packet &packet) {
 }
 
 void GfMoveRunControler::calcVelocity(f32 deltaTime, Packet &packet) {
-  const Param *param = packet.unknown18.get<Param>();
+  const Param *param = packet.m_paramAdapter.get<Param>();
   f32 speedRange = param->velocityMax * packet.unknown50 + packet.unknown54 - param->velocityMin;
   f32 speedTarget = param->velocityMin + speedRange * packet.unknown20;
   f32 speed = sqrtf(packet.unknown00.x * packet.unknown00.x + packet.unknown00.y * packet.unknown00.y + packet.unknown00.z * packet.unknown00.z);

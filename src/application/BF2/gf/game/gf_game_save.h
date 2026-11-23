@@ -41,8 +41,8 @@ public:
 
   s32 unknown08;               // Inferred role: busy state; original member name unknown.
   SAVESLOT unknown0c;          // Inferred role: save slot; original member name unknown.
-  SDataSave *unknown10;        // Inferred role: game data to save; original member name unknown.
-  SDataOption *unknown18;      // Inferred role: option data to save; original member name unknown.
+  SDataSave *m_save;           // Inferred role: game data to save; original member name unknown.
+  SDataOption *m_option;       // Inferred role: option data to save; original member name unknown.
   const void *unknown20;       // Inferred role: data of the file being written; original member name unknown.
   u64 unknown28;               // Inferred role: size of the file being written; original member name unknown.
   ml::FileHandleTh *unknown30; // Inferred role: pending file handle; original member name unknown.
@@ -50,8 +50,8 @@ public:
 };
 
 static_assert(offsetof(GfGameSave, unknown08) == 0x08, "");
-static_assert(offsetof(GfGameSave, unknown10) == 0x10, "");
-static_assert(offsetof(GfGameSave, unknown18) == 0x18, "");
+static_assert(offsetof(GfGameSave, m_save) == 0x10, "");
+static_assert(offsetof(GfGameSave, m_option) == 0x18, "");
 static_assert(offsetof(GfGameSave, unknown20) == 0x20, "");
 static_assert(offsetof(GfGameSave, unknown28) == 0x28, "");
 static_assert(offsetof(GfGameSave, unknown30) == 0x30, "");

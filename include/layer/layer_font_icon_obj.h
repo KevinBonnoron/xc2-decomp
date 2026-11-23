@@ -54,22 +54,22 @@ public:
   void getFontUvParms(f32 *uv, u16 index) const;
   void getFontUvOnlyParms(f32 *uv, u16 index) const;
 
-  LayerFontManager *unknown20; // Inferred role: font manager; original member name unknown.
-  u32 unknown28;               // Inferred role: flags; original member name unknown.
+  LayerFontManager *m_layerFontManager; // Inferred role: font manager; original member name unknown.
+  u32 unknown28;                        // Inferred role: flags; original member name unknown.
   u8 _2c[0x30 - 0x2c];
-  const unknown004 *unknown30; // Inferred role: icon data; original member name unknown.
-  const unknown002 *unknown38; // Inferred role: icon entries header; original member name unknown.
-  LayerTextureObj *unknown40;  // Inferred role: texture object; original member name unknown.
-  u32 unknown48;               // Inferred role: icon count; original member name unknown.
-  f32 unknown4c;               // Inferred role: texture height; original member name unknown.
-  f32 unknown50;               // Inferred role: texture width; original member name unknown.
+  const unknown004 *unknown30;        // Inferred role: icon data; original member name unknown.
+  const unknown002 *unknown38;        // Inferred role: icon entries header; original member name unknown.
+  LayerTextureObj *m_layerTextureObj; // Inferred role: texture object; original member name unknown.
+  u32 unknown48;                      // Inferred role: icon count; original member name unknown.
+  f32 unknown4c;                      // Inferred role: texture height; original member name unknown.
+  f32 unknown50;                      // Inferred role: texture width; original member name unknown.
 };
 
-static_assert(offsetof(LayerFontIconObj, unknown20) == 0x20, "");
+static_assert(offsetof(LayerFontIconObj, m_layerFontManager) == 0x20, "");
 static_assert(offsetof(LayerFontIconObj, unknown28) == 0x28, "");
 static_assert(offsetof(LayerFontIconObj, unknown30) == 0x30, "");
 static_assert(offsetof(LayerFontIconObj, unknown38) == 0x38, "");
-static_assert(offsetof(LayerFontIconObj, unknown40) == 0x40, "");
+static_assert(offsetof(LayerFontIconObj, m_layerTextureObj) == 0x40, "");
 static_assert(offsetof(LayerFontIconObj, unknown48) == 0x48, "");
 static_assert(offsetof(LayerFontIconObj, unknown4c) == 0x4c, "");
 static_assert(offsetof(LayerFontIconObj, unknown50) == 0x50, "");

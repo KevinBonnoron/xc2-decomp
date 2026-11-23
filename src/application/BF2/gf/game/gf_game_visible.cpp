@@ -32,7 +32,7 @@ void GfGameVisible::build(const GfSetupParam &) {
 void GfGameVisible::setup() {
   unknown08.setAllocator(fw::FrameworkMemory::getAllocator(5));
   for (u32 i = 0; i < 0x400; i++) {
-    unknown20.push(&unknown2030[i]);
+    unknown20.push(&m_info[i]);
   }
 }
 

@@ -30,15 +30,15 @@ public:
   s32 unknown0c; // Inferred role: used size; original member name unknown.
   s32 unknown10; // Inferred role: buffer size; original member name unknown.
   u8 _14[0x18 - 0x14];
-  void *unknown18;                       // Inferred role: buffer end; original member name unknown.
-  void *unknown20;                       // Inferred role: allocation; original member name unknown.
-  unknown001 *unknown28;                 // Inferred role: ranges; original member name unknown.
-  grlib::CGLibDblUniformBlock unknown30; // Inferred role: uniform block; original member name unknown.
+  void *unknown18;                                    // Inferred role: buffer end; original member name unknown.
+  void *unknown20;                                    // Inferred role: allocation; original member name unknown.
+  unknown001 *unknown28;                              // Inferred role: ranges; original member name unknown.
+  grlib::CGLibDblUniformBlock m_cGLibDblUniformBlock; // Inferred role: uniform block; original member name unknown.
 };
 
 static_assert(offsetof(DrResEtcUniformObj, unknown10) == 0x10, "");
 static_assert(offsetof(DrResEtcUniformObj, unknown18) == 0x18, "");
 static_assert(offsetof(DrResEtcUniformObj, unknown28) == 0x28, "");
-static_assert(offsetof(DrResEtcUniformObj, unknown30) == 0x30, "");
+static_assert(offsetof(DrResEtcUniformObj, m_cGLibDblUniformBlock) == 0x30, "");
 
 } // namespace ml

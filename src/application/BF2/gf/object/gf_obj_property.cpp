@@ -43,30 +43,30 @@ GfObjProperty *GfObjProperty::create(GF_OBJ_HANDLE *handle) {
   }
 }
 
-GfObjPropertyMap *GfObjProperty::getMap() { return GfObjUtil::getObjType(unknown08) == OBJECT_TYPE_MAP ? static_cast<GfObjPropertyMap *>(this) : nullptr; }
+GfObjPropertyMap *GfObjProperty::getMap() { return GfObjUtil::getObjType(m_GF_OBJ_HANDLE) == OBJECT_TYPE_MAP ? static_cast<GfObjPropertyMap *>(this) : nullptr; }
 
-GfObjPropertyDriver *GfObjProperty::getDriver() { return GfObjUtil::getObjType(unknown08) == OBJECT_TYPE_PC ? static_cast<GfObjPropertyDriver *>(this) : nullptr; }
+GfObjPropertyDriver *GfObjProperty::getDriver() { return GfObjUtil::getObjType(m_GF_OBJ_HANDLE) == OBJECT_TYPE_PC ? static_cast<GfObjPropertyDriver *>(this) : nullptr; }
 
-GfObjPropertyBlade *GfObjProperty::getBlade() { return GfObjUtil::getObjType(unknown08) == OBJECT_TYPE_BLADE ? static_cast<GfObjPropertyBlade *>(this) : nullptr; }
+GfObjPropertyBlade *GfObjProperty::getBlade() { return GfObjUtil::getObjType(m_GF_OBJ_HANDLE) == OBJECT_TYPE_BLADE ? static_cast<GfObjPropertyBlade *>(this) : nullptr; }
 
-GfObjPropertyPcWeapon *GfObjProperty::getPcWeapon() { return GfObjUtil::getObjType(unknown08) == OBJECT_TYPE_PC_WEAPON ? static_cast<GfObjPropertyPcWeapon *>(this) : nullptr; }
+GfObjPropertyPcWeapon *GfObjProperty::getPcWeapon() { return GfObjUtil::getObjType(m_GF_OBJ_HANDLE) == OBJECT_TYPE_PC_WEAPON ? static_cast<GfObjPropertyPcWeapon *>(this) : nullptr; }
 
-GfObjPropertyEnWeapon *GfObjProperty::getEnWeapon() { return GfObjUtil::getObjType(unknown08) == OBJECT_TYPE_EN_WEAPON ? static_cast<GfObjPropertyEnWeapon *>(this) : nullptr; }
+GfObjPropertyEnWeapon *GfObjProperty::getEnWeapon() { return GfObjUtil::getObjType(m_GF_OBJ_HANDLE) == OBJECT_TYPE_EN_WEAPON ? static_cast<GfObjPropertyEnWeapon *>(this) : nullptr; }
 
-GfObjPropertyBelonging *GfObjProperty::getBelonging() { return GfObjUtil::getObjType(unknown08) == OBJECT_TYPE_OPTION ? static_cast<GfObjPropertyBelonging *>(this) : nullptr; }
+GfObjPropertyBelonging *GfObjProperty::getBelonging() { return GfObjUtil::getObjType(m_GF_OBJ_HANDLE) == OBJECT_TYPE_OPTION ? static_cast<GfObjPropertyBelonging *>(this) : nullptr; }
 
-GfObjPropertyEnemy *GfObjProperty::getEnemy() { return GfObjUtil::getObjType(unknown08) == OBJECT_TYPE_ENEMY ? static_cast<GfObjPropertyEnemy *>(this) : nullptr; }
+GfObjPropertyEnemy *GfObjProperty::getEnemy() { return GfObjUtil::getObjType(m_GF_OBJ_HANDLE) == OBJECT_TYPE_ENEMY ? static_cast<GfObjPropertyEnemy *>(this) : nullptr; }
 
-GfObjPropertyNpc *GfObjProperty::getNpc() { return GfObjUtil::getObjType(unknown08) == OBJECT_TYPE_NPC ? static_cast<GfObjPropertyNpc *>(this) : nullptr; }
+GfObjPropertyNpc *GfObjProperty::getNpc() { return GfObjUtil::getObjType(m_GF_OBJ_HANDLE) == OBJECT_TYPE_NPC ? static_cast<GfObjPropertyNpc *>(this) : nullptr; }
 
-GfObjPropertyMob *GfObjProperty::getMob() { return GfObjUtil::getObjType(unknown08) == OBJECT_TYPE_MOB ? static_cast<GfObjPropertyMob *>(this) : nullptr; }
+GfObjPropertyMob *GfObjProperty::getMob() { return GfObjUtil::getObjType(m_GF_OBJ_HANDLE) == OBJECT_TYPE_MOB ? static_cast<GfObjPropertyMob *>(this) : nullptr; }
 
-GfObjPropertyGimmick *GfObjProperty::getGimmick() { return GfObjUtil::getObjType(unknown08) == OBJECT_TYPE_GIMMICK ? static_cast<GfObjPropertyGimmick *>(this) : nullptr; }
+GfObjPropertyGimmick *GfObjProperty::getGimmick() { return GfObjUtil::getObjType(m_GF_OBJ_HANDLE) == OBJECT_TYPE_GIMMICK ? static_cast<GfObjPropertyGimmick *>(this) : nullptr; }
 
-GfObjPropertyFobj *GfObjProperty::getFobj() { return GfObjUtil::getObjType(unknown08) == OBJECT_TYPE_FIELD_OBJ ? static_cast<GfObjPropertyFobj *>(this) : nullptr; }
+GfObjPropertyFobj *GfObjProperty::getFobj() { return GfObjUtil::getObjType(m_GF_OBJ_HANDLE) == OBJECT_TYPE_FIELD_OBJ ? static_cast<GfObjPropertyFobj *>(this) : nullptr; }
 
-GfObjPropertyEvent *GfObjProperty::getEvent() { return GfObjUtil::getObjType(unknown08) == OBJECT_TYPE_EVENT_OBJ ? static_cast<GfObjPropertyEvent *>(this) : nullptr; }
+GfObjPropertyEvent *GfObjProperty::getEvent() { return GfObjUtil::getObjType(m_GF_OBJ_HANDLE) == OBJECT_TYPE_EVENT_OBJ ? static_cast<GfObjPropertyEvent *>(this) : nullptr; }
 
-GfObjPropertyUi *GfObjProperty::getUi() { return GfObjUtil::getObjType(unknown08) == OBJECT_TYPE_UI_OBJ ? static_cast<GfObjPropertyUi *>(this) : nullptr; }
+GfObjPropertyUi *GfObjProperty::getUi() { return GfObjUtil::getObjType(m_GF_OBJ_HANDLE) == OBJECT_TYPE_UI_OBJ ? static_cast<GfObjPropertyUi *>(this) : nullptr; }
 
 } // namespace gf

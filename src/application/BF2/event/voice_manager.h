@@ -23,7 +23,7 @@ public:
   bool playAuto(const char *name, f32 delay, IVoiceEvent *event);
 
   // Inferred role: player accessor; original name unknown.
-  VoicePlayer &unknown001() { return unknown230; }
+  VoicePlayer &unknown001() { return m_voicePlayer; }
 
   VoiceManager();
   virtual ~VoiceManager() {}
@@ -52,11 +52,11 @@ private:
     }
   }
 
-  u32 unknown10;             // Inferred role: flags; original member name unknown.
-  u32 unknown14;             // Inferred role: disp flags; original member name unknown.
-  VoiceMaker unknown18;      // Inferred role: maker; original member name unknown.
-  VoicePlayer unknown230;    // Inferred role: player; original member name unknown.
-  VoiceOneShoter unknown6f8; // Inferred role: one shoter; original member name unknown.
+  u32 unknown10;                   // Inferred role: flags; original member name unknown.
+  u32 unknown14;                   // Inferred role: disp flags; original member name unknown.
+  VoiceMaker m_voiceMaker;         // Inferred role: maker; original member name unknown.
+  VoicePlayer m_voicePlayer;       // Inferred role: player; original member name unknown.
+  VoiceOneShoter m_voiceOneShoter; // Inferred role: one shoter; original member name unknown.
 };
 
 static_assert(sizeof(VoiceManager) == 0x720, "");

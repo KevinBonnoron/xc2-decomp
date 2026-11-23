@@ -49,15 +49,15 @@ void GfMenuReference::initialize(const GfSetupParam &) {
   // Each list has its own setup parameter in a block: the game (0x71003cc0a4) builds both at the same stack slot.
   {
     ui::UIListInfoBase::SetupParam enemyParam;
-    unknown4cb98 = GfMenuEnemyList::create();
+    m_menuEnemyList = GfMenuEnemyList::create();
     enemyParam.unknown08 = 8;
-    unknown4cb98->setup(getAllocator(ALLOCATOR_UNKNOWN_0), enemyParam);
+    m_menuEnemyList->setup(getAllocator(ALLOCATOR_UNKNOWN_0), enemyParam);
   }
   {
     ui::UIListInfoBase::SetupParam itemParam;
-    unknown4cba0 = GfMenuItemList::create();
+    m_menuItemList = GfMenuItemList::create();
     itemParam.unknown08 = 8;
-    unknown4cba0->setup(getAllocator(ALLOCATOR_UNKNOWN_0), itemParam);
+    m_menuItemList->setup(getAllocator(ALLOCATOR_UNKNOWN_0), itemParam);
   }
   for (u32 i = 0; i < 8; i++) {
     unknown4cbf8[i] = 0;
@@ -69,7 +69,7 @@ void GfMenuReference::initialize(const GfSetupParam &) {
     initReferenceNumber(i);
   }
   for (u32 i = 0; i < 7; i++) {
-    unknown4cba8[i] = ElemComboRoot();
+    m_elemComboRoot[i] = ElemComboRoot();
   }
   for (u32 i = 0; i < 2; i++) {
     unknown4cbe0[i].unknown00 = 0;
@@ -110,8 +110,8 @@ void GfMenuReference::destroy() {
 }
 
 void GfMenuReference::finalize() {
-  mm::mtl::safeRelease(unknown4cb98);
-  mm::mtl::safeRelease(unknown4cba0);
+  mm::mtl::safeRelease(m_menuEnemyList);
+  mm::mtl::safeRelease(m_menuItemList);
   while (unknown4c598.size() != 0) {
     GfSleep(1);
   }
@@ -188,9 +188,9 @@ const GfMenuReference::ArtsPaletteInfo &GfMenuReference::getArtsPaletteInfo(u8 i
   const ArtsPaletteInfo *info = &empty;
   if (reference != nullptr) {
     if (index < ARTS_PALETTE_UNKNOWN_3) {
-      info = &reference->unknown4cac0[index].unknown00;
+      info = &reference->unknown4cac0[index].m_artsPaletteInfo;
     } else {
-      info = &reference->unknown4cda0[index].unknown00;
+      info = &reference->unknown4cda0[index].m_artsPaletteInfo;
       if (!(index < ALL_ARTS_PALETTE_UNKNOWN_9)) {
         info = &empty;
       }
@@ -206,9 +206,9 @@ const GfMenuObjUtil::ArtsIconInfo &GfMenuReference::getArtsPaletteIconInfo(u8 in
     return empty;
   }
   if (index < ARTS_PALETTE_UNKNOWN_3) {
-    return reference->unknown4cac0[index].unknown08;
+    return reference->unknown4cac0[index].m_artsIconInfo;
   }
-  const GfMenuObjUtil::ArtsIconInfo *info = &reference->unknown4cda0[index].unknown08;
+  const GfMenuObjUtil::ArtsIconInfo *info = &reference->unknown4cda0[index].m_artsIconInfo;
   if (!(index < ALL_ARTS_PALETTE_UNKNOWN_9)) {
     info = &empty;
   }
@@ -444,7 +444,7 @@ const GfMenuReference::ElemComboRoot &GfMenuReference::getElementComboRootInfo(u
   static ElemComboRoot empty;
   GfMenuReference *reference = get();
   if (index < 7 && reference != nullptr) {
-    return reference->unknown4cba8[index];
+    return reference->m_elemComboRoot[index];
   }
   return empty;
 }
@@ -452,7 +452,7 @@ const GfMenuReference::ElemComboRoot &GfMenuReference::getElementComboRootInfo(u
 void GfMenuReference::setElemComboRootInfo(u32 index, const ElemComboRoot &root) {
   GfMenuReference *reference = get();
   if (index < 7 && reference != nullptr) {
-    reference->unknown4cba8[index] = root;
+    reference->m_elemComboRoot[index] = root;
   }
 }
 
@@ -466,7 +466,7 @@ u32 GfMenuReference::getElementComboRootCurrent() {
         GfObjPropertyEnemy *enemy = property->getEnemy();
         if (enemy != nullptr && enemy->unknowndc != 0) {
           for (u32 i = 0; i < 7; i++) {
-            if (reference->unknown4cba8[i].unknown00 == enemy->unknowndc) {
+            if (reference->m_elemComboRoot[i].unknown00 == enemy->unknowndc) {
               return i;
             }
           }
@@ -600,7 +600,7 @@ bool GfMenuReference::isReversePaletteBtnState(u32 index, u32 button) {
 GfMenuEnemyList *GfMenuReference::getEnemyLinkList() {
   GfMenuReference *reference = get();
   if (reference != nullptr) {
-    return reference->unknown4cb98;
+    return reference->m_menuEnemyList;
   }
   return nullptr;
 }
@@ -608,7 +608,7 @@ GfMenuEnemyList *GfMenuReference::getEnemyLinkList() {
 GfMenuItemList *GfMenuReference::getItemLinkList() {
   GfMenuReference *reference = get();
   if (reference != nullptr) {
-    return reference->unknown4cba0;
+    return reference->m_menuItemList;
   }
   return nullptr;
 }
@@ -632,11 +632,11 @@ void GfMenuReference::addItemLink(const MenuItemInfo &info) {
 void GfMenuReference::clearLinkList() {
   GfMenuReference *reference = get();
   if (reference != nullptr) {
-    if (reference->unknown4cb98 != nullptr) {
-      reference->unknown4cb98->clear();
+    if (reference->m_menuEnemyList != nullptr) {
+      reference->m_menuEnemyList->clear();
     }
-    if (reference->unknown4cba0 != nullptr) {
-      reference->unknown4cba0->clear();
+    if (reference->m_menuItemList != nullptr) {
+      reference->m_menuItemList->clear();
     }
   }
 }
@@ -950,7 +950,7 @@ u32 GfMenuReference::getBladeVirtualEquipOrbSlot() {
 GF_SEARCH_OBJ *GfMenuReference::createList(GF_SEARCH_OBJ *searchObj) {
   if (searchObj != unknown012) {
     REFLIST *list = new (unknown4070.unknown003()) REFLIST;
-    list->unknown00 = searchObj;
+    list->m_GF_SEARCH_OBJ = searchObj;
     list->unknown08.clear();
     unknown4c598.push_back(list);
   }
@@ -977,16 +977,16 @@ mm::mtl::FixedList<MENUREF_OBJ *, 512> *GfMenuReference::getList(GF_SEARCH_OBJ *
   if (reference == nullptr) {
     return nullptr;
   }
-  ml::CS cs(reference->unknown4ca18);
+  ml::CS cs(reference->m_criticalSection);
   for (mm::mtl::FixedList<REFLIST *, 32>::iterator it = reference->unknown4c598.begin(); it != reference->unknown4c598.end(); ++it) {
-    if ((*it)->unknown00 == searchObj) {
+    if ((*it)->m_GF_SEARCH_OBJ == searchObj) {
       return &(*it)->unknown08;
     }
   }
   return nullptr;
 }
 
-ml::CriticalSection &GfMenuReference::getCriticalSection() { return get()->unknown4ca18; }
+ml::CriticalSection &GfMenuReference::getCriticalSection() { return get()->m_criticalSection; }
 
 ui::UIStr &GfMenuReference::getReferenceString(u16 index) {
   GfMenuReference *reference = get();

@@ -11,7 +11,7 @@ public:
   void releaseQuery();
   u32 getOccPixel();
 
-  DrResQueryObj *unknown00; // Inferred role: query; original member name unknown.
+  DrResQueryObj *m_drResQueryObj; // Inferred role: query; original member name unknown.
 };
 
 static_assert(sizeof(DrResQueryAcc) == 0x8, "");

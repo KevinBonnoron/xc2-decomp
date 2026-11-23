@@ -109,19 +109,19 @@ public:
   unknown004 *getGlassBreakage() const;
   void getWetnessSetting(u16 index, WetSetting &setting) const;
 
-  DrMan *unknown00;                        // Inferred role: dr man; original member name unknown.
+  DrMan *m_drMan;                          // Inferred role: dr man; original member name unknown.
   FileResTh *unknown08[18];                // Inferred role: texture resources ([4, 5] toon grad, [6] toon rim, [7..11] volume, [12] IBL env, [13, 14] rain drop, [16, 17] flag
                                            // wave); original member name unknown.
   grlib::CGLibTextureBuffer unknown98[18]; // Inferred role: textures; original member name unknown.
   FileResTh *unknown878;                   // Inferred role: mirror ball model res; original member name unknown.
-  ScnObjModel *unknown880;                 // Inferred role: mirror ball; original member name unknown.
+  ScnObjModel *m_scnObjModel;              // Inferred role: mirror ball; original member name unknown.
   bool m_updateMirrorBallPos;
   u8 _889[0x890 - 0x889];
   FileResTh *unknown890; // Inferred role: camera light res; original member name unknown.
   FileResTh *unknown898; // Inferred role: glass breakage res; original member name unknown.
   FileResTh *unknown8a0; // Inferred role: filter lut res; original member name unknown.
   u8 _8a8[0x970 - 0x8a8];
-  DrPixlPostParm unknown970; // Inferred role: default post parm; original member name unknown.
+  DrPixlPostParm m_drPixlPostParm; // Inferred role: default post parm; original member name unknown.
   mm::mtl::FixStr<256> m_IBLEnvTexturePath;
   csvb::CCsvbData *unknown1b88; // Inferred role: wetness csvb data; original member name unknown.
 };
@@ -132,11 +132,11 @@ static_assert(sizeof(DrIniSys::WetSetting) == 0x10, "");
 static_assert(offsetof(DrIniSys, unknown08) == 0x08, "");
 static_assert(offsetof(DrIniSys, unknown98) == 0x98, "");
 static_assert(offsetof(DrIniSys, unknown878) == 0x878, "");
-static_assert(offsetof(DrIniSys, unknown880) == 0x880, "");
+static_assert(offsetof(DrIniSys, m_scnObjModel) == 0x880, "");
 static_assert(offsetof(DrIniSys, unknown890) == 0x890, "");
 static_assert(offsetof(DrIniSys, unknown898) == 0x898, "");
 static_assert(offsetof(DrIniSys, unknown8a0) == 0x8a0, "");
-static_assert(offsetof(DrIniSys, unknown970) == 0x970, "");
+static_assert(offsetof(DrIniSys, m_drPixlPostParm) == 0x970, "");
 static_assert(offsetof(DrIniSys, m_IBLEnvTexturePath) == 0x1a80, "");
 static_assert(offsetof(DrIniSys, unknown1b88) == 0x1b88, "");
 

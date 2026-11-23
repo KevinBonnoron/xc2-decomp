@@ -10,26 +10,26 @@ class WinView;
 namespace dir {
 
 VwTaskRoot::VwTaskRoot() {
-  unknown00.Init();
+  m_vwProcessMan.Init();
   Reset();
 }
 
 void VwTaskRoot::Release() {
-  unknown00.Delete();
-  unknown00.Term();
+  m_vwProcessMan.Delete();
+  m_vwProcessMan.Term();
   unknown60 = nullptr;
   unknown68 = nullptr;
   unknown50 = nullptr;
   unknown58 = nullptr;
 }
 
-void VwTaskRoot::Move() { unknown00.Move(); }
+void VwTaskRoot::Move() { m_vwProcessMan.Move(); }
 
-void VwTaskRoot::Draw() { unknown00.Draw(); }
+void VwTaskRoot::Draw() { m_vwProcessMan.Draw(); }
 
 void VwTaskRoot::Tail() {
-  unknown00.Tail();
-  unknown00.Delete();
+  m_vwProcessMan.Tail();
+  m_vwProcessMan.Delete();
 }
 
 void VwTaskRoot::DebugDraw(ml::WinView *view) {}

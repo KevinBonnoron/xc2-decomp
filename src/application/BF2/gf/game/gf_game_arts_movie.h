@@ -33,14 +33,14 @@ public:
   s32 getState() const;
   void gevPause(u32 resumeBits, u32 pauseBits) override;
 
-  GF_SLOT_HANDLE *unknown10;                                 // Inferred role: movie buffer slot; original member name unknown.
+  GF_SLOT_HANDLE *m_GF_SLOT_HANDLE;                          // Inferred role: movie buffer slot; original member name unknown.
   mm::mtl::IAllocator *unknown18;                            // Inferred role: movie buffer allocator; original member name unknown.
   u32 unknown20;                                             // Inferred role: cleared by constructor; original member name unknown.
   s32 m_state;                                               // Name from getState().
   mm::mtl::Delegate<void(const fw::UpdateInfo &)> unknown28; // Inferred role: update callback; original member name unknown.
 };
 
-static_assert(offsetof(GfArtsMovie, unknown10) == 0x10, "");
+static_assert(offsetof(GfArtsMovie, m_GF_SLOT_HANDLE) == 0x10, "");
 static_assert(offsetof(GfArtsMovie, unknown18) == 0x18, "");
 static_assert(offsetof(GfArtsMovie, m_state) == 0x24, "");
 static_assert(offsetof(GfArtsMovie, unknown28) == 0x28, "");

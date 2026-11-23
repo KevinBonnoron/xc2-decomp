@@ -9,13 +9,13 @@
 namespace layer {
 
 LayerFontManager::LayerFontManager(LayerManager *manager) {
-  unknown90 = manager;
+  m_layerManager = manager;
   unknown00.unknown10 = 0;
   unknown18[0].unknown10 = 0;
   unknown18[1].unknown10 = 0;
   unknown48.unknown10 = 0;
   unknown78.unknown10 = 0;
-  unknown60 = nullptr;
+  m_layerFontResObj = nullptr;
   unknown00.unknown00 = nullptr;
   unknown00.unknown08 = nullptr;
   unknown18[0].unknown00 = nullptr;
@@ -26,8 +26,8 @@ LayerFontManager::LayerFontManager(LayerManager *manager) {
   unknown48.unknown08 = nullptr;
   unknown78.unknown00 = nullptr;
   unknown78.unknown08 = nullptr;
-  unknown68 = nullptr;
-  unknown70 = nullptr;
+  m_layerFontIconObj = nullptr;
+  m_layerFontStyleObj = nullptr;
 }
 
 LayerFontManager::~LayerFontManager() {
@@ -47,36 +47,36 @@ void LayerFontManager::allRelease() {
 }
 
 LayerBase *LayerFontManager::createFontResObj(const void *data) {
-  LayerFontResObj *res = new (unknown90->unknown28) LayerFontResObj(this);
+  LayerFontResObj *res = new (m_layerManager->unknown28) LayerFontResObj(this);
   res->setFontData(data);
   unknown18[LayerManager::s_nStkIdx].unknown002(res);
-  if (unknown60 == nullptr) {
-    unknown60 = res;
+  if (m_layerFontResObj == nullptr) {
+    m_layerFontResObj = res;
   }
   return res;
 }
 
 LayerBase *LayerFontManager::createStyleObj(const void *data) {
-  LayerFontStyleObj *style = new (unknown90->unknown28) LayerFontStyleObj(this);
+  LayerFontStyleObj *style = new (m_layerManager->unknown28) LayerFontStyleObj(this);
   style->setStyleData(data);
   unknown78.unknown002(style);
-  if (unknown70 == nullptr) {
-    unknown70 = style;
+  if (m_layerFontStyleObj == nullptr) {
+    m_layerFontStyleObj = style;
   }
   return style;
 }
 
 LayerBase *LayerFontManager::createFontIconObj(const void *data) {
-  LayerFontIconObj *icon = new (unknown90->unknown28) LayerFontIconObj(this, data, LAYER_TYPE_UNKNOWN_11);
+  LayerFontIconObj *icon = new (m_layerManager->unknown28) LayerFontIconObj(this, data, LAYER_TYPE_UNKNOWN_11);
   unknown18[LayerManager::s_nStkIdx].unknown002(icon);
-  if (unknown68 == nullptr) {
-    unknown68 = icon;
+  if (m_layerFontIconObj == nullptr) {
+    m_layerFontIconObj = icon;
   }
   return icon;
 }
 
 LayerBase *LayerFontManager::createFontColMapObj(const void *data) {
-  LayerFontIconObj *colMap = new (unknown90->unknown28) LayerFontIconObj(this, data, LAYER_TYPE_UNKNOWN_12);
+  LayerFontIconObj *colMap = new (m_layerManager->unknown28) LayerFontIconObj(this, data, LAYER_TYPE_UNKNOWN_12);
   unknown18[LayerManager::s_nStkIdx].unknown002(colMap);
   return colMap;
 }

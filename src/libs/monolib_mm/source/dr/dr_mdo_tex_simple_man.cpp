@@ -7,7 +7,7 @@
 
 namespace ml {
 
-DrMdoTexSimpleMan::DrMdoTexSimpleMan(DrMan *drMan) : unknown00(drMan), unknown08(), unknown28(nullptr), unknown30(nullptr), unknown38(nullptr), unknown40(nullptr) {}
+DrMdoTexSimpleMan::DrMdoTexSimpleMan(DrMan *drMan) : m_drMan(drMan), unknown08(), unknown28(nullptr), unknown30(nullptr), unknown38(nullptr), unknown40(nullptr) {}
 
 DrMdoTexSimpleMan::~DrMdoTexSimpleMan() {
   for (int i = 0; i < 2; i++) {
@@ -40,7 +40,7 @@ DrMdoTexSimpleMan::~DrMdoTexSimpleMan() {
 
 DrResMdoTexSimple *DrMdoTexSimpleMan::createTextureObj(const void *data, int size, bool isMiddle) {
   CS lock(DrMan::getCriticalSection());
-  DrResMdoTexSimple *tex = new (unknown00->unknown10) DrResMdoTexSimple(data, size, isMiddle);
+  DrResMdoTexSimple *tex = new (m_drMan->unknown10) DrResMdoTexSimple(data, size, isMiddle);
   DrResMdoTexSimple **list = unknown08[DrMan::s_nDblStockIdx];
   if (list[1] == nullptr) {
     list[0] = tex;

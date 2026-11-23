@@ -27,6 +27,7 @@ public:
   void setDefault(const mm::Vec3 &position, const mm::Vec3 &target);
   void getDefault(mm::Vec3 &position, mm::Vec3 &target);
   void getCurrent(mm::Vec3 &position, mm::Vec3 &target);
+  void updateLookAt(const mm::Vec3 &position, const mm::Vec3 &rotation);
 
   u8 _a8[0xb0 - 0xa8];
   mm::Vec3 unknownb0; // Inferred role: default position; original member name unknown.

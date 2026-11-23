@@ -4,7 +4,7 @@
 
 namespace layer {
 
-LayerResAddTexObj::LayerResAddTexObj(const void *data, u32 index) : unknown00(nullptr), unknown08(nullptr), unknown10(data), unknown18(nullptr) {
+LayerResAddTexObj::LayerResAddTexObj(const void *data, u32 index) : unknown00(nullptr), unknown08(nullptr), unknown10(data), m_layerTextureObj(nullptr) {
   unknown22 = 0;
   unknown20 = index;
 }
@@ -15,15 +15,15 @@ LayerResAddTexObj::LayerResAddTexObj(grlib::CGLibTextureBuffer *texture, u32 ind
   unknown22 = 0x400;
   unknown20 = index;
   unknown10_texture = texture;
-  unknown18 = nullptr;
+  m_layerTextureObj = nullptr;
 }
 
 LayerResAddTexObj::~LayerResAddTexObj() { release(); }
 
 void LayerResAddTexObj::release() {
-  if (unknown18 != nullptr) {
-    unknown18->release();
-    unknown18 = nullptr;
+  if (m_layerTextureObj != nullptr) {
+    m_layerTextureObj->release();
+    m_layerTextureObj = nullptr;
   }
 }
 
@@ -31,7 +31,7 @@ grlib::CGLibTextureBuffer *LayerResAddTexObj::getTexObj(u32 index) {
   if (unknown22 & 0x400) {
     return unknown10_texture;
   }
-  return unknown18->getTexture(index);
+  return m_layerTextureObj->getTexture(index);
 }
 
 } // namespace layer

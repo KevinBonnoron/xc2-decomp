@@ -187,6 +187,7 @@ public:
   static void resumeThread();
   static int createGroupHandle(u32 count);
   static bool entryJobThread(int handle, u32 (*function)(void *, void *), u32 priority, void *argument, void *userData, CPUID cpu, bool isDebug, bool isBackground);
+  static bool entryAutoExecGrp(int handle, CPUID cpu, u32 priority);
   static u32 getResult(int handle);
   static bool getWaitingJob(TJOB *&job, WorkCpuThread *thread);
   static void endFrame();
@@ -233,7 +234,7 @@ public:
   fixed_size_alloc<TJOB> unknown1768; // Inferred role: job pool; original member name unknown. Evidence: the constructor stores the vtable at 0x1768 and zeroes the pool pointer (0x1770), the bitmap
                                       // (0x1778), the elements (0x1780) and the word count and used count (0x1788); allocJob and freeJob read the bitmap, the elements (0x40 bytes
                                       // each), the word count (0x1788) and the used count (0x178c); wkStandbyLogin stores the count 0x400 at 0x1790 (0x7100774330).
-  TJOB *unknown1798;                  // Inferred role: last entered job; original member name unknown.
+  TJOB *m_TJOB;                       // Inferred role: last entered job; original member name unknown.
   mm::mtl::FixedList<AUTO_EXEC, 32> unknown17a0; // Inferred role: auto executed groups; original member name unknown.
   u32 unknown1958;
   u32 unknown195c;
@@ -254,11 +255,11 @@ public:
   long m_syncClock;
   u32 unknown2088; // Inferred role: group handle counter, incremented by createGroupHandle (0x7100773b88); original member name unknown.
   u8 _208c[0x2090 - 0x208c];
-  unsigned long unknown2090;                         // Inferred role: frame count; original member name unknown.
+  unsigned long m_frameCount;                        // Inferred role: frame count; named after the game accessor ml::WorkCpu::getFrameCount.
   std::chrono::system_clock::time_point unknown2098; // Inferred role: start time; original member name unknown. Evidence: the constructor (0x710076f938) and wkStandbyLogout (0x710077480c) store the
                                                      // return value of std::chrono::system_clock::now(), and wkStandbyLogout (0x71007748cc) takes the difference of a later now() with it.
   mm::mtl::FixedList<IErrorCB *, 32> unknown20a0;    // Inferred role: error callbacks; original member name unknown.
-  CriticalSectionNC unknown22e0;                     // Inferred role: error callbacks lock; original member name unknown.
+  CriticalSectionNC m_criticalSectionNC;             // Inferred role: error callbacks lock; original member name unknown.
 };
 
 static_assert(offsetof(WorkCpu, unknown1b0) == 0x1b0, "");
@@ -270,7 +271,7 @@ static_assert(offsetof(WorkCpu, unknown1740) == 0x1740, "");
 static_assert(offsetof(WorkCpu, unknown1758) == 0x1758, "");
 static_assert(offsetof(WorkCpu, m_even) == 0x1764, "");
 static_assert(offsetof(WorkCpu, unknown1768) == 0x1768, "");
-static_assert(offsetof(WorkCpu, unknown1798) == 0x1798, "");
+static_assert(offsetof(WorkCpu, m_TJOB) == 0x1798, "");
 static_assert(offsetof(WorkCpu, unknown17a0) == 0x17a0, "");
 static_assert(offsetof(WorkCpu, unknown1958) == 0x1958, "");
 static_assert(offsetof(WorkCpu, unknown195c) == 0x195c, "");
@@ -281,8 +282,8 @@ static_assert(offsetof(WorkCpu, unknown2020) == 0x2020, "");
 static_assert(offsetof(WorkCpu, unknown2034) == 0x2034, "");
 static_assert(offsetof(WorkCpu, unknown2048) == 0x2048, "");
 static_assert(offsetof(WorkCpu, m_syncClock) == 0x2080, "");
-static_assert(offsetof(WorkCpu, unknown2090) == 0x2090, "");
+static_assert(offsetof(WorkCpu, m_frameCount) == 0x2090, "");
 static_assert(offsetof(WorkCpu, unknown20a0) == 0x20a0, "");
-static_assert(offsetof(WorkCpu, unknown22e0) == 0x22e0, "");
+static_assert(offsetof(WorkCpu, m_criticalSectionNC) == 0x22e0, "");
 
 } // namespace ml

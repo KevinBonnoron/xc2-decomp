@@ -22,7 +22,7 @@ namespace {
 // Inferred role: tells whether a position is inside one of the battle locks; original name unknown.
 struct unknown001 {
   void onTraverse(const gmk::AGmkBase &gmk) {
-    if (static_cast<const gmk::GmkBattleLock &>(gmk).unknown50.unknown58 != nullptr) {
+    if (static_cast<const gmk::GmkBattleLock &>(gmk).m_gmkCollision.unknown58 != nullptr) {
       result = gmk.isInsideShape(position, 0.0f);
     }
   }
@@ -34,7 +34,7 @@ struct unknown001 {
 // Inferred role: tells whether one of the battle locks is active; original name unknown.
 struct unknown002 {
   void onTraverse(const gmk::AGmkBase &gmk) {
-    if (static_cast<const gmk::GmkBattleLock &>(gmk).unknown50.unknown58 != nullptr) {
+    if (static_cast<const gmk::GmkBattleLock &>(gmk).m_gmkCollision.unknown58 != nullptr) {
       lock->unknown20 = true;
     }
   }

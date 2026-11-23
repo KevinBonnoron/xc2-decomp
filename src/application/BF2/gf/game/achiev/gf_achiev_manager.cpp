@@ -32,7 +32,7 @@ void GfAchievManager::update(const fw::UpdateInfo &) {
 }
 
 void GfAchievManager::flushEventIncAchiev(const IncQuest &incQuest) {
-  AchievQuest *achievQuest = GfDataQuest::getAchievQuest(incQuest.unknown00);
+  AchievQuest *achievQuest = GfDataQuest::getAchievQuest(incQuest.m_questID);
   if (achievQuest == nullptr || achievQuest->unknown16 == 0 || achievQuest->unknown14 == 0) {
     return;
   }
@@ -61,7 +61,7 @@ void GfAchievManager::incleaseAchievCount(QuestID quest, u32 count, u32 add) {
     return;
   }
   IncQuest incQuest;
-  incQuest.unknown00 = quest;
+  incQuest.m_questID = quest;
   incQuest.unknown04 = count;
   incQuest.unknown08 = add;
   if (unknown08.full()) {

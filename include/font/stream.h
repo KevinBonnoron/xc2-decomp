@@ -29,9 +29,9 @@ public:
   u64 pos(u64 position);
 
 private:
-  File *unknown00; // Inferred role: file; original member name unknown.
-  u8 unknown08;    // Inferred role: byte being consumed; original member name unknown.
-  u8 unknown09;    // Inferred role: number of bits left in the byte being consumed; original member name unknown.
+  File *m_file; // Inferred role: file; original member name unknown.
+  u8 unknown08; // Inferred role: byte being consumed; original member name unknown.
+  u8 unknown09; // Inferred role: number of bits left in the byte being consumed; original member name unknown.
 
   friend struct StreamLayout;
 };

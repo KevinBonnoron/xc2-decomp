@@ -14,7 +14,7 @@ namespace ml {
 
 // The game zeroes the three lists before the DrResMdoSortGrp constructor call (0x71007cf634..0x71007cf640, hence the value-initialised members) and
 // stores zero in each of them again at the end (0x71007cf6f4..0x71007cf6fc, ruling 5 / P3: redundant stores the asm shows).
-DrMdoGrpObj::DrMdoGrpObj(int viewNum, u32 num) : DrMdlBase(viewNum), unknown38(), unknown58(), unknown78(this) {
+DrMdoGrpObj::DrMdoGrpObj(int viewNum, u32 num) : DrMdlBase(viewNum), unknown38(), unknown58(), m_drResMdoSortGrp(this) {
   unknown1c = unknown037_5;
   s32 count = num;
   if (count < 0) {
@@ -64,7 +64,7 @@ DrMdlObj *DrMdoGrpObj::createMdl(const void *data, const char *name, u32 index) 
   } else {
     mdl = new (DrMan::s_pTop->unknown10) DrMdoCtlDammy(data, DrMan::s_pTop, unknown1a);
   }
-  mdl->unknown20 |= unknown038_2;
+  mdl->m_disp |= unknown038_2;
   // The game compares the group count with the index as signed (0x71007cf9b0) and stores the clamped index in the 16-bit group member (0x71007cf9bc).
   if (unknown68 <= static_cast<s32>(index)) {
     index = unknown68 - 1;
@@ -85,10 +85,10 @@ void DrMdoGrpObj::dispOffUpdate() {
 }
 
 void DrMdoGrpObj::shadowRender() {
-  u32 groups = DrMan::s_pTop->unknown88->unknown23c;
+  u32 groups = DrMan::s_pTop->m_drMdlMan->unknown23c;
   for (int i = 0; i < unknown6c; i++) {
     for (DrMdlBase *mdl = unknown30[i]->unknown00; mdl != nullptr; mdl = mdl->unknown10) {
-      if ((mdl->unknown20 & unknown038_0) && ((1 << mdl->unknown18) & groups)) {
+      if ((mdl->m_disp & unknown038_0) && ((1 << mdl->m_groups) & groups)) {
         mdl->shadowRender();
       }
     }
@@ -96,10 +96,10 @@ void DrMdoGrpObj::shadowRender() {
 }
 
 bool DrMdoGrpObj::shadowCacheRender(DrPixlShadowCacheObj &cache) {
-  u32 groups = DrMan::s_pTop->unknown88->unknown23c;
+  u32 groups = DrMan::s_pTop->m_drMdlMan->unknown23c;
   for (int i = 0; i < unknown6c; i++) {
     for (DrMdlBase *mdl = unknown30[i]->unknown00; mdl != nullptr; mdl = mdl->unknown10) {
-      if ((mdl->unknown20 & unknown038_0) && ((1 << mdl->unknown18) & groups)) {
+      if ((mdl->m_disp & unknown038_0) && ((1 << mdl->m_groups) & groups)) {
         if (!mdl->shadowCacheRender(cache)) {
           return false;
         }
@@ -110,10 +110,10 @@ bool DrMdoGrpObj::shadowCacheRender(DrPixlShadowCacheObj &cache) {
 }
 
 void DrMdoGrpObj::shadowCacheOnlyRender() {
-  u32 groups = DrMan::s_pTop->unknown88->unknown23c;
+  u32 groups = DrMan::s_pTop->m_drMdlMan->unknown23c;
   for (int i = 0; i < unknown6c; i++) {
     for (DrMdlBase *mdl = unknown30[i]->unknown00; mdl != nullptr; mdl = mdl->unknown10) {
-      if ((1 << mdl->unknown18) & groups) {
+      if ((1 << mdl->m_groups) & groups) {
         mdl->shadowCacheOnlyRender();
       }
     }

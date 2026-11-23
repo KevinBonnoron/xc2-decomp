@@ -52,8 +52,8 @@ bool GfMenuOrderMgr::isInitialized() {
 void GfMenuOrderMgr::postUpdate(const fw::UpdateInfo &) {
   GfMenuOrderMgr *manager = get();
   if (manager != nullptr && manager->unknown368 == 0) {
-    if (manager->pickLogOrder(manager->unknown340)) {
-      ui::UIManager::get()->requestObjectEvent(manager->unknown340.unknown04, manager->unknown340.unknown08, 0.0f);
+    if (manager->pickLogOrder(manager->m_sLog)) {
+      ui::UIManager::get()->requestObjectEvent(manager->m_sLog.unknown04, manager->m_sLog.m_eventData, 0.0f);
       manager->unknown368 = 1;
     }
   }
@@ -77,7 +77,7 @@ void GfMenuOrderMgr::setOrder(int order, u32 handle, const ui::EventData &event)
 void GfMenuOrderMgr::pushLogOrder(const sLog &log) {
   if (!unknown10.full()) {
     for (mm::mtl::FixedQueue<sLog, LOG_UNKNOWN_20>::iterator it = unknown10.begin(); it != unknown10.end(); ++it) {
-      if ((*it).unknown00 == log.unknown00 && (*it).unknown00 == ORDER_UNKNOWN_2 && (*it).unknown08.unknown14 == 0) {
+      if ((*it).unknown00 == log.unknown00 && (*it).unknown00 == ORDER_UNKNOWN_2 && (*it).m_eventData.unknown14 == 0) {
         *it = log;
         return;
       }
@@ -93,7 +93,7 @@ void GfMenuOrderMgr::pushLogOrder(const sLog &log) {
 void GfMenuOrderMgr::cancelOrder(int order) { get()->cancelLogOrder(order); }
 
 void GfMenuOrderMgr::finishOrder(int order) {
-  if (get()->unknown340.unknown00 == order) {
+  if (get()->m_sLog.unknown00 == order) {
     get()->unknown368 = 0;
   }
 }

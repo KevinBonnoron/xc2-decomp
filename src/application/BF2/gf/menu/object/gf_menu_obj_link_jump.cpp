@@ -196,11 +196,11 @@ void GfMenuObjLinkJump::RootListener::reciveEvent(const ui::EventData &event, u3
     ui::EventData sendData;
     sendData.unknown00 = GfMenuTypes::unknown003_33;
     GfMenuObject::sendEvent(acc.searchChild("LAY_notify"), sendData, 0.0f);
-    unknown20->unknown78 = false;
+    m_menuObjLinkJump->unknown78 = false;
     break;
   }
   case 8:
-    if (event.unknown0c == 9 && !unknown20->unknown78) {
+    if (event.unknown0c == 9 && !m_menuObjLinkJump->unknown78) {
       ui::EventData sendData;
       sendData.unknown00 = GfMenuTypes::unknown003_33;
       GfMenuObject::sendEvent(acc.searchChild("LAY_category_list"), sendData, 0.0f);

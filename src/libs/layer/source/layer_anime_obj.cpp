@@ -9,9 +9,9 @@
 
 namespace layer {
 
-LayerAnimeObj::LayerAnimeObj(int count) : unknown10(nullptr), unknown18(0), unknown1c(0), unknown28(0), unknown30(0) {
-  unknown20 = LayerManager::get()->unknown28;
-  unknown10 = static_cast<LayerAnimeInfo *>(mtl::MemManager::allocate(unknown20, static_cast<size_t>(static_cast<u32>(count)) * sizeof(LayerAnimeInfo), 0x10, false, "no name", 0));
+LayerAnimeObj::LayerAnimeObj(int count) : m_layerAnimeInfo(nullptr), unknown18(0), unknown1c(0), unknown28(0), unknown30(0) {
+  m_ALLOC_HANDLE = LayerManager::get()->unknown28;
+  m_layerAnimeInfo = static_cast<LayerAnimeInfo *>(mtl::MemManager::allocate(m_ALLOC_HANDLE, static_cast<size_t>(static_cast<u32>(count)) * sizeof(LayerAnimeInfo), 0x10, false, "no name", 0));
   unknown18 = 0;
   unknown1c = count;
   unknown08[0] = 0;
@@ -23,13 +23,13 @@ LayerAnimeObj::LayerAnimeObj(int count) : unknown10(nullptr), unknown18(0), unkn
 
 LayerAnimeObj::~LayerAnimeObj() {
   unknown18 = 0;
-  if (unknown20.isValid() && unknown10 != nullptr) {
-    mtl::MemManager::deallocate(unknown10, 0, false);
-    unknown10 = nullptr;
+  if (m_ALLOC_HANDLE.isValid() && m_layerAnimeInfo != nullptr) {
+    mtl::MemManager::deallocate(m_layerAnimeInfo, 0, false);
+    m_layerAnimeInfo = nullptr;
   }
   unknown1c = 0;
-  unknown10 = nullptr;
-  unknown20 = mtl::ALLOC_HANDLE();
+  m_layerAnimeInfo = nullptr;
+  m_ALLOC_HANDLE = mtl::ALLOC_HANDLE();
 }
 
 LayerAnimeObj *LayerAnimeObj::createAnimObj(int id) { return new (LayerManager::get()->unknown28) LayerAnimeObj(id); }
@@ -70,30 +70,30 @@ void LayerAnimeObj::setSelectIdx(u32 idx) {
 
 void LayerAnimeObj::calcParm(LayerResParmInfo &parm, const LayerAnimeInfo &info, f32 rate) {
   if (info.unknown00 & 0x1) {
-    parm.unknown00.unknown00 += (info.unknown08 - parm.unknown00.unknown00) * rate;
-    parm.unknown00.unknown04 += (info.unknown0c - parm.unknown00.unknown04) * rate;
+    parm.m_layerBasePos.unknown00 += (info.unknown08 - parm.m_layerBasePos.unknown00) * rate;
+    parm.m_layerBasePos.unknown04 += (info.unknown0c - parm.m_layerBasePos.unknown04) * rate;
   }
   if (info.unknown00 & 0x2) {
-    parm.unknown00.unknown08 += (info.unknown10 - parm.unknown00.unknown08) * rate;
+    parm.m_layerBasePos.unknown08 += (info.unknown10 - parm.m_layerBasePos.unknown08) * rate;
   }
   if (info.unknown00 & 0x4) {
-    parm.unknown00.unknown0c += (info.unknown14 - parm.unknown00.unknown0c) * rate;
-    parm.unknown00.unknown10 += (info.unknown18 - parm.unknown00.unknown10) * rate;
+    parm.m_layerBasePos.unknown0c += (info.unknown14 - parm.m_layerBasePos.unknown0c) * rate;
+    parm.m_layerBasePos.unknown10 += (info.unknown18 - parm.m_layerBasePos.unknown10) * rate;
   }
   if (info.unknown00 & 0x8) {
-    parm.unknown00.unknown14 += (info.unknown1c - parm.unknown00.unknown14) * rate;
-    parm.unknown00.unknown18 += (info.unknown20 - parm.unknown00.unknown18) * rate;
+    parm.m_layerBasePos.unknown14 += (info.unknown1c - parm.m_layerBasePos.unknown14) * rate;
+    parm.m_layerBasePos.unknown18 += (info.unknown20 - parm.m_layerBasePos.unknown18) * rate;
   }
   if (info.unknown00 & 0x10) {
-    parm.unknown1c.unknown10.r += (info.unknown34 - parm.unknown1c.unknown10.r) * rate;
-    parm.unknown1c.unknown10.g += (info.unknown38 - parm.unknown1c.unknown10.g) * rate;
-    parm.unknown1c.unknown10.b += (info.unknown3c - parm.unknown1c.unknown10.b) * rate;
+    parm.m_layerResColor.m_addCol.r += (info.unknown34 - parm.m_layerResColor.m_addCol.r) * rate;
+    parm.m_layerResColor.m_addCol.g += (info.unknown38 - parm.m_layerResColor.m_addCol.g) * rate;
+    parm.m_layerResColor.m_addCol.b += (info.unknown3c - parm.m_layerResColor.m_addCol.b) * rate;
   }
   if (info.unknown00 & 0x20) {
-    parm.unknown1c.unknown00.r += (info.unknown24 - parm.unknown1c.unknown00.r) * rate;
-    parm.unknown1c.unknown00.g += (info.unknown28 - parm.unknown1c.unknown00.g) * rate;
-    parm.unknown1c.unknown00.b += (info.unknown2c - parm.unknown1c.unknown00.b) * rate;
-    parm.unknown1c.unknown00.a += (info.unknown30 - parm.unknown1c.unknown00.a) * rate;
+    parm.m_layerResColor.m_mulCol.r += (info.unknown24 - parm.m_layerResColor.m_mulCol.r) * rate;
+    parm.m_layerResColor.m_mulCol.g += (info.unknown28 - parm.m_layerResColor.m_mulCol.g) * rate;
+    parm.m_layerResColor.m_mulCol.b += (info.unknown2c - parm.m_layerResColor.m_mulCol.b) * rate;
+    parm.m_layerResColor.m_mulCol.a += (info.unknown30 - parm.m_layerResColor.m_mulCol.a) * rate;
   }
 }
 

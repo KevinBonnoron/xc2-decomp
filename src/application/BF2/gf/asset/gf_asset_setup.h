@@ -110,10 +110,10 @@ public:
   static void requestWpnSePackFile(GfAssetFilesInfo &info, u32 weaponType, GfFileIdx index);
 
   u32 unknown08;                                                     // Inferred role: id; original member name unknown.
-  GF_ASSET_HANDLE *unknown10;                                        // Inferred role: handle; original member name unknown.
-  CBdatWrapper *unknown18;                                           // Inferred role: bdat; original member name unknown.
+  GF_ASSET_HANDLE *m_GF_ASSET_HANDLE;                                // Inferred role: handle; original member name unknown.
+  CBdatWrapper *m_cBdatWrapper;                                      // Inferred role: bdat; original member name unknown.
   mm::mtl::FixedVector<unknown002 *, RESOURCE_UNKNOWN_24> unknown20; // Inferred role: ref resources; original member name unknown.
-  const GfInitParam *unknowne8;                                      // Inferred role: init param; original member name unknown.
+  const GfInitParam *m_initParam;                                    // Inferred role: init param; original member name unknown.
   bool unknownf0;                                                    // Inferred role: has ref resource; original member name unknown.
   mm::mtl::FixStr<128> unknownf4;                                    // Inferred role: debug model name; original member name unknown.
   mm::mtl::FixStr<128> unknown178;                                   // Inferred role: debug motion name; original member name unknown.
@@ -121,10 +121,10 @@ public:
 
 static_assert(sizeof(GfAssetSetup::unknown002) == 0x98, "");
 static_assert(offsetof(GfAssetSetup, unknown08) == 0x08, "");
-static_assert(offsetof(GfAssetSetup, unknown10) == 0x10, "");
-static_assert(offsetof(GfAssetSetup, unknown18) == 0x18, "");
+static_assert(offsetof(GfAssetSetup, m_GF_ASSET_HANDLE) == 0x10, "");
+static_assert(offsetof(GfAssetSetup, m_cBdatWrapper) == 0x18, "");
 static_assert(offsetof(GfAssetSetup, unknown20) == 0x20, "");
-static_assert(offsetof(GfAssetSetup, unknowne8) == 0xe8, "");
+static_assert(offsetof(GfAssetSetup, m_initParam) == 0xe8, "");
 static_assert(offsetof(GfAssetSetup, unknownf0) == 0xf0, "");
 static_assert(offsetof(GfAssetSetup, unknownf4) == 0xf4, "");
 
@@ -310,10 +310,10 @@ public:
   virtual GfAssetType getAssetTypeMot() const { return ASSET_TYPE_UNKNOWN_11; }
   virtual GfAssetType getAssetTypeArc() const { return ASSET_TYPE_UNKNOWN_12; }
 
-  const GfInitParamEnemy *unknown200; // Inferred role: init param enemy; original member name unknown.
+  const GfInitParamEnemy *m_initParamEnemy; // Inferred role: init param enemy; original member name unknown.
 };
 
-static_assert(offsetof(GfAssetSetupEnemy, unknown200) == 0x200, "");
+static_assert(offsetof(GfAssetSetupEnemy, m_initParamEnemy) == 0x200, "");
 
 class GfAssetSetupEnemyBlade : public GfAssetSetupEnemy {
 public:
@@ -512,10 +512,10 @@ public:
   GfFileIdx getStpSlot() const override { return static_cast<GfFileIdx>(5); }
   GfAssetType getAssetType() const override { return ASSET_TYPE_UNKNOWN_8; }
 
-  GfAppend unknown200; // Inferred role: append; original member name unknown.
+  GfAppend m_append; // Inferred role: append; original member name unknown.
 };
 
-static_assert(offsetof(GfAssetSetupWeapon, unknown200) == 0x200, "");
+static_assert(offsetof(GfAssetSetupWeapon, m_append) == 0x200, "");
 
 class GfAssetSetupWeaponEventCS : public GfAssetSetupWeapon {
 public:
@@ -549,10 +549,10 @@ public:
   GfFileIdx getStpSlot() const override { return static_cast<GfFileIdx>(5); }
   GfAssetType getAssetType() const override { return ASSET_TYPE_UNKNOWN_17; }
 
-  GfAppend unknown200; // Inferred role: append; original member name unknown.
+  GfAppend m_append; // Inferred role: append; original member name unknown.
 };
 
-static_assert(offsetof(GfAssetSetupEnWeapon, unknown200) == 0x200, "");
+static_assert(offsetof(GfAssetSetupEnWeapon, m_append) == 0x200, "");
 
 class GfAssetSetupBelonging : public GfAssetSetup {
 public:
@@ -569,10 +569,10 @@ public:
   GfFileIdx getArcSlot() const override { return static_cast<GfFileIdx>(1); }
   GfAssetType getAssetType() const override { return ASSET_TYPE_UNKNOWN_17; }
 
-  GfAppend unknown200; // Inferred role: append; original member name unknown.
+  GfAppend m_append; // Inferred role: append; original member name unknown.
 };
 
-static_assert(offsetof(GfAssetSetupBelonging, unknown200) == 0x200, "");
+static_assert(offsetof(GfAssetSetupBelonging, m_append) == 0x200, "");
 
 class GfAssetSetupExtra : public GfAssetSetup {
 public:
@@ -592,10 +592,10 @@ public:
   GfFileIdx getStpSlot() const override { return static_cast<GfFileIdx>(5); }
   GfAssetType getAssetType() const override { return ASSET_TYPE_UNKNOWN_17; }
 
-  GfAppend unknown200; // Inferred role: append; original member name unknown.
+  GfAppend m_append; // Inferred role: append; original member name unknown.
 };
 
-static_assert(offsetof(GfAssetSetupExtra, unknown200) == 0x200, "");
+static_assert(offsetof(GfAssetSetupExtra, m_append) == 0x200, "");
 
 class GfAssetSetupMapSeamless : public GfAssetSetup {
 public:

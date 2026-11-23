@@ -74,16 +74,16 @@ public:
   // Inferred role: the GfEvtModel members from 0x18, after the ReferenceObject and IGfObjListener bases.
   GF_EVT_MODEL unknown18;                         // Inferred role: type; original member name unknown.
   u32 unknown1c;                                  // Inferred role: second constructor parameter; original member name unknown.
-  GF_OBJ_HANDLE *unknown20;                       // Inferred role: handle; original member name unknown.
-  GfEvtModel *unknown28;                          // Inferred role: model this one is mounted on; original member name unknown.
+  GF_OBJ_HANDLE *m_GF_OBJ_HANDLE;                 // Inferred role: handle; original member name unknown.
+  GfEvtModel *m_evtModel;                         // Inferred role: model this one is mounted on; original member name unknown.
   mm::mtl::FixStr<32> unknown30;                  // Inferred role: mount bone name; original member name unknown.
   mm::mtl::FixedList<GfEvtModel *, 32> unknown58; // Inferred role: models mounted on this one; original member name unknown.
 };
 
 static_assert(offsetof(GfEvtModel, unknown18) == 0x18, "");
 static_assert(offsetof(GfEvtModel, unknown1c) == 0x1c, "");
-static_assert(offsetof(GfEvtModel, unknown20) == 0x20, "");
-static_assert(offsetof(GfEvtModel, unknown28) == 0x28, "");
+static_assert(offsetof(GfEvtModel, m_GF_OBJ_HANDLE) == 0x20, "");
+static_assert(offsetof(GfEvtModel, m_evtModel) == 0x28, "");
 static_assert(offsetof(GfEvtModel, unknown30) == 0x30, "");
 static_assert(offsetof(GfEvtModel, unknown58) == 0x58, "");
 static_assert(sizeof(GfEvtModel) == 0x298, "");
@@ -159,12 +159,12 @@ public:
 
   static mm::mtl::RTTI m_rtti;
 
-  ai::Fsm unknown298; // Inferred role: state machine; original member name unknown.
-  u32 unknown310;     // Inferred role: blade; original member name unknown.
+  ai::Fsm m_fsm;  // Inferred role: state machine; original member name unknown.
+  u32 unknown310; // Inferred role: blade; original member name unknown.
   u8 _314[0x318 - 0x314];
 };
 
-static_assert(offsetof(GfEvtModelDriver, unknown298) == 0x298, "");
+static_assert(offsetof(GfEvtModelDriver, m_fsm) == 0x298, "");
 static_assert(offsetof(GfEvtModelDriver, unknown310) == 0x310, "");
 static_assert(sizeof(GfEvtModelDriver) == 0x318, "");
 
@@ -249,10 +249,10 @@ public:
 
   static mm::mtl::RTTI m_rtti;
 
-  ai::Fsm unknown298; // Inferred role: state machine; original member name unknown.
+  ai::Fsm m_fsm; // Inferred role: state machine; original member name unknown.
 };
 
-static_assert(offsetof(GfEvtModelBlade, unknown298) == 0x298, "");
+static_assert(offsetof(GfEvtModelBlade, m_fsm) == 0x298, "");
 static_assert(sizeof(GfEvtModelBlade) == 0x310, "");
 
 class GfEvtModelEnemy : public GfEvtModel {
@@ -318,10 +318,10 @@ public:
 
   static mm::mtl::RTTI m_rtti;
 
-  ai::Fsm unknown298; // Inferred role: state machine; original member name unknown.
+  ai::Fsm m_fsm; // Inferred role: state machine; original member name unknown.
 };
 
-static_assert(offsetof(GfEvtModelEnemy, unknown298) == 0x298, "");
+static_assert(offsetof(GfEvtModelEnemy, m_fsm) == 0x298, "");
 static_assert(sizeof(GfEvtModelEnemy) == 0x310, "");
 
 class GfEvtModelWeapon : public GfEvtModel {
@@ -347,13 +347,13 @@ public:
   bool isPlayEndAnimCS();
   void setAnimSpeedCS(f32 speed);
 
-  // GfAppendHandles, not GfWeapon: the constructor (0x710030c27c) stores the GfAppendHandles vtable here, the same one the GfInitParamWeapon constructor stores in its unknown130.
-  GfAppendHandles unknown298; // Inferred role: weapon handles; original member name unknown.
-  u32 unknown348;             // Inferred role: driver; original member name unknown.
+  // GfAppendHandles, not GfWeapon: the constructor (0x710030c27c) stores the GfAppendHandles vtable here, the same one the GfInitParamWeapon constructor stores in its m_appendHandles.
+  GfAppendHandles m_appendHandles; // Inferred role: weapon handles; original member name unknown.
+  u32 unknown348;                  // Inferred role: driver; original member name unknown.
   u8 _34c[0x350 - 0x34c];
 };
 
-static_assert(offsetof(GfEvtModelWeapon, unknown298) == 0x298, "");
+static_assert(offsetof(GfEvtModelWeapon, m_appendHandles) == 0x298, "");
 static_assert(offsetof(GfEvtModelWeapon, unknown348) == 0x348, "");
 static_assert(sizeof(GfEvtModelWeapon) == 0x350, "");
 

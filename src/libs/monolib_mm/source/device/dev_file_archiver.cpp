@@ -52,7 +52,7 @@ void *DevFileDicAllocator::reallocate(void *pointer, size_t size) {
   return mtl::MemManager::allocate(m_mem, size, 4, false, "no name", 0);
 }
 
-DevFileArchiver::DevFileArchiver(mtl::ALLOC_HANDLE mem) : unknown0c(mem), unknown490(mem) { initialize(); }
+DevFileArchiver::DevFileArchiver(mtl::ALLOC_HANDLE mem) : m_ALLOC_HANDLE(mem), m_devFileDicAllocator(mem) { initialize(); }
 
 void DevFileArchiver::initialize() {
   for (int i = 0; i < 8; i++) {

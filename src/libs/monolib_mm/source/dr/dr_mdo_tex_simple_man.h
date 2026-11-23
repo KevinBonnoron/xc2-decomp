@@ -13,7 +13,7 @@ public:
   DrResMdoTexSimple *createTextureObj(const void *data, int size, bool isMiddle);
   void update();
 
-  DrMan *unknown00;                   // Inferred role: dr manager; original member name unknown.
+  DrMan *m_drMan;                     // Inferred role: dr manager; original member name unknown.
   DrResMdoTexSimple *unknown08[2][2]; // Inferred role: first and last texture per buffer; original member name unknown.
   DrResMdoTexSimple *unknown28;       // Inferred role: first texture; original member name unknown.
   DrResMdoTexSimple *unknown30;       // Inferred role: last texture; original member name unknown.

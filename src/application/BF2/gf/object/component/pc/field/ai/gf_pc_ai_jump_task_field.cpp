@@ -22,7 +22,7 @@ bool TaskFieldJump::testCondition(const BlackBoardField &blackBoard) {
 }
 
 void TaskFieldJump::update(BlackBoardField &blackBoard) {
-  GfComPropertyPc *property = blackBoard.unknown08;
+  GfComPropertyPc *property = blackBoard.m_comPropertyPc;
   const JumpAIParam *param = AgentUtilField::getAIParamAdapter(*property, PARAM_ID_FIELD_AI_UNKNOWN_4).get<JumpAIParam>();
   const mm::Vec3 &velocity = property->unknown80;
   property->unknown60.unknown08.set(INPUT_ID_UNKNOWN_2);

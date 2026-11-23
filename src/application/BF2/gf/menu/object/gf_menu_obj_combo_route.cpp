@@ -74,13 +74,13 @@ void GfMenuObjComboRoute::MainListener::reciveEvent(const ui::EventData &event, 
         param.unknown14 = 8;
         param.unknown0c = 3;
         int ctrl = GfMenuObjUtil::startCtrl(cursor.unknown10, param, nullptr);
-        if (unknown20->unknown24[index] == -1) {
-          unknown20->unknown24[index] = ctrl;
+        if (m_menuObjComboRoute->unknown24[index] == -1) {
+          m_menuObjComboRoute->unknown24[index] = ctrl;
         }
       } else if (type == 6) {
-        if (unknown20->unknown24[index] != -1) {
-          GfMenuObjUtil::stopCtrl(unknown20->unknown24[index]);
-          unknown20->unknown24[index] = -1;
+        if (m_menuObjComboRoute->unknown24[index] != -1) {
+          GfMenuObjUtil::stopCtrl(m_menuObjComboRoute->unknown24[index]);
+          m_menuObjComboRoute->unknown24[index] = -1;
         }
         cursor.setDisp(false);
       }
@@ -98,21 +98,21 @@ void GfMenuObjComboRoute::MainListener::reciveEvent(const ui::EventData &event, 
       param.unknown00 = 0.3f;
       param.unknown11 = true;
       param.unknown14 = 4;
-      param.unknown18 = unknown20->unknown24[7];
-      unknown20->unknown24[7] = GfMenuObjUtil::startCtrl(root.unknown10, param, nullptr);
+      param.unknown18 = m_menuObjComboRoute->unknown24[7];
+      m_menuObjComboRoute->unknown24[7] = GfMenuObjUtil::startCtrl(root.unknown10, param, nullptr);
       unknown0c = 1;
     }
     break;
   case 0x22: {
     ui::UIObjectAcc root(handle, "LAY_root");
     if (unknown0c == 1) {
-      if (unknown20->unknown24[7] != -1) {
+      if (m_menuObjComboRoute->unknown24[7] != -1) {
         GfMenuObjUtil::CtrlParam param;
         param.unknown08 = 0x4002;
         param.unknown00 = 0.3f;
         param.unknown0c = 1;
         param.unknown14 = 4;
-        param.unknown18 = unknown20->unknown24[7];
+        param.unknown18 = m_menuObjComboRoute->unknown24[7];
         GfMenuObjUtil::startCtrl(root.unknown10, param, nullptr);
       }
       unknown0c = 0;

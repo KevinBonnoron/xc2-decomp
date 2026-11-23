@@ -19,14 +19,14 @@ public:
   void unbind();
   void apply() override;
 
-  ModelObject *unknown18;              // Inferred role: model object; original member name unknown.
+  ModelObject *m_modelObject;          // Inferred role: model object; original member name unknown.
   f32 unknown20[RATIO_UNKNOWN_6];      // Inferred role: fade ratios; original member name unknown.
   s32 unknown38[RATIO_UNKNOWN_6];      // Inferred role: etc param index per ratio; original member name unknown.
   mm::mtl::Delegate<bool()> unknown50; // Inferred role: enable check; original member name unknown.
   bool unknown70;                      // Inferred role: use volume fade accessor; original member name unknown.
 };
 
-static_assert(offsetof(AnimVolumeFadeModifier, unknown18) == 0x18, "");
+static_assert(offsetof(AnimVolumeFadeModifier, m_modelObject) == 0x18, "");
 static_assert(offsetof(AnimVolumeFadeModifier, unknown20) == 0x20, "");
 static_assert(offsetof(AnimVolumeFadeModifier, unknown38) == 0x38, "");
 static_assert(offsetof(AnimVolumeFadeModifier, unknown50) == 0x50, "");

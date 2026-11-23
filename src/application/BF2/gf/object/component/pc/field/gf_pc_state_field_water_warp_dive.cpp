@@ -32,9 +32,9 @@ void StateFieldWaterWarpDive::update(GfComBehaviorPc *behavior, const fw::Update
     StateUtilField::startWaterWarpFade(*behavior);
     unknown1c = true;
   }
-  const WaterCommonParam *param = property->unknown310.unknown002();
+  const WaterCommonParam *param = property->m_propertyField.unknown002();
   if (unknown18 > param->waterHoleDiveTime && comAsm->setState("S_waterhole_01", ANIM_LAYER_UNKNOWN_0)) {
-    const MsgPcFieldNotifyWarp *warp = property->unknown310.getWarpInfo();
+    const MsgPcFieldNotifyWarp *warp = property->m_propertyField.getWarpInfo();
     MsgPcFieldNotifyWaterWarpBuddy message(warp);
     StateUtil::sendMessageToBuddy(*behavior, message);
     mm::Vec3 position = warp->unknown10;
@@ -48,7 +48,7 @@ void StateFieldWaterWarpDive::update(GfComBehaviorPc *behavior, const fw::Update
     property->unknown160.unknown10.z = 0.0f;
     property->unknown160.unknown10.w = cosine;
     property->syncDirection();
-    StateUtilField::setChildFrameHeight(*behavior, -property->unknown310.unknown50);
+    StateUtilField::setChildFrameHeight(*behavior, -property->m_propertyField.unknown50);
     GfComDynamics *dynamics = behavior->unknown08->getComponent<GfComDynamics>();
     if (dynamics != nullptr) {
       dynamics->resetMovement();
@@ -56,7 +56,7 @@ void StateFieldWaterWarpDive::update(GfComBehaviorPc *behavior, const fw::Update
     if (property->unknown38 == 0) {
       GfGamePlayerCamera::requestResetCamera();
     }
-    property->unknown310.unknown10_6 = false;
+    property->m_propertyField.unknown10_6 = false;
     reqState(STATE_ID_UNKNOWN_31);
   }
 }

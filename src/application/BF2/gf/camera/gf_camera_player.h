@@ -110,6 +110,7 @@ public:
   static void setOnceOff();
   void reset();
   void resetClimb(ResetCameraWallTiming timing);
+  void resetClimb();
   bool isResetClimb();
   void resetLoad();
   void resetBattleWarp();
@@ -122,9 +123,9 @@ public:
   u32 getSaveSide() const;
   bool isSaveFreeMode() const;
 
-  GF_OBJ_HANDLE *unknowna8;   // Inferred role: target object; original member name unknown.
-  fw::ParamAdapter unknownb0; // Inferred role: parameters of the camera; original member name unknown.
-  f32 unknownb8;              // Inferred role: yaw; original member name unknown.
+  GF_OBJ_HANDLE *m_GF_OBJ_HANDLE;  // Inferred role: target object; original member name unknown.
+  fw::ParamAdapter m_paramAdapter; // Inferred role: parameters of the camera; original member name unknown.
+  f32 unknownb8;                   // Inferred role: yaw; original member name unknown.
   f32 m_saveYaw;
   f32 unknownc0; // Inferred role: pitch; original member name unknown.
   f32 m_savePitch;
@@ -164,7 +165,7 @@ public:
   mm::Vec3 unknown51a0; // Inferred role: tracked position of the player target; original member name unknown.
   f32 unknown51b0;      // Inferred role: tracked height; original member name unknown.
   u8 _51b4[0x51b8 - 0x51b4];
-  CameraPadData unknown51b8; // Inferred role: pad of the camera; original member name unknown.
+  CameraPadData m_cameraPadData; // Inferred role: pad of the camera; original member name unknown.
   u8 _5200[0x5280 - 0x5200];
   mm::Vec3 unknown5280;              // Inferred role: start of the side collision on the first side; original member name unknown.
   mm::Vec3 unknown5290;              // Inferred role: end of the side collision on the first side; original member name unknown.
@@ -193,7 +194,7 @@ static_assert(offsetof(PlayerCamera, m_manual) == 0x120, "");
 static_assert(offsetof(PlayerCamera, unknown124) == 0x124, "");
 static_assert(offsetof(PlayerCamera, unknown52c4) == 0x52c4, "");
 static_assert(offsetof(PlayerCamera, unknown160) == 0x160, "");
-static_assert(offsetof(PlayerCamera, unknown51b8) == 0x51b8, "");
+static_assert(offsetof(PlayerCamera, m_cameraPadData) == 0x51b8, "");
 static_assert(offsetof(PlayerCamera, unknown52d8) == 0x52d8, "");
 static_assert(sizeof(PlayerCamera) == 0x53b0, "");
 

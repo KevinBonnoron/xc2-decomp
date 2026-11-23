@@ -26,11 +26,11 @@ class GfGameSpeed : public mm::mtl::PtrSingleton<GfGameSpeed> {
 public:
   // Inferred role: speed; original type name unknown.
   struct unknown004 {
-    unknown004() : unknown00(1.0f), unknown04(1.0f), unknown08(true) {}
+    unknown004() : unknown00(1.0f), m_speed(1.0f), m_applySpeed(true) {}
 
-    f32 unknown00;  // Inferred role: original; original member name unknown.
-    f32 unknown04;  // Inferred role: current; original member name unknown.
-    bool unknown08; // Inferred role: apply; original member name unknown.
+    f32 unknown00;     // Inferred role: original; original member name unknown.
+    f32 m_speed;       // Inferred role: current; named after the game accessor gf::GfGameSpeed::getSpeed.
+    bool m_applySpeed; // Inferred role: apply; named after the game accessor gf::GfGameSpeed::isApplySpeed.
   };
 
   GfGameSpeed(const GfSetupParam &param);

@@ -240,18 +240,18 @@ void GfMenuObjArtsPalette2::MainListener::reciveEvent(const ui::EventData &event
     } else {
       kind = 2;
     }
-    unknown20->unknown40 = kind;
-    if (row != unknown20->unknown38) {
+    m_menuObjArtsPalette2->unknown40 = kind;
+    if (row != m_menuObjArtsPalette2->unknown38) {
       GfMenuObject::addResultCallContext(acc.unknown10, 0, row);
-      unknown20->unknown38 = row;
+      m_menuObjArtsPalette2->unknown38 = row;
     }
     if (kind == 1) {
       int number = row * 3 + column - 1;
-      unknown20->unknown50->unknown162(number);
+      m_menuObjArtsPalette2->unknown50->unknown162(number);
     } else {
-      unknown20->unknown50->unknown162(-1);
+      m_menuObjArtsPalette2->unknown50->unknown162(-1);
     }
-    unknown20->unknown28->setIndex(index);
+    m_menuObjArtsPalette2->unknown28->setIndex(index);
     break;
   }
   case 8: {
@@ -260,8 +260,8 @@ void GfMenuObjArtsPalette2::MainListener::reciveEvent(const ui::EventData &event
     if (params >> 32 != 1 || unknown10.unknown04 != 1) {
       break;
     }
-    u64 selection = unknown20->unknown38_u64;
-    switch (unknown20->unknown40) {
+    u64 selection = m_menuObjArtsPalette2->unknown38_u64;
+    switch (m_menuObjArtsPalette2->unknown40) {
     case 0:
       if (static_cast<u32>(selection >> 32) != static_cast<u32>(selection)) {
         GfMenuObject::addResultCallContext(acc.unknown10, 3, 0);
@@ -270,13 +270,13 @@ void GfMenuObjArtsPalette2::MainListener::reciveEvent(const ui::EventData &event
     case 1: {
       u32 column = button % 5 - 1;
       u32 slot = static_cast<u32>(selection) * 3 + column;
-      if (GfMenuReference::isArtsPaletteEnable(slot) && unknown20->unknown48.test(slot)) {
+      if (GfMenuReference::isArtsPaletteEnable(slot) && m_menuObjArtsPalette2->unknown48.test(slot)) {
         GfMenuObject::addResultCallContext(acc.unknown10, 1, column);
       }
       break;
     }
     case 2:
-      if (unknown20->unknown4c.test(static_cast<u32>(selection))) {
+      if (m_menuObjArtsPalette2->unknown4c.test(static_cast<u32>(selection))) {
         GfMenuObject::addResultCallContext(acc.unknown10, 2, 0);
       }
       break;
@@ -303,7 +303,7 @@ void GfMenuObjArtsPalette2::MainListener::reciveEvent(const ui::EventData &event
         GfMenuObjUtil::playSE(0x25);
         recastMax.setDisp(true);
         recast.setDisp(false);
-        unknown20->unknown48.set(slot, true);
+        m_menuObjArtsPalette2->unknown48.set(slot, true);
         GfMenuObjUtil::CtrlParam param;
         param.unknown08 = 0x80002;
         param.unknown00 = 0.5f;
@@ -313,13 +313,13 @@ void GfMenuObjArtsPalette2::MainListener::reciveEvent(const ui::EventData &event
         GfMenuObjUtil::startCtrl(effect.unknown10, param, nullptr);
       } else {
         recastMax.setDisp(false);
-        unknown20->unknown48.set(slot, false);
+        m_menuObjArtsPalette2->unknown48.set(slot, false);
       }
     }
     // The game's case 0 falls into the default code: the compare with step 4 is executed after it.
     default:
       if (type == 5 && step == 4) {
-        unknown20->unknown3c = slot;
+        m_menuObjArtsPalette2->unknown3c = slot;
       }
       break;
     case 2:
@@ -327,7 +327,7 @@ void GfMenuObjArtsPalette2::MainListener::reciveEvent(const ui::EventData &event
       {
         bool isDisp = type != 1;
         ui::UIObjectAcc(acc.unknown10, name.c_str()).setDisp(isDisp);
-        unknown20->unknown4c.set(slot, isDisp);
+        m_menuObjArtsPalette2->unknown4c.set(slot, isDisp);
       }
       break;
     case 1:
@@ -342,7 +342,7 @@ void GfMenuObjArtsPalette2::MainListener::reciveEvent(const ui::EventData &event
       if (type == 1) {
         gauge.setAddColor("cyan");
         icon.setDisp(true);
-        if (slot == 2 && unknown20->unknown24 == -1) {
+        if (slot == 2 && m_menuObjArtsPalette2->unknown24 == -1) {
           GfMenuObjUtil::CtrlParam param;
           param.unknown08 = 0x40000000;
           param.unknown00 = 1.0f;
@@ -350,14 +350,14 @@ void GfMenuObjArtsPalette2::MainListener::reciveEvent(const ui::EventData &event
           param.unknown0c = 4;
           param.unknown14 = 8;
           param.unknown38 = 1.0f;
-          unknown20->unknown24 = GfMenuObjUtil::startCtrl(acc.searchChild("LAY_party_gauge_bar"), param, nullptr);
+          m_menuObjArtsPalette2->unknown24 = GfMenuObjUtil::startCtrl(acc.searchChild("LAY_party_gauge_bar"), param, nullptr);
         }
       } else {
         gauge.setAddColor("yellow");
         icon.setDisp(false);
-        if (unknown20->unknown24 != -1) {
-          GfMenuObjUtil::stopCtrl(unknown20->unknown24);
-          unknown20->unknown24 = -1;
+        if (m_menuObjArtsPalette2->unknown24 != -1) {
+          GfMenuObjUtil::stopCtrl(m_menuObjArtsPalette2->unknown24);
+          m_menuObjArtsPalette2->unknown24 = -1;
         }
       }
       break;
@@ -406,7 +406,7 @@ void GfMenuObjArtsPalette2::MainListener::reciveEvent(const ui::EventData &event
     ui::UIObjectAcc cursor(acc.unknown10, "IMG_bl_arts_cursor");
     if (isSelection == 1) {
       cursor.setMulColor("select");
-      GfMenuObject::addResultCallContext(acc.unknown10, 0, unknown20->unknown38);
+      GfMenuObject::addResultCallContext(acc.unknown10, 0, m_menuObjArtsPalette2->unknown38);
     } else {
       cursor.setMulColor("unuse");
     }
@@ -414,8 +414,8 @@ void GfMenuObjArtsPalette2::MainListener::reciveEvent(const ui::EventData &event
     break;
   }
   case unknown002:
-    unknown20->unknown28->setIndex(0);
-    unknown20->unknown38 = 0;
+    m_menuObjArtsPalette2->unknown28->setIndex(0);
+    m_menuObjArtsPalette2->unknown38 = 0;
     break;
   default:
     ui::UIObjectListener::reciveEvent(event, handle);

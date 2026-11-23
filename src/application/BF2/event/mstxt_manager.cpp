@@ -9,12 +9,12 @@
 
 namespace event {
 
-MstxtManager::MstxtManager() : unknown98(nullptr) {}
+MstxtManager::MstxtManager() : m_mstxtRes(nullptr) {}
 
 void MstxtManager::clear() {
-  if (unknown98 != nullptr) {
-    unknown98->unregisterBdat();
-    unknown98 = nullptr;
+  if (m_mstxtRes != nullptr) {
+    m_mstxtRes->unregisterBdat();
+    m_mstxtRes = nullptr;
   }
   for (size_t i = 0; i < unknown10.size(); i++) {
     if (unknown10[i] != nullptr) {
@@ -26,12 +26,12 @@ void MstxtManager::clear() {
 }
 
 void MstxtManager::registerBdat(const char *path) {
-  if (unknown98 != nullptr) {
-    unknown98->unregisterBdat();
-    unknown98 = nullptr;
+  if (m_mstxtRes != nullptr) {
+    m_mstxtRes->unregisterBdat();
+    m_mstxtRes = nullptr;
   }
-  unknown98 = search(path);
-  unknown98->registerBdat();
+  m_mstxtRes = search(path);
+  m_mstxtRes->registerBdat();
 }
 
 void MstxtManager::load(const char *path) {
@@ -59,22 +59,22 @@ bool MstxtManager::isLoading() const {
   return false;
 }
 
-bool MstxtManager::isLoaded() const { return unknown98 != nullptr ? unknown98->isLoaded() : false; }
+bool MstxtManager::isLoaded() const { return m_mstxtRes != nullptr ? m_mstxtRes->isLoaded() : false; }
 
-unsigned char *MstxtManager::getFp() const { return unknown98 != nullptr ? unknown98->getFp() : nullptr; }
+unsigned char *MstxtManager::getFp() const { return m_mstxtRes != nullptr ? m_mstxtRes->getFp() : nullptr; }
 
 int MstxtManager::getSeatID(const char *label) const {
-  if (unknown98 == nullptr) {
+  if (m_mstxtRes == nullptr) {
     return -1;
   }
-  return unknown98->getSeatID(label);
+  return m_mstxtRes->getSeatID(label);
 }
 
-const char *MstxtManager::getText(const char *label) const { return unknown98 != nullptr ? unknown98->getText(label) : ""; }
+const char *MstxtManager::getText(const char *label) const { return m_mstxtRes != nullptr ? m_mstxtRes->getText(label) : ""; }
 
-int MstxtManager::getTop() const { return unknown98 != nullptr ? unknown98->getTop() : 0; }
+int MstxtManager::getTop() const { return m_mstxtRes != nullptr ? m_mstxtRes->getTop() : 0; }
 
-int MstxtManager::getCount() const { return unknown98 != nullptr ? unknown98->getCount() : 0; }
+int MstxtManager::getCount() const { return m_mstxtRes != nullptr ? m_mstxtRes->getCount() : 0; }
 
 void MstxtManager::OnEventProc(MSG_TYPE type) {
   if (type == MSG_TYPE_UNKNOWN_12) {

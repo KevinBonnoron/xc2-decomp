@@ -25,23 +25,23 @@ size_t GfSlotMapping::getAllSize() { return ALL_SLOT_UNKNOWN_619380736; }
 void GfSlotMapping::createMapping(const GfSetupParam &param) {
   destroyMapping();
   if (param.unknown1c == 0) {
-    unknown08->createSlot(ASSET_TYPE_UNKNOWN_3, 1, "SLOT_MA", 0x22a0000, unknown00, false);
-    unknown08->createSlot(ASSET_TYPE_UNKNOWN_4, 8, "SLOT_PC", 0x28000, unknown00, false);
-    unknown08->createSlot(ASSET_TYPE_UNKNOWN_5, 64, "SLOT_PM", 0x78000, unknown00, false);
-    unknown08->createSlot(ASSET_TYPE_UNKNOWN_6, 22, "SLOT_BL", 0x28000, unknown00, false);
-    unknown08->createSlot(ASSET_TYPE_UNKNOWN_7, 272, "SLOT_BM", 0x4a000, unknown00, false);
-    unknown08->createSlot(ASSET_TYPE_UNKNOWN_8, 168, "SLOT_WP", 0x20000, unknown00, false);
-    unknown08->createSlot(ASSET_TYPE_UNKNOWN_16, 192, "SLOT_WM", 0x50000, unknown00, false);
-    unknown08->createSlot(ASSET_TYPE_UNKNOWN_9, 512, "SLOT_WE", 0x20000, unknown00, false);
-    unknown08->createSlot(ASSET_TYPE_UNKNOWN_10, 160, "SLOT_EN", 0x4000, unknown00, false);
-    unknown08->createSlot(ASSET_TYPE_UNKNOWN_11, 480, "SLOT_EM", 0x20000, unknown00, false);
-    unknown08->createSlot(ASSET_TYPE_UNKNOWN_12, 160, "SLOT_EA", 0x2000, unknown00, false);
-    unknown08->createSlot(ASSET_TYPE_UNKNOWN_13, 240, "SLOT_EF", 0x20000, unknown00, false);
-    unknown08->createSlot(ASSET_TYPE_UNKNOWN_14, 32, "SLOT_FO", 0x20000, unknown00, false);
-    unknown08->createSlot(ASSET_TYPE_UNKNOWN_15, 300, "SLOT_MO", 0x30000, unknown00, false);
-    unknown08->createSlot(ASSET_TYPE_UNKNOWN_17, 304, "SLOT_OP", 0x14000, unknown00, false);
-    unknown08->createSlot(ASSET_TYPE_UNKNOWN_18, 1304, "SLOT_TP", 0x10000, unknown00, false);
-    unknown08->createSlot(ASSET_TYPE_UNKNOWN_19, 150, "SLOT_SE", 0x40000, unknown00, false);
+    m_slotAll->createSlot(ASSET_TYPE_UNKNOWN_3, 1, "SLOT_MA", 0x22a0000, m_slotAllocator, false);
+    m_slotAll->createSlot(ASSET_TYPE_UNKNOWN_4, 8, "SLOT_PC", 0x28000, m_slotAllocator, false);
+    m_slotAll->createSlot(ASSET_TYPE_UNKNOWN_5, 64, "SLOT_PM", 0x78000, m_slotAllocator, false);
+    m_slotAll->createSlot(ASSET_TYPE_UNKNOWN_6, 22, "SLOT_BL", 0x28000, m_slotAllocator, false);
+    m_slotAll->createSlot(ASSET_TYPE_UNKNOWN_7, 272, "SLOT_BM", 0x4a000, m_slotAllocator, false);
+    m_slotAll->createSlot(ASSET_TYPE_UNKNOWN_8, 168, "SLOT_WP", 0x20000, m_slotAllocator, false);
+    m_slotAll->createSlot(ASSET_TYPE_UNKNOWN_16, 192, "SLOT_WM", 0x50000, m_slotAllocator, false);
+    m_slotAll->createSlot(ASSET_TYPE_UNKNOWN_9, 512, "SLOT_WE", 0x20000, m_slotAllocator, false);
+    m_slotAll->createSlot(ASSET_TYPE_UNKNOWN_10, 160, "SLOT_EN", 0x4000, m_slotAllocator, false);
+    m_slotAll->createSlot(ASSET_TYPE_UNKNOWN_11, 480, "SLOT_EM", 0x20000, m_slotAllocator, false);
+    m_slotAll->createSlot(ASSET_TYPE_UNKNOWN_12, 160, "SLOT_EA", 0x2000, m_slotAllocator, false);
+    m_slotAll->createSlot(ASSET_TYPE_UNKNOWN_13, 240, "SLOT_EF", 0x20000, m_slotAllocator, false);
+    m_slotAll->createSlot(ASSET_TYPE_UNKNOWN_14, 32, "SLOT_FO", 0x20000, m_slotAllocator, false);
+    m_slotAll->createSlot(ASSET_TYPE_UNKNOWN_15, 300, "SLOT_MO", 0x30000, m_slotAllocator, false);
+    m_slotAll->createSlot(ASSET_TYPE_UNKNOWN_17, 304, "SLOT_OP", 0x14000, m_slotAllocator, false);
+    m_slotAll->createSlot(ASSET_TYPE_UNKNOWN_18, 1304, "SLOT_TP", 0x10000, m_slotAllocator, false);
+    m_slotAll->createSlot(ASSET_TYPE_UNKNOWN_19, 150, "SLOT_SE", 0x40000, m_slotAllocator, false);
   }
   registSoundMemeory(ASSET_TYPE_UNKNOWN_18);
   registSoundMemeory(ASSET_TYPE_UNKNOWN_19);
@@ -50,13 +50,13 @@ void GfSlotMapping::createMapping(const GfSetupParam &param) {
 void GfSlotMapping::destroyMapping() {
   unregistSoundMemeory(ASSET_TYPE_UNKNOWN_19);
   unregistSoundMemeory(ASSET_TYPE_UNKNOWN_18);
-  unknown08->destroyMapping();
+  m_slotAll->destroyMapping();
 }
 
 void GfSlotMapping::registSoundMemeory(GfAssetType type) {
   size_t size;
   void *buffer;
-  if (unknown08->getSlotInfo(buffer, size, type) && fw::SoundManager::get() != nullptr) {
+  if (m_slotAll->getSlotInfo(buffer, size, type) && fw::SoundManager::get() != nullptr) {
     fw::SoundManager::get()->attachPoolMemory(buffer, size);
   }
 }
@@ -64,32 +64,32 @@ void GfSlotMapping::registSoundMemeory(GfAssetType type) {
 void GfSlotMapping::unregistSoundMemeory(GfAssetType type) {
   size_t size;
   void *buffer;
-  if (unknown08->getSlotInfo(buffer, size, type) && fw::SoundManager::get() != nullptr) {
+  if (m_slotAll->getSlotInfo(buffer, size, type) && fw::SoundManager::get() != nullptr) {
     fw::SoundManager::get()->detachPoolMemory(buffer, size);
   }
 }
 
-GfSlotMapping::GfSlotMapping() : unknown08(nullptr), unknown1818(0), unknown1820(0) {
+GfSlotMapping::GfSlotMapping() : m_slotAll(nullptr), unknown1818(0), unknown1820(0) {
   // __LINE__ must be 382 and 383 as in the original source: they are the line arguments of operator new.
 #line 382
-  unknown08 = new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) GfSlotAll();
-  unknown00 = new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) GfSlotAllocator();
+  m_slotAll = new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) GfSlotAll();
+  m_slotAllocator = new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) GfSlotAllocator();
 }
 
 GfSlotMapping::~GfSlotMapping() {
-  if (unknown00 != nullptr) {
-    delete unknown00;
-    unknown00 = nullptr;
+  if (m_slotAllocator != nullptr) {
+    delete m_slotAllocator;
+    m_slotAllocator = nullptr;
   }
 
-  if (unknown08 != nullptr) {
-    delete unknown08;
-    unknown08 = nullptr;
+  if (m_slotAll != nullptr) {
+    delete m_slotAll;
+    m_slotAll = nullptr;
   }
 }
 
 void GfSlotMapping::setup(const GfSetupParam &param, GfAllocator *allocator, size_t size) {
-  this->unknown00->setupSizeAlloc("SLOT_ALL", allocator, size, SLOT_UNKNOWN_8192, false);
+  this->m_slotAllocator->setupSizeAlloc("SLOT_ALL", allocator, size, SLOT_UNKNOWN_8192, false);
   createMapping(param);
   unknown1818 = mtl::MemManager::getTopAdr(getAllocator(ALLOCATOR_UNKNOWN_3)->getMemHandle());
   unknown1820 = unknown1818 + mtl::MemManager::getTotalSize(getAllocator(ALLOCATOR_UNKNOWN_3)->getMemHandle());
@@ -100,59 +100,59 @@ void GfSlotMapping::destroy() {
     GfSleep(1);
   }
   destroyMapping();
-  unknown00->destroy();
+  m_slotAllocator->destroy();
 }
 
 void GfSlotMapping::update(const fw::UpdateInfo &info) { updateSlotRequest(info); }
 
 bool GfSlotMapping::setupFreeSlot(REQ *request) {
   GfSlotBase *slot;
-  if (request->unknown08->unknown230 == unknown006) {
-    u32 priority = request->unknown08->unknown250;
-    GfAssetType type = request->unknown08->m_assetType.unknown00;
-    if (GfAssetManager::isExistSameAsset(request->unknown08)) {
+  if (request->m_assetPack->m_GF_SLOT_HANDLE == unknown006) {
+    u32 priority = request->m_assetPack->unknown250;
+    GfAssetType type = request->m_assetPack->m_assetType.m_assetType;
+    if (GfAssetManager::isExistSameAsset(request->m_assetPack)) {
       return false;
     }
 
-    size_t slotSize = unknown08->getByteSizeBySlotNum(type, request->unknown08->unknown248);
-    size_t needSize = request->unknown08->getNeedLoadFileSize(unknown08->getBlockSize(type), false);
+    size_t slotSize = m_slotAll->getByteSizeBySlotNum(type, request->m_assetPack->unknown248);
+    size_t needSize = request->m_assetPack->getNeedLoadFileSize(m_slotAll->getBlockSize(type), false);
     if (needSize > slotSize) {
-      unknown08->isMemoryDebug(type);
+      m_slotAll->isMemoryDebug(type);
     }
-    request->unknown08->setLoadSlotNum(unknown08->getSlotNumByByteSize(type, needSize));
+    request->m_assetPack->setLoadSlotNum(m_slotAll->getSlotNumByByteSize(type, needSize));
 
-    GF_SLOT_HANDLE *handle = unknown08->setupSlotByte(type, needSize, priority);
+    GF_SLOT_HANDLE *handle = m_slotAll->setupSlotByte(type, needSize, priority);
     if (handle == unknown006) {
       GfAssetManager::destroySlotCache(type);
       if (request->unknown10 < RETRY_UNKNOWN_999) {
         request->unknown10++;
       }
-      if (request->unknown08->unknown254 < 2) {
-        return GfAssetUtil::isObjectDestroy(request->unknown00);
+      if (request->m_assetPack->unknown254 < 2) {
+        return GfAssetUtil::isObjectDestroy(request->m_GF_ASSET_HANDLE);
       }
       return false;
     }
 
-    slot = unknown08->getSlot(handle);
-    request->unknown08->unknown230 = handle;
+    slot = m_slotAll->getSlot(handle);
+    request->m_assetPack->m_GF_SLOT_HANDLE = handle;
   } else {
-    slot = unknown08->getSlot(request->unknown08->unknown230);
+    slot = m_slotAll->getSlot(request->m_assetPack->m_GF_SLOT_HANDLE);
   }
 
-  GfAssetManager::loadStart(request->unknown08, slot);
+  GfAssetManager::loadStart(request->m_assetPack, slot);
   return true;
 }
 
 void GfSlotMapping::requestSlotLoad(GF_ASSET_HANDLE *handle, GfAssetPack *pack) {
   for (REQ *request = unknown10.begin(); request != unknown10.end(); ++request) {
-    if (request->unknown08 == pack) {
+    if (request->m_assetPack == pack) {
       return;
     }
   }
   pack->addRef();
   REQ request = {};
-  request.unknown00 = handle;
-  request.unknown08 = pack;
+  request.m_GF_ASSET_HANDLE = handle;
+  request.m_assetPack = pack;
   request.unknown10 = 0;
   request.unknown14 = unknown015;
   unknown10.push_back(request);
@@ -161,48 +161,48 @@ void GfSlotMapping::requestSlotLoad(GF_ASSET_HANDLE *handle, GfAssetPack *pack) 
 
 bool GfSlotMapping::isRequest(const GfAssetPack *pack) const {
   for (const REQ *request = unknown10.begin(); request != unknown10.end(); ++request) {
-    if (request->unknown08 == pack) {
+    if (request->m_assetPack == pack) {
       return true;
     }
   }
   return false;
 }
 
-void GfSlotMapping::releaseSlot(GF_SLOT_HANDLE *handle) { unknown08->releaseSlot(handle); }
+void GfSlotMapping::releaseSlot(GF_SLOT_HANDLE *handle) { m_slotAll->releaseSlot(handle); }
 
-u32 GfSlotMapping::getSlots(GF_SLOT_HANDLE *handle) const { return unknown08->getSlot(handle)->getMultiSlot(); }
+u32 GfSlotMapping::getSlots(GF_SLOT_HANDLE *handle) const { return m_slotAll->getSlot(handle)->getMultiSlot(); }
 
-const char *GfSlotMapping::getSlotName(GF_SLOT_HANDLE *handle) const { return unknown08->getSlot(handle)->getName(); }
+const char *GfSlotMapping::getSlotName(GF_SLOT_HANDLE *handle) const { return m_slotAll->getSlot(handle)->getName(); }
 
-const char *GfSlotMapping::getSlotName(GfAssetType type) const { return unknown08->getSlotName(type); }
+const char *GfSlotMapping::getSlotName(GfAssetType type) const { return m_slotAll->getSlotName(type); }
 
-f32 GfSlotMapping::getSlotUsingRatio(GfAssetType type) const { return unknown08->getSlotUsingRatio(type); }
+f32 GfSlotMapping::getSlotUsingRatio(GfAssetType type) const { return m_slotAll->getSlotUsingRatio(type); }
 
-size_t GfSlotMapping::getSlotSize(GfAssetType type) const { return unknown08->getSlotSize(type); }
+size_t GfSlotMapping::getSlotSize(GfAssetType type) const { return m_slotAll->getSlotSize(type); }
 
-size_t GfSlotMapping::getSlotBlockSize(GfAssetType type) const { return unknown08->getBlockSize(type); }
+size_t GfSlotMapping::getSlotBlockSize(GfAssetType type) const { return m_slotAll->getBlockSize(type); }
 
-u32 GfSlotMapping::getSlotCount(GfAssetType type) const { return unknown08->getSlotCount(type); }
+u32 GfSlotMapping::getSlotCount(GfAssetType type) const { return m_slotAll->getSlotCount(type); }
 
-GF_SLOT_HANDLE *GfSlotMapping::getSlotHandle(GfAssetType type, u32 index) const { return unknown08->getSlotHandle(type, index); }
+GF_SLOT_HANDLE *GfSlotMapping::getSlotHandle(GfAssetType type, u32 index) const { return m_slotAll->getSlotHandle(type, index); }
 
-u32 GfSlotMapping::getSystemSlotCount(GfAssetType type) const { return unknown08->getSystemSlotCount(type); }
+u32 GfSlotMapping::getSystemSlotCount(GfAssetType type) const { return m_slotAll->getSystemSlotCount(type); }
 
-bool GfSlotMapping::isSystemSlotParent(GfAssetType type, u32 index) { return unknown08->isSystemSlotParent(type, index); }
+bool GfSlotMapping::isSystemSlotParent(GfAssetType type, u32 index) { return m_slotAll->isSystemSlotParent(type, index); }
 
-bool GfSlotMapping::isSystemSlotChild(GfAssetType type, u32 index) { return unknown08->isSystemSlotChild(type, index); }
+bool GfSlotMapping::isSystemSlotChild(GfAssetType type, u32 index) { return m_slotAll->isSystemSlotChild(type, index); }
 
-GF_SLOT_HANDLE *GfSlotMapping::getSystemSlotHandle(GfAssetType type, u32 index) { return unknown08->getSystemSlotHandle(type, index); }
+GF_SLOT_HANDLE *GfSlotMapping::getSystemSlotHandle(GfAssetType type, u32 index) { return m_slotAll->getSystemSlotHandle(type, index); }
 
-u32 GfSlotMapping::getSlotNumByByteSize(GfAssetType type, size_t size) const { return unknown08->getSlotNumByByteSize(type, size); }
+u32 GfSlotMapping::getSlotNumByByteSize(GfAssetType type, size_t size) const { return m_slotAll->getSlotNumByByteSize(type, size); }
 
-GF_SLOT_HANDLE *GfSlotMapping::allocateSlot(GfAssetType type, size_t size) { return unknown08->setupSlotByte(type, size, 1); }
+GF_SLOT_HANDLE *GfSlotMapping::allocateSlot(GfAssetType type, size_t size) { return m_slotAll->setupSlotByte(type, size, 1); }
 
-bool GfSlotMapping::getSlotInfo(mm::mtl::IAllocator *&allocator, void *&buffer, size_t &size, GF_SLOT_HANDLE *handle) { return unknown08->getSlotInfo(allocator, buffer, size, handle); }
+bool GfSlotMapping::getSlotInfo(mm::mtl::IAllocator *&allocator, void *&buffer, size_t &size, GF_SLOT_HANDLE *handle) { return m_slotAll->getSlotInfo(allocator, buffer, size, handle); }
 
-bool GfSlotMapping::isExistAsset(GF_SLOT_HANDLE *handle) const { return unknown08->isExistAsset(handle); }
+bool GfSlotMapping::isExistAsset(GF_SLOT_HANDLE *handle) const { return m_slotAll->isExistAsset(handle); }
 
-void *GfSlotMapping::allocateSize(size_t size, size_t alignment) { return unknown08->allocateSize(ASSET_TYPE_UNKNOWN_18, size, alignment); }
+void *GfSlotMapping::allocateSize(size_t size, size_t alignment) { return m_slotAll->allocateSize(ASSET_TYPE_UNKNOWN_18, size, alignment); }
 
 bool GfSlotMapping::deallocateSize(void *pointer) {
   u64 address = reinterpret_cast<u64>(pointer);
@@ -210,7 +210,7 @@ bool GfSlotMapping::deallocateSize(void *pointer) {
     return false;
   }
   if (unknown1820 > address) {
-    unknown08->deallocateSize(pointer);
+    m_slotAll->deallocateSize(pointer);
     return true;
   }
   return false;
@@ -218,22 +218,22 @@ bool GfSlotMapping::deallocateSize(void *pointer) {
 
 void GfSlotMapping::ExtendSlotAllocator::createAllocator(size_t size, const char *name) {
   unknown08 = mtl::MemManager::allocate(ml::MlMem::getDebugMem(), size + EXTEND_UNKNOWN_32768, 0x10, false, "no name", 0);
-  unknown10 = mtl::MemManager::create(unknown08, size + EXTEND_UNKNOWN_32768, name, true);
+  m_ALLOC_HANDLE = mtl::MemManager::create(unknown08, size + EXTEND_UNKNOWN_32768, name, true);
   // __LINE__ must be 891 as in the original source: it is the line argument of operator new.
 #line 891
-  unknown00 = new (getAllocator(ALLOCATOR_UNKNOWN_10), __FILE__, __LINE__, 8) GfSlotAllocator();
-  unknown00->setupSizeAlloc(name, mtl::MemManager::getAllocator(unknown10), size, SLOT_UNKNOWN_8192, false);
+  m_slotAllocator = new (getAllocator(ALLOCATOR_UNKNOWN_10), __FILE__, __LINE__, 8) GfSlotAllocator();
+  m_slotAllocator->setupSizeAlloc(name, mtl::MemManager::getAllocator(m_ALLOC_HANDLE), size, SLOT_UNKNOWN_8192, false);
 }
 
 void GfSlotMapping::ExtendSlotAllocator::destroyAllocator() {
-  if (unknown00 != nullptr) {
-    delete unknown00;
-    unknown00 = nullptr;
+  if (m_slotAllocator != nullptr) {
+    delete m_slotAllocator;
+    m_slotAllocator = nullptr;
   }
 
-  if (unknown10.isValid()) {
-    mtl::MemManager::erase(unknown10);
-    unknown10 = mtl::ALLOC_HANDLE();
+  if (m_ALLOC_HANDLE.isValid()) {
+    mtl::MemManager::erase(m_ALLOC_HANDLE);
+    m_ALLOC_HANDLE = mtl::ALLOC_HANDLE();
   }
 
   if (unknown08 != nullptr) {
@@ -242,6 +242,6 @@ void GfSlotMapping::ExtendSlotAllocator::destroyAllocator() {
   }
 }
 
-bool GfSlotMapping::BiggerPrio::operator()(REQ &request, REQ &other) const { return request.unknown08->unknown250 > other.unknown08->unknown250; }
+bool GfSlotMapping::BiggerPrio::operator()(REQ &request, REQ &other) const { return request.m_assetPack->unknown250 > other.m_assetPack->unknown250; }
 
 } // namespace gf

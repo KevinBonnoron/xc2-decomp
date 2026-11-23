@@ -24,9 +24,9 @@ constexpr u16 BATTLE_REACTION_UNKNOWN_1 = 1; // Inferred role: battle reaction h
 
 void GmkBlade::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gmk) {
   unknown00 = bdat.getValCheck("BladeSizeCheck", id, BDAT_TYPE_UNKNOWN_1);
-  unknown06 = ScenarioFlagCond(bdat.getValCheck("ScenarioFlagMin", id, BDAT_TYPE_UNKNOWN_2), bdat.getValCheck("ScenarioFlagMax", id, BDAT_TYPE_UNKNOWN_2));
+  m_scenarioFlagCond = ScenarioFlagCond(bdat.getValCheck("ScenarioFlagMin", id, BDAT_TYPE_UNKNOWN_2), bdat.getValCheck("ScenarioFlagMax", id, BDAT_TYPE_UNKNOWN_2));
   u16 timeRange = bdat.getValCheck("TimeRange", id, BDAT_TYPE_UNKNOWN_2);
-  unknown10.unknown08 = timeRange;
+  m_timeCond.unknown08 = timeRange;
   unknown02 = bdat.getValCheck("Condition", id, BDAT_TYPE_UNKNOWN_2);
   unknown04 = bdat.getValCheck("BattleReaction", id, BDAT_TYPE_UNKNOWN_2);
   u16 visibleXZ = bdat.getValCheck("Visible_XZ", id, BDAT_TYPE_UNKNOWN_2);
@@ -38,10 +38,10 @@ void GmkBlade::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gmk) 
 }
 
 bool GmkBlade::BdatInfo::isPopCondMatched(const mm::Vec3 &position) const {
-  if (unknown06.isEnable() && !unknown06.isMatch()) {
+  if (m_scenarioFlagCond.isEnable() && !m_scenarioFlagCond.isMatch()) {
     return false;
   }
-  if (unknown10.isEnable() && !unknown10.isMatch()) {
+  if (m_timeCond.isEnable() && !m_timeCond.isMatch()) {
     return false;
   }
   if (unknown02 != 0 && !gf::GfGameCond::isGameCond(unknown02)) {
@@ -60,10 +60,10 @@ bool GmkBlade::BdatInfo::isPopCondMatched(const mm::Vec3 &position) const {
 }
 
 bool GmkBlade::BdatInfo::isPopCommonCondMatched() const {
-  if (unknown06.isEnable() && !unknown06.isMatch()) {
+  if (m_scenarioFlagCond.isEnable() && !m_scenarioFlagCond.isMatch()) {
     return false;
   }
-  if (unknown10.isEnable() && !unknown10.isMatch()) {
+  if (m_timeCond.isEnable() && !m_timeCond.isMatch()) {
     return false;
   }
   if (unknown02 != 0 && !gf::GfGameCond::isGameCond(unknown02)) {
@@ -132,14 +132,14 @@ void GmkBlade::createGobInst() {
   }
   disposeGobInst(false);
   CBdatWrapper bdat = {getBindedBdatFp()};
-  unknown48 = gf::GfObjFactory::createGmkBlade(bdat, unknown20.unknown18, unknown50);
+  unknown48 = gf::GfObjFactory::createGmkBlade(bdat, m_createInfo.unknown18, unknown50);
   if (unknown48 == gf::unknown020) {
     return;
   }
   bindToGameObj(unknown48);
   validateDisp();
   gf::GfObjSetupNpc *setup = mm::mtl::dynamicCast<gf::GfObjSetupNpc>(gf::GfObjManager::getObjInfo(unknown48)->unknown30);
-  unknown003(setup, unknown08.unknown08);
+  unknown003(setup, m_createBaseInfo.m_xform);
 }
 
 void GmkBlade::update(f32 deltaTime) {
@@ -164,7 +164,7 @@ bool GmkBlade::canPopGobInst() const {
   if (unknown48 != gf::unknown020 || unknown50 == 0) {
     return false;
   }
-  return getBdatInfo()->isPopCondMatched(unknown08.unknown08->unknown00);
+  return getBdatInfo()->isPopCondMatched(m_createBaseInfo.m_xform->unknown00);
 }
 
 void GmkBlade::onGobEvent(gf::IGfObjListener::OBJEVT event, gf::GF_OBJ_HANDLE *handle) {
@@ -184,7 +184,7 @@ bool GmkBlade::canDepopGobInst() const {
       return false;
     }
     if (unknown50 != 0) {
-      return getBdatInfo()->isDepopCondMatched(unknown08.unknown08->unknown00);
+      return getBdatInfo()->isDepopCondMatched(m_createBaseInfo.m_xform->unknown00);
     }
   }
   return true;

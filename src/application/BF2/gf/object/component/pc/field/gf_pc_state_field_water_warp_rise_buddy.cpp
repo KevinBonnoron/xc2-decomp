@@ -21,7 +21,7 @@ namespace pc {
 
 void StateFieldWaterWarpRiseBuddy::enter(GfComBehaviorPc *behavior, ai::State *previous) {
   GfComPropertyPc *property = behavior->unknown08->getComponent<GfComPropertyPc>();
-  const MsgPcFieldNotifyWarp *warp = property->unknown310.getWarpInfo();
+  const MsgPcFieldNotifyWarp *warp = property->m_propertyField.getWarpInfo();
   mm::Vec3 position = warp->unknown10;
   position.y -= property->unknown2f0;
   property->unknown160.unknown00 = position;
@@ -33,7 +33,7 @@ void StateFieldWaterWarpRiseBuddy::enter(GfComBehaviorPc *behavior, ai::State *p
   property->unknown160.unknown10.z = 0.0f;
   property->unknown160.unknown10.w = cosine;
   property->syncDirection();
-  StateUtilField::setChildFrameHeight(*behavior, -property->unknown310.unknown50);
+  StateUtilField::setChildFrameHeight(*behavior, -property->m_propertyField.unknown50);
   GfComDynamics *dynamics = behavior->unknown08->getComponent<GfComDynamics>();
   if (dynamics != nullptr) {
     dynamics->resetMovement();

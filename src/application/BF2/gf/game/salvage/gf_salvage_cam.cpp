@@ -12,7 +12,7 @@ namespace gf {
 
 static constexpr fw::CAMERA_PRIO CAMERA_PRIO_UNKNOWN_55 = static_cast<fw::CAMERA_PRIO>(55); // Inferred role: camera prio salvage; original name unknown.
 
-GfSalvageCam::GfSalvageCam(GF_OBJ_HANDLE *target) : fw::Camera(CAMERA_PRIO_UNKNOWN_55), unknowna8(target) {}
+GfSalvageCam::GfSalvageCam(GF_OBJ_HANDLE *target) : fw::Camera(CAMERA_PRIO_UNKNOWN_55), m_GF_OBJ_HANDLE(target) {}
 
 GfSalvageCam::~GfSalvageCam() {}
 
@@ -25,7 +25,7 @@ void GfSalvageCam::onActivate() {}
 void GfSalvageCam::onDeactivate() {}
 
 void GfSalvageCam::update(const fw::UpdateInfo &info) {
-  GfObjAcc acc(unknowna8);
+  GfObjAcc acc(m_GF_OBJ_HANDLE);
   const mm::Vec3 &position = acc.getWorldTransform().unknown00;
   setLookAt(position + mm::Vec3(0.0f, 10.0f, 10.0f), position, 0.0f);
 }

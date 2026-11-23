@@ -29,7 +29,7 @@ void Camera::onDeactivate() {}
 void Camera::update(const UpdateInfo &info) {}
 
 Camera::Camera(CAMERA_PRIO prio)
-    : unknown20(nullptr), unknown28(prio), m_fov(40.0f), unknown30(0.01f), unknown34(40000.0f), unknown40(mm::Vec3::zero), unknown50(mm::Vec3::unitZ), unknowna0(false), unknowna4(0.0f) {
+    : unknown20(nullptr), unknown28(prio), m_fov(40.0f), m_nearClip(0.01f), m_farClip(40000.0f), unknown40(mm::Vec3::zero), unknown50(mm::Vec3::unitZ), unknowna0(false), unknowna4(0.0f) {
   unknown60 = mm::Mat44::identity;
 }
 

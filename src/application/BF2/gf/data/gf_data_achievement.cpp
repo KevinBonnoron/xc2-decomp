@@ -125,7 +125,7 @@ bool GfDataAchievement::isAddAchievementBonusCount(const AchievQuest &achievQues
     }
   }
 
-  QuestTaskParam taskParam(GfDataQuest::getListNextQuestA(achievQuest.unknown00), 0, TASK_STATE_UNKNOWN_0);
+  QuestTaskParam taskParam(GfDataQuest::getListNextQuestA(achievQuest.m_questID), 0, TASK_STATE_UNKNOWN_0);
   switch (taskParam.unknown10) {
   case TASK_TYPE_UNKNOWN_1:
   case TASK_TYPE_UNKNOWN_4:

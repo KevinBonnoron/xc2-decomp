@@ -19,7 +19,7 @@ struct unknown001 {
 
 template void LayerLinkList<LayerTextureObj>::deleteList(LayerTextureObj *node);
 
-LayerTextureMan::LayerTextureMan(LayerManager *manager) : unknown18(manager) {}
+LayerTextureMan::LayerTextureMan(LayerManager *manager) : m_layerManager(manager) {}
 
 LayerTextureObj::LayerTextureObj(const u8 *data, LayerManager *manager, LayerTextureMan *textureMan)
     : unknown00(nullptr), unknown08(nullptr), unknown10(data), unknown18(1), unknown2c(0), unknown38(nullptr), unknown40(textureMan) {
@@ -30,7 +30,7 @@ LayerTextureObj::LayerTextureObj(const u8 *data, LayerManager *manager, LayerTex
 void LayerTextureObj::textureRelease() {
   if (unknown38 != nullptr) {
     for (s32 i = 0; i < unknown2c; i++) {
-      unknown30[i].~CGLibTextureBuffer();
+      m_texture[i].~CGLibTextureBuffer();
     }
     if (unknown38 != nullptr) {
       mtl::MemManager::deallocate(unknown38, 0, false);
@@ -40,9 +40,9 @@ void LayerTextureObj::textureRelease() {
   }
 }
 
-const grlib::CGLibTextureBuffer *LayerTextureObj::getTexture(int index) const { return &unknown30[index]; }
+const grlib::CGLibTextureBuffer *LayerTextureObj::getTexture(int index) const { return &m_texture[index]; }
 
-grlib::CGLibTextureBuffer *LayerTextureObj::getTexture(int index) { return &unknown30[index]; }
+grlib::CGLibTextureBuffer *LayerTextureObj::getTexture(int index) { return &m_texture[index]; }
 
 LayerTextureObj::~LayerTextureObj() { textureRelease(); }
 
@@ -62,10 +62,10 @@ void LayerTextureObj::setupTexture(const u8 *data, LayerManager *manager) {
   textureRelease();
   unknown20 = data;
   unknown2c = reinterpret_cast<const unknown001 *>(data)->unknown04;
-  unknown30 = static_cast<grlib::CGLibTextureBuffer *>(mtl::MemManager::allocate(manager->unknown2c, static_cast<size_t>(unknown2c) * sizeof(grlib::CGLibTextureBuffer), 0x10, false, "no name", 0));
-  unknown38 = unknown30;
+  m_texture = static_cast<grlib::CGLibTextureBuffer *>(mtl::MemManager::allocate(manager->unknown2c, static_cast<size_t>(unknown2c) * sizeof(grlib::CGLibTextureBuffer), 0x10, false, "no name", 0));
+  unknown38 = m_texture;
   for (s32 i = 0; i < unknown2c; i++) {
-    new (&unknown30[i]) grlib::CGLibTextureBuffer();
+    new (&m_texture[i]) grlib::CGLibTextureBuffer();
   }
 }
 
@@ -100,7 +100,7 @@ LayerTextureObj *LayerTextureMan::createTextureObj(const u8 *data) {
     }
   }
 
-  LayerTextureObj *textureObj = new (unknown18->unknown28) LayerTextureObj(data, unknown18, this);
+  LayerTextureObj *textureObj = new (m_layerManager->unknown28) LayerTextureObj(data, m_layerManager, this);
   if (textureObj != nullptr) {
     unknown002(textureObj);
   }

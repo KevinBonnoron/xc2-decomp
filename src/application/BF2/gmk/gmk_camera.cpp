@@ -14,7 +14,7 @@
 
 namespace gmk {
 
-GmkCamera::GmkCamera(const CreateInfo *info) : unknown10(), unknown140(), unknown148(nullptr) {
+GmkCamera::GmkCamera(const CreateInfo *info) : m_createInfo(), unknown140(), unknown148(nullptr) {
   if (info != nullptr) {
     create(*info);
   }
@@ -52,7 +52,7 @@ bool GmkCamera::CreateInfo::validateTransform(u16 lodId) {
 
 void GmkCamera::create(const CreateInfo &info) {
   dispose();
-  unknown10 = info;
+  m_createInfo = info;
   unknown140 = info.unknown107 ? gf::GimmickCamera::create(info.unknown00.c_str(), info.unknown110, info.unknown120) : gf::GimmickCamera::create(info.unknown00.c_str());
   static_cast<gf::GimmickCamera *>(unknown140.get())->setAuto(info.unknown105);
   unknown148 = &GmkCamera::seqWaitToLoaded;
@@ -77,11 +77,11 @@ void GmkCamera::dispose() {
     }
     unknown140 = nullptr;
   }
-  unknown10 = CreateInfo();
+  m_createInfo = CreateInfo();
 }
 
 void GmkCamera::update(f32 deltaTime) {
-  if (unknown10.unknown00.length() > 0 && unknown148) {
+  if (m_createInfo.unknown00.length() > 0 && unknown148) {
     (this->*unknown148)(deltaTime);
   }
 }
@@ -89,9 +89,9 @@ void GmkCamera::update(f32 deltaTime) {
 void GmkCamera::play() { unknown148 = &GmkCamera::seqWaitToPlay; }
 
 void GmkCamera::applyInvisibleParty() {
-  if (unknown10.unknown104 == 1) {
+  if (m_createInfo.unknown104 == 1) {
     setDispOfParty(false, false);
-  } else if (unknown10.unknown104 == 2) {
+  } else if (m_createInfo.unknown104 == 2) {
     setDispOfParty(false, true);
   }
 }
@@ -114,8 +114,8 @@ void GmkCamera::seqWaitToLoaded(f32 deltaTime) {
   if (!isLoaded()) {
     return;
   }
-  if (unknown10.unknown105) {
-    if (unknown10.unknown106 && !gf::GfPlayFactory::createGmkCamera(unknown140)) {
+  if (m_createInfo.unknown105) {
+    if (m_createInfo.unknown106 && !gf::GfPlayFactory::createGmkCamera(unknown140)) {
       return;
     }
     fw::CameraManager::get()->unknown20[0].push(unknown140, 0.0f);
@@ -125,7 +125,7 @@ void GmkCamera::seqWaitToLoaded(f32 deltaTime) {
 }
 
 void GmkCamera::seqWaitToPlay(f32 deltaTime) {
-  if (unknown10.unknown106 && !gf::GfPlayFactory::createGmkCamera(unknown140)) {
+  if (m_createInfo.unknown106 && !gf::GfPlayFactory::createGmkCamera(unknown140)) {
     return;
   }
   fw::CameraManager::get()->unknown20[0].push(unknown140, 0.0f);
@@ -138,9 +138,9 @@ void GmkCamera::seqWaitToEnd(f32 deltaTime) {
   if (!static_cast<gf::GimmickCamera *>(unknown140.get())->isPlayEnd()) {
     return;
   }
-  if (unknown10.unknown104 == 1) {
+  if (m_createInfo.unknown104 == 1) {
     setDispOfParty(true, false);
-  } else if (unknown10.unknown104 == 2) {
+  } else if (m_createInfo.unknown104 == 2) {
     setDispOfParty(true, true);
   }
   unknown148 = nullptr;

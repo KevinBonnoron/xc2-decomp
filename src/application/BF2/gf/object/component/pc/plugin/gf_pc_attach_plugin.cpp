@@ -19,18 +19,18 @@
 namespace gf {
 namespace pc {
 
-AttachPlugin::AttachPlugin() : unknown0c(0), unknown10(unknown020), unknown18(nullptr), unknown20(mm::Vec3::zero), unknown30(mm::Quat::identity) {}
+AttachPlugin::AttachPlugin() : unknown0c(0), m_GF_OBJ_HANDLE(unknown020), m_comBehaviorPc(nullptr), unknown20(mm::Vec3::zero), unknown30(mm::Quat::identity) {}
 
 AttachPlugin::~AttachPlugin() {}
 
 bool AttachPlugin::setup(GfComBehaviorPc &behavior) {
-  unknown18 = &behavior;
+  m_comBehaviorPc = &behavior;
   return true;
 }
 
 void AttachPlugin::cleanup(GfComBehaviorPc &) {
   unknown0c &= ~1u;
-  unknown18 = nullptr;
+  m_comBehaviorPc = nullptr;
 }
 
 void AttachPlugin::onActivate() {}
@@ -38,10 +38,10 @@ void AttachPlugin::onActivate() {}
 void AttachPlugin::onDeactivate() { dettachObj(); }
 
 void AttachPlugin::dettachObj() {
-  if (unknown10 != unknown020) {
-    GfObjUtil::dettachGfObject(unknown10, static_cast<GfObj *>(unknown18->unknown08)->unknownf8);
-    unknown10 = unknown020;
-    GfComDynamics *dynamics = unknown18->unknown08->getComponent<GfComDynamics>();
+  if (m_GF_OBJ_HANDLE != unknown020) {
+    GfObjUtil::dettachGfObject(m_GF_OBJ_HANDLE, static_cast<GfObj *>(m_comBehaviorPc->unknown08)->unknownf8);
+    m_GF_OBJ_HANDLE = unknown020;
+    GfComDynamics *dynamics = m_comBehaviorPc->unknown08->getComponent<GfComDynamics>();
     if (dynamics != nullptr) {
       fw::Transform transform;
       transform.unknown00 = mm::Vec3::zero;
@@ -53,8 +53,8 @@ void AttachPlugin::dettachObj() {
 }
 
 void AttachPlugin::attachObj(GF_OBJ_HANDLE *handle) {
-  GfObjUtil::attachGfObj(handle, static_cast<GfObj *>(unknown18->unknown08)->unknownf8);
-  unknown10 = handle;
+  GfObjUtil::attachGfObj(handle, static_cast<GfObj *>(m_comBehaviorPc->unknown08)->unknownf8);
+  m_GF_OBJ_HANDLE = handle;
   GfObj *obj = GfObjUtil::getObj(handle);
   if (obj != nullptr) {
     GfComTransform *comTransform = obj->getComponent<GfComTransform>();
@@ -64,7 +64,7 @@ void AttachPlugin::attachObj(GF_OBJ_HANDLE *handle) {
       unknown20 = frame->unknown40.unknown00;
       unknown30 = frame->unknown40.unknown10;
     }
-    GfComDynamics *dynamics = unknown18->unknown08->getComponent<GfComDynamics>();
+    GfComDynamics *dynamics = m_comBehaviorPc->unknown08->getComponent<GfComDynamics>();
     if (dynamics != nullptr) {
       fw::Transform transform;
       transform.unknown00 = mm::Vec3::zero;
@@ -76,10 +76,10 @@ void AttachPlugin::attachObj(GF_OBJ_HANDLE *handle) {
 }
 
 void AttachPlugin::notifyMovement() {
-  GfObj *obj = GfObjUtil::getObj(unknown10);
+  GfObj *obj = GfObjUtil::getObj(m_GF_OBJ_HANDLE);
   if (obj != nullptr) {
     GfComTransform *transform = obj->getComponent<GfComTransform>();
-    GfComDynamics *dynamics = unknown18->unknown08->getComponent<GfComDynamics>();
+    GfComDynamics *dynamics = m_comBehaviorPc->unknown08->getComponent<GfComDynamics>();
     if (transform != nullptr && dynamics != nullptr) {
       fw::Transform world = transform->unknown001()->getSyncedWorldTransform();
       fw::Transform delta;
@@ -95,8 +95,8 @@ void AttachPlugin::notifyMovement() {
 }
 
 void AttachPlugin::notifyExcludeMovementRider(const fw::Transform &transform) {
-  if (GfGameRide::get() != nullptr && GfGameRide::isVehicle(static_cast<GfObj *>(unknown18->unknown08)->unknownf8)) {
-    GfObj *buddy = GfObjUtil::getObj(StateUtil::getBuddyHandle(*unknown18));
+  if (GfGameRide::get() != nullptr && GfGameRide::isVehicle(static_cast<GfObj *>(m_comBehaviorPc->unknown08)->unknownf8)) {
+    GfObj *buddy = GfObjUtil::getObj(StateUtil::getBuddyHandle(*m_comBehaviorPc));
     if (buddy != nullptr) {
       GfComPropertyPc *property = buddy->getComponent<GfComPropertyPc>();
       GfComDynamics *dynamics = buddy->getComponent<GfComDynamics>();
@@ -110,9 +110,9 @@ void AttachPlugin::notifyExcludeMovementRider(const fw::Transform &transform) {
 void AttachPlugin::changeWallMode(bool isWall) {
   if (isWall != ((unknown0c >> 1) & 1)) {
     if (isWall) {
-      EnviromentSensor *sensor = unknown18->unknown08->getComponent<GfComPropertyPc>()->getEnvSensor();
+      EnviromentSensor *sensor = m_comBehaviorPc->unknown08->getComponent<GfComPropertyPc>()->getEnvSensor();
       if (sensor->unknown24_1) {
-        GF_OBJ_HANDLE *handle = sensor->unknown150.unknown90;
+        GF_OBJ_HANDLE *handle = sensor->unknown150.m_GF_OBJ_HANDLE;
         if (handle != unknown020) {
           dettachObj();
           attachObj(handle);

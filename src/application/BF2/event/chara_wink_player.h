@@ -23,7 +23,7 @@ public:
   void create(CharaWeightPlayer *weight);
   void destroy();
   void update(f32 delta) {
-    if (unknown10 == nullptr) {
+    if (m_charaWeightPlayer == nullptr) {
       return;
     }
 
@@ -46,7 +46,7 @@ public:
 
 private:
   mm::mtl::unknown027<FLAG_UNKNOWN_32> unknown08; // Inferred role: flags; original member name unknown.
-  CharaWeightPlayer *unknown10;                   // Inferred role: weight; original member name unknown.
+  CharaWeightPlayer *m_charaWeightPlayer;         // Inferred role: weight; original member name unknown.
   State unknown18;                                // Inferred role: state; original member name unknown.
   int unknown28;                                  // Inferred role: counter; original member name unknown.
   const char *unknown30;                          // Inferred role: status; original member name unknown.

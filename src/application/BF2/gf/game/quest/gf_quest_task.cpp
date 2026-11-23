@@ -11,6 +11,7 @@
 #include "gf/data/gf_data_item.h"
 #include "gf/data/gf_data_quest.h"
 #include "gf/data/gf_game_flag.h"
+#include "gf/data/gf_object_type.h"
 #include "gf/game/achiev/gf_achiev_manager.h"
 #include "gf/game/gf_game_cond.h"
 #include "gf/game/gf_game_manager.h"
@@ -51,13 +52,13 @@ static inline bool isTaskFlagComplete(const QuestTaskParam &param) {
     return false;
   }
 
-  if (param.unknown04.unknown02 != 0) {
-    AchievQuest *achievQuest = GfDataQuest::getAchievQuest(param.unknown04);
+  if (param.m_questID.unknown02 != 0) {
+    AchievQuest *achievQuest = GfDataQuest::getAchievQuest(param.m_questID);
     if (achievQuest == nullptr) {
       return false;
     }
 
-    u16 flag = GfDataQuest::getListPRTQuestID(param.unknown04).empty() ? ACHIEV_FLAG_TASK_UNKNOWN_2 : ACHIEV_FLAG_TASK_UNKNOWN_3;
+    u16 flag = GfDataQuest::getListPRTQuestID(param.m_questID).empty() ? ACHIEV_FLAG_TASK_UNKNOWN_2 : ACHIEV_FLAG_TASK_UNKNOWN_3;
     return (flag & achievQuest->unknown0c) != 0;
   }
 
@@ -67,20 +68,20 @@ static inline bool isTaskFlagComplete(const QuestTaskParam &param) {
 
 bool GfQuestTask::setCompleteFlag(const QuestTaskParam &param, bool isComplete) {
   bool wasComplete = isTaskFlagComplete(param);
-  if (param.unknown04.unknown02 == 0) {
+  if (param.m_questID.unknown02 == 0) {
     u32 purpose = param.unknown08;
     u32 taskIndex = param.unknown0c;
     GfGameFlag::setLocal(1, QuestListAcc::get()->getTaskFlag(purpose, taskIndex), isComplete);
     if (!wasComplete && isComplete) {
-      SCOM_POPUP::createQuest(param.unknown04);
+      SCOM_POPUP::createQuest(param.m_questID);
     }
   } else {
-    AchievQuest *achievQuest = GfDataQuest::getAchievQuest(param.unknown04);
+    AchievQuest *achievQuest = GfDataQuest::getAchievQuest(param.m_questID);
     if (achievQuest == nullptr || !GfKizunaringBlade::isCompleteLevel(*achievQuest)) {
       return false;
     }
 
-    achievQuest->setTaskComplete(GfQuestInfo::isParent(param.unknown04), isComplete);
+    achievQuest->setTaskComplete(GfQuestInfo::isParent(param.m_questID), isComplete);
     achievQuest->setCountComplete();
   }
 
@@ -114,7 +115,7 @@ void AchievQuest::setCountComplete() {
   }
 
   if (GfAchievManager::get() != nullptr) {
-    GfAchievManager::get()->incleaseAchievCount(unknown00, oldCount, newCount - oldCount);
+    GfAchievManager::get()->incleaseAchievCount(m_questID, oldCount, newCount - oldCount);
   }
 }
 
@@ -197,7 +198,7 @@ bool GfQuestTask::isEnableTaskCondition(const QuestTaskParam &param) {
     return true;
   }
 
-  if (param.unknown04.unknown00 == QUEST_MAP_UNKNOWN_2020) {
+  if (param.m_questID.unknown00 == QUEST_MAP_UNKNOWN_2020) {
     return GfGameCond::isGameCondWithMap(condition, QUEST_MAP_UNKNOWN_6);
   }
 
@@ -205,7 +206,7 @@ bool GfQuestTask::isEnableTaskCondition(const QuestTaskParam &param) {
 }
 
 void GfQuestTask::completeTask(const QuestTaskParam &param) {
-  if (GfQuestInfo::isQuestOrder(param.unknown04) && param.unknown08 != 0 && !GfQuestInfo::isCompleteTask(param)) {
+  if (GfQuestInfo::isQuestOrder(param.m_questID) && param.unknown08 != 0 && !GfQuestInfo::isCompleteTask(param)) {
     setCompleteFlag(param, true);
   }
 }
@@ -442,12 +443,12 @@ static void unknown001(QuestID quest, u32 map, u32 place) {
 void GfQuestTask::completeReachTask(u32 map, u32 place) {
   mm::mtl::FixedQueue<QuestData, 8000> *orderQuest = GfQuestManager::getOrderQuest();
   for (mm::mtl::FixedQueue<QuestData, 8000>::iterator it = orderQuest->begin(), last = orderQuest->end(); it != last; ++it) {
-    unknown001((*it).unknown00, map, place);
+    unknown001((*it).m_questID, map, place);
   }
 
   mm::mtl::FixedQueue<QuestData, 15000> *orderAchievementQuest = GfQuestManager::getOrderAchievementQuest();
   for (mm::mtl::FixedQueue<QuestData, 15000>::iterator it = orderAchievementQuest->begin(), last = orderAchievementQuest->end(); it != last; ++it) {
-    unknown001((*it).unknown00, map, place);
+    unknown001((*it).m_questID, map, place);
   }
 }
 
@@ -503,14 +504,64 @@ void GfQuestTask::completeItemUseTask(u32 item, u32 driver) {
   mm::mtl::FixedVector<u16, BLADE_UNKNOWN_422> blades;
   mm::mtl::FixedQueue<QuestData, 8000> *orderQuest = GfQuestManager::getOrderQuest();
   for (mm::mtl::FixedQueue<QuestData, 8000>::iterator it = orderQuest->begin(), last = orderQuest->end(); it != last; ++it) {
-    unknown002((*it).unknown00, item, category, blades);
+    unknown002((*it).m_questID, item, category, blades);
   }
 
   GfDataDriver::getListBlade(blades, driver);
   mm::mtl::FixedQueue<QuestData, 15000> *orderAchievementQuest = GfQuestManager::getOrderAchievementQuest();
   for (mm::mtl::FixedQueue<QuestData, 15000>::iterator it = orderAchievementQuest->begin(), last = orderAchievementQuest->end(); it != last; ++it) {
-    unknown002((*it).unknown00, item, category, blades);
+    unknown002((*it).m_questID, item, category, blades);
   }
+}
+
+u32 GfQuestTask::getReduceHpObj(QuestID quest, GF_OBJ_HANDLE *handle) {
+  u32 purpose = GfDataQuest::getListPurposeID(quest);
+  if (purpose == 0) {
+    return 0;
+  }
+
+  GfObjAcc objAcc(handle);
+  if (objAcc.getType() == OBJECT_TYPE_ENEMY) {
+    u32 enemy = objAcc.getEnArrangeId();
+    QuestListAcc *questListAcc = QuestListAcc::get();
+    for (u32 taskIndex = 0; taskIndex < QUEST_UNKNOWN_4; taskIndex++) {
+      QuestTaskParam param(quest, taskIndex, purpose, TASK_STATE_UNKNOWN_0);
+      if (param.unknown10 != TASK_TYPE_UNKNOWN_1) {
+        continue;
+      }
+
+      // Ruling 8: the statements of GfQuestUtil::isEnemyGroup (0x71003773d0) written out; the game does not call it here (0x7100375c88 holds the
+      // unrolled 8-step loop). The call form `isEnemyGroup(group, enemy)` gives 275 instructions against 238 (clang then unrolls the four-task loop,
+      // calling isEnemyGroup four times). Including gf_quest_util.cpp in this unit does not help: clang still keeps the call, and it inlines
+      // GfQuestUtil::sendSuppressLog into incSuppressEnemy, which the game calls out of line.
+      u32 group = questListAcc->getBattleEnemyGroupID(param.unknown14);
+      if (group != 0) {
+        GfBdatChrEnParam *chrEnParam = GfBdatChrEnParam::get();
+        for (u32 index = 0; index < 8; index++) {
+          if (enemy == chrEnParam->getEnemyGroupEnemyID(group, index)) {
+            return questListAcc->getBattleReduceEnemyHP(param.unknown14);
+          }
+        }
+      }
+
+      if (enemy == questListAcc->getBattleEnemyID(param.unknown14)) {
+        return questListAcc->getBattleReduceEnemyHP(param.unknown14);
+      }
+    }
+  } else if (GfGameManager::getPartyLeaderDriver() == handle) {
+    QuestListAcc *questListAcc = QuestListAcc::get();
+    for (u32 taskIndex = 0; taskIndex < QUEST_UNKNOWN_4; taskIndex++) {
+      QuestTaskParam param(quest, taskIndex, purpose, TASK_STATE_UNKNOWN_0);
+      if (param.unknown10 == TASK_TYPE_UNKNOWN_1) {
+        u32 reduceHp = questListAcc->getBattleReducePCHP(param.unknown14);
+        if (reduceHp != 0) {
+          return reduceHp;
+        }
+      }
+    }
+  }
+
+  return 0;
 }
 
 bool GfQuestTask::isReduceHpObj(QuestID quest, GF_OBJ_HANDLE *handle) { return getReduceHpObj(quest, handle) != 0; }
@@ -625,7 +676,7 @@ u16 GfQuestTask::getTaskMap(const QuestTaskParam &param) {
 }
 
 QuestTaskParam::QuestTaskParam(QuestID quest, u32 taskIndex, TASK_STATE state)
-    : QuestParam(QUEST_PARAM_UNKNOWN_0), unknown04(quest), unknown0c(taskIndex), unknown10(0), unknown14(0), unknown18(state), unknown1c(false) {
+    : QuestParam(QUEST_PARAM_UNKNOWN_0), m_questID(quest), unknown0c(taskIndex), unknown10(0), unknown14(0), unknown18(state), unknown1c(false) {
   QuestListAcc *questListAcc = QuestListAcc::get();
   unknown08 = GfDataQuest::getListPurposeID(quest);
   if (unknown08 == 0) {
@@ -641,7 +692,7 @@ QuestTaskParam::QuestTaskParam(QuestID quest, u32 taskIndex, TASK_STATE state)
 }
 
 QuestTaskParam::QuestTaskParam(QuestID quest, u32 taskIndex, u32 purpose, TASK_STATE state)
-    : QuestParam(QUEST_PARAM_UNKNOWN_0), unknown04(quest), unknown08(purpose), unknown0c(taskIndex), unknown10(0), unknown14(0), unknown18(state), unknown1c(false) {
+    : QuestParam(QUEST_PARAM_UNKNOWN_0), m_questID(quest), unknown08(purpose), unknown0c(taskIndex), unknown10(0), unknown14(0), unknown18(state), unknown1c(false) {
   QuestListAcc *questListAcc = QuestListAcc::get();
   if (!quest.empty() && this->unknown08 == 0) {
     this->unknown08 = GfDataQuest::getListPurposeID(quest);
@@ -670,7 +721,7 @@ bool AchievQuest::setCount(u32 newCount) {
   }
 
   if (add != 0 && GfAchievManager::get() != nullptr) {
-    GfAchievManager::get()->incleaseAchievCount(unknown00, oldCount, add);
+    GfAchievManager::get()->incleaseAchievCount(m_questID, oldCount, add);
   }
 
   return add != 0;
@@ -693,7 +744,7 @@ bool AchievQuest::incleseCount(u32 add) {
   }
 
   if (GfAchievManager::get() != nullptr) {
-    GfAchievManager::get()->incleaseAchievCount(unknown00, oldCount, add);
+    GfAchievManager::get()->incleaseAchievCount(m_questID, oldCount, add);
   }
 
   return true;

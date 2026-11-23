@@ -46,12 +46,12 @@ static const QUEST_REWARD unknown006[] = {QUEST_REWARD_UNKNOWN_0, QUEST_REWARD_U
 static const u32 unknown007[] = {999999999, 999999999, 99999, 9999, 99999};
 
 GfMenuQuestAdapter::GfMenuQuestAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways)
-    : GfMenuAdapter(plugin, false, isUpdateAlways), unknown30(), unknown34(0), unknown38(0), unknown3c(false), unknown88(nullptr), unknown90(nullptr) {}
+    : GfMenuAdapter(plugin, false, isUpdateAlways), m_questID(), unknown34(0), unknown38(0), unknown3c(false), m_iConverter(nullptr), unknown90(nullptr) {}
 
 GfMenuQuestAdapter::~GfMenuQuestAdapter() {
-  if (unknown88 != nullptr) {
-    delete unknown88;
-    unknown88 = nullptr;
+  if (m_iConverter != nullptr) {
+    delete m_iConverter;
+    m_iConverter = nullptr;
   }
   unknown90 = nullptr;
 }
@@ -137,7 +137,7 @@ GfMenuQuestAdapter *GfMenuQuestAdapter::create(u32 handle, QuestID quest, u32 ty
 
 void GfMenuQuestAdapter::init(GfMenuQuestAdapter *adapter, QuestID quest, u32 type, u32 kind) {
   if (adapter != nullptr) {
-    adapter->unknown30 = quest;
+    adapter->m_questID = quest;
     adapter->unknown34 = type;
     adapter->unknown38 = kind;
     adapter->unknown3c = true;
@@ -152,7 +152,7 @@ GfMenuQuestAdapter *GfMenuQuestAdapter::createFromReference(u32 handle, mm::mtl:
   converter->getQuestID(quest);
   GfMenuQuestAdapter *adapter = create(handle, quest, type, isUpdateAlways);
   if (adapter != nullptr) {
-    adapter->unknown88 = converter;
+    adapter->m_iConverter = converter;
   }
   return adapter;
 }
@@ -165,17 +165,17 @@ GfMenuQuestAdapter *GfMenuQuestAdapter::createFromList(u32 handle, GfMenuQuestLi
   converter->getQuestID(quest);
   GfMenuQuestAdapter *adapter = create(handle, quest, type, isUpdateAlways);
   if (adapter != nullptr) {
-    adapter->unknown88 = converter;
+    adapter->m_iConverter = converter;
   }
   return adapter;
 }
 
 void GfMenuQuestAdapter::update(const fw::UpdateInfo &info) {
-  if (unknown88 != nullptr) {
+  if (m_iConverter != nullptr) {
     QuestID quest = {};
-    unknown88->getQuestID(quest);
-    if (!(unknown30 == quest)) {
-      unknown30 = quest;
+    m_iConverter->getQuestID(quest);
+    if (!(m_questID == quest)) {
+      m_questID = quest;
       setChange();
     }
   }
@@ -189,7 +189,7 @@ void GfMenuQuestAdapter::update(const fw::UpdateInfo &info) {
   }
 
   if ((unknown20 & (FLAG_UNKNOWN_0 | FLAG_UNKNOWN_1)) != 0) {
-    if (unknown30.unknown00 != 0) {
+    if (m_questID.unknown00 != 0) {
       setDisp(true);
     } else {
       setDisp(false);
@@ -198,7 +198,7 @@ void GfMenuQuestAdapter::update(const fw::UpdateInfo &info) {
     switch (unknown38) {
     case unknown001_0: {
       const char *text;
-      isDisp = getParamText(unknown30, unknown34, &text);
+      isDisp = getParamText(m_questID, unknown34, &text);
       if (isDisp) {
         setText(ui::UIStr(text, false));
       }
@@ -207,7 +207,7 @@ void GfMenuQuestAdapter::update(const fw::UpdateInfo &info) {
     case unknown001_1: {
       u32 number;
       u32 max;
-      isDisp = getParamNumber(unknown30, unknown34, number, max);
+      isDisp = getParamNumber(m_questID, unknown34, number, max);
       if (isDisp) {
         ui::UIObjectNumberPlugin *plugin = unknown18 != nullptr ? mm::mtl::dynamicCast<ui::UIObjectNumberPlugin>(unknown18) : nullptr;
         if (plugin != nullptr) {
@@ -219,7 +219,7 @@ void GfMenuQuestAdapter::update(const fw::UpdateInfo &info) {
     }
     case unknown001_2: {
       u32 icon;
-      isDisp = getParamIcon(unknown30, unknown34, icon);
+      isDisp = getParamIcon(m_questID, unknown34, icon);
       if (isDisp) {
         ui::UIObjectNumberPlugin *plugin = unknown18 != nullptr ? mm::mtl::dynamicCast<ui::UIObjectNumberPlugin>(unknown18) : nullptr;
         if (plugin != nullptr) {
@@ -231,7 +231,7 @@ void GfMenuQuestAdapter::update(const fw::UpdateInfo &info) {
     case unknown001_3: {
       const char *text;
       const char *color;
-      isDisp = getParamTextColor(unknown30, unknown34, &text, &color);
+      isDisp = getParamTextColor(m_questID, unknown34, &text, &color);
       if (isDisp) {
         ui::UIObjectTextPlugin *plugin = unknown18 != nullptr ? mm::mtl::dynamicCast<ui::UIObjectTextPlugin>(unknown18) : nullptr;
         if (plugin != nullptr) {
@@ -241,7 +241,7 @@ void GfMenuQuestAdapter::update(const fw::UpdateInfo &info) {
       break;
     }
     case unknown001_4: {
-      isDisp = getParamRewardText(unknown30, unknown34, unknown40);
+      isDisp = getParamRewardText(m_questID, unknown34, unknown40);
       if (isDisp) {
         ui::UIObjectTextPlugin *plugin = unknown18 != nullptr ? mm::mtl::dynamicCast<ui::UIObjectTextPlugin>(unknown18) : nullptr;
         if (plugin != nullptr) {
@@ -251,7 +251,7 @@ void GfMenuQuestAdapter::update(const fw::UpdateInfo &info) {
       break;
     }
     case unknown001_5:
-      isDisp = getParamDisp(unknown30, unknown34);
+      isDisp = getParamDisp(m_questID, unknown34);
       break;
     default:
       isDisp = false;
@@ -352,34 +352,34 @@ bool GfMenuQuestAdapter::getParamNumber(QuestID quest, u32 type, u32 &number, u3
     u32 value;
     switch (unknown006[index]) {
     case QUEST_REWARD_UNKNOWN_0:
-      value = reward.unknown00[0].unknown44_u32;
+      value = reward.m_param[0].unknown44_u32;
       break;
     case QUEST_REWARD_UNKNOWN_1:
-      value = reward.unknown00[1].unknown44_u32;
+      value = reward.m_param[1].unknown44_u32;
       break;
     case QUEST_REWARD_UNKNOWN_2:
-      value = reward.unknown00[2].unknown44_u32;
+      value = reward.m_param[2].unknown44_u32;
       break;
     case QUEST_REWARD_UNKNOWN_3:
-      value = reward.unknown00[3].unknown44_u32;
+      value = reward.m_param[3].unknown44_u32;
       break;
     case QUEST_REWARD_UNKNOWN_4:
-      value = reward.unknown00[4].unknown44;
+      value = reward.m_param[4].unknown44;
       break;
     case QUEST_REWARD_UNKNOWN_5:
-      value = reward.unknown00[5].unknown44;
+      value = reward.m_param[5].unknown44;
       break;
     case QUEST_REWARD_UNKNOWN_6:
-      value = reward.unknown00[6].unknown44;
+      value = reward.m_param[6].unknown44;
       break;
     case QUEST_REWARD_UNKNOWN_7:
-      value = reward.unknown00[7].unknown44;
+      value = reward.m_param[7].unknown44;
       break;
     case QUEST_REWARD_UNKNOWN_8:
     case QUEST_REWARD_UNKNOWN_9:
     case QUEST_REWARD_UNKNOWN_10:
     case QUEST_REWARD_UNKNOWN_11:
-      value = reward.unknown00[unknown006[index]].m_developZone;
+      value = reward.m_param[unknown006[index]].m_developZone;
       break;
     default:
       value = 0;
@@ -536,7 +536,7 @@ bool GfMenuQuestAdapter::getParamRewardText(QuestID quest, u32 type, mm::mtl::Fi
   if (type - unknown002_30 < 8 && isEmpty == 0) {
     GfQuestReward reward;
     if (GfQuestManager::getRewardItem(reward, quest, true)) {
-      text = reward.unknown00[type - unknown002_30].unknown00;
+      text = reward.m_param[type - unknown002_30].unknown00;
       result = text.c_str()[0] != '\0';
     }
   }

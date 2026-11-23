@@ -34,7 +34,7 @@ public:
   DynamicWindResource();
   ~DynamicWindResource();
 
-  wnd::ResWind unknown10; // Inferred role: res wind; original member name unknown.
+  wnd::ResWind m_resWind; // Inferred role: res wind; original member name unknown.
 };
 
 static_assert(sizeof(DynamicWindResource) == 0x40, "");

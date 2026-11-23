@@ -53,9 +53,9 @@ public:
   };
 
   struct UpdateInfo {
-    GF_OBJ_HANDLE *unknown00; // Inferred role: damaged object; original member name unknown.
-    int unknown08;            // Inferred role: damage id of the ground; original member name unknown.
-    f32 unknown0c;            // Inferred role: delta time; original member name unknown.
+    GF_OBJ_HANDLE *m_GF_OBJ_HANDLE; // Inferred role: damaged object; original member name unknown.
+    int unknown08;                  // Inferred role: damage id of the ground; original member name unknown.
+    f32 unknown0c;                  // Inferred role: delta time; original member name unknown.
   };
 
   GfFieldDmg(const CreateInfo *info);
@@ -69,14 +69,14 @@ public:
   bool unknown08; // Inferred role: apply the damage; original member name unknown.
   bool unknown09; // Inferred role: created; original member name unknown.
   u8 _0a[0x10 - 0x0a];
-  const GfFieldDmgManager::BdatInfo *unknown10; // Inferred role: damage info of the current damage id; original member name unknown.
-  u32 unknown18;                                // Inferred role: current damage id; original member name unknown.
-  f32 unknown1c;                                // Inferred role: elapsed time; original member name unknown.
-  bool unknown20;                               // Inferred role: damage applied this frame; original member name unknown.
+  const GfFieldDmgManager::BdatInfo *m_bdatInfo; // Inferred role: damage info of the current damage id; original member name unknown.
+  u32 unknown18;                                 // Inferred role: current damage id; original member name unknown.
+  f32 unknown1c;                                 // Inferred role: elapsed time; original member name unknown.
+  bool unknown20;                                // Inferred role: damage applied this frame; original member name unknown.
 };
 
 static_assert(offsetof(GfFieldDmg, unknown08) == 0x08, "");
-static_assert(offsetof(GfFieldDmg, unknown10) == 0x10, "");
+static_assert(offsetof(GfFieldDmg, m_bdatInfo) == 0x10, "");
 static_assert(offsetof(GfFieldDmg, unknown18) == 0x18, "");
 static_assert(offsetof(GfFieldDmg, unknown1c) == 0x1c, "");
 static_assert(offsetof(GfFieldDmg, unknown20) == 0x20, "");

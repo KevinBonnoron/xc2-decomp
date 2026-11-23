@@ -62,12 +62,12 @@ static GfMenuAchievementAdapter::unknown001 TYPE_INFOS[] = {
 };
 
 GfMenuAchievementAdapter::GfMenuAchievementAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways)
-    : GfMenuAdapter(plugin, false, isUpdateAlways), unknown50(nullptr), unknown58(0), unknown5c(0), unknown60(0), unknown64(0) {}
+    : GfMenuAdapter(plugin, false, isUpdateAlways), m_iConverter(nullptr), unknown58(0), unknown5c(0), unknown60(0), unknown64(0) {}
 
 GfMenuAchievementAdapter::~GfMenuAchievementAdapter() {
-  if (unknown50 != nullptr) {
-    delete unknown50;
-    unknown50 = nullptr;
+  if (m_iConverter != nullptr) {
+    delete m_iConverter;
+    m_iConverter = nullptr;
   }
 }
 
@@ -304,7 +304,7 @@ bool GfMenuAchievementAdapter::update_QuestNum() {
   SDataBladeAchievement *info = GfDataBlade::getAchievInfo(unknown5c, unknown60);
   u32 count;
   u32 limit;
-  if (!GfQuestUtil::getDispCount(count, limit, info->unknown04[unknown64 - 1])) {
+  if (!GfQuestUtil::getDispCount(count, limit, info->m_achievQuest[unknown64 - 1])) {
     return false;
   }
   setNumber(count);
@@ -315,7 +315,7 @@ bool GfMenuAchievementAdapter::update_QuestMax() {
   SDataBladeAchievement *info = GfDataBlade::getAchievInfo(unknown5c, unknown60);
   u32 count;
   u32 limit;
-  if (!GfQuestUtil::getDispCount(count, limit, info->unknown04[unknown64 - 1])) {
+  if (!GfQuestUtil::getDispCount(count, limit, info->m_achievQuest[unknown64 - 1])) {
     return false;
   }
   setNumber(limit);
@@ -393,7 +393,7 @@ GfMenuAchievementAdapter *GfMenuAchievementAdapter::createFromCoverter(u32 handl
   u16 level = converter->getKizunaLevel();
   GfMenuAchievementAdapter *adapter = create(handle, type, blade, line, level, isUpdateAlways);
   if (adapter != nullptr) {
-    adapter->unknown50 = converter;
+    adapter->m_iConverter = converter;
   }
   return adapter;
 }
@@ -413,18 +413,18 @@ GfMenuAchievementAdapter *GfMenuAchievementAdapter::createFromReferenceBladeLine
 }
 
 void GfMenuAchievementAdapter::update(const fw::UpdateInfo &info) {
-  if (unknown50 != nullptr) {
-    u32 newBlade = unknown50->getBladeId();
+  if (m_iConverter != nullptr) {
+    u32 newBlade = m_iConverter->getBladeId();
     if (unknown5c != newBlade) {
       unknown5c = newBlade;
       setChange();
     }
-    u32 newLine = unknown50->getKizunaLine();
+    u32 newLine = m_iConverter->getKizunaLine();
     if (unknown60 != newLine) {
       unknown60 = newLine;
       setChange();
     }
-    u32 newLevel = unknown50->getKizunaLevel();
+    u32 newLevel = m_iConverter->getKizunaLevel();
     if (unknown64 != newLevel) {
       unknown64 = newLevel;
       setChange();

@@ -97,7 +97,10 @@ public:
 
   GF_OBJ_HANDLE *unknown00; // Inferred role: wire; original member name unknown.
   GF_OBJ_HANDLE *unknown08; // Inferred role: owner; original member name unknown.
-  u8 _10[0x18 - 0x10];
+  s16 unknown10;            // Inferred role: mount of the wire in the skeleton of its model; original member name unknown.
+  s16 unknown12;            // Inferred role: node of the first owner wire bone; original member name unknown.
+  s16 unknown14;            // Inferred role: node of the second owner wire bone; original member name unknown.
+  s16 unknown16;            // Inferred role: first owner wire bone; original member name unknown.
   GF_OBJ_HANDLE *unknown18; // Inferred role: target; original member name unknown.
   mm::Vec3 unknown20;       // Inferred role: target position; original member name unknown.
   s16 unknown30;            // Inferred role: target bone; original member name unknown.
@@ -112,6 +115,10 @@ public:
 };
 
 static_assert(offsetof(GfAppendWire, unknown08) == 0x08, "");
+static_assert(offsetof(GfAppendWire, unknown10) == 0x10, "");
+static_assert(offsetof(GfAppendWire, unknown12) == 0x12, "");
+static_assert(offsetof(GfAppendWire, unknown14) == 0x14, "");
+static_assert(offsetof(GfAppendWire, unknown16) == 0x16, "");
 static_assert(offsetof(GfAppendWire, unknown18) == 0x18, "");
 static_assert(offsetof(GfAppendWire, unknown20) == 0x20, "");
 static_assert(offsetof(GfAppendWire, unknown30) == 0x30, "");

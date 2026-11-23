@@ -256,13 +256,13 @@ public:
   void startCapture(ScnRenderDrCapture *capture);
   void setCaptureMode(bool captureMode);
 
-  DrMan *unknown00;          // Inferred role: dr man; original member name unknown.
-  DrPixlPostParm *unknown08; // Inferred role: post parm; original member name unknown.
-  s32 unknown10;             // Inferred role: view index; original member name unknown.
+  DrMan *m_drMan;                   // Inferred role: dr man; original member name unknown.
+  DrPixlPostParm *m_drPixlPostParm; // Inferred role: post parm; original member name unknown.
+  s32 unknown10;                    // Inferred role: view index; original member name unknown.
 };
 
-static_assert(offsetof(ScnRenderDrSysParmAcc, unknown00) == 0x00, "");
-static_assert(offsetof(ScnRenderDrSysParmAcc, unknown08) == 0x08, "");
+static_assert(offsetof(ScnRenderDrSysParmAcc, m_drMan) == 0x00, "");
+static_assert(offsetof(ScnRenderDrSysParmAcc, m_drPixlPostParm) == 0x08, "");
 static_assert(offsetof(ScnRenderDrSysParmAcc, unknown10) == 0x10, "");
 
 } // namespace ml

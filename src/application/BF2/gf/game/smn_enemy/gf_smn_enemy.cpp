@@ -8,6 +8,7 @@
 #include "gf/data/gf_data_param_acc.h"
 #include "gf/data/gf_object_type.h"
 #include "gf/game/gf_game_obj.h"
+#include "gf/game/gf_game_util.h"
 #include "gf/gf_allocator.h"
 #include "gf/object/component/enemy/gf_com_behavior_enemy.h"
 #include "gf/object/component/gf_com_transform.h"
@@ -21,8 +22,10 @@
 #include "gmk/gmk_enemy/gmk_enemy.h"
 #include "gmk/gmk_manager.h"
 #include "gmk/gmk_set.h"
+#include "ml/rand.h"
 #include "mm_math/mm_col4.h"
 #include "mm_math/mm_mat44.h"
+#include "mm_math/mm_quat.h"
 #include "mm_mtl/fixed_list.h"
 #include "mm_mtl/vector.h"
 
@@ -30,7 +33,7 @@ constexpr size_t CAPACITY_UNKNOWN_40 = 40; // Inferred role: smn enemy capacity;
 
 namespace gf {
 
-GfRelSmnEnemy::GfRelSmnEnemy(const CreateInfo *info) : unknown40(1.0f), unknown44(5.0f), unknown48() {
+GfRelSmnEnemy::GfRelSmnEnemy(const CreateInfo *info) : unknown40(1.0f), unknown44(5.0f), m_distHvCond() {
   GfObjManager::addListener(this, OBJEVT_UNKNOWN_0);
   if (info != nullptr) {
     create(*info);
@@ -48,11 +51,11 @@ void GfRelSmnEnemy::dispose() {
     unknown50.clear();
     unknown50.destroy();
   }
-  unknown10 = CreateInfo();
+  m_createInfo = CreateInfo();
 }
 
 void GfRelSmnEnemy::update(f32 deltaTime) {
-  if (unknown10.unknown00 == unknown020 || unknown10.unknown08 < 1) {
+  if (m_createInfo.m_GF_OBJ_HANDLE == unknown020 || m_createInfo.unknown08 < 1) {
     return;
   }
   if (isOwnerValid()) {
@@ -65,22 +68,22 @@ void GfRelSmnEnemy::update(f32 deltaTime) {
 }
 
 bool GfRelSmnEnemy::isOwnerValid() const {
-  GfObjAcc acc(unknown10.unknown00);
+  GfObjAcc acc(m_createInfo.m_GF_OBJ_HANDLE);
   return !acc.isDestroy() && !acc.testFlag(OBJ_FLAG_UNKNOWN_17) && acc.getObj() != nullptr;
 }
 
 u32 GfRelSmnEnemy::getEnemyNum() const {
-  if (unknown10.unknown00 == unknown020) {
+  if (m_createInfo.m_GF_OBJ_HANDLE == unknown020) {
     return 0;
   }
-  if (unknown10.unknown08 > 0) {
+  if (m_createInfo.unknown08 > 0) {
     return unknowna0.size();
   }
   return 0;
 }
 
 GF_OBJ_HANDLE *GfRelSmnEnemy::getEnemy(u32 index) const {
-  if (unknown10.unknown00 == unknown020 || unknown10.unknown08 < 1) {
+  if (m_createInfo.m_GF_OBJ_HANDLE == unknown020 || m_createInfo.unknown08 < 1) {
     return unknown020;
   }
   return unknowna0[index];
@@ -114,8 +117,8 @@ void GfRelSmnEnemy::disposeEnemies(bool isFade) {
 }
 
 void GfRelSmnEnemy::debugDraw() const {
-  if (unknown10.unknown00 != unknown020 && unknown10.unknown08 > 0) {
-    GfObjAcc acc(unknown10.unknown00);
+  if (m_createInfo.m_GF_OBJ_HANDLE != unknown020 && m_createInfo.unknown08 > 0) {
+    GfObjAcc acc(m_createInfo.m_GF_OBJ_HANDLE);
     if (acc.getObj() != nullptr) {
       mm::Mat44 matrix;
       acc.getWorldTransform().unknown001(matrix);
@@ -130,10 +133,52 @@ void GfRelSmnEnemy::updateDepopEnemy() {
   if (!unknowna0.empty()) {
     for (GF_OBJ_HANDLE **enemy = unknowna0.begin(), **end = unknowna0.end(); enemy != end; ++enemy) {
       GfObjSetupEnemy *setup = GfObjUtil::getObjSetup<GfObjSetupEnemy>(*enemy);
-      if (0.0f < unknown48.unknown00 && 0.0f < unknown48.unknown04 && !unknown48.isMatch(setup->unknown20)) {
+      if (0.0f < m_distHvCond.unknown00 && 0.0f < m_distHvCond.unknown04 && !m_distHvCond.isMatch(setup->unknown20)) {
         unknowna0.erase(enemy);
         SCOM_DESTROY_GAME_OBJ::create(*enemy, 0.5f, 0);
         return;
+      }
+    }
+  }
+}
+
+void GfRelSmnEnemy::validatePopPos() {
+  if (unknowna0.size() != 0) {
+    for (GF_OBJ_HANDLE **enemy = unknowna0.begin(), **end = unknowna0.end(); enemy != end; ++enemy) {
+      GF_OBJ_HANDLE *enemyHandle = *enemy;
+      if (!GfGameObj::isValidGameObj(enemyHandle, true, nullptr) || GfGameUtil::isGameObjWait(enemyHandle)) {
+        return;
+      }
+    }
+  }
+  if (unknown78.size() != 0) {
+    // The game draws the random index before begin() checks its buffer (mtRandf2 call, then the assert).
+    size_t index = static_cast<size_t>(unknown78.size() * ml::mtRandf2());
+    std::pair<PopInfo *, GF_OBJ_HANDLE *> *wait = unknown78.begin() + index;
+    bool isCenter = wait->first->unknown10.unknown003();
+    GF_OBJ_HANDLE *handle = wait->second;
+    GfObjAcc acc(handle);
+    GfObj *obj = acc.getObj();
+    if (obj == nullptr) {
+      return;
+    }
+    GfComBehaviorEnemy *behavior = obj->getComponent<GfComBehaviorEnemy>();
+    if (behavior == nullptr) {
+      return;
+    }
+    GfObjSetupEnemy *setup = GfObjUtil::getObjSetup<GfObjSetupEnemy>(handle);
+    if (behavior->validatePopPos(setup->unknown20, setup->unknown30, false, isCenter)) {
+      unknown78.erase(wait);
+      unknowna0.push_back(handle);
+      behavior->onPopped();
+      GfGameUtil::setGameObjWait(handle, false);
+    } else {
+      mm::Vec3 position;
+      if (getPopPos(position, *wait->first)) {
+        fw::Transform transform;
+        transform.unknown00 = position;
+        mm::unknown005(transform.unknown10, setup->unknown30);
+        setup->setInitialTransform(transform);
       }
     }
   }
@@ -179,7 +224,7 @@ void GfSmnEnemyManager::clearSmnEnemies() {
     }
     for (GF_OBJ_HANDLE *handle : *GfGameObj::getList(OBJECT_TYPE_ENEMY)) {
       gmk::AGmkBase *gmk = gmk::getBindedGmkInst(handle);
-      if (gmk != nullptr && gmk->getGmkType() == gmk::GMK_TYPE_ENEMY && static_cast<gmk::GmkEnemy *>(gmk)->unknown48.unknown38.unknown03) {
+      if (gmk != nullptr && gmk->getGmkType() == gmk::GMK_TYPE_ENEMY && static_cast<gmk::GmkEnemy *>(gmk)->m_gmkEnemyInsts.m_bdatInfo.unknown03) {
         GfObjUtil::destroy(handle);
       }
     }
@@ -204,7 +249,7 @@ void GfSmnEnemyManager::update(f32 deltaTime) {
     for (GfRelSmnEnemy **enemy = get()->unknown08.begin(); enemy != get()->unknown08.end(); ++enemy) {
       GfRelSmnEnemy *smnEnemy = *enemy;
       smnEnemy->update(deltaTime);
-      if (smnEnemy->unknown10.unknown00 != unknown020 && smnEnemy->unknown10.unknown08 > 0) {
+      if (smnEnemy->m_createInfo.m_GF_OBJ_HANDLE != unknown020 && smnEnemy->m_createInfo.unknown08 > 0) {
         continue;
       }
       delete smnEnemy;
@@ -222,17 +267,17 @@ struct unknown004 {
       return;
     }
     const gmk::GmkEnemy &enemy = static_cast<const gmk::GmkEnemy &>(gmk);
-    if (!enemy.unknown48.unknown38.unknown03) {
+    if (!enemy.m_gmkEnemyInsts.m_bdatInfo.unknown03) {
       return;
     }
-    mm::Vec3 distance = unknown00 - enemy.unknown08.unknown08->unknown00;
+    mm::Vec3 distance = unknown00 - enemy.m_createBaseInfo.m_xform->unknown00;
     if (unknown08 < distance.x * distance.x + distance.y * distance.y + distance.z * distance.z) {
       return;
     }
-    if (enemy.unknown48.unknown38.isPopCondMatchedOfSmn()) {
+    if (enemy.m_gmkEnemyInsts.m_bdatInfo.isPopCondMatchedOfSmn()) {
       gmk::ForcePopEnemyInfo info;
       info.unknown00 = unknown0c;
-      enemy.unknown48.reqForcePopGobInst(info);
+      enemy.m_gmkEnemyInsts.reqForcePopGobInst(info);
     }
   }
 
@@ -244,7 +289,7 @@ struct unknown004 {
 } // namespace
 
 bool GfSmnEnemyManager::execAbsSummon(const AbsSmnInfo &info) {
-  GfObj *owner = GfObjUtil::getObj(info.unknown00);
+  GfObj *owner = GfObjUtil::getObj(info.m_GF_OBJ_HANDLE);
   if (owner == nullptr) {
     return false;
   }
@@ -263,7 +308,7 @@ bool GfSmnEnemyManager::execAbsSummon(const AbsSmnInfo &info) {
       // Decision 2026-11-14 #12: the game keeps the accessor's data in a local across the destructor of paramAcc (csel w24, wzr, w28, eq then cbnz w24); testing it in the `if` duplicates the
       // destructor call (206 instructions instead of 207).
       const SDataEnemy *data = paramAcc.getSDataEnemy();
-      if (data->unknown99 != info.unknown0c) {
+      if (data->m_genus != info.unknown0c) {
         continue;
       }
     }
@@ -289,7 +334,7 @@ bool GfSmnEnemyManager::execAbsSummon(const AbsSmnInfo &info) {
 bool GfSmnEnemyManager::execRelSummon(const RelSmnInfo &info) {
   if (get()->unknown08.capacity() > get()->unknown08.size()) {
     GfRelSmnEnemy::CreateInfo createInfo;
-    createInfo.unknown00 = info.unknown00;
+    createInfo.m_GF_OBJ_HANDLE = info.m_GF_OBJ_HANDLE;
     createInfo.unknown08 = info.unknown08;
     GfRelSmnEnemy *enemy = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfRelSmnEnemy(&createInfo);
     get()->unknown08.push_back(enemy);

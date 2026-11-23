@@ -13,15 +13,18 @@ namespace gf {
 class GfMenuObjDamageBuff : public GfMenuObject {
 public:
   // Queued by GfMenuManyObjects; the game gives it its own vtable, inheriting the dispose of the base.
-  struct DamageInfo : GfMenuManyObjects::InfoType {};
+  struct DamageInfo : GfMenuManyObjects::InfoType {
+    DamageInfo() {}
+    DamageInfo(u32 handle) : InfoType(handle) {}
+  };
 
   class ListListener : public ui::UIObjectListener {
   public:
-    ListListener(GfMenuObjDamageBuff *owner) : _0c(), unknown20(owner) {}
+    ListListener(GfMenuObjDamageBuff *owner) : _0c(), m_menuObjDamageBuff(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
-    GfMenuObjDamageBuff *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjDamageBuff *m_menuObjDamageBuff; // Inferred role: owner; original member name unknown.
   };
 
   GfMenuObjDamageBuff(u32 handle);
@@ -66,7 +69,7 @@ static_assert(offsetof(GfMenuObjDamageBuff::OpenParam, unknown20) == 0x20, "");
 static_assert(sizeof(GfMenuObjDamageBuff::OpenParam) == 0x30, "");
 static_assert(offsetof(GfMenuObjDamageBuff::OpenUniteParam, unknown10) == 0x10, "");
 static_assert(sizeof(GfMenuObjDamageBuff::OpenUniteParam) == 0x20, "");
-static_assert(offsetof(GfMenuObjDamageBuff::ListListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjDamageBuff::ListListener, m_menuObjDamageBuff) == 0x20, "");
 static_assert(sizeof(GfMenuObjDamageBuff::ListListener) == 0x28, "");
 
 } // namespace gf

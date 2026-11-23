@@ -14,12 +14,41 @@ void IDColiGrandMesh::calNomParm(mm::Vec3 &normal, const IDCmfNormalData *data) 
   normal.z = data->unknown04 * 6.1035156e-05f;
 }
 
+bool IDColiGrandMesh::meshAaBb(u32 index) {
+  const IDCmfPoliData *poli = &m_wrkIDCmfWork->m_iDCmfPoliData[index];
+  // The table pointer is read before the material index (0x71008e2544 before 0x71008e2548); without the local the index comes first.
+  const unknown097 *materials = m_wrkIDCmfWork->unknown40;
+  if (materials[poli->unknown0a].unknown04 & m_iDColiResult->unknowne8) {
+    return false;
+  }
+  const mm::Vec3 *vertices = m_wrkIDCmfWork->unknown18[poli->unknown05];
+  // The count is read once (ldrb w23, 0x71008e2584) and bounds the loop; with `poli->unknown04` in the condition the call reloads it.
+  u8 count = poli->unknown04;
+  const u16 *indices = reinterpret_cast<const u16 *>(m_wrkIDCmfWork->unknown00 + poli->unknown00) + count;
+  const mm::Vec3 &center = vertices[indices[0]];
+  bool isHit = false;
+  for (int i = 0; i < count; i++) {
+    if (!IDColiUtilMath::isTriangleBoxHitCheck(m_iDColiInput->unknown00, m_iDColiInput->unknown10, center, vertices[indices[1 + i]], vertices[indices[2 + i]])) {
+      continue;
+    }
+    // `unknown30 == nullptr` compares the pointer and the adjustment separately (cset, orr); the game tests `(adj & 1) | ptr` once (0x71008e2770).
+    if (!unknown30) {
+      return m_iDColiResult->unknown001();
+    }
+    stockAaBbParm(center);
+    isHit = true;
+    stockAaBbParm(vertices[indices[1 + i]]);
+    stockAaBbParm(vertices[indices[2 + i]]);
+  }
+  return isHit;
+}
+
 void IDColiGrandMesh::stockAaBbParm(const mm::Vec3 &point) {
-  mm::Vec3 &max = unknown08->unknown50.unknown00;
+  mm::Vec3 &max = m_iDColiResult->unknown50.unknown00;
   max.x = max.x > point.x ? max.x : point.x;
   max.y = max.y > point.y ? max.y : point.y;
   max.z = max.z > point.z ? max.z : point.z;
-  mm::Vec3 &min = unknown08->unknown50.unknown10;
+  mm::Vec3 &min = m_iDColiResult->unknown50.unknown10;
   min.x = min.x < point.x ? min.x : point.x;
   min.y = min.y < point.y ? min.y : point.y;
   min.z = min.z < point.z ? min.z : point.z;
@@ -27,39 +56,39 @@ void IDColiGrandMesh::stockAaBbParm(const mm::Vec3 &point) {
 
 bool IDColiGrandMesh::lenghtLine(f32 value) { return 0.0f <= value && value <= 1.0f; }
 
-bool IDColiGrandMesh::lenghtRay(f32 value) { return unknown10->unknown94 <= value && value <= unknown10->unknown90; }
+bool IDColiGrandMesh::lenghtRay(f32 value) { return m_iDColiInput->unknown94 <= value && value <= m_iDColiInput->unknown90; }
 
-bool IDColiGrandMesh::lenghtSphere(f32 value) { return fabsf(value) <= unknown10->unknown90; }
+bool IDColiGrandMesh::lenghtSphere(f32 value) { return fabsf(value) <= m_iDColiInput->unknown90; }
 
-bool IDColiGrandMesh::lenghtWallSphere(f32 value) { return 0.0f <= value && value < unknown10->unknown90; }
+bool IDColiGrandMesh::lenghtWallSphere(f32 value) { return 0.0f <= value && value < m_iDColiInput->unknown90; }
 
 void IDColiGrandMesh::stockNear(IDColiCallArg &arg, const IDCmfPoliData *poli, f32 distance) {
-  if (distance < unknown08->unknown90) {
+  if (distance < m_iDColiResult->unknown90) {
     unknown016(arg, poli, distance);
   }
 }
 
 void IDColiGrandMesh::stockSecNear(IDColiCallArg &arg, const IDCmfPoliData *poli, f32 distance) {
   if (distance < 0.0f) {
-    if (unknown08->unknowna0 <= distance) {
-      unknown08->unknown50.unknown00 = arg.unknown00;
-      unknown08->unknown50.unknown10 = arg.unknown10;
-      unknown08->unknowna0 = distance;
-      unknown08->unknown50.unknown30 = arg.unknown30;
-      unknown08->unknownb1 = true;
-      unknown08->unknowna8 = unknown08->unknownf0;
-      (this->*unknown70)(unknown08->unknown50, poli);
+    if (m_iDColiResult->unknowna0 <= distance) {
+      m_iDColiResult->unknown50.unknown00 = arg.unknown00;
+      m_iDColiResult->unknown50.unknown10 = arg.unknown10;
+      m_iDColiResult->unknowna0 = distance;
+      m_iDColiResult->unknown50.unknown30 = arg.unknown30;
+      m_iDColiResult->unknownb1 = true;
+      m_iDColiResult->unknowna8 = m_iDColiResult->unknownf0;
+      (this->*unknown70)(m_iDColiResult->unknown50, poli);
     }
-  } else if (distance < unknown08->unknown90) {
+  } else if (distance < m_iDColiResult->unknown90) {
     unknown016(arg, poli, distance);
   }
 }
 
 // Inferred role: distance scaled by the matrix of the moved instance; original name unknown.
 inline f32 IDColiGrandMesh::unknown090(f32 distance) const {
-  f32 scaleX = unknown18->unknown00[0][0] + unknown18->unknown00[0][1] + unknown18->unknown00[0][2];
-  f32 scaleY = unknown18->unknown00[1][0] + unknown18->unknown00[1][1] + unknown18->unknown00[1][2];
-  f32 scaleZ = unknown18->unknown00[2][0] + unknown18->unknown00[2][1] + unknown18->unknown00[2][2];
+  f32 scaleX = m_iDCmfPosData->unknown00[0][0] + m_iDCmfPosData->unknown00[0][1] + m_iDCmfPosData->unknown00[0][2];
+  f32 scaleY = m_iDCmfPosData->unknown00[1][0] + m_iDCmfPosData->unknown00[1][1] + m_iDCmfPosData->unknown00[1][2];
+  f32 scaleZ = m_iDCmfPosData->unknown00[2][0] + m_iDCmfPosData->unknown00[2][1] + m_iDCmfPosData->unknown00[2][2];
   f32 scale = sqrtf(scaleX * scaleX + scaleY * scaleY + scaleZ * scaleZ);
   f32 scaledDistance = scale * 0.57735056f;
   scaledDistance *= distance;
@@ -81,28 +110,28 @@ inline void unknown092(mm::Vec3 &vector) {
 
 // Inferred role: stores the position and the normal of a hit of a moved instance in world space as the front hit; original name unknown.
 inline void IDColiGrandMesh::unknown091(const IDColiCallArg &arg) {
-  unknown08->unknown10.unknown00.x = arg.unknown00.x * unknown18->unknown00[0][0] + arg.unknown00.y * unknown18->unknown00[0][1] + arg.unknown00.z * unknown18->unknown00[0][2];
-  unknown08->unknown10.unknown00.y = arg.unknown00.x * unknown18->unknown00[1][0] + arg.unknown00.y * unknown18->unknown00[1][1] + arg.unknown00.z * unknown18->unknown00[1][2];
-  unknown08->unknown10.unknown00.z = arg.unknown00.x * unknown18->unknown00[2][0] + arg.unknown00.y * unknown18->unknown00[2][1] + arg.unknown00.z * unknown18->unknown00[2][2];
-  const IDCmfPosData *posData = unknown18;
-  mm::Vec3 &position = unknown08->unknown10.unknown00;
+  m_iDColiResult->unknown10.unknown00.x = arg.unknown00.x * m_iDCmfPosData->unknown00[0][0] + arg.unknown00.y * m_iDCmfPosData->unknown00[0][1] + arg.unknown00.z * m_iDCmfPosData->unknown00[0][2];
+  m_iDColiResult->unknown10.unknown00.y = arg.unknown00.x * m_iDCmfPosData->unknown00[1][0] + arg.unknown00.y * m_iDCmfPosData->unknown00[1][1] + arg.unknown00.z * m_iDCmfPosData->unknown00[1][2];
+  m_iDColiResult->unknown10.unknown00.z = arg.unknown00.x * m_iDCmfPosData->unknown00[2][0] + arg.unknown00.y * m_iDCmfPosData->unknown00[2][1] + arg.unknown00.z * m_iDCmfPosData->unknown00[2][2];
+  const IDCmfPosData *posData = m_iDCmfPosData;
+  mm::Vec3 &position = m_iDColiResult->unknown10.unknown00;
   f32 tx = posData->unknown00[0][3];
   f32 ty = posData->unknown00[1][3];
   f32 tz = posData->unknown00[2][3];
   position.x = tx + position.x;
   position.y = ty + position.y;
   position.z = tz + position.z;
-  unknown08->unknown10.unknown10.x = arg.unknown10.x * unknown18->unknown00[0][0] + arg.unknown10.y * unknown18->unknown00[0][1] + arg.unknown10.z * unknown18->unknown00[0][2];
-  unknown08->unknown10.unknown10.y = arg.unknown10.x * unknown18->unknown00[1][0] + arg.unknown10.y * unknown18->unknown00[1][1] + arg.unknown10.z * unknown18->unknown00[1][2];
-  unknown08->unknown10.unknown10.z = arg.unknown10.x * unknown18->unknown00[2][0] + arg.unknown10.y * unknown18->unknown00[2][1] + arg.unknown10.z * unknown18->unknown00[2][2];
+  m_iDColiResult->unknown10.unknown10.x = arg.unknown10.x * m_iDCmfPosData->unknown00[0][0] + arg.unknown10.y * m_iDCmfPosData->unknown00[0][1] + arg.unknown10.z * m_iDCmfPosData->unknown00[0][2];
+  m_iDColiResult->unknown10.unknown10.y = arg.unknown10.x * m_iDCmfPosData->unknown00[1][0] + arg.unknown10.y * m_iDCmfPosData->unknown00[1][1] + arg.unknown10.z * m_iDCmfPosData->unknown00[1][2];
+  m_iDColiResult->unknown10.unknown10.z = arg.unknown10.x * m_iDCmfPosData->unknown00[2][0] + arg.unknown10.y * m_iDCmfPosData->unknown00[2][1] + arg.unknown10.z * m_iDCmfPosData->unknown00[2][2];
 }
 
 void IDColiGrandMesh::stockInstNear(IDColiCallArg &arg, const IDCmfPoliData *poli, f32 distance) {
   f32 scaledDistance = unknown090(distance);
-  if (unknown08->unknown90 > scaledDistance) {
-    unknown08->unknown90 = scaledDistance;
+  if (m_iDColiResult->unknown90 > scaledDistance) {
+    m_iDColiResult->unknown90 = scaledDistance;
     unknown091(arg);
-    unknown092(unknown08->unknown10.unknown10);
+    unknown092(m_iDColiResult->unknown10.unknown10);
     unknown015(arg, poli);
   }
 }
@@ -110,110 +139,113 @@ void IDColiGrandMesh::stockInstNear(IDColiCallArg &arg, const IDCmfPoliData *pol
 void IDColiGrandMesh::stockInstSecNear(IDColiCallArg &arg, const IDCmfPoliData *poli, f32 distance) {
   f32 scaledDistance = unknown090(distance);
   if (scaledDistance < 0.0f) {
-    if (unknown08->unknowna0 <= scaledDistance) {
-      unknown08->unknowna0 = scaledDistance;
-      unknown08->unknown50.unknown00.x = arg.unknown00.x * unknown18->unknown00[0][0] + arg.unknown00.y * unknown18->unknown00[0][1] + arg.unknown00.z * unknown18->unknown00[0][2];
-      unknown08->unknown50.unknown00.y = arg.unknown00.x * unknown18->unknown00[1][0] + arg.unknown00.y * unknown18->unknown00[1][1] + arg.unknown00.z * unknown18->unknown00[1][2];
-      unknown08->unknown50.unknown00.z = arg.unknown00.x * unknown18->unknown00[2][0] + arg.unknown00.y * unknown18->unknown00[2][1] + arg.unknown00.z * unknown18->unknown00[2][2];
-      const IDCmfPosData *posData = unknown18;
-      mm::Vec3 &position = unknown08->unknown50.unknown00;
+    if (m_iDColiResult->unknowna0 <= scaledDistance) {
+      m_iDColiResult->unknowna0 = scaledDistance;
+      m_iDColiResult->unknown50.unknown00.x = arg.unknown00.x * m_iDCmfPosData->unknown00[0][0] + arg.unknown00.y * m_iDCmfPosData->unknown00[0][1] + arg.unknown00.z * m_iDCmfPosData->unknown00[0][2];
+      m_iDColiResult->unknown50.unknown00.y = arg.unknown00.x * m_iDCmfPosData->unknown00[1][0] + arg.unknown00.y * m_iDCmfPosData->unknown00[1][1] + arg.unknown00.z * m_iDCmfPosData->unknown00[1][2];
+      m_iDColiResult->unknown50.unknown00.z = arg.unknown00.x * m_iDCmfPosData->unknown00[2][0] + arg.unknown00.y * m_iDCmfPosData->unknown00[2][1] + arg.unknown00.z * m_iDCmfPosData->unknown00[2][2];
+      const IDCmfPosData *posData = m_iDCmfPosData;
+      mm::Vec3 &position = m_iDColiResult->unknown50.unknown00;
       f32 tx = posData->unknown00[0][3];
       f32 ty = posData->unknown00[1][3];
       f32 tz = posData->unknown00[2][3];
       position.x = tx + position.x;
       position.y = ty + position.y;
       position.z = tz + position.z;
-      unknown08->unknown50.unknown10.x = arg.unknown10.x * unknown18->unknown00[0][0] + arg.unknown10.y * unknown18->unknown00[0][1] + arg.unknown10.z * unknown18->unknown00[0][2];
-      unknown08->unknown50.unknown10.y = arg.unknown10.x * unknown18->unknown00[1][0] + arg.unknown10.y * unknown18->unknown00[1][1] + arg.unknown10.z * unknown18->unknown00[1][2];
-      unknown08->unknown50.unknown10.z = arg.unknown10.x * unknown18->unknown00[2][0] + arg.unknown10.y * unknown18->unknown00[2][1] + arg.unknown10.z * unknown18->unknown00[2][2];
-      unknown092(unknown08->unknown50.unknown10);
+      m_iDColiResult->unknown50.unknown10.x = arg.unknown10.x * m_iDCmfPosData->unknown00[0][0] + arg.unknown10.y * m_iDCmfPosData->unknown00[0][1] + arg.unknown10.z * m_iDCmfPosData->unknown00[0][2];
+      m_iDColiResult->unknown50.unknown10.y = arg.unknown10.x * m_iDCmfPosData->unknown00[1][0] + arg.unknown10.y * m_iDCmfPosData->unknown00[1][1] + arg.unknown10.z * m_iDCmfPosData->unknown00[1][2];
+      m_iDColiResult->unknown50.unknown10.z = arg.unknown10.x * m_iDCmfPosData->unknown00[2][0] + arg.unknown10.y * m_iDCmfPosData->unknown00[2][1] + arg.unknown10.z * m_iDCmfPosData->unknown00[2][2];
+      unknown092(m_iDColiResult->unknown50.unknown10);
       unknown012(arg, poli);
     }
-  } else if (unknown08->unknown90 > scaledDistance) {
-    unknown08->unknown90 = scaledDistance;
+  } else if (m_iDColiResult->unknown90 > scaledDistance) {
+    m_iDColiResult->unknown90 = scaledDistance;
     unknown091(arg);
-    unknown092(unknown08->unknown10.unknown10);
+    unknown092(m_iDColiResult->unknown10.unknown10);
     unknown015(arg, poli);
   }
 }
 
 void IDColiGrandMesh::stockTbl(IDColiCallArg &arg, const IDCmfPoliData *poli, f32 distance) {
   (this->*unknown70)(arg, poli);
-  if (unknown08->unknowne4 > unknown08->unknowne0) {
-    if (unknown08->unknownb8 != nullptr) {
-      unknown08->unknownb8[unknown08->unknowne0] = arg.unknown00;
+  if (m_iDColiResult->unknowne4 > m_iDColiResult->unknowne0) {
+    if (m_iDColiResult->unknownb8 != nullptr) {
+      m_iDColiResult->unknownb8[m_iDColiResult->unknowne0] = arg.unknown00;
     }
-    if (unknown08->unknownc0 != nullptr) {
-      unknown08->unknownc0[unknown08->unknowne0] = arg.unknown10;
+    if (m_iDColiResult->unknownc0 != nullptr) {
+      m_iDColiResult->unknownc0[m_iDColiResult->unknowne0] = arg.unknown10;
     }
-    if (unknown08->unknownc8 != nullptr) {
-      unknown08->unknownc8[unknown08->unknowne0] = arg.unknown20;
+    if (m_iDColiResult->unknownc8 != nullptr) {
+      m_iDColiResult->unknownc8[m_iDColiResult->unknowne0] = arg.unknown20;
     }
-    if (unknown08->unknownd0 != nullptr) {
-      unknown08->unknownd0[unknown08->unknowne0] = arg.unknown30;
+    if (m_iDColiResult->unknownd0 != nullptr) {
+      m_iDColiResult->unknownd0[m_iDColiResult->unknowne0] = arg.unknown30;
     }
-    unknown08->unknownb0 = true;
-    unknown08->unknowne0++;
+    m_iDColiResult->unknownb0 = true;
+    m_iDColiResult->unknowne0++;
   }
-  if (unknown08->unknown100 != nullptr) {
-    unknown08->unknown100->coli_param_callback(unknown08->unknownf0, arg);
+  if (m_iDColiResult->m_iDColiCallBack != nullptr) {
+    m_iDColiResult->m_iDColiCallBack->coli_param_callback(m_iDColiResult->unknownf0, arg);
   }
 }
 
 void IDColiGrandMesh::stockInstTbl(IDColiCallArg &arg, const IDCmfPoliData *poli, f32 distance) {
-  if (unknown08->unknown100 != nullptr) {
+  if (m_iDColiResult->m_iDColiCallBack != nullptr) {
     unknown091(arg);
-    unknown08->unknown10.unknown30 = arg.unknown30;
-    unknown092(unknown08->unknown10.unknown10);
-    (this->*unknown70)(unknown08->unknown10, poli);
-    unknown08->unknown100->coli_param_callback(unknown08->unknownf0, unknown08->unknown10);
-    if (unknown08->unknowne4 > unknown08->unknowne0) {
-      if (unknown08->unknownb8 != nullptr) {
-        unknown08->unknownb8[unknown08->unknowne0] = unknown08->unknown10.unknown00;
+    m_iDColiResult->unknown10.unknown30 = arg.unknown30;
+    unknown092(m_iDColiResult->unknown10.unknown10);
+    (this->*unknown70)(m_iDColiResult->unknown10, poli);
+    m_iDColiResult->m_iDColiCallBack->coli_param_callback(m_iDColiResult->unknownf0, m_iDColiResult->unknown10);
+    if (m_iDColiResult->unknowne4 > m_iDColiResult->unknowne0) {
+      if (m_iDColiResult->unknownb8 != nullptr) {
+        m_iDColiResult->unknownb8[m_iDColiResult->unknowne0] = m_iDColiResult->unknown10.unknown00;
       }
-      if (unknown08->unknownc0 != nullptr) {
-        unknown08->unknownc0[unknown08->unknowne0] = unknown08->unknown10.unknown10;
+      if (m_iDColiResult->unknownc0 != nullptr) {
+        m_iDColiResult->unknownc0[m_iDColiResult->unknowne0] = m_iDColiResult->unknown10.unknown10;
       }
-      if (unknown08->unknownc8 != nullptr) {
-        unknown08->unknownc8[unknown08->unknowne0] = unknown08->unknown10.unknown20;
+      if (m_iDColiResult->unknownc8 != nullptr) {
+        m_iDColiResult->unknownc8[m_iDColiResult->unknowne0] = m_iDColiResult->unknown10.unknown20;
       }
-      if (unknown08->unknownd0 != nullptr) {
-        unknown08->unknownd0[unknown08->unknowne0] = unknown08->unknown10.unknown30;
+      if (m_iDColiResult->unknownd0 != nullptr) {
+        m_iDColiResult->unknownd0[m_iDColiResult->unknowne0] = m_iDColiResult->unknown10.unknown30;
       }
-      unknown08->unknownb0 = true;
-      unknown08->unknowne0++;
+      m_iDColiResult->unknownb0 = true;
+      m_iDColiResult->unknowne0++;
     }
-  } else if (unknown08->unknowne4 > unknown08->unknowne0) {
-    if (unknown08->unknownb8 != nullptr) {
-      mm::Vec3 position(arg.unknown00.x * unknown18->unknown00[0][0] + arg.unknown00.y * unknown18->unknown00[0][1] + arg.unknown00.z * unknown18->unknown00[0][2],
-                        arg.unknown00.x * unknown18->unknown00[1][0] + arg.unknown00.y * unknown18->unknown00[1][1] + arg.unknown00.z * unknown18->unknown00[1][2],
-                        arg.unknown00.x * unknown18->unknown00[2][0] + arg.unknown00.y * unknown18->unknown00[2][1] + arg.unknown00.z * unknown18->unknown00[2][2]);
-      unknown08->unknownb8[unknown08->unknowne0] = position + mm::Vec3(unknown18->unknown00[0][3], unknown18->unknown00[1][3], unknown18->unknown00[2][3]);
+  } else if (m_iDColiResult->unknowne4 > m_iDColiResult->unknowne0) {
+    if (m_iDColiResult->unknownb8 != nullptr) {
+      mm::Vec3 position(arg.unknown00.x * m_iDCmfPosData->unknown00[0][0] + arg.unknown00.y * m_iDCmfPosData->unknown00[0][1] + arg.unknown00.z * m_iDCmfPosData->unknown00[0][2],
+                        arg.unknown00.x * m_iDCmfPosData->unknown00[1][0] + arg.unknown00.y * m_iDCmfPosData->unknown00[1][1] + arg.unknown00.z * m_iDCmfPosData->unknown00[1][2],
+                        arg.unknown00.x * m_iDCmfPosData->unknown00[2][0] + arg.unknown00.y * m_iDCmfPosData->unknown00[2][1] + arg.unknown00.z * m_iDCmfPosData->unknown00[2][2]);
+      m_iDColiResult->unknownb8[m_iDColiResult->unknowne0] = position + mm::Vec3(m_iDCmfPosData->unknown00[0][3], m_iDCmfPosData->unknown00[1][3], m_iDCmfPosData->unknown00[2][3]);
     }
-    if (unknown08->unknownc0 != nullptr) {
-      unknown08->unknownc0[unknown08->unknowne0].x = arg.unknown10.x * unknown18->unknown00[0][0] + arg.unknown10.y * unknown18->unknown00[0][1] + arg.unknown10.z * unknown18->unknown00[0][2];
-      unknown08->unknownc0[unknown08->unknowne0].y = arg.unknown10.x * unknown18->unknown00[1][0] + arg.unknown10.y * unknown18->unknown00[1][1] + arg.unknown10.z * unknown18->unknown00[1][2];
-      unknown08->unknownc0[unknown08->unknowne0].z = arg.unknown10.x * unknown18->unknown00[2][0] + arg.unknown10.y * unknown18->unknown00[2][1] + arg.unknown10.z * unknown18->unknown00[2][2];
-      unknown092(unknown08->unknownc0[unknown08->unknowne0]);
+    if (m_iDColiResult->unknownc0 != nullptr) {
+      m_iDColiResult->unknownc0[m_iDColiResult->unknowne0].x =
+          arg.unknown10.x * m_iDCmfPosData->unknown00[0][0] + arg.unknown10.y * m_iDCmfPosData->unknown00[0][1] + arg.unknown10.z * m_iDCmfPosData->unknown00[0][2];
+      m_iDColiResult->unknownc0[m_iDColiResult->unknowne0].y =
+          arg.unknown10.x * m_iDCmfPosData->unknown00[1][0] + arg.unknown10.y * m_iDCmfPosData->unknown00[1][1] + arg.unknown10.z * m_iDCmfPosData->unknown00[1][2];
+      m_iDColiResult->unknownc0[m_iDColiResult->unknowne0].z =
+          arg.unknown10.x * m_iDCmfPosData->unknown00[2][0] + arg.unknown10.y * m_iDCmfPosData->unknown00[2][1] + arg.unknown10.z * m_iDCmfPosData->unknown00[2][2];
+      unknown092(m_iDColiResult->unknownc0[m_iDColiResult->unknowne0]);
     }
-    if (unknown08->unknownc8 != nullptr) {
+    if (m_iDColiResult->unknownc8 != nullptr) {
       (this->*unknown70)(arg, poli);
-      unknown08->unknownc8[unknown08->unknowne0] = arg.unknown20;
+      m_iDColiResult->unknownc8[m_iDColiResult->unknowne0] = arg.unknown20;
     }
-    if (unknown08->unknownd0 != nullptr) {
-      unknown08->unknownd0[unknown08->unknowne0] = arg.unknown30;
+    if (m_iDColiResult->unknownd0 != nullptr) {
+      m_iDColiResult->unknownd0[m_iDColiResult->unknowne0] = arg.unknown30;
     }
     (this->*unknown70)(arg, poli);
-    unknown08->unknownb0 = true;
-    unknown08->unknowne0++;
+    m_iDColiResult->unknownb0 = true;
+    m_iDColiResult->unknowne0++;
   }
 }
 
 void IDColiGrandMesh::vecotrDef(IDColiCallArg &arg, const IDCmfPoliData *poli) {
   const f32 *vector = &mm::Vec3::zero.x;
   if (arg.unknown30->unknown08 & 0x80) {
-    const u16 *index = reinterpret_cast<const u16 *>(unknown00->unknown00 + poli->unknown00) + poli->unknown04 * 2 + 2;
-    vector = &unknown00->unknown28[poli->unknown05][*index].unknown00;
+    const u16 *index = reinterpret_cast<const u16 *>(m_wrkIDCmfWork->unknown00 + poli->unknown00) + poli->unknown04 * 2 + 2;
+    vector = &m_wrkIDCmfWork->unknown28[poli->unknown05][*index].unknown00;
     arg.unknown20.x = vector[0];
     arg.unknown20.y = vector[1];
   } else {
@@ -231,11 +263,11 @@ void IDColiGrandMesh::vecotrInst(IDColiCallArg &arg, const IDCmfPoliData *poli) 
     return;
   }
 
-  const u16 *index = reinterpret_cast<const u16 *>(unknown00->unknown00 + poli->unknown00) + poli->unknown04 * 2 + 2;
-  unknown014 vector = unknown00->unknown28[poli->unknown05][*index];
-  arg.unknown20.x = vector.unknown00 * unknown18->unknown00[0][0] + vector.unknown04 * unknown18->unknown00[0][1] + vector.unknown08 * unknown18->unknown00[0][2];
-  arg.unknown20.y = vector.unknown00 * unknown18->unknown00[1][0] + vector.unknown04 * unknown18->unknown00[1][1] + vector.unknown08 * unknown18->unknown00[1][2];
-  arg.unknown20.z = vector.unknown00 * unknown18->unknown00[2][0] + vector.unknown04 * unknown18->unknown00[2][1] + vector.unknown08 * unknown18->unknown00[2][2];
+  const u16 *index = reinterpret_cast<const u16 *>(m_wrkIDCmfWork->unknown00 + poli->unknown00) + poli->unknown04 * 2 + 2;
+  unknown014 vector = m_wrkIDCmfWork->unknown28[poli->unknown05][*index];
+  arg.unknown20.x = vector.unknown00 * m_iDCmfPosData->unknown00[0][0] + vector.unknown04 * m_iDCmfPosData->unknown00[0][1] + vector.unknown08 * m_iDCmfPosData->unknown00[0][2];
+  arg.unknown20.y = vector.unknown00 * m_iDCmfPosData->unknown00[1][0] + vector.unknown04 * m_iDCmfPosData->unknown00[1][1] + vector.unknown08 * m_iDCmfPosData->unknown00[1][2];
+  arg.unknown20.z = vector.unknown00 * m_iDCmfPosData->unknown00[2][0] + vector.unknown04 * m_iDCmfPosData->unknown00[2][1] + vector.unknown08 * m_iDCmfPosData->unknown00[2][2];
 }
 
 } // namespace idcoli

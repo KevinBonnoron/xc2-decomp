@@ -135,7 +135,7 @@ void GfMenuObjSort::MainListener::reciveEvent(const ui::EventData &event, u32 ha
     u32 index = event.unknown08;
     if (index != 0xffffffff) {
       u32 previous = event.unknown0c;
-      unknown20->refreshItem(index, unknown0c);
+      m_menuObjSort->refreshItem(index, unknown0c);
       if (previous != 0xffffffff && index != previous) {
         GfMenuObjUtil::playSECommonCursor();
       }
@@ -170,7 +170,7 @@ void GfMenuObjSort::MainListener::reciveEvent(const ui::EventData &event, u32 ha
       // The game calls getFP here and discards the result.
       GfDataBdat::getFP(BDAT_MNU_SORT_TABLE);
       mm::mtl::FixStr<32> name;
-      for (u32 i = 0; i < unknown20->unknown30; i++) {
+      for (u32 i = 0; i < m_menuObjSort->unknown30; i++) {
         u16 sortID = getSortID(table, i);
         bool isListed = sortID != 0;
         name.format("LAY_list_item@%02d", i + 1);
@@ -210,14 +210,14 @@ void GfMenuObjSort::MainListener::reciveEvent(const ui::EventData &event, u32 ha
     } else {
       GfMenuObject::hookCtrlEvent(acc.unknown10, ctrl);
     }
-    unknown20->unknown24 = object;
-    unknown20->unknown28 = labelObject;
-    unknown20->unknown2c = table & 0xffff;
+    m_menuObjSort->unknown24 = object;
+    m_menuObjSort->unknown28 = labelObject;
+    m_menuObjSort->unknown2c = table & 0xffff;
     unknown0c = count;
     unknown10 = selectedIndex & 0xffff;
     GfMenuObject::resetInputSelection(acc.unknown10);
     GfMenuObject::setupInputSelection(acc.unknown10, unknown10, unknown0c);
-    unknown20->refreshItem(selectedIndex & 0xffff, unknown0c);
+    m_menuObjSort->refreshItem(selectedIndex & 0xffff, unknown0c);
     GfMenuObjOperationInfo::add(handle, 0, 0, 0);
     GfMenuObjUtil::playSECommonSort();
     break;
@@ -236,19 +236,19 @@ void GfMenuObjSort::MainListener::reciveEvent(const ui::EventData &event, u32 ha
     param.unknown04 = 2;
     GfMenuObjUtil::startCtrl(acc.unknown10, param, nullptr);
     GfMenuObject::disableInput(acc.unknown10);
-    unknown20->unknown24 = 0;
-    unknown20->unknown28 = 0;
-    unknown20->unknown2c = 0;
+    m_menuObjSort->unknown24 = 0;
+    m_menuObjSort->unknown28 = 0;
+    m_menuObjSort->unknown2c = 0;
     GfMenuObjOperationInfo::remove(handle, 0, 0, 0);
     break;
   }
   case 8: {
     u32 index = event.unknown08;
     int type = event.unknown0c;
-    ui::UIObjectAcc label(unknown20->unknown28);
+    ui::UIObjectAcc label(m_menuObjSort->unknown28);
     if (type == 1) {
       if (unknown10 != index) {
-        setSortLabelText(getSortID(unknown20->unknown2c, index), label.unknown10);
+        setSortLabelText(getSortID(m_menuObjSort->unknown2c, index), label.unknown10);
       }
       GfMenuObjUtil::playSECommonDecide();
     } else if (type == 2) {
@@ -261,7 +261,7 @@ void GfMenuObjSort::MainListener::reciveEvent(const ui::EventData &event, u32 ha
     selected.unknown08 = index;
     selected.unknown0c = 0;
     selected.unknown00 = 0x148;
-    GfMenuObject::sendEvent(unknown20->unknown24, selected, 0.0f);
+    GfMenuObject::sendEvent(m_menuObjSort->unknown24, selected, 0.0f);
     {
       ui::UIObjectAcc cursor(acc.unknown10, "LAY_cur");
       cursor.setAlpha(0.0f);

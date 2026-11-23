@@ -41,17 +41,17 @@ void GfKizunaringBlade::orderAchievement(u32 blade, u32 line, u32 level) {
     return;
   }
 
-  const AchievQuest &achievQuest = achievement->unknown04[level - 1];
-  if (achievQuest.unknown00.empty()) {
+  const AchievQuest &achievQuest = achievement->m_achievQuest[level - 1];
+  if (achievQuest.m_questID.empty()) {
     return;
   }
 
   if (line == ACHIEVEMENT_UNKNOWN_9) {
-    if (!GfQuestInfo::isQuestFin(achievQuest.unknown00) && !GfQuestInfo::isQuestOrder(achievQuest.unknown00)) {
-      GfQuestManager::openOrder(achievQuest.unknown00, false);
+    if (!GfQuestInfo::isQuestFin(achievQuest.m_questID) && !GfQuestInfo::isQuestOrder(achievQuest.m_questID)) {
+      GfQuestManager::openOrder(achievQuest.m_questID, false);
     }
-  } else if (GfQuestInfo::isQuestNotOrder(achievQuest.unknown00)) {
-    GfQuestManager::openOrder(achievQuest.unknown00, false);
+  } else if (GfQuestInfo::isQuestNotOrder(achievQuest.m_questID)) {
+    GfQuestManager::openOrder(achievQuest.m_questID, false);
   }
 }
 
@@ -61,7 +61,7 @@ void GfKizunaringBlade::releaseAchievement(u32 blade, u32 line, u32 level) {
   }
 
   SDataBladeAchievement *achievement = GfDataBlade::getAchievInfo(blade, line);
-  achievement->unknown04[level - 1].unknown0c |= 1;
+  achievement->m_achievQuest[level - 1].unknown0c |= 1;
   if (GfDataBlade::getAchievReleaseLevel(blade, line) < level) {
     GfGameUtil::setAchievementReleaseLevel(blade, line, level);
     if (line == ACHIEVEMENT_UNKNOWN_9 && GfDataBlade::getTrustRank(blade) < static_cast<int>(level)) {
@@ -79,27 +79,27 @@ void GfKizunaringBlade::releaseAchievement(u32 blade, u32 line, u32 level) {
     }
 
     for (u32 next = level + 1; next <= ACHIEVEMENT_UNKNOWN_5; next++) {
-      AchievQuest &achievQuest = achievement->unknown04[next - 1];
-      if (GfQuestInfo::isQuestOrder(achievQuest.unknown00)) {
+      AchievQuest &achievQuest = achievement->m_achievQuest[next - 1];
+      if (GfQuestInfo::isQuestOrder(achievQuest.m_questID)) {
         s32 count = GfAchievStats::getAchievementTotalCount(achievQuest);
         if (count > 0) {
           achievQuest.setCount(count);
         } else {
-          GfQuestTask::setupOrderTask(achievQuest.unknown00);
+          GfQuestTask::setupOrderTask(achievQuest.m_questID);
         }
         break;
       }
     }
 
     if (level < ACHIEVEMENT_UNKNOWN_5) {
-      const AchievQuest &achievQuest = GfDataBlade::getAchievInfo(blade, line)->unknown04[level];
+      const AchievQuest &achievQuest = GfDataBlade::getAchievInfo(blade, line)->m_achievQuest[level];
       if (achievQuest.isCountComplete()) {
-        GfQuestTask::updateQuestTask(GfDataQuest::getListNextQuestA(achievQuest.unknown00));
+        GfQuestTask::updateQuestTask(GfDataQuest::getListNextQuestA(achievQuest.m_questID));
       }
     }
   }
 
-  GfAchievStats::checkBladeActivate(achievement->unknown04[level - 1].unknown16);
+  GfAchievStats::checkBladeActivate(achievement->m_achievQuest[level - 1].unknown16);
 }
 
 u32 GfKizunaringBlade::getAchievementCategory(u32 blade, u32 line, u32 level) {
@@ -242,9 +242,9 @@ u16 GfKizunaringBlade::getAchievementResultEnhance(u32 blade, u32 line, u32 leve
 
 bool GfKizunaringBlade::isNetabareOK(u32 blade, u32 line, u32 level) {
   SDataBladeAchievement *achievement = GfDataBlade::getAchievInfo(blade, line);
-  AchievQuest *achievQuest = &achievement->unknown04[level - 1];
-  if (!achievQuest->unknown00.empty()) {
-    QuestID nextQuest = GfDataQuest::getListNextQuestA(achievQuest->unknown00);
+  AchievQuest *achievQuest = &achievement->m_achievQuest[level - 1];
+  if (!achievQuest->m_questID.empty()) {
+    QuestID nextQuest = GfDataQuest::getListNextQuestA(achievQuest->m_questID);
     QuestListAcc *questListAcc = QuestListAcc::get();
     QuestTaskParam taskParam(nextQuest, 0, TASK_STATE_UNKNOWN_0);
     u32 condition = questListAcc->getTaskTaskCondition1(taskParam.unknown08);
@@ -276,8 +276,8 @@ bool GfKizunaringBlade::isCompleteLevel(u32 blade, u32 line, u32 level) {
   }
 
   for (u32 index = 1; index < level; index++) {
-    const AchievQuest &achievQuest = achievement->unknown04[index - 1];
-    if (!achievQuest.unknown00.empty() && (achievQuest.unknown0c & 1) == 0 && (GfQuestInfo::isQuestOrder(achievQuest.unknown00) || GfQuestInfo::isQuestNotOrder(achievQuest.unknown00))) {
+    const AchievQuest &achievQuest = achievement->m_achievQuest[index - 1];
+    if (!achievQuest.m_questID.empty() && (achievQuest.unknown0c & 1) == 0 && (GfQuestInfo::isQuestOrder(achievQuest.m_questID) || GfQuestInfo::isQuestNotOrder(achievQuest.m_questID))) {
       return false;
     }
   }
@@ -324,8 +324,8 @@ int GfKizunaringBlade::getSkillLevel(u32 blade, u32 line, u32 level) {
   SDataBladeAchievement *achievement = GfDataBlade::getAchievInfo(blade, line);
   int skillLevel = 0;
   for (u32 index = 1; index <= level; index++) {
-    const AchievQuest &achievQuest = achievement->unknown04[index - 1];
-    if (!achievQuest.unknown00.empty() || (achievQuest.unknown14 == 1 && (achievQuest.unknown0c & 1) != 0)) {
+    const AchievQuest &achievQuest = achievement->m_achievQuest[index - 1];
+    if (!achievQuest.m_questID.empty() || (achievQuest.unknown14 == 1 && (achievQuest.unknown0c & 1) != 0)) {
       skillLevel++;
     }
   }
@@ -334,8 +334,8 @@ int GfKizunaringBlade::getSkillLevel(u32 blade, u32 line, u32 level) {
 }
 
 void GfKizunaringBlade::qevCompleteQuest(const QuestCompleteParam &param) {
-  if (param.unknown04.unknown02 != 0) {
-    AchievQuest *achievQuest = GfDataQuest::getAchievQuest(param.unknown04);
+  if (param.m_questID.unknown02 != 0) {
+    AchievQuest *achievQuest = GfDataQuest::getAchievQuest(param.m_questID);
     if (achievQuest != nullptr) {
       SCOM_POPUP::createAchievement(achievQuest->unknown16, achievQuest->unknown12, achievQuest->unknown14);
     }

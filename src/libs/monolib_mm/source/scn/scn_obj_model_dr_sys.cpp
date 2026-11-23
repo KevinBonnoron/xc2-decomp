@@ -7,7 +7,7 @@
 
 namespace ml {
 
-ScnObjModelDrSys::ScnObjModelDrSys(Scn *scn, const void *data, const char *name) : ScnObjModel(scn, name), unknown3d8(nullptr), m_data(data) { unknown3e0 = unknown08->unknown38->unknown10; }
+ScnObjModelDrSys::ScnObjModelDrSys(Scn *scn, const void *data, const char *name) : ScnObjModel(scn, name), unknown3d8(nullptr), m_data(data) { m_drMan = m_scn->unknown38->m_drMan; }
 
 void ScnObjModelDrSys::update() {}
 
@@ -24,9 +24,9 @@ void ScnObjModelDrSys::apply() {
   }
 }
 
-void ScnObjModelDrSys::setGroups(int groups) { unknown3d8->unknown18 = groups; }
+void ScnObjModelDrSys::setGroups(int groups) { unknown3d8->m_groups = groups; }
 
-int ScnObjModelDrSys::getGroups() { return unknown3d8->unknown18; }
+int ScnObjModelDrSys::getGroups() { return unknown3d8->m_groups; }
 
 void ScnObjModelDrSys::setAlpha(f32 alpha) { unknown3d8->setAlpha(alpha); }
 
@@ -44,8 +44,8 @@ const mm::Vec3 &ScnObjModelDrSys::getAABBMax() const { return unknown3d8->getAAB
 
 const mm::Vec3 &ScnObjModelDrSys::getAABBMin() const { return unknown3d8->getAABBMin(); }
 
-const mm::Vec3 &ScnObjModelDrSys::getCenter() const { return unknown3d8->unknown130; }
+const mm::Vec3 &ScnObjModelDrSys::getCenter() const { return unknown3d8->m_center; }
 
-f32 ScnObjModelDrSys::getLength() const { return unknown3d8->unknown160; }
+f32 ScnObjModelDrSys::getLength() const { return unknown3d8->m_length; }
 
 } // namespace ml

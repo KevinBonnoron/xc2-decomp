@@ -48,14 +48,14 @@ Result SystemCorePlatform::InitAudioDevice(const InitParam &param) {
     unknown1e8[i] = i;
   }
   for (int i = 0; i < 2; i++) {
-    EffectBusInfo &info = unknown1f0[i];
+    EffectBusInfo &info = m_effectBusInfo[i];
     info.unknown00 = false;
     info.unknown01 = false;
     info.unknown03[0] = 6 + i * 2;
     info.unknown03[1] = 7 + i * 2;
     info.unknown02 = SoundEffecter::unknown001_255;
     info.unknown08 = 1.0f;
-    info.unknown10 = nullptr;
+    info.m_soundEffecter = nullptr;
     info.unknown18 = nullptr;
     info.unknown20 = nn::audio::BufferMixerType();
     info.unknown28 = nn::audio::DelayType();
@@ -124,11 +124,11 @@ Result SystemCorePlatform::InitEffect(u8 bus, SoundEffecter *effecter) {
 }
 
 Result SystemCorePlatform::InitDelayEffect(u8 bus, SoundDelayEffecter *effecter) {
-  EffectBusInfo &info = unknown1f0[bus];
-  if (info.unknown10 != nullptr || info.unknown01 || effecter->unknown20 > effecter->unknown24) {
+  EffectBusInfo &info = m_effectBusInfo[bus];
+  if (info.m_soundEffecter != nullptr || info.unknown01 || effecter->unknown20 > effecter->unknown24) {
     return static_cast<Result>(-1);
   }
-  info.unknown10 = effecter;
+  info.m_soundEffecter = effecter;
   info.unknown02 = SoundEffecter::unknown001_0;
   info.unknown08 = effecter->unknown1c;
   nn::TimeSpan delayTimeMax = nn::TimeSpan::FromMicroSeconds(effecter->unknown24 * 1000000.0);
@@ -157,11 +157,11 @@ Result SystemCorePlatform::InitDelayEffect(u8 bus, SoundDelayEffecter *effecter)
 }
 
 Result SystemCorePlatform::InitI3dl2ReverbEffect(u8 bus, SoundI3dl2ReverbEffecter *effecter) {
-  EffectBusInfo &info = unknown1f0[bus];
-  if (info.unknown10 != nullptr || info.unknown01) {
+  EffectBusInfo &info = m_effectBusInfo[bus];
+  if (info.m_soundEffecter != nullptr || info.unknown01) {
     return static_cast<Result>(-1);
   }
-  info.unknown10 = effecter;
+  info.m_soundEffecter = effecter;
   info.unknown02 = SoundEffecter::unknown001_1;
   info.unknown08 = effecter->unknown1c;
   size_t size = nn::audio::GetRequiredBufferSizeForI3dl2Reverb(unknown268, 2);
@@ -200,7 +200,7 @@ Result SystemCorePlatform::InitI3dl2ReverbEffect(u8 bus, SoundI3dl2ReverbEffecte
 
 Result SystemCorePlatform::QuitEffect(SoundEffecter *effecter) {
   int bus = GetBusNumberFormEffecter(effecter);
-  if (bus < 0 || unknown1f0[bus].unknown01) {
+  if (bus < 0 || m_effectBusInfo[bus].unknown01) {
     return static_cast<Result>(-1);
   }
   Result result;
@@ -216,33 +216,33 @@ Result SystemCorePlatform::QuitEffect(SoundEffecter *effecter) {
 }
 
 int SystemCorePlatform::GetBusNumberFormEffecter(SoundEffecter *effecter) {
-  if (unknown1f0[0].unknown10 == effecter) {
+  if (m_effectBusInfo[0].m_soundEffecter == effecter) {
     return 0;
   }
-  if (unknown1f0[1].unknown10 == effecter) {
+  if (m_effectBusInfo[1].m_soundEffecter == effecter) {
     return 1;
   }
   return -1;
 }
 
 Result SystemCorePlatform::QuitDelayEffect(u8 bus) {
-  EffectBusInfo &info = unknown1f0[bus];
+  EffectBusInfo &info = m_effectBusInfo[bus];
   nn::audio::SetBufferMixerEnabled(&info.unknown20, false);
   nn::audio::SetDelayEnabled(&info.unknown28, false);
   info.unknown01 = true;
   info.unknown00 = false;
-  info.unknown10 = nullptr;
+  info.m_soundEffecter = nullptr;
   DeleteEffect(info);
   return static_cast<Result>(0);
 }
 
 Result SystemCorePlatform::QuitI3dl2ReverbEffect(u8 bus) {
-  EffectBusInfo &info = unknown1f0[bus];
+  EffectBusInfo &info = m_effectBusInfo[bus];
   nn::audio::SetBufferMixerEnabled(&info.unknown20, false);
   nn::audio::SetI3dl2ReverbEnabled(&info.unknown30, false);
   info.unknown01 = true;
   info.unknown00 = false;
-  info.unknown10 = nullptr;
+  info.m_soundEffecter = nullptr;
   DeleteEffect(info);
   return static_cast<Result>(0);
 }
@@ -275,7 +275,7 @@ void SystemCorePlatform::DeleteEffect(EffectBusInfo &info) {
 void SystemCorePlatform::UpdateEffectVolume(SoundEffecter *effecter) {
   int bus = GetBusNumberFormEffecter(effecter);
   if (bus >= 0) {
-    unknown1f0[bus].unknown08 = effecter->unknown1c;
+    m_effectBusInfo[bus].unknown08 = effecter->unknown1c;
   }
 }
 

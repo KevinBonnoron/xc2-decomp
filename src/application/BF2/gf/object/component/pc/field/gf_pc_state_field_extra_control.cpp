@@ -70,7 +70,7 @@ void StateFieldExtraControl::update(GfComBehaviorPc *behavior, const fw::UpdateI
     break;
   }
   case MODE_UNKNOWN_0: {
-    const FieldParam *param = property->unknown310.unknown006();
+    const FieldParam *param = property->m_propertyField.unknown006();
     MoveUtilField::updateBrake(info, *property);
     f32 speed = sqrtf(property->unknown80.x * property->unknown80.x + property->unknown80.y * property->unknown80.y + property->unknown80.z * property->unknown80.z);
     if (speed <= 0.0f) {

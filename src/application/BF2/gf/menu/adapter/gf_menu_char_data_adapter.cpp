@@ -153,7 +153,7 @@ GfMenuCharDataAdapter::PartyDriverConverter *GfMenuCharDataAdapter::IConverter::
 GfMenuCharDataAdapter::PartyBladeConverter *GfMenuCharDataAdapter::IConverter::fromPartyBlade() { return nullptr; }
 
 void GfMenuCharDataAdapter::GfObjConverter::getCharData(u8 &type, u32 &id) {
-  GfObjAcc acc(unknown08);
+  GfObjAcc acc(m_GF_OBJ_HANDLE);
   type = acc.getType();
   id = acc.getBdatId();
 }
@@ -200,55 +200,55 @@ GfMenuCharDataAdapter::PartyBladeConverter *GfMenuCharDataAdapter::PartyBladeCon
 inline void GfMenuCharDataAdapter::DriverListConverter::getCharData(u8 &type, u32 &id) {
   u32 index = unknown10;
   if (index == -1) {
-    index = unknown08->getIndex(true);
+    index = m_menuDriverList->getIndex(true);
     if (index == -1) {
       return;
     }
   }
-  if (static_cast<int>(index) < static_cast<int>(unknown08->getSize())) {
+  if (static_cast<int>(index) < static_cast<int>(m_menuDriverList->getSize())) {
     type = OBJECT_TYPE_PC;
-    id = unknown08->getContents(unknown08->getPageIndex(index)).unknown00;
+    id = m_menuDriverList->getContents(m_menuDriverList->getPageIndex(index)).unknown00;
   }
 }
 
 inline void GfMenuCharDataAdapter::BladeListConverter::getCharData(u8 &type, u32 &id) {
   u32 index = unknown10;
   if (index == -1) {
-    index = unknown08->getIndex(true);
+    index = m_menuBladeList->getIndex(true);
     if (index == -1) {
       return;
     }
   }
-  if (static_cast<int>(index) < static_cast<int>(unknown08->getSize())) {
+  if (static_cast<int>(index) < static_cast<int>(m_menuBladeList->getSize())) {
     type = OBJECT_TYPE_BLADE;
-    id = unknown08->getContents(unknown08->getPageIndex(index)).unknown00;
+    id = m_menuBladeList->getContents(m_menuBladeList->getPageIndex(index)).unknown00;
   }
 }
 
 inline void GfMenuCharDataAdapter::EnemyListConverter::getCharData(u8 &type, u32 &id) {
   u32 index = unknown10;
   if (index == -1) {
-    index = unknown08->getIndex(true);
+    index = m_menuEnemyList->getIndex(true);
     if (index == -1) {
       return;
     }
   }
-  if (static_cast<int>(index) < static_cast<int>(unknown08->getSize())) {
+  if (static_cast<int>(index) < static_cast<int>(m_menuEnemyList->getSize())) {
     type = OBJECT_TYPE_ENEMY;
-    id = unknown08->getContents(unknown08->getPageIndex(index)).unknown00;
+    id = m_menuEnemyList->getContents(m_menuEnemyList->getPageIndex(index)).unknown00;
   }
 }
 
 void GfMenuCharDataAdapter::EnBookListConverter::getCharData(u8 &type, u32 &id) {
   u32 index = unknown10;
   if (index == -1) {
-    index = unknown08->getIndex(true);
+    index = m_menuIDList->getIndex(true);
     if (index == -1) {
       return;
     }
   }
-  if (static_cast<int>(index) < static_cast<int>(unknown08->getSize())) {
-    u32 book = unknown08->getContents(unknown08->getPageIndex(index)).unknown00;
+  if (static_cast<int>(index) < static_cast<int>(m_menuIDList->getSize())) {
+    u32 book = m_menuIDList->getContents(m_menuIDList->getPageIndex(index)).unknown00;
     type = OBJECT_TYPE_ENEMY;
     id = GfBdatChrEnArrange::get()->getBTL_EnBookBaseEnemyID(book);
   }
@@ -288,20 +288,20 @@ void GfMenuCharDataAdapter::ReferenceBladeOwnerDriverConverter::getCharData(u8 &
 }
 
 GfMenuCharDataAdapter::GfMenuCharDataAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways)
-    : GfMenuAdapter(plugin, false, isUpdateAlways), unknown70(nullptr), unknown78(0), unknown79(0), unknown7c(0), unknown80(0), unknown88(nullptr) {}
+    : GfMenuAdapter(plugin, false, isUpdateAlways), m_iConverter(nullptr), unknown78(0), unknown79(0), unknown7c(0), unknown80(0), m_menuBladeList(nullptr) {}
 
 GfMenuCharDataAdapter::~GfMenuCharDataAdapter() {
-  if (unknown70 != nullptr) {
-    delete unknown70;
-    unknown70 = nullptr;
+  if (m_iConverter != nullptr) {
+    delete m_iConverter;
+    m_iConverter = nullptr;
   }
-  mm::mtl::safeRelease(unknown88);
+  mm::mtl::safeRelease(m_menuBladeList);
 }
 
 void GfMenuCharDataAdapter::setSlotList(GfMenuBladeList *list) {
-  mm::mtl::safeRelease(unknown88);
-  unknown88 = list;
-  unknown88->addRef();
+  mm::mtl::safeRelease(m_menuBladeList);
+  m_menuBladeList = list;
+  m_menuBladeList->addRef();
 }
 
 GfMenuCharDataAdapter *GfMenuCharDataAdapter::create(u32 handle, u32 type, u8 objType, u32 id, bool isUpdateAlways) {
@@ -329,7 +329,7 @@ GfMenuCharDataAdapter *GfMenuCharDataAdapter::createFromCoverter(u32 handle, u32
   converter->getCharData(objType, id);
   GfMenuCharDataAdapter *adapter = create(handle, type, objType, id, isUpdateAlways);
   if (adapter != nullptr) {
-    adapter->unknown70 = converter;
+    adapter->m_iConverter = converter;
   }
   return adapter;
 }
@@ -417,10 +417,10 @@ GfMenuCharDataAdapter *GfMenuCharDataAdapter::createFromReferenceBladeOwnerDrive
 }
 
 void GfMenuCharDataAdapter::update(const fw::UpdateInfo &info) {
-  if (unknown70 != nullptr) {
+  if (m_iConverter != nullptr) {
     u8 type = 0;
     u32 id = 0;
-    unknown70->getCharData(type, id);
+    m_iConverter->getCharData(type, id);
     changeCharData(type, id);
   }
   if ((unknown20 & (FLAG_UNKNOWN_0 | FLAG_UNKNOWN_1)) == 0) {
@@ -472,23 +472,34 @@ void GfMenuCharDataAdapter::update(const fw::UpdateInfo &info) {
   unknown20 &= ~FLAG_UNKNOWN_0;
 }
 
+void GfMenuCharDataAdapter::changeCharData(u8 type, u32 id) {
+  if (unknown78 != type) {
+    unknown78 = type;
+    setChange();
+  }
+  if (unknown7c != id) {
+    unknown7c = id;
+    setChange();
+  }
+}
+
 void GfMenuCharDataAdapter::changeGfObj(GF_OBJ_HANDLE *handle) {
-  if (unknown70 != nullptr && unknown70->fromGfObj() != nullptr) {
-    GfObjConverter *converter = unknown70->fromGfObj();
-    converter->unknown08 = handle;
+  if (m_iConverter != nullptr && m_iConverter->fromGfObj() != nullptr) {
+    GfObjConverter *converter = m_iConverter->fromGfObj();
+    converter->m_GF_OBJ_HANDLE = handle;
   }
 }
 
 void GfMenuCharDataAdapter::changePartyDriver(u8 partyId) {
-  if (unknown70 != nullptr && unknown70->fromPartyDriver() != nullptr) {
-    PartyDriverConverter *converter = unknown70->fromPartyDriver();
+  if (m_iConverter != nullptr && m_iConverter->fromPartyDriver() != nullptr) {
+    PartyDriverConverter *converter = m_iConverter->fromPartyDriver();
     converter->unknown08 = partyId;
   }
 }
 
 void GfMenuCharDataAdapter::changePartyBlade(u8 partyId, u8 slot) {
-  if (unknown70 != nullptr && unknown70->fromPartyBlade() != nullptr) {
-    PartyBladeConverter *converter = unknown70->fromPartyBlade();
+  if (m_iConverter != nullptr && m_iConverter->fromPartyBlade() != nullptr) {
+    PartyBladeConverter *converter = m_iConverter->fromPartyBlade();
     converter->unknown08 = partyId;
     converter->unknown0c = slot;
   }
@@ -1000,7 +1011,7 @@ bool GfMenuCharDataAdapter::update_BL_BtlSkillLv(const DataParamAcc &acc) {
 bool GfMenuCharDataAdapter::update_BL_Selectable(const DataParamAcc &acc) {
   if (acc.getObjType() == OBJECT_TYPE_BLADE) {
     const char *color = nullptr;
-    if (!GfMenuObjUtil::isBladeSelectable(acc.getValidBdatId(), unknown88)) {
+    if (!GfMenuObjUtil::isBladeSelectable(acc.getValidBdatId(), m_menuBladeList)) {
       color = "unuse";
     }
     setMulColor(color);
@@ -1011,7 +1022,7 @@ bool GfMenuCharDataAdapter::update_BL_Selectable(const DataParamAcc &acc) {
 bool GfMenuCharDataAdapter::update_BL_Releasable(const DataParamAcc &acc) {
   if (acc.getObjType() == OBJECT_TYPE_BLADE) {
     const char *color = nullptr;
-    if (!GfMenuObjUtil::isBladeReleasable(acc.getValidBdatId(), unknown88)) {
+    if (!GfMenuObjUtil::isBladeReleasable(acc.getValidBdatId(), m_menuBladeList)) {
       color = "unuse";
     }
     setMulColor(color);
@@ -1218,7 +1229,7 @@ bool GfMenuCharDataAdapter::update_BL_SkillName(const DataParamAcc &acc) {
 bool GfMenuCharDataAdapter::update_BL_weaponTypeName(const DataParamAcc &acc) {
   if (acc.getObjType() == OBJECT_TYPE_BLADE) {
     u8 *bdat = GfDataBdat::getFP(BDAT_MNU_MSG_WEAPON_TYPE);
-    u32 weaponType = GfDataBlade::getSDataBlade(acc.getValidBdatId()).unknown821;
+    u32 weaponType = GfDataBlade::getSDataBlade(acc.getValidBdatId()).m_weaponType;
     u8 *msBdat = GfDataBdat::getFP(BDAT_ITM_PCWPNTYPE_MS);
     u16 name = Bdat::getVal(bdat, "name", weaponType).valueU16;
     ui::UIStr text(msBdat, name);

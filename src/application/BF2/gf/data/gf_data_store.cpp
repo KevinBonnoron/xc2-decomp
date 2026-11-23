@@ -55,7 +55,7 @@ void GfDataStore::clear() {
   initOptionData();
 }
 
-void GfDataStore::initSystemData() { get()->mDataSystem.unknown08 = RealTime(); }
+void GfDataStore::initSystemData() { get()->mDataSystem.m_realTime = RealTime(); }
 
 void GfDataStore::initGameData() {
   new (&get()->mDataGame) SDataGame();
@@ -111,7 +111,7 @@ void GfDataStore::setGameData(const SDataSystem *dataSystem, const SDataGame *da
 
   if (dataSystem != nullptr) {
     dataStore->mDataSystem.unknown00 = dataSystem->unknown00;
-    dataStore->mDataSystem.unknown08 = dataSystem->unknown08;
+    dataStore->mDataSystem.m_realTime = dataSystem->m_realTime;
   }
 
   if (dataOption != nullptr) {

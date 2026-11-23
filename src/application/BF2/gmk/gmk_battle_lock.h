@@ -39,14 +39,14 @@ public:
   void disposeEffect(bool isFadeOut);
 
   // Inferred helper: gimmick data of the create info; original name unknown.
-  const unknown001 *unknown002() const { return static_cast<const unknown001 *>(unknown20.unknown08); }
+  const unknown001 *unknown002() const { return static_cast<const unknown001 *>(m_createInfo.unknown08); }
 
-  GmkCollision unknown50; // Inferred role: collision; original member name unknown.
-  u32 unknownc0;          // Inferred role: effect handle; original member name unknown.
-  mutable int unknownc4;  // Inferred role: number of enemies that hold the battle lock; original member name unknown.
+  GmkCollision m_gmkCollision; // Inferred role: collision; original member name unknown.
+  u32 unknownc0;               // Inferred role: effect handle; original member name unknown.
+  mutable int unknownc4;       // Inferred role: number of enemies that hold the battle lock; original member name unknown.
 };
 
-static_assert(offsetof(GmkBattleLock, unknown50) == 0x50, "");
+static_assert(offsetof(GmkBattleLock, m_gmkCollision) == 0x50, "");
 static_assert(offsetof(GmkBattleLock, unknownc0) == 0xc0, "");
 static_assert(offsetof(GmkBattleLock, unknownc4) == 0xc4, "");
 static_assert(sizeof(GmkBattleLock) == 0xd0, "");

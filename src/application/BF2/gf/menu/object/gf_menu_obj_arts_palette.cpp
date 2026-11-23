@@ -294,7 +294,7 @@ void GfMenuObjArtsPalette::MainListener::reciveEvent(const ui::EventData &event,
       ui::UIObjectAcc range(acc.unknown10, "IMG_elem_range");
       range.startAnimation("loop", false);
       range.setDisp(true);
-      unknown20->unknown808.unknown005();
+      m_menuObjArtsPalette->unknown808.unknown005();
     }
     break;
   case 0x101:
@@ -311,7 +311,7 @@ void GfMenuObjArtsPalette::MainListener::reciveEvent(const ui::EventData &event,
       ui::UIObjectAcc range(acc.unknown10, "IMG_elem_range");
       range.stopAnimation();
       range.setDisp(false);
-      unknown20->unknown808.unknown005();
+      m_menuObjArtsPalette->unknown808.unknown005();
     }
     break;
   case 0x10a: {
@@ -319,7 +319,7 @@ void GfMenuObjArtsPalette::MainListener::reciveEvent(const ui::EventData &event,
     if (unknown10.unknown00 == 1) {
       if (GfMenuReference::isArtsPaletteEnable(slot) && GfMenuReference::getArtsPaletteInfo(slot).unknown04 == 1.0f) {
         GfMenuObjUtil::playSE(0x23);
-        unknown20->unknown30[slot] |= 4;
+        m_menuObjArtsPalette->unknown30[slot] |= 4;
       } else {
         GfMenuObjUtil::playSE(0x24);
       }
@@ -327,11 +327,11 @@ void GfMenuObjArtsPalette::MainListener::reciveEvent(const ui::EventData &event,
     break;
   }
   case 0x10b:
-    unknown20->ctrlPalletteDisp(event.unknown08 == 1, 0);
+    m_menuObjArtsPalette->ctrlPalletteDisp(event.unknown08 == 1, 0);
     break;
   case 0x10c: {
     int isReverse = event.unknown08;
-    int ctrl = unknown20->ctrlPalletteDisp(isReverse == 1, 1);
+    int ctrl = m_menuObjArtsPalette->ctrlPalletteDisp(isReverse == 1, 1);
     if (ctrl != -1) {
       GfMenuObject::hookCtrlEvent(acc.unknown10, ctrl);
     }
@@ -363,44 +363,44 @@ void GfMenuObjArtsPalette::MainListener::reciveEvent(const ui::EventData &event,
       if (type == 1) {
         GfMenuObjUtil::playSE(0x22);
         recast.setDisp(false);
-        if (effect.isValid() && unknown20->unknown24[slot] == -1) {
+        if (effect.isValid() && m_menuObjArtsPalette->unknown24[slot] == -1) {
           effect.setDisp(true);
-          unknown20->unknown7f0[slot]->unknown005();
-          unknown20->unknown7f0[slot]->addAnimJob(effect.unknown10, "standbye");
+          m_menuObjArtsPalette->unknown7f0[slot]->unknown005();
+          m_menuObjArtsPalette->unknown7f0[slot]->addAnimJob(effect.unknown10, "standbye");
         }
-        unknown20->unknown30[slot] |= 1;
+        m_menuObjArtsPalette->unknown30[slot] |= 1;
       } else {
-        if ((unknown20->unknown30[slot] & 4) == 0) {
+        if ((m_menuObjArtsPalette->unknown30[slot] & 4) == 0) {
           effect.setDisp(false);
         } else {
           effect.startAnimation("select", false);
-          unknown20->unknown30[slot] &= ~4;
+          m_menuObjArtsPalette->unknown30[slot] &= ~4;
         }
         recast.setDisp(true);
-        unknown20->unknown7f0[slot]->unknown005();
-        if (unknown20->unknown24[slot] != -1) {
-          GfMenuObjUtil::stopCtrl(unknown20->unknown24[slot]);
-          unknown20->unknown24[slot] = -1;
+        m_menuObjArtsPalette->unknown7f0[slot]->unknown005();
+        if (m_menuObjArtsPalette->unknown24[slot] != -1) {
+          GfMenuObjUtil::stopCtrl(m_menuObjArtsPalette->unknown24[slot]);
+          m_menuObjArtsPalette->unknown24[slot] = -1;
         }
-        unknown20->unknown30[slot] &= ~1;
+        m_menuObjArtsPalette->unknown30[slot] &= ~1;
       }
-      unknown20->updateArtsIconDisp(slot);
+      m_menuObjArtsPalette->updateArtsIconDisp(slot);
       break;
     }
     case 1:
       if (type == 5) {
-        unknown20->unknown30[slot] |= 2;
+        m_menuObjArtsPalette->unknown30[slot] |= 2;
       } else {
-        unknown20->unknown30[slot] &= ~2;
+        m_menuObjArtsPalette->unknown30[slot] &= ~2;
       }
-      unknown20->updateArtsIconDisp(slot);
+      m_menuObjArtsPalette->updateArtsIconDisp(slot);
       break;
     case 2:
       if (type == 5) {
         {
           ui::UIObjectAcc range(acc.unknown10, "IMG_elem_range");
-          unknown20->unknown808.addAnimJob(range.unknown10, "start");
-          unknown20->unknown808.addAnimJob(range.unknown10, "loop");
+          m_menuObjArtsPalette->unknown808.addAnimJob(range.unknown10, "start");
+          m_menuObjArtsPalette->unknown808.addAnimJob(range.unknown10, "loop");
         }
         ui::UIObjectAcc rangeIcon(acc.unknown10, "IMG_elem_range_icon");
         GfMenuObjUtil::CtrlParam param;
@@ -416,7 +416,7 @@ void GfMenuObjArtsPalette::MainListener::reciveEvent(const ui::EventData &event,
         {
           ui::UIObjectAcc range(acc.unknown10, "IMG_elem_range");
           range.startAnimation("loop", false);
-          unknown20->unknown808.unknown005();
+          m_menuObjArtsPalette->unknown808.unknown005();
         }
         ui::UIObjectAcc rangeIcon(acc.unknown10, "IMG_elem_range_icon");
         int ctrl = GfMenuObjUtil::getCtrlID(rangeIcon.unknown10);
@@ -449,9 +449,9 @@ void GfMenuObjArtsPalette::MainListener::reciveEvent(const ui::EventData &event,
       acc.setDispChild(false, "IMG_frame");
     } else if (event.unknown08 == 10) {
       if (!GfMenuManager::isBattleState(BATTLE_STATE_UNKNOWN_1)) {
-        unknown20->unknown30[0] &= ~4;
-        unknown20->unknown30[1] &= ~4;
-        unknown20->unknown30[2] &= ~4;
+        m_menuObjArtsPalette->unknown30[0] &= ~4;
+        m_menuObjArtsPalette->unknown30[1] &= ~4;
+        m_menuObjArtsPalette->unknown30[2] &= ~4;
       }
     }
     break;

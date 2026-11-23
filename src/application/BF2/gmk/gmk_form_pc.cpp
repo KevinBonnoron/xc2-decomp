@@ -15,7 +15,7 @@ template <GmkType TYPE> TGmkFormPcnpc<TYPE>::~TGmkFormPcnpc() { dispose(); }
 
 template <GmkType TYPE> GmkType TGmkFormPcnpc<TYPE>::getGmkType() const { return GMK_TYPE; }
 
-template <GmkType TYPE> bool TGmkFormPcnpc<TYPE>::isValid() const { return unknown08.unknown00 != nullptr && unknown20.unknown08 != nullptr; }
+template <GmkType TYPE> bool TGmkFormPcnpc<TYPE>::isValid() const { return m_createBaseInfo.m_ownerGmkEnemyList != nullptr && m_createInfo.unknown08 != nullptr; }
 
 template <GmkType TYPE> void TGmkFormPcnpc<TYPE>::create(const CreateInfo &info) { AGmkBase::create(info); }
 
@@ -27,7 +27,7 @@ template <GmkType TYPE, typename FORM_PCNPC> TGmkFormPc<TYPE, FORM_PCNPC>::~TGmk
 
 template <GmkType TYPE, typename FORM_PCNPC> GmkType TGmkFormPc<TYPE, FORM_PCNPC>::getGmkType() const { return GMK_TYPE; }
 
-template <GmkType TYPE, typename FORM_PCNPC> bool TGmkFormPc<TYPE, FORM_PCNPC>::isValid() const { return unknown08.unknown00 != nullptr && unknown20.unknown08 != nullptr; }
+template <GmkType TYPE, typename FORM_PCNPC> bool TGmkFormPc<TYPE, FORM_PCNPC>::isValid() const { return m_createBaseInfo.m_ownerGmkEnemyList != nullptr && m_createInfo.unknown08 != nullptr; }
 
 template <GmkType TYPE, typename FORM_PCNPC> void TGmkFormPc<TYPE, FORM_PCNPC>::create(const CreateInfo &info) { AGmkBase::create(info); }
 
@@ -36,7 +36,7 @@ template <GmkType TYPE, typename FORM_PCNPC> void TGmkFormPc<TYPE, FORM_PCNPC>::
 template <GmkType TYPE, typename FORM_PCNPC> void TGmkFormPc<TYPE, FORM_PCNPC>::debugUpdateMmf() {}
 
 template <GmkType TYPE, typename FORM_PCNPC> const IGmkList *TGmkFormPc<TYPE, FORM_PCNPC>::getBindedFormPcnpcList() const {
-  return unknown08.unknown00->getCreateInfo().unknown08->unknown1b8[FORM_PCNPC::GMK_TYPE];
+  return m_createBaseInfo.m_ownerGmkEnemyList->getCreateInfo().m_gmkSet->unknown1b8[FORM_PCNPC::GMK_TYPE];
 }
 
 template class TGmkFormPcnpc<GMK_TYPE_FORM_PCNPC>;

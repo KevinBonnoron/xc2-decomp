@@ -82,7 +82,7 @@ void GfMenuObjDummyTutorial::MainListener::reciveEvent(const ui::EventData &even
   }
   case 0x21: {
     ui::UIObjectAcc image(acc.unknown10, "IMG_tutorial");
-    unknown20->unknown28->unknown0c = event.unknown08_u16;
+    m_menuObjDummyTutorial->unknown28->unknown0c = event.unknown08_u16;
     GfMenuObjUtil::CtrlParam param;
     param.unknown00 = 0.25f;
     param.unknown04 = 1;

@@ -75,7 +75,7 @@ void GfFileSizePool::destroyThread() {
   unknown18018.clear();
 }
 
-u32 GfFileSizePool::getFileSizeByHandle(u64 handle) const { return unknown10[getPoolIndex(handle)].unknown10; }
+u32 GfFileSizePool::getFileSizeByHandle(u64 handle) const { return unknown10[getPoolIndex(handle)].m_fileSizeByHandle; }
 
 u32 GfFileSizePool::getPoolIndex(u64 handle) { return handle & 0xffff; }
 
@@ -122,7 +122,7 @@ u64 GfFileSizePool::requestFileSize(const char *path) {
   unknown001 entry;
   entry.unknown00 = handle;
   entry.unknown08 = name;
-  entry.unknown10 = -2;
+  entry.m_fileSizeByHandle = -2;
   entry.unknown14 = index;
   unknown10.push_back(entry);
   unknown1b028.push(entry);
@@ -139,12 +139,12 @@ void GfFileSizePool::recalcFileSizeCache(u64 handle, const char *path) {
 #line 197
   entry.unknown08 = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) mm::mtl::FixStr<128>();
   *entry.unknown08 = path;
-  entry.unknown10 = -2;
+  entry.m_fileSizeByHandle = -2;
   unknown1b028.push(entry);
 }
 
 bool GfFileSizePool::getFileSize(int &size, u64 handle) const {
-  s32 fileSize = unknown10[getPoolIndex(handle)].unknown10;
+  s32 fileSize = unknown10[getPoolIndex(handle)].m_fileSizeByHandle;
   if (fileSize != -2) {
     size = fileSize;
     return true;
@@ -196,10 +196,10 @@ void GfFileSizePool::copyPoolFromRequest() {
   mm::mtl::FixedQueue<unknown001, 512>::iterator it = unknown18018.begin();
   while (it != unknown18018.end()) {
     unknown001 &entry = *it;
-    if (entry.unknown10 == -2) {
+    if (entry.m_fileSizeByHandle == -2) {
       break;
     }
-    unknown10[entry.unknown14].unknown10 = entry.unknown10;
+    unknown10[entry.unknown14].m_fileSizeByHandle = entry.m_fileSizeByHandle;
     if (unknown10[entry.unknown14].unknown08 != nullptr) {
       delete unknown10[entry.unknown14].unknown08;
       unknown10[entry.unknown14].unknown08 = nullptr;
@@ -220,13 +220,13 @@ void GfFileSizePool::execFileSizeJob(u32 count) {
   u32 executed = 0;
   mm::mtl::FixedQueue<unknown001, 512>::iterator end = unknown18018.end();
   for (mm::mtl::FixedQueue<unknown001, 512>::iterator it = unknown18018.begin(); it != end; ++it) {
-    if ((*it).unknown10 == -2) {
+    if ((*it).m_fileSizeByHandle == -2) {
       int size = ml::DevFileTh::getFileSize((*it).unknown08->c_str(), nullptr);
       if (size < 0) {
         size = -1;
       }
       executed++;
-      (*it).unknown10 = size;
+      (*it).m_fileSizeByHandle = size;
       if (executed >= count) {
         break;
       }

@@ -64,7 +64,7 @@ DrResMdoVertex *DrMdoVertexMan::createVertexObj(DrCalcStmListObj *list) {
   }
   unknown035 *res = list->getResVertexObj();
   DrResMdoVertex *vertex = new (DrMan::getIns()->unknown10) DrResMdoVertex(res->unknown00);
-  vertex->unknown78 = list;
+  vertex->m_drCalcStmListObj = list;
   if (vertex != nullptr) {
     if (unknown08 == nullptr) {
       unknown00 = vertex;

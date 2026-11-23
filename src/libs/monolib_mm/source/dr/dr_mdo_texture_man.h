@@ -40,7 +40,7 @@ public:
   grlib::CGLibTextureBuffer *getTextureID(u32 id);
   grlib::CGLibTextureBuffer *getTextureName(const char *name);
 
-  DrMan *unknown00;           // Inferred role: dr man; original member name unknown.
+  DrMan *m_drMan;             // Inferred role: dr man; original member name unknown.
   DrResMdoTexList *unknown08; // Inferred role: first mdo texture list; original member name unknown.
   DrResMdoTexList *unknown10; // Inferred role: last mdo texture list; original member name unknown.
   DrResEtcTexList *unknown18; // Inferred role: first etc texture list; original member name unknown.

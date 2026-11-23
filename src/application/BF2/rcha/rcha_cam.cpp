@@ -22,14 +22,14 @@ bool RchaCam::hasAnm(const void *data) {
 
 int RchaCam::getValueInt(int slot, f32 frame, int defaultValue) const {
   if (unknown19a4[slot] >= 0) {
-    return unknown10[unknown19a4[slot]].getValueInt(frame);
+    return m_rchaAnm[unknown19a4[slot]].getValueInt(frame);
   }
   return defaultValue;
 }
 
 f32 RchaCam::getValue(int slot, f32 frame, f32 defaultValue) const {
   if (unknown19a4[slot] >= 0) {
-    return unknown10[unknown19a4[slot]].getValue(frame);
+    return m_rchaAnm[unknown19a4[slot]].getValue(frame);
   }
   return defaultValue;
 }
@@ -60,7 +60,7 @@ f32 RchaCam::getMBlurStr(f32 frame) const { return getValue(CAMATR_UNKNOWN_20, f
 
 bool RchaCam::isEnableMBlur(f32 frame) const {
   if (unknown19a4[CAMATR_UNKNOWN_19] >= 0) {
-    return unknown10[unknown19a4[CAMATR_UNKNOWN_19]].getValue(frame) > 0.9f;
+    return m_rchaAnm[unknown19a4[CAMATR_UNKNOWN_19]].getValue(frame) > 0.9f;
   }
   return false;
 }
@@ -69,7 +69,7 @@ f32 RchaCam::getMBlurSub(f32 frame) const { return getValue(CAMATR_UNKNOWN_21, f
 
 bool RchaCam::isEnableDOF(f32 frame) const {
   if (unknown19a4[CAMATR_UNKNOWN_10] >= 0) {
-    return unknown10[unknown19a4[CAMATR_UNKNOWN_10]].getValue(frame) > 0.9f;
+    return m_rchaAnm[unknown19a4[CAMATR_UNKNOWN_10]].getValue(frame) > 0.9f;
   }
   return false;
 }
@@ -90,21 +90,21 @@ int RchaCam::getPixelLvDOF(f32 frame) const { return getValueInt(CAMATR_UNKNOWN_
 
 bool RchaCam::isHlvDOF(f32 frame) const {
   if (unknown19a4[CAMATR_UNKNOWN_18] >= 0) {
-    return unknown10[unknown19a4[CAMATR_UNKNOWN_18]].getValue(frame) > 0.9f;
+    return m_rchaAnm[unknown19a4[CAMATR_UNKNOWN_18]].getValue(frame) > 0.9f;
   }
   return false;
 }
 
 bool RchaCam::isSMapVis(f32 frame) const {
   if (unknown19a4[CAMATR_UNKNOWN_22] >= 0) {
-    return unknown10[unknown19a4[CAMATR_UNKNOWN_22]].getValue(frame) > 0.9f;
+    return m_rchaAnm[unknown19a4[CAMATR_UNKNOWN_22]].getValue(frame) > 0.9f;
   }
   return true;
 }
 
 bool RchaCam::isEnableTime(f32 frame) const {
   if (unknown19a4[CAMATR_UNKNOWN_23] >= 0) {
-    return unknown10[unknown19a4[CAMATR_UNKNOWN_23]].getValue(frame) > 0.9f;
+    return m_rchaAnm[unknown19a4[CAMATR_UNKNOWN_23]].getValue(frame) > 0.9f;
   }
   return false;
 }
@@ -112,7 +112,7 @@ bool RchaCam::isEnableTime(f32 frame) const {
 f32 RchaCam::getTimeVal(f32 frame) const {
   f32 time = 0.0f;
   if (unknown19a4[CAMATR_UNKNOWN_24] >= 0) {
-    time = unknown10[unknown19a4[CAMATR_UNKNOWN_24]].getValue(frame);
+    time = m_rchaAnm[unknown19a4[CAMATR_UNKNOWN_24]].getValue(frame);
     if (time < 0.0f) {
       time = 0.0f;
     } else if (time > 23.999998f) {
@@ -124,14 +124,14 @@ f32 RchaCam::getTimeVal(f32 frame) const {
 
 bool RchaCam::isEnableWeather(f32 frame) const {
   if (unknown19a4[CAMATR_UNKNOWN_25] >= 0) {
-    return unknown10[unknown19a4[CAMATR_UNKNOWN_25]].getValue(frame) > 0.9f;
+    return m_rchaAnm[unknown19a4[CAMATR_UNKNOWN_25]].getValue(frame) > 0.9f;
   }
   return false;
 }
 
 bool RchaCam::isCamLgtStop(f32 frame) const {
   if (unknown19a4[CAMATR_UNKNOWN_28] >= 0) {
-    return unknown10[unknown19a4[CAMATR_UNKNOWN_28]].getValue(frame) > 0.9f;
+    return m_rchaAnm[unknown19a4[CAMATR_UNKNOWN_28]].getValue(frame) > 0.9f;
   }
   return false;
 }

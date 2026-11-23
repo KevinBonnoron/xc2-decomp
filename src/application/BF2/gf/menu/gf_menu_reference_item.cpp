@@ -14,11 +14,11 @@
 
 namespace gf {
 
-void GfMenuReferenceItem::getItem(MenuItemInfo &info) const { info = unknown0c; }
+void GfMenuReferenceItem::getItem(MenuItemInfo &info) const { info = m_menuItemInfo; }
 
-void GfMenuReferenceFs::getFs(MenuFieldSkill &fs) const { fs = unknown0c; }
+void GfMenuReferenceFs::getFs(MenuFieldSkill &fs) const { fs = m_menuFieldSkill; }
 
-void GfMenuReferenceQuest::getQuest(QuestID &quest) const { quest = unknown0c; }
+void GfMenuReferenceQuest::getQuest(QuestID &quest) const { quest = m_questID; }
 
 void GfMenuReferenceDriverEquipItem::getItem(MenuItemInfo &info) const {
   u32 driver = GfMenuReference::getReferenceDriverID(unknown0c);

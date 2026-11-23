@@ -59,6 +59,66 @@ void unbindPadResource() {
   }
 }
 
+// Ruling 8 (P4): the game (0x71005b97a4, 756 instructions) holds one straight-line block per archive and one create call per file, each with its own immediate index and string pair, so the blocks
+// are written out. A loop over a table of file name, index and path does not unroll (403 instructions, frame 176 against the game's 240), and a file-local helper taking the archive, the name,
+// the index and the path inlines but shares one stack slot for the returned parameter list (756 instructions, frame 48 against 240).
+void createGfParameter() {
+  fw::CommonResource *resource = GfStaticRes::search("/param/common.prm");
+  if (resource != nullptr) {
+    arc::CArcData archive(resource->getAssetData());
+    fw::ParamBuilder::create(archive.getFileAdr("common_target.param"), 0, "T:/BF2/param/param/common/common_target.xml");
+    fw::ParamBuilder::create(archive.getFileAdr("common_look_at_ik.param"), 1, "T:/BF2/param/param/common/common_look_at_ik.xml");
+    fw::ParamBuilder::create(archive.getFileAdr("common_spine_ik.param"), 2, "T:/BF2/param/param/common/common_spine_ik.xml");
+    fw::ParamBuilder::create(archive.getFileAdr("common_spc_ik.param"), 3, "T:/BF2/param/param/common/common_spc_ik.xml");
+    fw::ParamBuilder::create(archive.getFileAdr("common_foot_ik.param"), 4, "T:/BF2/param/param/common/common_foot_ik.xml");
+    fw::ParamBuilder::create(archive.getFileAdr("common_access.param"), 5, "T:/BF2/param/param/common/common_access.xml");
+    fw::ParamBuilder::create(archive.getFileAdr("common_battle.param"), 10, "T:/BF2/param/param/common/common_battle.xml");
+    fw::ParamBuilder::create(archive.getFileAdr("common_formation.param"), 6, "T:/BF2/param/param/common/common_formation.xml");
+    fw::ParamBuilder::create(archive.getFileAdr("common_lure.param"), 7, "T:/BF2/param/param/common/common_lure.xml");
+    fw::ParamBuilder::create(archive.getFileAdr("common_env_sensor.param"), 8, "T:/BF2/param/param/common/common_env_sensor.xml");
+    fw::ParamBuilder::create(archive.getFileAdr("common_spine_rotate_ik.param"), 9, "T:/BF2/param/param/common/common_spine_rotate_ik.xml");
+    fw::ParamBuilder::create(archive.getFileAdr("common_eye.param"), 11, "T:/BF2/param/param/common/common_eye.xml");
+    fw::ParamBuilder::create(archive.getFileAdr("common_unique_motion.param"), 12, "T:/BF2/param/param/common/common_unique_motion.xml");
+    fw::ParamBuilder::create(archive.getFileAdr("common_enemy.param"), 21, "T:/BF2/param/param/common/common_enemy.xml");
+  }
+
+  resource = GfStaticRes::search("/param/pc.prm");
+  if (resource != nullptr) {
+    arc::CArcData archive(resource->getAssetData());
+    fw::ParamBuilder::create(archive.getFileAdr("pc_common.param"), 13, "T:/BF2/param/param/pc/pc_common.xml");
+    fw::ParamBuilder::create(archive.getFileAdr("pc_act_field.param"), 14, "T:/BF2/param/param/pc/pc_act_field.xml");
+    fw::ParamBuilder::create(archive.getFileAdr("pc_act_ai_field.param"), 15, "T:/BF2/param/param/pc/pc_act_ai_field.xml");
+    fw::ParamBuilder::create(archive.getFileAdr("pc_ai_field.param"), 16, "T:/BF2/param/param/pc/pc_ai_field.xml");
+    fw::ParamBuilder::create(archive.getFileAdr("pc_coli.param"), 17, "T:/BF2/param/param/pc/pc_coli.xml");
+    fw::ParamBuilder::create(archive.getFileAdr("pc_sound.param"), 18, "T:/BF2/param/param/pc/pc_sound.xml");
+  }
+
+  resource = GfStaticRes::search("/param/camera.prm");
+  if (resource != nullptr) {
+    arc::CArcData archive(resource->getAssetData());
+    fw::ParamBuilder::create(archive.getFileAdr("camera.param"), 19, "T:/BF2/param/param/camera/camera.xml");
+  }
+
+  resource = GfStaticRes::search("/param/menu.prm");
+  if (resource != nullptr) {
+    arc::CArcData archive(resource->getAssetData());
+    fw::ParamBuilder::create(archive.getFileAdr("menu.param"), 20, "T:/BF2/param/param/menu/menu.xml");
+  }
+
+  resource = GfStaticRes::search("/param/event.prm");
+  if (resource != nullptr) {
+    arc::CArcData archive(resource->getAssetData());
+    fw::ParamBuilder::create(archive.getFileAdr("ev_look_at_ik.param"), 22, "T:/BF2/param/param/event/ev_look_at_ik.xml");
+    fw::ParamBuilder::create(archive.getFileAdr("ev_spine_ik.param"), 23, "T:/BF2/param/param/event/ev_spine_ik.xml");
+  }
+
+  resource = GfStaticRes::search("/param/effect.prm");
+  if (resource != nullptr) {
+    arc::CArcData archive(resource->getAssetData());
+    fw::ParamBuilder::create(archive.getFileAdr("eff_footstep.param"), 24, "T:/BF2/param/param/effect/eff_footstep.xml");
+  }
+}
+
 void destroyGfParameter() {
   for (u32 index = 0; index < 25; index++) {
     fw::ParamBuilder::destroy(index);

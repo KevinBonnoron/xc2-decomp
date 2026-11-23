@@ -18,7 +18,7 @@ void ScriptEffectMove::doit(const Param &param) {
   }
   ObjectEffect *effect = static_cast<ObjectEffect *>(object);
   PosAxis axis(param.val(0).getS32(), param.val(1).getF32(), param.val(2).getF32(), param.val(3).getF32());
-  unknown10 = effect->getPosAxis();
+  m_posAxis = effect->getPosAxis();
   effect->linerPosAxis(axis, param.val(4).getF32(), static_cast<CV_TYPE>(param.val(5).getS32()));
 }
 
@@ -27,7 +27,7 @@ void ScriptEffectMove::undo(const Param &param) {
   if (ScriptUtil::getObjType(object) != OBJTYPE_UNKNOWN_4) {
     return;
   }
-  static_cast<ObjectEffect *>(object)->setPosAxis(unknown10);
+  static_cast<ObjectEffect *>(object)->setPosAxis(m_posAxis);
 }
 
 void ScriptEffectMove::redo(const Param &param) {

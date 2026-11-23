@@ -26,7 +26,7 @@ static GF_SEARCH_OBJ *const unknown012 = reinterpret_cast<GF_SEARCH_OBJ *>(-1); 
 // Size from the GfSearchInfo pool of GfGameSearchObj (1024 elements in 0xc000 bytes). Members from the consumers GfGameTarget::selectTarget
 // and GfGameSearchObj::updateObj, which fills them.
 struct GfSearchInfo {
-  GF_OBJ_HANDLE *unknown00; // Inferred role: found object; original member name unknown.
+  GF_OBJ_HANDLE *m_GF_OBJ_HANDLE; // Inferred role: found object; original member name unknown.
   u8 _08[0x20 - 0x08];
   f32 unknown20;       // Inferred role: distance; original member name unknown. Evidence: LookAtPlugin::changeTarget (1.0.0: 0x710057997c) compares it between candidates.
   f32 unknown24;       // Inferred role: forward angle; original member name unknown.
@@ -74,21 +74,21 @@ static_assert(sizeof(GfSearchParam) == 0x70, "");
 class GfGameSearchObj : public mm::mtl::PtrSingleton<GfGameSearchObj> {
 public:
   struct GFSEARCH_INFO {
-    GFSEARCH_INFO() : unknown70(unknown012), unknown78(nullptr), unknown80(0) {}
+    GFSEARCH_INFO() : m_GF_SEARCH_OBJ(unknown012), unknown78(nullptr), unknown80(0) {}
 
-    GfSearchParam unknown00;                            // Inferred role: search parameters; original member name unknown.
-    GF_SEARCH_OBJ *unknown70;                           // Inferred role: handle; original member name unknown.
+    GfSearchParam m_searchParam;                        // Inferred role: search parameters; original member name unknown.
+    GF_SEARCH_OBJ *m_GF_SEARCH_OBJ;                     // Inferred role: handle; original member name unknown.
     mm::mtl::FixedList<GfSearchInfo *, 256> *unknown78; // Inferred role: found objects; original member name unknown.
     u32 unknown80;                                      // Inferred role: flags, bit 0 disables the search; original member name unknown.
   };
 
   struct GfSearchCache {
     struct POS {
-      const mm::Vec3 *unknown00; // Inferred role: position; original member name unknown.
-      const mm::Quat *unknown08; // Inferred role: rotation; original member name unknown.
-      f32 unknown10;             // Inferred role: copied from GfSearchParam::unknown3c; original member name unknown.
-      GF_OBJ_HANDLE *unknown18;  // Inferred role: object; original member name unknown.
-      f32 unknown20;             // Inferred role: forward angle; original member name unknown.
+      const mm::Vec3 *unknown00;      // Inferred role: position; original member name unknown.
+      const mm::Quat *unknown08;      // Inferred role: rotation; original member name unknown.
+      f32 unknown10;                  // Inferred role: copied from GfSearchParam::unknown3c; original member name unknown.
+      GF_OBJ_HANDLE *m_GF_OBJ_HANDLE; // Inferred role: object; original member name unknown.
+      f32 unknown20;                  // Inferred role: forward angle; original member name unknown.
     };
 
     GfSearchCache() { unknown001(); }
@@ -125,13 +125,13 @@ public:
   ml::fixed_size_alloc_inside<GFSEARCH_INFO, 64> unknown08;    // Inferred role: search infos; original member name unknown.
   mm::mtl::FixedList<GF_SEARCH_OBJ *, 64> unknown2438;         // Inferred role: active searches; original member name unknown.
   ml::fixed_size_alloc_inside<GfSearchInfo, 1024> unknown2898; // Inferred role: found object pool; original member name unknown.
-  GfSearchCache unknowne940;                                   // Inferred role: object position cache; original member name unknown.
+  GfSearchCache m_searchCache;                                 // Inferred role: object position cache; original member name unknown.
   u32 unknown90978;                                            // Inferred role: handle serial; original member name unknown.
   bool unknown9097c;                                           // Inferred role: initialized; original member name unknown.
 };
 
 static_assert(sizeof(GfGameSearchObj::GFSEARCH_INFO) == 0x90, "");
-static_assert(offsetof(GfGameSearchObj::GFSEARCH_INFO, unknown70) == 0x70, "");
+static_assert(offsetof(GfGameSearchObj::GFSEARCH_INFO, m_GF_SEARCH_OBJ) == 0x70, "");
 static_assert(offsetof(GfGameSearchObj::GFSEARCH_INFO, unknown78) == 0x78, "");
 static_assert(offsetof(GfGameSearchObj::GFSEARCH_INFO, unknown80) == 0x80, "");
 static_assert(sizeof(GfGameSearchObj::GfSearchCache::POS) == 0x28, "");
@@ -139,7 +139,7 @@ static_assert(offsetof(GfGameSearchObj::GfSearchCache, unknown82000) == 0x82000,
 static_assert(offsetof(GfGameSearchObj, unknown08) == 0x08, "");
 static_assert(offsetof(GfGameSearchObj, unknown2438) == 0x2438, "");
 static_assert(offsetof(GfGameSearchObj, unknown2898) == 0x2898, "");
-static_assert(offsetof(GfGameSearchObj, unknowne940) == 0xe940, "");
+static_assert(offsetof(GfGameSearchObj, m_searchCache) == 0xe940, "");
 static_assert(offsetof(GfGameSearchObj, unknown90978) == 0x90978, "");
 static_assert(offsetof(GfGameSearchObj, unknown9097c) == 0x9097c, "");
 static_assert(sizeof(GfGameSearchObj) == 0x90980, "");

@@ -12,6 +12,7 @@ namespace ml {
 class DrResMdoSampler;
 class DrShdMdoDecRes;
 struct MdsMatTextureInfo;
+struct MdsMatTechnique;
 
 class DrShdMdoDecExtTbl : public grlib::CGLibDecShdExtTbl {
 public:
@@ -22,17 +23,22 @@ public:
   void bindShader();
   void setShaderParamAdd(u32 *param, u32 *globalParam);
   void setTextureList(const MdsMatTextureInfo *infos, grlib::CGLibTextureBuffer **textures, DrResMdoSampler *sampler);
+  void setupShderInfo(DrShdMdoDecRes *shader, const MdsMatTechnique *technique, const u8 *data);
 
-  DrShdMdoDecRes *unknown18; // Inferred role: dec res; original member name unknown.
-  u32 *unknown20;            // Inferred role: shader param add; original member name unknown.
+  DrShdMdoDecRes *m_drShdMdoDecRes; // Inferred role: dec res; original member name unknown.
+  u32 *unknown20;                   // Inferred role: shader param add; original member name unknown.
   u32 *m_valGlobalParam;
   u8 unknown30; // Inferred role: global parameter index of the billboard uniform block; original member name unknown.
-  u8 _31[0x36 - 0x31];
+  u8 unknown31; // Inferred role: global parameter index of the occlusion uniform block, also of the billboard matrix uniform block of partsDefRender (0x71007f1aec); original member name unknown.
+  u8 unknown32; // Inferred role: global parameter index of the node animation uniform block; original member name unknown.
+  u8 unknown33; // Inferred role: global parameter index of the flag wave uniform block; original member name unknown.
+  u8 unknown34; // Inferred role: global parameter index of the old flag wave uniform block; original member name unknown.
+  u8 _35;
   u8 unknown36; // Inferred role: texture count; original member name unknown.
   u8 _37[0x38 - 0x37];
 };
 
-static_assert(offsetof(DrShdMdoDecExtTbl, unknown18) == 0x18, "");
+static_assert(offsetof(DrShdMdoDecExtTbl, m_drShdMdoDecRes) == 0x18, "");
 static_assert(offsetof(DrShdMdoDecExtTbl, m_valGlobalParam) == 0x28, "");
 static_assert(offsetof(DrShdMdoDecExtTbl, unknown30) == 0x30, "");
 static_assert(offsetof(DrShdMdoDecExtTbl, unknown36) == 0x36, "");

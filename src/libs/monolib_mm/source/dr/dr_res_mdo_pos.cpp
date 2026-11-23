@@ -9,28 +9,28 @@
 
 namespace ml {
 
-DrResMdoPos::DrResMdoPos() : unknown00(nullptr), unknown08(nullptr), unknown1e(0), unknown21(0), unknown22(-1) {}
+DrResMdoPos::DrResMdoPos() : unknown00(nullptr), m_mdsPosKeepData(nullptr), unknown1e(0), unknown21(0), unknown22(-1) {}
 
-DrResMdoPos::DrResMdoPos(const MdsPosKeepData *keepData) : unknown00(nullptr), unknown08(keepData), unknown1e(0), unknown21(0), unknown22(-1) {}
+DrResMdoPos::DrResMdoPos(const MdsPosKeepData *keepData) : unknown00(nullptr), m_mdsPosKeepData(keepData), unknown1e(0), unknown21(0), unknown22(-1) {}
 
 void DrResMdoPos::copy(DrResMdoPos *source) {
   unknown1e = 0;
   unknown18 = source->unknown18;
-  unknown08 = source->unknown08;
+  m_mdsPosKeepData = source->m_mdsPosKeepData;
   unknown21 = source->unknown21;
   unknown22 = source->unknown22;
 }
 
 DrResMdoPos::~DrResMdoPos() {
   if (unknown00 != nullptr) {
-    unknown00->unknown28 = nullptr;
+    unknown00->m_drResMdoPos = nullptr;
     unknown00 = nullptr;
   }
 }
 
 void DrResMdoPos::release() {
   if (unknown00 != nullptr) {
-    unknown00->unknown28 = nullptr;
+    unknown00->m_drResMdoPos = nullptr;
     unknown00 = nullptr;
   }
 }
@@ -40,7 +40,7 @@ bool DrResMdoPos::clipTest(DrCalcViewWork *viewWork, const mm::Vec3 &position, f
   f32 dx = viewPos.x - position.x;
   f32 dy = viewPos.y - position.y;
   f32 dz = viewPos.z - position.z;
-  if (dx * dx + dy * dy + dz * dz > radius * radius && !viewWork->unknown4e0.clipTest(position, radius)) {
+  if (dx * dx + dy * dy + dz * dz > radius * radius && !viewWork->m_drCalcClipWorkViewPlane.clipTest(position, radius)) {
     return false;
   }
   return true;
@@ -65,17 +65,17 @@ bool DrResMdoPos::setSubAlphaCnt(int count) {
 int DrResMdoPosAddList::createBuffSize() { return 4000; }
 
 int DrResMdoPosAddList::setupBuff(u8 *buffer) {
-  unknown00 = reinterpret_cast<DrResMdoPos *>(buffer);
+  m_drResMdoPos = reinterpret_cast<DrResMdoPos *>(buffer);
   unknown08 = 0;
   for (int i = 0; i < 100; i++) {
-    new (&unknown00[i]) DrResMdoPos();
+    new (&m_drResMdoPos[i]) DrResMdoPos();
   }
   return 4000;
 }
 
 void DrResMdoPosAddList::release() {
   for (int i = 0; i < 100; i++) {
-    unknown00[i].release();
+    m_drResMdoPos[i].release();
   }
 }
 
@@ -85,7 +85,7 @@ DrResMdoPos *DrResMdoPosAddList::createAdd() {
   if (unknown08 >= 100) {
     return nullptr;
   }
-  return &unknown00[unknown08++];
+  return &m_drResMdoPos[unknown08++];
 }
 
 } // namespace ml

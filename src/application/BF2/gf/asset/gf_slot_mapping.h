@@ -29,10 +29,10 @@ class GfSlotAllocator;
 class GfSlotMapping {
 public:
   struct REQ {
-    GF_ASSET_HANDLE *unknown00; // Inferred role: handle; original member name unknown.
-    GfAssetPack *unknown08;     // Inferred role: pack; original member name unknown.
-    u16 unknown10;              // Inferred role: retry count; original member name unknown.
-    f32 unknown14;              // Inferred role: timer; original member name unknown.
+    GF_ASSET_HANDLE *m_GF_ASSET_HANDLE; // Inferred role: handle; original member name unknown.
+    GfAssetPack *m_assetPack;           // Inferred role: pack; original member name unknown.
+    u16 unknown10;                      // Inferred role: retry count; original member name unknown.
+    f32 unknown14;                      // Inferred role: timer; original member name unknown.
   };
 
   struct BiggerPrio {
@@ -44,9 +44,9 @@ public:
     void createAllocator(size_t size, const char *name);
     void destroyAllocator();
 
-    GfSlotAllocator *unknown00;  // Inferred role: allocator; original member name unknown.
-    void *unknown08;             // Inferred role: memory; original member name unknown.
-    mtl::ALLOC_HANDLE unknown10; // Inferred role: handle; original member name unknown.
+    GfSlotAllocator *m_slotAllocator; // Inferred role: allocator; original member name unknown.
+    void *unknown08;                  // Inferred role: memory; original member name unknown.
+    mtl::ALLOC_HANDLE m_ALLOC_HANDLE; // Inferred role: handle; original member name unknown.
   };
 
   static const u32 REQUEST_UNKNOWN_256 = 256; // Inferred role: request max; original name unknown.
@@ -85,8 +85,8 @@ public:
   void *allocateSize(size_t size, size_t alignment);
   bool deallocateSize(void *pointer);
 
-  GfSlotAllocator *unknown00;                               // Inferred role: allocator; original member name unknown.
-  GfSlotAll *unknown08;                                     // Inferred role: slot all; original member name unknown.
+  GfSlotAllocator *m_slotAllocator;                         // Inferred role: allocator; original member name unknown.
+  GfSlotAll *m_slotAll;                                     // Inferred role: slot all; original member name unknown.
   mm::mtl::FixedVector<REQ, REQUEST_UNKNOWN_256> unknown10; // Inferred role: requests; original member name unknown.
   u64 unknown1818;                                          // Inferred role: top address; original member name unknown.
   u64 unknown1820;                                          // Inferred role: end address; original member name unknown.

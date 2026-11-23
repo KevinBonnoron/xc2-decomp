@@ -207,7 +207,7 @@ bool WorkRootState::isEntryWork(u32 wid, const WorkObj *parent) {
       if (parent != nullptr) {
         WorkObj *work = getWork(wid);
         do {
-          work = work->unknown58;
+          work = work->m_workObj;
         } while (work != nullptr && work != parent);
       }
       return true;
@@ -418,7 +418,7 @@ void _wrootst::WorkRoot::procParent() {
       if (work->wkIsActive() && !parent->wkIsWaitException() && parent->wkIsActive()) {
         unknown1a8.erase(unknown1a8.begin());
         unknown1e8.erase(unknown1e8.begin());
-        work->unknown58->wkRemoveChild(work);
+        work->m_workObj->wkRemoveChild(work);
         parent->wkEntryChild(work, false);
       }
     }

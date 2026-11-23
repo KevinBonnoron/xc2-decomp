@@ -23,7 +23,7 @@ constexpr u32 MERCENARIES_LEVEL_UNKNOWN_5 = 5; // Inferred role: mercenaries lev
 // Inferred role: save data mercenaries team; original type name unknown.
 struct unknown120 {
   u16 unknown00[6];     // Inferred role: members; original member name unknown.
-  QuestID unknown0c;    // Inferred role: mission quest; original member name unknown.
+  QuestID m_questID;    // Inferred role: mission quest; original member name unknown.
   u32 unknown10;        // Inferred role: team id; original member name unknown.
   u32 unknown14;        // Inferred role: mission; original member name unknown.
   f32 unknown18;        // Inferred role: mission elapsed time; original member name unknown.
@@ -32,7 +32,7 @@ struct unknown120 {
   bool _24;
 };
 
-static_assert(offsetof(unknown120, unknown0c) == 0x0c, "");
+static_assert(offsetof(unknown120, m_questID) == 0x0c, "");
 static_assert(offsetof(unknown120, unknown10) == 0x10, "");
 static_assert(offsetof(unknown120, unknown14) == 0x14, "");
 static_assert(offsetof(unknown120, unknown1c) == 0x1c, "");
@@ -49,10 +49,14 @@ static_assert(sizeof(unknown121) == 0x0c, "");
 // Inferred role: save data mercenaries; original type name unknown.
 struct unknown122 {
   mm::mtl::FixedVector<unknown120, 3> unknown00; // Inferred role: teams; original member name unknown.
-  unknown121 unknown80[40];                      // Inferred role: presets; original member name unknown.
+  unknown121 m_preset[8];                        // Inferred role: presets; named after the game accessor gf::GfDataMercenaries::getPreset.
+  // Inferred role: reserver slots, zero when free. Evidence: GfDataBlade::getEnableCountForCreateBlade (0x71002a15d8) counts the zero u16 of the
+  // 0xe0 to 0x260 range, bounded by getReserverMax (at most 5 * 24 + 24 + 48 = 192 entries, the size of this range); original member name unknown.
+  u16 unknowne0[192];
 };
 
-static_assert(offsetof(unknown122, unknown80) == 0x080, "");
+static_assert(offsetof(unknown122, m_preset) == 0x080, "");
+static_assert(offsetof(unknown122, unknowne0) == 0x0e0, "");
 static_assert(sizeof(unknown122) == 0x260, "");
 
 class GfDataMercenaries {

@@ -13,12 +13,12 @@ public:
   void InitVariable();
   virtual void Reset();
 
-  SingleListNode *unknown08; // Inferred role: next node of the circular list; original member name unknown.
-  u8 unknown10;              // Inferred role: reset by the constructor and Reset; original member name unknown.
-  s32 unknown14;             // Inferred role: reset to -1 by the constructor and Reset; original member name unknown.
+  SingleListNode *m_singleListNode; // Inferred role: next node of the circular list; original member name unknown.
+  u8 unknown10;                     // Inferred role: reset by the constructor and Reset; original member name unknown.
+  s32 unknown14;                    // Inferred role: reset to -1 by the constructor and Reset; original member name unknown.
 };
 
-static_assert(offsetof(SingleListNode, unknown08) == 0x08, "");
+static_assert(offsetof(SingleListNode, m_singleListNode) == 0x08, "");
 static_assert(offsetof(SingleListNode, unknown10) == 0x10, "");
 static_assert(offsetof(SingleListNode, unknown14) == 0x14, "");
 static_assert(sizeof(SingleListNode) == 0x18, "");
@@ -33,10 +33,10 @@ public:
   SingleListNode *InsertNext(SingleListNode *position, SingleListNode *node);
   SingleListNode *Remove(SingleListNode *node);
 
-  SingleListNode *unknown08; // Inferred role: head of the circular list; original member name unknown.
+  SingleListNode *m_singleListNode; // Inferred role: head of the circular list; original member name unknown.
 };
 
-static_assert(offsetof(SingleListHeader, unknown08) == 0x08, "");
+static_assert(offsetof(SingleListHeader, m_singleListNode) == 0x08, "");
 static_assert(sizeof(SingleListHeader) == 0x10, "");
 
 // Layout evidence: DoubleListNode::DoubleListNode 0x71001413f0 and the vtable _ZTVN3dir14DoubleListNodeE.
@@ -62,7 +62,7 @@ static_assert(sizeof(DoubleListNode) == 0x20, "");
 // Layout evidence: DoubleListHeader::InsertTop 0x710014143c (the head of the circular list lies at offset 0x08).
 class DoubleListHeader {
 public:
-  DoubleListHeader() : unknown08(nullptr) {}
+  DoubleListHeader() : m_doubleListNode(nullptr) {}
   virtual ~DoubleListHeader() {}
   DoubleListNode *InsertTop(DoubleListNode *node);
   DoubleListNode *InsertEnd(DoubleListNode *node);
@@ -70,10 +70,10 @@ public:
   DoubleListNode *InsertNext(DoubleListNode *position, DoubleListNode *node);
   DoubleListNode *Remove(DoubleListNode *node);
 
-  DoubleListNode *unknown08; // Inferred role: head of the circular list; original member name unknown.
+  DoubleListNode *m_doubleListNode; // Inferred role: head of the circular list; original member name unknown.
 };
 
-static_assert(offsetof(DoubleListHeader, unknown08) == 0x08, "");
+static_assert(offsetof(DoubleListHeader, m_doubleListNode) == 0x08, "");
 static_assert(sizeof(DoubleListHeader) == 0x10, "");
 
 // The vtable of this template holds DoubleListHeader::~DoubleListHeader and the deleting destructor, as the game's
@@ -87,12 +87,12 @@ public:
   void InitVariable();
   void Reset() override;
 
-  ChildListNode *unknown20; // Inferred role: parent node, null for a root node; original member name unknown.
+  ChildListNode *m_childListNode; // Inferred role: parent node, null for a root node; original member name unknown.
   u8 _28[0x38 - 0x28];
   TChildListHeader<ChildListNode> unknown38; // Inferred role: list of the children; original member name unknown.
 };
 
-static_assert(offsetof(ChildListNode, unknown20) == 0x20, "");
+static_assert(offsetof(ChildListNode, m_childListNode) == 0x20, "");
 static_assert(offsetof(ChildListNode, unknown38) == 0x38, "");
 static_assert(sizeof(ChildListNode) == 0x48, "");
 

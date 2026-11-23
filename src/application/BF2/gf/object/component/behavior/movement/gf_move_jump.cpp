@@ -27,7 +27,7 @@ void GfMoveJumpControler::update(const fw::UpdateInfo &info, Packet &packet) {
 }
 
 void GfMoveJumpControler::calcVelocity(f32 deltaTime, Packet &packet) {
-  const Param *param = packet.unknown18.get<Param>();
+  const Param *param = packet.m_paramAdapter.get<Param>();
   f32 speedMax = param->velocityMax * packet.unknown20;
   f32 speed = packet.unknown00.x * packet.unknown40.x + packet.unknown00.y * packet.unknown40.y + packet.unknown00.z * packet.unknown40.z;
   if (speedMax > speed) {

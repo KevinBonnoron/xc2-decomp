@@ -12,14 +12,14 @@ namespace ml {
 // loads all three as floats (`ldr s6, [x21, #0x28]` at 0x7100838770, 0x2c at 0x71008387d8, 0x30 at 0x71008387fc).
 DrPixlPostObjRainDrop::DrPixlPostObjRainDrop(DrMan *drMan, DrPixlMan *pixlMan, DrPixlPostMan *postMan)
     : DrPixlPostObj(drMan, pixlMan, postMan), unknown18(0), unknown28(0.0f), unknown2c(0.1f), unknown30(0.2f) {
-  unknown20 = new (unknown00->unknown0c) DrPixlRenderTarget(unknown00);
+  m_drPixlRenderTarget = new (m_drMan->unknown0c) DrPixlRenderTarget(m_drMan);
 }
 
 DrPixlPostObjRainDrop::~DrPixlPostObjRainDrop() {
-  DrPixlRenderTarget *renderTarget = unknown20;
+  DrPixlRenderTarget *renderTarget = m_drPixlRenderTarget;
   if (renderTarget != nullptr) {
     delete renderTarget;
-    unknown20 = nullptr;
+    m_drPixlRenderTarget = nullptr;
   }
 }
 
@@ -33,6 +33,6 @@ void DrPixlPostObjRainDrop::requestUseLoadedDepth() { unknown18 &= ~4; }
 
 void DrPixlPostObjRainDrop::requestSaveDepth(const char *) {}
 
-void DrPixlPostObjRainDrop::update() { unknown00->unknown120[unknown00->unknown1c98]->getRainDropOn(); }
+void DrPixlPostObjRainDrop::update() { m_drMan->unknown120[m_drMan->unknown1c98]->getRainDropOn(); }
 
 } // namespace ml

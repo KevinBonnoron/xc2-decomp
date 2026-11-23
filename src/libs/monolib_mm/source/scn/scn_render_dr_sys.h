@@ -53,10 +53,10 @@ public:
   static void createDrRender(Scn *scn);
   static u32 thDrSysInitialize(void *argument, void *userData);
 
-  DrMan *unknown10; // Inferred role: dr man; original member name unknown.
+  DrMan *m_drMan; // Inferred role: dr man; original member name unknown.
 };
 
-static_assert(offsetof(ScnRenderDrSys, unknown10) == 0x10, "");
+static_assert(offsetof(ScnRenderDrSys, m_drMan) == 0x10, "");
 static_assert(sizeof(ScnRenderDrSys) == 0x18, "");
 
 class ScnRenderDrViewCtrl {

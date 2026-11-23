@@ -21,7 +21,7 @@ f32 LipsyncManager::getVolume(f32 frame) const {
   return unknownf0->GetFloat(row, 1);
 }
 
-LipsyncManager::LipsyncManager() : unknown10(0), unknown60(nullptr), unknownf0(nullptr) {}
+LipsyncManager::LipsyncManager() : unknown10(0), m_lipsyncRes(nullptr), unknownf0(nullptr) {}
 
 void LipsyncManager::clear() {
   for (size_t i = 0; i < unknown18.size(); i++) {
@@ -31,7 +31,7 @@ void LipsyncManager::clear() {
     }
   }
   unknown18.clear();
-  unknown60 = nullptr;
+  m_lipsyncRes = nullptr;
   if (unknownf0 != nullptr) {
     delete unknownf0;
     unknownf0 = nullptr;
@@ -80,8 +80,8 @@ void LipsyncManager::setEvent(const char *name) {
       break;
     }
   }
-  unknown60 = res;
-  setFlag(FLAG_UNKNOWN_0, unknown60 != nullptr);
+  m_lipsyncRes = res;
+  setFlag(FLAG_UNKNOWN_0, m_lipsyncRes != nullptr);
 }
 
 bool LipsyncManager::setTarget(const char *name) {
@@ -89,7 +89,7 @@ bool LipsyncManager::setTarget(const char *name) {
     return false;
   }
   int size;
-  void *data = unknown60->searchCsv(name, size);
+  void *data = m_lipsyncRes->searchCsv(name, size);
   if (data == nullptr) {
     unknown68 = "";
     setFlag(FLAG_UNKNOWN_1, false);

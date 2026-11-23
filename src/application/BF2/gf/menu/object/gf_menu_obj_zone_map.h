@@ -35,7 +35,7 @@ public:
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x20 - 0x0c];
-    GfMenuObjZoneMap *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjZoneMap *m_menuObjZoneMap; // Inferred role: owner; original member name unknown.
   };
 
   class HelpListener : public ui::UIObjectListener {
@@ -43,7 +43,7 @@ public:
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x20 - 0x0c];
-    GfMenuObjZoneMap *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjZoneMap *m_menuObjZoneMap; // Inferred role: owner; original member name unknown.
   };
 
   class MapSelectListener : public ui::UIObjectListener {
@@ -51,7 +51,7 @@ public:
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x20 - 0x0c];
-    GfMenuObjZoneMap *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjZoneMap *m_menuObjZoneMap; // Inferred role: owner; original member name unknown.
   };
 
   struct MapJumpInfo {
@@ -110,7 +110,7 @@ public:
   bool unknown3124; // Role and original member name unknown, cleared by the constructor.
   bool unknown3125; // Role and original member name unknown, cleared by the constructor.
   u8 _3126[0x3128 - 0x3126];
-  GfMenuCallContext *unknown3128;                  // Inferred role: call context; original member name unknown.
+  GfMenuCallContext *m_menuCallContext;            // Inferred role: call context; original member name unknown.
   GfMenuSequence<GfMenuObjZoneMap, 8> unknown3130; // Inferred role: queued steps; original member name unknown.
   bool unknown33c0;                                // Role and original member name unknown, cleared by the constructor.
   u8 _33c1[0x33c8 - 0x33c1];
@@ -118,7 +118,7 @@ public:
   u16 unknown33d0; // Role and original member name unknown, cleared by the constructor.
 };
 
-static_assert(offsetof(GfMenuObjZoneMap::MainListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjZoneMap::MainListener, m_menuObjZoneMap) == 0x20, "");
 static_assert(offsetof(GfMenuObjZoneMap, unknown28) == 0x28, "");
 static_assert(offsetof(GfMenuObjZoneMap, unknown30) == 0x30, "");
 static_assert(offsetof(GfMenuObjZoneMap, unknown38) == 0x38, "");
@@ -133,7 +133,7 @@ static_assert(offsetof(GfMenuObjZoneMap, unknown0a0) == 0xa0, "");
 static_assert(offsetof(GfMenuObjZoneMap, unknown3100) == 0x3100, "");
 static_assert(offsetof(GfMenuObjZoneMap, unknown3124) == 0x3124, "");
 static_assert(offsetof(GfMenuObjZoneMap, unknown3125) == 0x3125, "");
-static_assert(offsetof(GfMenuObjZoneMap, unknown3128) == 0x3128, "");
+static_assert(offsetof(GfMenuObjZoneMap, m_menuCallContext) == 0x3128, "");
 static_assert(offsetof(GfMenuObjZoneMap, unknown3130) == 0x3130, "");
 static_assert(offsetof(GfMenuObjZoneMap, unknown33c0) == 0x33c0, "");
 static_assert(offsetof(GfMenuObjZoneMap, unknown33c8) == 0x33c8, "");

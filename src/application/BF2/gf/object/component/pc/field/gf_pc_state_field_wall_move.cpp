@@ -17,15 +17,15 @@
 namespace gf {
 namespace pc {
 
-void StateFieldWallMove::enter(GfComBehaviorPc *behavior, ai::State *previous) { behavior->getProperty()->unknown310.unknown10_7 = false; }
+void StateFieldWallMove::enter(GfComBehaviorPc *behavior, ai::State *previous) { behavior->getProperty()->m_propertyField.unknown10_7 = false; }
 
 void StateFieldWallMove::leave(GfComBehaviorPc *behavior, ai::State *next) {
   GfComPropertyPc *property = behavior->unknown08->getComponent<GfComPropertyPc>();
-  if (property->unknown310.unknown10_6) {
+  if (property->m_propertyField.unknown10_6) {
     MsgPcFieldNotifyWall message;
-    message.unknown10 = property->unknown310.unknown130.unknown00;
-    message.unknown30.unknown00 = property->unknown160.unknown00;
-    message.unknown30.unknown10 = property->unknown160.unknown10;
+    message.unknown10 = property->m_propertyField.unknown130.unknown00;
+    message.m_transform.unknown00 = property->unknown160.unknown00;
+    message.m_transform.unknown10 = property->unknown160.unknown10;
     message.unknown50 = 3;
     StateUtilField::sendMessageWallChilds(*property, message);
   }
@@ -45,12 +45,12 @@ void StateFieldWallMove::update(GfComBehaviorPc *behavior, const fw::UpdateInfo 
     GfPropertyField::WALL_MOVE_MODE mode = StateUtilField::decideWallMoveMode(*property);
     if (StateUtilField::isMovableWall(*property, mode)) {
       if (StateUtilField::execAsmCmd(*comAsm, StateUtilField::getAsmID(mode))) {
-        property->unknown310.unknown14 = mode;
+        property->m_propertyField.unknown14 = mode;
         reqState(STATE_ID_UNKNOWN_47);
         return;
       }
     } else if (StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_CLIMBIDLE)) {
-      property->unknown310.unknown14 = GfPropertyField::WALL_MOVE_MODE_UNKNOWN_FFFFFFFF;
+      property->m_propertyField.unknown14 = GfPropertyField::WALL_MOVE_MODE_UNKNOWN_FFFFFFFF;
       reqState(STATE_ID_UNKNOWN_46);
       return;
     }

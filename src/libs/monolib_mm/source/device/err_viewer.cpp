@@ -27,7 +27,7 @@ ErrViewer::ErrViewer() {
   unknown26a = false;
   unknown26b = false;
   unknown26c = false;
-  unknown10 = new (WorkUtil::getWorkMem()) CriticalSection();
+  m_criticalSection = new (WorkUtil::getWorkMem()) CriticalSection();
   s_nHandle = 0;
   WorkCpu::addBackgroundListener(this);
 }
@@ -37,9 +37,9 @@ ErrViewer::~ErrViewer() {
     WorkControl::pause(false, SYS_TAG_ERR());
   }
   WorkCpu::removeBackgroundListener(this);
-  if (unknown10 != nullptr) {
-    delete unknown10;
-    unknown10 = nullptr;
+  if (m_criticalSection != nullptr) {
+    delete m_criticalSection;
+    m_criticalSection = nullptr;
   }
 }
 
@@ -48,9 +48,9 @@ bool ErrViewer::isValid(CERR_STRUCT *error) {
   if (viewer == nullptr) {
     return false;
   }
-  CS lock(*viewer->unknown10);
+  CS lock(*viewer->m_criticalSection);
   for (mm::mtl::FixedList<ERRINFO *, 32>::iterator it = viewer->unknown18.begin(); it != viewer->unknown18.end(); ++it) {
-    if ((*it)->unknown10 == error) {
+    if ((*it)->m_CERR_STRUCT == error) {
       return true;
     }
   }
@@ -60,10 +60,10 @@ bool ErrViewer::isValid(CERR_STRUCT *error) {
 void ErrViewer::reqCancel(CERR_STRUCT *error) {
   ErrViewer *viewer = get();
   if (viewer != nullptr) {
-    CS lock(*viewer->unknown10);
+    CS lock(*viewer->m_criticalSection);
     for (mm::mtl::FixedList<ERRINFO *, 32>::iterator it = viewer->unknown18.begin(); it != viewer->unknown18.end(); ++it) {
-      if ((*it)->unknown10 == error) {
-        (*it)->unknown08 = nullptr;
+      if ((*it)->m_CERR_STRUCT == error) {
+        (*it)->m_iCBError = nullptr;
         break;
       }
     }
@@ -94,7 +94,7 @@ void ErrViewer::standby() {
   }
   viewer->upErrViewer();
   if (viewer->unknown269) {
-    CS lock(*viewer->unknown10);
+    CS lock(*viewer->m_criticalSection);
     for (mm::mtl::FixedList<ERRINFO *, 32>::iterator it = viewer->unknown18.begin(); it != viewer->unknown18.end(); ++it) {
       if ((*it)->unknown18 != nullptr) {
         mtl::MemManager::deallocate((*it)->unknown18, 0, false);
@@ -115,12 +115,12 @@ bool ErrViewer::isExistError() const {
   if (WorkRoot::isRestart()) {
     return false;
   }
-  CS lock(*unknown10);
+  CS lock(*m_criticalSection);
   return unknown18.begin() != unknown18.end();
 }
 
 ErrViewer::ERRINFO *ErrViewer::getError() const {
-  CS lock(*unknown10);
+  CS lock(*m_criticalSection);
   if (!isExistError()) {
     return nullptr;
   }
@@ -131,7 +131,7 @@ void ErrViewer::deleteError() {
   if (!isExistError()) {
     return;
   }
-  CS lock(*unknown10);
+  CS lock(*m_criticalSection);
   mm::mtl::FixedList<ERRINFO *, 32>::iterator it = unknown18.begin();
   if (it != unknown18.end()) {
     if ((*it)->unknown18 != nullptr) {
@@ -150,9 +150,9 @@ void ErrViewer::callbackError(ERR_CALL call) {
   if (!isExistError()) {
     return;
   }
-  CS lock(*unknown10);
+  CS lock(*m_criticalSection);
   ERRINFO *info = *unknown18.begin();
-  if (info->unknown04 == call && info->unknown08 != nullptr && !info->unknown08->unknown001(info->unknown10) && info->unknownb0 > 0) {
+  if (info->unknown04 == call && info->m_iCBError != nullptr && !info->m_iCBError->unknown001(info->m_CERR_STRUCT) && info->unknownb0 > 0) {
     info->unknownac = info->unknownb0;
   }
 }

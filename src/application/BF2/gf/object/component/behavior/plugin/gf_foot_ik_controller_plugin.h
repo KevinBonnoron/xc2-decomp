@@ -39,16 +39,16 @@ public:
   virtual void update(GfComBehavior &behavior, const fw::UpdateInfo &info);
   void switchMode(Mode mode);
 
-  GfComBehavior *unknown10; // Inferred role: behavior; original member name unknown.
-  Mode unknown18;           // Inferred role: ground solver mode; original member name unknown.
-  bool unknown1c;           // Inferred role: slope solver with placement solver; original member name unknown.
-  bool unknown1d;           // Inferred role: ground placement enabled; original member name unknown.
-  u8 unknown1e;             // Inferred role: force foot ground fit; original member name unknown.
-  bool unknown1f;           // Inferred role: ground placement allowed; original member name unknown.
-  bool unknown20;           // Inferred role: force two chara ground fit; original member name unknown.
+  GfComBehavior *m_comBehavior; // Inferred role: behavior; original member name unknown.
+  Mode unknown18;               // Inferred role: ground solver mode; original member name unknown.
+  bool unknown1c;               // Inferred role: slope solver with placement solver; original member name unknown.
+  bool unknown1d;               // Inferred role: ground placement enabled; original member name unknown.
+  u8 unknown1e;                 // Inferred role: force foot ground fit; original member name unknown.
+  bool unknown1f;               // Inferred role: ground placement allowed; original member name unknown.
+  bool unknown20;               // Inferred role: force two chara ground fit; original member name unknown.
 };
 
-static_assert(offsetof(FootIkControllerPlugin, unknown10) == 0x10, "");
+static_assert(offsetof(FootIkControllerPlugin, m_comBehavior) == 0x10, "");
 static_assert(offsetof(FootIkControllerPlugin, unknown18) == 0x18, "");
 static_assert(offsetof(FootIkControllerPlugin, unknown1c) == 0x1c, "");
 static_assert(offsetof(FootIkControllerPlugin, unknown1d) == 0x1d, "");

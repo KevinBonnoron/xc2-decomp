@@ -25,7 +25,7 @@ void GmkRoutedNpcList::create(const CreateInfo &info) { TGmkList::create(info); 
 
 void GmkRoutedNpcList::createGmk(void *data) {
   TGmkList::createGmk(data);
-  GmkNpcManager *manager = &getCreateInfo().unknown08->unknown178;
+  GmkNpcManager *manager = &getCreateInfo().m_gmkSet->m_gmkNpcManager;
   u32 num = getInstNum();
   for (u32 i = 0; i < num; i++) {
     manager->addGmkNpc(&gmkInsts[i]);
@@ -33,9 +33,9 @@ void GmkRoutedNpcList::createGmk(void *data) {
 }
 
 void GmkRoutedNpcList::disposeGmk() {
-  GmkSet *set = getCreateInfo().unknown08;
+  GmkSet *set = getCreateInfo().m_gmkSet;
   if (set != nullptr) {
-    GmkNpcManager *manager = &set->unknown178;
+    GmkNpcManager *manager = &set->m_gmkNpcManager;
     u32 num = getInstNum();
     for (u32 i = 0; i < num; i++) {
       manager->removeGmkNpc(&gmkInsts[i]);
@@ -47,9 +47,9 @@ void GmkRoutedNpcList::disposeGmk() {
 GmkType GmkRoutedNpc::getGmkType() const { return GMK_TYPE; }
 
 void GmkRoutedNpc::dispose() {
-  if (unknown70 != nullptr) {
-    delete unknown70;
-    unknown70 = nullptr;
+  if (m_gmkRouteNavi != nullptr) {
+    delete m_gmkRouteNavi;
+    m_gmkRouteNavi = nullptr;
   }
   AGmkBase::dispose();
 }
@@ -97,8 +97,8 @@ void GmkRoutedNpc::onGobEvent(gf::IGfObjListener::OBJEVT event, gf::GF_OBJ_HANDL
   if (event == gf::IGfObjListener::OBJEVT_UNKNOWN_3) {
     unbindToGameObj(handle);
     unknown78 = true;
-    if (AGmkNpc::unknown18->unknown30 == handle) {
-      AGmkNpc::unknown18->disposeGobInst(false);
+    if (AGmkNpc::m_gmkNpcIdInfo->unknown30 == handle) {
+      AGmkNpc::m_gmkNpcIdInfo->disposeGobInst(false);
     }
   }
 }
@@ -122,10 +122,10 @@ void GmkRoutedNpc::unbindToGameObj(gf::GF_OBJ_HANDLE *handle) const {
 }
 
 gf::GF_OBJ_HANDLE *GmkRoutedNpc::getGobInst() const {
-  if (AGmkNpc::unknown18 == nullptr) {
+  if (AGmkNpc::m_gmkNpcIdInfo == nullptr) {
     return gf::unknown020;
   }
-  gf::GF_OBJ_HANDLE *handle = AGmkNpc::unknown18->unknown30;
+  gf::GF_OBJ_HANDLE *handle = AGmkNpc::m_gmkNpcIdInfo->unknown30;
   if (this != getBindedGmkInst(handle)) {
     return gf::unknown020;
   }
@@ -133,7 +133,7 @@ gf::GF_OBJ_HANDLE *GmkRoutedNpc::getGobInst() const {
 }
 
 bool GmkRoutedNpc::isPopCondMatchedExceptDist() const {
-  if (AGmkNpc::unknown18 != nullptr && AGmkNpc::unknown18->unknown18 == this) {
+  if (AGmkNpc::m_gmkNpcIdInfo != nullptr && AGmkNpc::m_gmkNpcIdInfo->m_aGmkNpc == this) {
     return isPopCondMatched();
   }
   return false;
@@ -148,7 +148,7 @@ bool GmkRoutedNpc::findPopPosRot(mm::Vec3 &position, mm::Vec3 &rotation) const {
   } else {
     unknown78 = false;
     GmkRouteNavi::InitResult result;
-    if (!unknown70->initAtRandom(result)) {
+    if (!m_gmkRouteNavi->initAtRandom(result)) {
       return false;
     }
     position = result.position;
@@ -179,11 +179,11 @@ void GmkRoutedNpc::debugDraw() const {
   GmkRoute::debugDraw(isPopCondMatched);
 }
 
-int GmkRoutedNpc::getBindedBdatId() const { return GmkRoute::unknown20.unknown18; }
+int GmkRoutedNpc::getBindedBdatId() const { return GmkRoute::m_createInfo.unknown18; }
 
-u8 *GmkRoutedNpc::getBindedBdatFp() const { return GmkRoute::unknown08.unknown00->getBindedBdatFp(); }
+u8 *GmkRoutedNpc::getBindedBdatFp() const { return GmkRoute::m_createBaseInfo.m_ownerGmkEnemyList->getBindedBdatFp(); }
 
-const IGmkList *GmkRoutedNpc::getBindedRoutePointList() const { return GmkRoute::unknown08.unknown00->getCreateInfo().unknown08->unknown1b8[GMK_TYPE_UNKNOWN_5]; }
+const IGmkList *GmkRoutedNpc::getBindedRoutePointList() const { return GmkRoute::m_createBaseInfo.m_ownerGmkEnemyList->getCreateInfo().m_gmkSet->unknown1b8[GMK_TYPE_UNKNOWN_5]; }
 
 } // namespace gmk
 

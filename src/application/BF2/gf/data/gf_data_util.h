@@ -3,6 +3,8 @@
 
 namespace gf {
 
+struct RealTime;
+
 constexpr u32 MONEY_UNKNOWN_999999999 = 999'999'999; // Inferred role: money max; original name unknown.
 constexpr u32 COIN_UNKNOWN_9999 = 9'999;             // Inferred role: coin max; original name unknown.
 
@@ -56,7 +58,7 @@ public:
 
   static void setRandomInn();
   static void setSalvagerPoint(u32 salvagerPoint);
-  static u64 *getSaveRealTime();
+  static RealTime *getSaveRealTime();
   static bool isCollectFlagNewVersion();
   static void convertNewCollectFlagPatch();
 

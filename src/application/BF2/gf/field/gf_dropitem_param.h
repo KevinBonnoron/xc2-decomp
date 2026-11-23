@@ -48,15 +48,15 @@ static_assert(sizeof(GfDropitemParam) == 0x5c, "");
 
 class GfDropitemParamInst {
 public:
-  GfDropitemParamInst() : unknown00(nullptr), unknown08(0.0f), unknown0c(0.0f) {}
+  GfDropitemParamInst() : m_dropitemParam(nullptr), unknown08(0.0f), unknown0c(0.0f) {}
   GfDropitemParamInst(const GfDropitemParam *param, f32 height);
   void create(const GfDropitemParam &param, f32 height);
   f32 getGravity() const;
   mm::Vec3 &getInitVelocity(mm::Vec3 &velocity) const;
 
-  const GfDropitemParam *unknown00; // Inferred role: base parameters; original member name unknown.
-  f32 unknown08;                    // Role and original member name unknown.
-  f32 unknown0c;                    // Role and original member name unknown.
+  const GfDropitemParam *m_dropitemParam; // Inferred role: base parameters; original member name unknown.
+  f32 unknown08;                          // Role and original member name unknown.
+  f32 unknown0c;                          // Role and original member name unknown.
 };
 
 static_assert(offsetof(GfDropitemParamInst, unknown08) == 0x08, "");

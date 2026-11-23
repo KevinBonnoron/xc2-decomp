@@ -11,7 +11,7 @@ template bool TGmkList<GmkAreaWeather, GmkAreaWeather::BdatInfo, 1381259073u, 2u
 
 GmkType GmkAreaWeather::getGmkType() const { return GMK_TYPE; }
 
-bool GmkAreaWeather::isValid() const { return unknown08.unknown00 != nullptr && unknown20.unknown08 != nullptr; }
+bool GmkAreaWeather::isValid() const { return m_createBaseInfo.m_ownerGmkEnemyList != nullptr && m_createInfo.unknown08 != nullptr; }
 
 void GmkAreaWeather::create(const CreateInfo &info) {
   AGmkBase::create(info);
@@ -19,21 +19,21 @@ void GmkAreaWeather::create(const CreateInfo &info) {
 }
 
 void GmkAreaWeather::createGmkPhantom() {
-  const GmkSet *set = unknown08.unknown00->getCreateInfo().unknown08;
-  if (set != nullptr && set->unknown10.unknown24) {
+  const GmkSet *set = m_createBaseInfo.m_ownerGmkEnemyList->getCreateInfo().m_gmkSet;
+  if (set != nullptr && set->m_createInfo.unknown24) {
     return;
   }
-  unknown50.create(*this, nullptr, false);
+  m_gmkPhantom.create(*this, nullptr, false);
 }
 
 void GmkAreaWeather::dispose() {
-  if (unknown50.unknown78 != nullptr) {
-    unknown50.unknown78->setColiUserData(nullptr);
-    unknown50.unknown78->setListener(nullptr);
+  if (m_gmkPhantom.unknown78 != nullptr) {
+    m_gmkPhantom.unknown78->setColiUserData(nullptr);
+    m_gmkPhantom.unknown78->setListener(nullptr);
   }
-  unknown50.unknown83 = false;
-  mm::mtl::safeRelease(unknown50.unknown78);
-  unknown50.unknown70 = nullptr;
+  m_gmkPhantom.unknown83 = false;
+  mm::mtl::safeRelease(m_gmkPhantom.unknown78);
+  m_gmkPhantom.unknown70 = nullptr;
   AGmkBase::dispose();
 }
 

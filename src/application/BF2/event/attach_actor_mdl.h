@@ -24,7 +24,7 @@ public:
   void setTransform(const mm::Mat44 &transform);
 
 private:
-  ModelObj *unknowna0; // Inferred role: model object; original member name unknown.
+  ModelObj *m_modelObj; // Inferred role: model object; original member name unknown.
 };
 
 static_assert(sizeof(AttachActorMdl) == 0xb0, "");

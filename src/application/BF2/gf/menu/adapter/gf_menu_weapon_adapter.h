@@ -46,12 +46,12 @@ public:
 
   class BladeWithChipListConverter : public IConverter {
   public:
-    BladeWithChipListConverter(u32 blade, GfMenuItemList *list, u32 index) : unknown08(blade), unknown10(list), unknown18(index) {}
+    BladeWithChipListConverter(u32 blade, GfMenuItemList *list, u32 index) : unknown08(blade), m_menuItemList(list), unknown18(index) {}
     u32 getWeaponID() override;
 
-    u32 unknown08;             // Inferred role: blade; original member name unknown.
-    GfMenuItemList *unknown10; // Inferred role: chip list; original member name unknown.
-    u32 unknown18;             // Inferred role: chip list index; original member name unknown.
+    u32 unknown08;                  // Inferred role: blade; original member name unknown.
+    GfMenuItemList *m_menuItemList; // Inferred role: chip list; original member name unknown.
+    u32 unknown18;                  // Inferred role: chip list index; original member name unknown.
   };
 
   struct ReferenceChip {
@@ -87,13 +87,13 @@ public:
   void update(const fw::UpdateInfo &info) override;
 
   mm::mtl::Delegate<bool(u32)> unknown30; // Inferred role: updater; original member name unknown.
-  IConverter *unknown50;                  // Inferred role: converter; original member name unknown.
+  IConverter *m_iConverter;               // Inferred role: converter; original member name unknown.
   u32 unknown58;                          // Inferred role: weapon; original member name unknown.
   u32 unknown5c;                          // Role and original member name unknown.
 };
 
 static_assert(offsetof(GfMenuWeaponAdapter, unknown30) == 0x30, "");
-static_assert(offsetof(GfMenuWeaponAdapter, unknown50) == 0x50, "");
+static_assert(offsetof(GfMenuWeaponAdapter, m_iConverter) == 0x50, "");
 static_assert(offsetof(GfMenuWeaponAdapter, unknown58) == 0x58, "");
 static_assert(sizeof(GfMenuWeaponAdapter) == 0x60, "");
 

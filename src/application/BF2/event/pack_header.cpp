@@ -2,13 +2,13 @@
 
 namespace event {
 
-const char *PackHeader::getPath(u32 index) const { return mFiles[index].unknown00; }
+const char *PackHeader::getPath(u32 index) const { return mFiles[index].m_path; }
 
-u32 PackHeader::getPrio(u32 index) const { return mFiles[index].unknown108; }
+u32 PackHeader::getPrio(u32 index) const { return mFiles[index].m_prio; }
 
-u32 PackHeader::getDataOfs(u32 index) const { return mFiles[index].unknown100; }
+u32 PackHeader::getDataOfs(u32 index) const { return mFiles[index].m_dataOfs; }
 
-u32 PackHeader::getDataSize(u32 index) const { return mFiles[index].unknown104; }
+u32 PackHeader::getDataSize(u32 index) const { return mFiles[index].m_dataSize; }
 
 u32 PackHeader::getCount() const { return mCount; }
 

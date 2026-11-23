@@ -12,9 +12,9 @@ public:
   explicit DrPixlRenderCubeMapMipMap(DrMan *man);
   ~DrPixlRenderCubeMapMipMap();
 
-  DrMan *unknown1888; // Inferred role: DrMan owner; original member name unknown.
+  DrMan *m_drMan; // Inferred role: DrMan owner; original member name unknown.
 };
 
-static_assert(offsetof(DrPixlRenderCubeMapMipMap, unknown1888) == 0x1888, "");
+static_assert(offsetof(DrPixlRenderCubeMapMipMap, m_drMan) == 0x1888, "");
 
 } // namespace ml

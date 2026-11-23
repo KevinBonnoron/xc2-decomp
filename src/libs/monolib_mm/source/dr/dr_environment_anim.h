@@ -180,23 +180,23 @@ public:
 
   static void (DrEnvironmentAnim::*s_pFogAnim[])(DrFogObjGbl *fog, const LgtAnimInf *inf, f32 frame);
 
-  const unknown001 *unknown00; // Inferred role: animation ranges; original member name unknown.
-  const LgtAnimInf *unknown08; // Inferred role: animation commands; original member name unknown.
-  const unknown086 *unknown10; // Inferred role: hermite keys; original member name unknown.
-  const unknown087 *unknown18; // Inferred role: bit keys; original member name unknown.
-  const f32 *unknown20;        // Inferred role: rotation values; original member name unknown.
-  int unknown28;               // Inferred role: anim num; original member name unknown.
-  f32 *unknown30;              // Inferred role: frames; original member name unknown.
-  mm::Col3 unknown38;          // Inferred role: color; original member name unknown.
-  mm::Col3 unknown44;          // Inferred role: side color; original member name unknown.
-  mm::Col3 unknown50;          // Inferred role: sun color; original member name unknown.
-  f32 unknown5c;               // Inferred role: intensity; original member name unknown.
-  f32 unknown60[3];            // Inferred role: anm val; original member name unknown.
+  const unknown001 *unknown00;    // Inferred role: animation ranges; original member name unknown.
+  const LgtAnimInf *m_lgtAnimInf; // Inferred role: animation commands; original member name unknown.
+  const unknown086 *unknown10;    // Inferred role: hermite keys; original member name unknown.
+  const unknown087 *unknown18;    // Inferred role: bit keys; original member name unknown.
+  const f32 *unknown20;           // Inferred role: rotation values; original member name unknown.
+  int unknown28;                  // Inferred role: anim num; original member name unknown.
+  f32 *unknown30;                 // Inferred role: frames; original member name unknown.
+  mm::Col3 unknown38;             // Inferred role: color; original member name unknown.
+  mm::Col3 unknown44;             // Inferred role: side color; original member name unknown.
+  mm::Col3 unknown50;             // Inferred role: sun color; original member name unknown.
+  f32 unknown5c;                  // Inferred role: intensity; original member name unknown.
+  f32 unknown60[3];               // Inferred role: anm val; original member name unknown.
 };
 
 static_assert(offsetof(DrEnvironmentAnim::unknown001, unknown0c) == 0x0c, "");
 static_assert(sizeof(DrEnvironmentAnim::unknown001) == 0x10, "");
-static_assert(offsetof(DrEnvironmentAnim, unknown08) == 0x08, "");
+static_assert(offsetof(DrEnvironmentAnim, m_lgtAnimInf) == 0x08, "");
 static_assert(offsetof(DrEnvironmentAnim, unknown20) == 0x20, "");
 static_assert(offsetof(DrEnvironmentAnim, unknown10) == 0x10, "");
 static_assert(offsetof(DrEnvironmentAnim, unknown28) == 0x28, "");

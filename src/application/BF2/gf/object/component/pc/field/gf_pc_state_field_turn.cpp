@@ -16,14 +16,14 @@ void StateFieldTurn::enter(GfComBehaviorPc *behavior, ai::State *previous) {
   GfComPropertyPc *property = behavior->unknown08->getComponent<GfComPropertyPc>();
   StateUtilField::setAsmSpeedMove(*property);
   property->unknown007();
-  unknown18 = previous->unknown08 != STATE_ID_UNKNOWN_7;
+  unknown18 = previous->m_state != STATE_ID_UNKNOWN_7;
   unknown008(*property, unknown20);
   StateUtilField::notifyTurn(*behavior);
 }
 
 void StateFieldTurn::leave(GfComBehaviorPc *behavior, ai::State *next) {
   GfComPropertyPc *property = behavior->unknown08->getComponent<GfComPropertyPc>();
-  if (next != nullptr && next->unknown08 != STATE_ID_UNKNOWN_12) {
+  if (next != nullptr && next->m_state != STATE_ID_UNKNOWN_12) {
     property->unknown80 = mm::Vec3::zero;
   }
   property->unknown94 = 0.0f;

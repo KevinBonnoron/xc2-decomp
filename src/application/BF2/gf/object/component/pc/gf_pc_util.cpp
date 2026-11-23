@@ -8,7 +8,7 @@ namespace pc {
 
 bool isWallState(ai::State *state) {
   while (state != nullptr) {
-    if (state->unknown08 == STATE_ID_UNKNOWN_38) {
+    if (state->m_state == STATE_ID_UNKNOWN_38) {
       return true;
     }
 

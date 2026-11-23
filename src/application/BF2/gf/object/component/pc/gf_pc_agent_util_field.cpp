@@ -52,15 +52,15 @@ mm::Vec2 AgentUtilField::calcFollowWallInput(const mm::Vec3 &position, GfComProp
   mm::Vec3 offset = position - property.unknown160.unknown00;
   f32 up = offset.x * property.unknown1c0.x + offset.y * property.unknown1c0.y + offset.z * property.unknown1c0.z;
   if (up >= 0.0f) {
-    input.y = up >= property.unknown310.unknown3c ? 1.0f : 0.0f;
+    input.y = up >= property.m_propertyField.unknown3c ? 1.0f : 0.0f;
   } else {
-    input.y = up <= -property.unknown310.unknown40 ? -1.0f : 0.0f;
+    input.y = up <= -property.m_propertyField.unknown40 ? -1.0f : 0.0f;
   }
   f32 side = offset.x * property.unknown200.x + offset.y * property.unknown200.y + offset.z * property.unknown200.z;
   if (side >= 0.0f) {
-    input.x = side >= property.unknown310.unknown44 ? 1.0f : 0.0f;
+    input.x = side >= property.m_propertyField.unknown44 ? 1.0f : 0.0f;
   } else {
-    input.x = side <= -property.unknown310.unknown44 ? -1.0f : 0.0f;
+    input.x = side <= -property.m_propertyField.unknown44 ? -1.0f : 0.0f;
   }
   return input;
 }
@@ -70,14 +70,14 @@ void AgentUtilField::setFollowWallEndInput(const mm::Vec3 &position, GfComProper
   property.unknown60.unknown04 = offset.x * property.unknown1c0.x + offset.y * property.unknown1c0.y + offset.z * property.unknown1c0.z >= 0.0f ? 1.0f : -1.0f;
   f32 side = offset.x * property.unknown200.x + offset.y * property.unknown200.y + offset.z * property.unknown200.z;
   if (side >= 0.0f) {
-    property.unknown60.unknown00 = side >= property.unknown310.unknown44 ? 1.0f : 0.0f;
+    property.unknown60.unknown00 = side >= property.m_propertyField.unknown44 ? 1.0f : 0.0f;
   } else {
-    property.unknown60.unknown00 = side <= -property.unknown310.unknown44 ? -1.0f : 0.0f;
+    property.unknown60.unknown00 = side <= -property.m_propertyField.unknown44 ? -1.0f : 0.0f;
   }
 }
 
 bool AgentUtilField::getWallFollowTransform(const BlackBoardField &blackBoard, fw::Transform *transform) {
-  GfComPropertyPc *property = blackBoard.unknown08;
+  GfComPropertyPc *property = blackBoard.m_comPropertyPc;
   fw::ParamAdapter adapter = getAIParamAdapter(*property, PARAM_ID_FIELD_AI_UNKNOWN_5);
   if (blackBoard.unknown200.test(4)) {
     u32 index = adapter.get<WallAiParam>()->delay * (property->unknown38 >> 1);
@@ -100,7 +100,7 @@ bool AgentUtilField::isWallEndMove(const BlackBoardField &blackBoard) {
   if (blackBoard.unknown200.test(4)) {
     return false;
   }
-  GfComPropertyPc *property = blackBoard.unknown08;
+  GfComPropertyPc *property = blackBoard.m_comPropertyPc;
   const WallAiParam *param = static_cast<const WallAiParam *>(unknown001(*property)->unknown10[PARAM_ID_FIELD_AI_UNKNOWN_5].param);
   return !StateUtilField::isNearPlayer(*property, blackBoard.unknown90, param->climbEndSafeRange);
 }
@@ -118,7 +118,7 @@ bool AgentUtilField::calcParentPlayerPush(GfComPropertyPc &property, const mm::V
       if (i == property.unknown38) {
         return isPush;
       }
-      GfObjProperty *other = GfObjUtil::getProperty(formation->unknown1a0[i].unknown08);
+      GfObjProperty *other = GfObjUtil::getProperty(formation->unknown1a0[i].m_playerHandle);
       if (other != nullptr && other->unknown18->unknown00 == PROPERTY_MOVE_UNKNOWN_3) {
         mm::Vec3 offset = other->unknown18->unknown10 - position;
         const mm::Vec3 &normal = wallInfo->unknown00.normal;
@@ -142,8 +142,8 @@ bool AgentUtilField::calcParentPlayerPush(GfComPropertyPc &property, const mm::V
 }
 
 bool AgentUtilField::isEnableWallMove(GfComPropertyPc &property, const mm::Vec2 &input) {
-  f32 up = input.y * (input.y >= 0.0f ? property.unknown310.unknown3c : property.unknown310.unknown40);
-  f32 side = input.x * property.unknown310.unknown44;
+  f32 up = input.y * (input.y >= 0.0f ? property.m_propertyField.unknown3c : property.m_propertyField.unknown40);
+  f32 side = input.x * property.m_propertyField.unknown44;
   mm::Vec3 position = property.unknown1c0 * up + property.unknown200 * side + property.unknown160.unknown00;
   const WallAiParam *param = getAIParamAdapter(property, PARAM_ID_FIELD_AI_UNKNOWN_5).get<WallAiParam>();
   mm::Vec3 push;
@@ -156,7 +156,7 @@ bool AgentUtilField::existNearChimbPlayer(GfComPropertyPc &property, const mm::V
   bool isExist = false;
   for (u32 i = 0; i < GfGamePlayerFormation::PLAYER_UNKNOWN_6; i++) {
     if (formation->unknown1a0[i].unknown10) {
-      GfObjProperty *other = GfObjUtil::getProperty(formation->unknown1a0[i].unknown08);
+      GfObjProperty *other = GfObjUtil::getProperty(formation->unknown1a0[i].m_playerHandle);
       if (other != nullptr && other->unknown18->unknown00 == PROPERTY_MOVE_UNKNOWN_3) {
         mm::Vec3 offset = other->unknown18->unknown10 - position;
         isExist |= sqrtf(offset.x * offset.x + offset.y * offset.y + offset.z * offset.z) - param->nearRange < 0.0f;
@@ -171,11 +171,11 @@ bool AgentUtilField::isWallJumpAnyPlayer() {
   bool isWallJump = false;
   for (u32 i = 0; i < GfGamePlayerFormation::PLAYER_UNKNOWN_6; i++) {
     if (formation->unknown1a0[i].unknown10) {
-      GfObj *obj = GfObjUtil::getObj(formation->unknown1a0[i].unknown08);
+      GfObj *obj = GfObjUtil::getObj(formation->unknown1a0[i].m_playerHandle);
       if (obj != nullptr) {
         GfComPropertyPc *property = mm::mtl::dynamicCast<GfComPropertyPc>(obj->unknown38[GfComProperty::COMPONENT_INDEX]);
-        if (property->unknown310.unknown10_4) {
-          isWallJump = isWallJump || property->unknown310.unknown11_2;
+        if (property->m_propertyField.unknown10_4) {
+          isWallJump = isWallJump || property->m_propertyField.unknown11_2;
         }
       }
     }

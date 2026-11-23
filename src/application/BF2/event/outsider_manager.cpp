@@ -19,13 +19,13 @@ void OutsiderManager::clear() {
   if (unknown14 & FLAG_UNKNOWN_0) {
     update(false);
   }
-  unknown20.clear();
+  m_outsiderField.clear();
   unknown18 = OBJ_TYPE_UNKNOWN_0;
   unknown14 = 0;
 }
 
 void OutsiderManager::update(bool isHide) {
-  if (unknown20.getType() < OutsiderField::TYPE_UNKNOWN_1) {
+  if (m_outsiderField.getType() < OutsiderField::TYPE_UNKNOWN_1) {
     return;
   }
   if (unknown18 & OBJ_TYPE_UNKNOWN_0_2) {
@@ -53,8 +53,8 @@ void OutsiderManager::update(bool isHide) {
 
 void OutsiderManager::update() {
   if (unknown14 & FLAG_UNKNOWN_0) {
-    unknown20.update();
-    if (unknown20.getRadius() > 0.0f) {
+    m_outsiderField.update();
+    if (m_outsiderField.getRadius() > 0.0f) {
       update(true);
     }
   }
@@ -84,7 +84,7 @@ void OutsiderManager::updateSub(bool isHide, gf::GF_OBJ_HANDLE *handle) {
     return;
   }
   f32 alpha = gf::GfObjAcc(handle).getAlphaEvent();
-  if (unknown20.isInside(transform->getPosition())) {
+  if (m_outsiderField.isInside(transform->getPosition())) {
     alpha = __builtin_fmaxf(alpha - 0.1f, 0.0f);
   } else {
     alpha = __builtin_fminf(alpha + 0.1f, 1.0f);
@@ -94,7 +94,7 @@ void OutsiderManager::updateSub(bool isHide, gf::GF_OBJ_HANDLE *handle) {
 
 void OutsiderManager::render() {
   if (isDisp() && (unknown14 & FLAG_UNKNOWN_0)) {
-    unknown20.draw();
+    m_outsiderField.draw();
   }
 }
 
@@ -118,7 +118,7 @@ void OutsiderManager::OnEventProc(MSG_TYPE type) {
 
 void OutsiderManager::defineTgt(OBJ_TYPE targets) { unknown18 = targets; }
 
-void OutsiderManager::defineFld(OutsiderField::TYPE type, const mm::Vec3 &pos, f32 radius) { unknown20.setField(type, pos, radius); }
+void OutsiderManager::defineFld(OutsiderField::TYPE type, const mm::Vec3 &pos, f32 radius) { m_outsiderField.setField(type, pos, radius); }
 
 void OutsiderManager::setActive(bool isActive) {
   if (isActive) {

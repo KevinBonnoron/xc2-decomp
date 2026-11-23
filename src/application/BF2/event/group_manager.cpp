@@ -4,14 +4,14 @@ namespace event {
 
 GroupManager::GroupManager() : unknown10(0), unknown450(mm::Mat44::identity), unknown490(0.0f) {}
 
-void GroupManager::push(const CharaObj *chara) { unknown20.push(chara); }
+void GroupManager::push(const CharaObj *chara) { m_group.push(chara); }
 
-void GroupManager::pop(const CharaObj *chara) { unknown20.pop(chara); }
+void GroupManager::pop(const CharaObj *chara) { m_group.pop(chara); }
 
 void GroupManager::clear() {
   unknown450 = mm::Mat44::identity;
   unknown490 = 0.0f;
-  unknown20.clear();
+  m_group.clear();
 }
 
 void GroupManager::setDisp(bool isDisp) {

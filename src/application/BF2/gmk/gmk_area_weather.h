@@ -19,7 +19,7 @@ public:
 
   static const GmkType GMK_TYPE = GMK_TYPE_AREA_WEATHER; // Inferred name; shared by every gimmick class for the TGmkList templates.
 
-  GmkAreaWeather() : unknown50(nullptr) {}
+  GmkAreaWeather() : m_gmkPhantom(nullptr) {}
   ~GmkAreaWeather() override { dispose(); }
   GmkType getGmkType() const override;
   bool isValid() const override;
@@ -27,10 +27,10 @@ public:
   void createGmkPhantom();
   void dispose() override;
 
-  GmkPhantom unknown50; // Inferred role: phantom; original member name unknown.
+  GmkPhantom m_gmkPhantom; // Inferred role: phantom; original member name unknown.
 };
 
-static_assert(offsetof(GmkAreaWeather, unknown50) == 0x50, "");
+static_assert(offsetof(GmkAreaWeather, m_gmkPhantom) == 0x50, "");
 static_assert(sizeof(GmkAreaWeather) == 0xe0, "");
 
 typedef TGmkList<GmkAreaWeather, GmkAreaWeather::BdatInfo, 0x52545741, 2, GmkAreaWeatherGob> GmkAreaWeatherList;

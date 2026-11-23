@@ -13,12 +13,12 @@ static GfMenuPouchAdapter::TypeInfo TYPE_INFOS[] = {
     {&GfMenuPouchAdapter::update_PouchRemainTime, {GfMenuAdapter::unknown004_7, 3, 0}},
 };
 
-GfMenuPouchAdapter::GfMenuPouchAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways) : GfMenuAdapter(plugin, false, isUpdateAlways), unknown50(nullptr), _58(), unknown5c(0.0f), unknown60(0) {}
+GfMenuPouchAdapter::GfMenuPouchAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways) : GfMenuAdapter(plugin, false, isUpdateAlways), m_iConverter(nullptr), _58(), unknown5c(0.0f), unknown60(0) {}
 
 GfMenuPouchAdapter::~GfMenuPouchAdapter() {
-  if (unknown50 != nullptr) {
-    delete unknown50;
-    unknown50 = nullptr;
+  if (m_iConverter != nullptr) {
+    delete m_iConverter;
+    m_iConverter = nullptr;
   }
 }
 
@@ -67,7 +67,7 @@ GfMenuPouchAdapter *GfMenuPouchAdapter::createFromCoverter(u32 handle, u32 type,
   u32 driver = converter->getDriverId();
   GfMenuPouchAdapter *adapter = create(handle, type, pouchIndex, driver, isUpdateAlways);
   if (adapter != nullptr) {
-    adapter->unknown50 = converter;
+    adapter->m_iConverter = converter;
   }
   return adapter;
 }
@@ -87,13 +87,13 @@ GfMenuPouchAdapter *GfMenuPouchAdapter::createFromReferenceIndexReferenceDriver(
 }
 
 void GfMenuPouchAdapter::update(const fw::UpdateInfo &info) {
-  if (unknown50 != nullptr) {
-    u32 newPouchIndex = unknown50->getPouchIndex();
+  if (m_iConverter != nullptr) {
+    u32 newPouchIndex = m_iConverter->getPouchIndex();
     if (unknown60 != newPouchIndex) {
       unknown60 = newPouchIndex;
       setChange();
     }
-    u32 newDriver = unknown50->getDriverId();
+    u32 newDriver = m_iConverter->getDriverId();
     if (unknown64 != newDriver) {
       unknown64 = newDriver;
       setChange();

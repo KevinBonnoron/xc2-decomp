@@ -30,7 +30,7 @@ enum SCNAXIS {};
 class ScnDebugManipuObj {
 public:
   struct RENDER_INFO {
-    AttrTransform unknown00; // Inferred role: transform; original member name unknown.
+    AttrTransform m_attrTransform; // Inferred role: transform; original member name unknown.
   };
 
   void getGblMat(mm::Mat44 &matrix, bool isBack);
@@ -43,7 +43,7 @@ public:
   virtual void update() = 0;
   virtual void render(DebDraw *debDraw) = 0;
 
-  Scn *unknown08;      // Inferred role: scn; original member name unknown.
+  Scn *m_scn;          // Inferred role: scn; original member name unknown.
   SCNMANIPU unknown10; // Inferred role: type; original member name unknown.
   SCNAXIS unknown14;   // Inferred role: axis lock; original member name unknown.
   int unknown18;       // Inferred role: pick; original member name unknown.

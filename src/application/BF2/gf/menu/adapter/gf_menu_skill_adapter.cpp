@@ -26,12 +26,12 @@ static GfMenuSkillAdapter::TypeInfo TYPE_INFOS[] = {
 };
 
 GfMenuSkillAdapter::GfMenuSkillAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways)
-    : GfMenuAdapter(plugin, false, isUpdateAlways), unknown50(nullptr), _58(), unknown5c(0), unknown60(0), unknown64(0), unknown68(0) {}
+    : GfMenuAdapter(plugin, false, isUpdateAlways), m_iConverter(nullptr), _58(), unknown5c(0), unknown60(0), unknown64(0), unknown68(0) {}
 
 GfMenuSkillAdapter::~GfMenuSkillAdapter() {
-  if (unknown50 != nullptr) {
-    delete unknown50;
-    unknown50 = nullptr;
+  if (m_iConverter != nullptr) {
+    delete m_iConverter;
+    m_iConverter = nullptr;
   }
 }
 
@@ -194,7 +194,7 @@ GfMenuSkillAdapter *GfMenuSkillAdapter::createFromCoverter(u32 handle, u32 type,
   u16 round = converter->getRound();
   GfMenuSkillAdapter *adapter = create(handle, type, driver, line, level, round, isUpdateAlways);
   if (adapter != nullptr) {
-    adapter->unknown50 = converter;
+    adapter->m_iConverter = converter;
   }
   return adapter;
 }
@@ -214,23 +214,23 @@ GfMenuSkillAdapter *GfMenuSkillAdapter::createFromReferenceDriverLineLevel(u32 h
 }
 
 void GfMenuSkillAdapter::update(const fw::UpdateInfo &info) {
-  if (unknown50 != nullptr) {
-    u32 newDriver = unknown50->getDriverId();
+  if (m_iConverter != nullptr) {
+    u32 newDriver = m_iConverter->getDriverId();
     if (unknown5c != newDriver) {
       unknown5c = newDriver;
       setChange();
     }
-    u32 newLine = unknown50->getKizunaLine();
+    u32 newLine = m_iConverter->getKizunaLine();
     if (unknown60 != newLine) {
       unknown60 = newLine;
       setChange();
     }
-    u32 newLevel = unknown50->getKizunaLevel();
+    u32 newLevel = m_iConverter->getKizunaLevel();
     if (unknown64 != newLevel) {
       unknown64 = newLevel;
       setChange();
     }
-    u32 newRound = unknown50->getRound();
+    u32 newRound = m_iConverter->getRound();
     if (unknown68 != newRound) {
       unknown68 = newRound;
       setChange();

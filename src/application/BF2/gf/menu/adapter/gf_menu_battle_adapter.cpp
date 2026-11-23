@@ -49,12 +49,12 @@ static GfMenuBattleAdapter::TypeInfo TYPE_INFOS[] = {
     {&GfMenuBattleAdapter::update_ReverseIconCol, {GfMenuAdapter::unknown004_8, 0, 0}},
 };
 
-GfMenuBattleAdapter::GfMenuBattleAdapter(ui::UIObjectPlugin *plugin) : GfMenuAdapter(plugin, true, true), unknown30(0), unknown58(nullptr) {}
+GfMenuBattleAdapter::GfMenuBattleAdapter(ui::UIObjectPlugin *plugin) : GfMenuAdapter(plugin, true, true), unknown30(0), m_referenceIndexConverter(nullptr) {}
 
 GfMenuBattleAdapter::~GfMenuBattleAdapter() {
-  if (unknown58 != nullptr) {
-    delete unknown58;
-    unknown58 = nullptr;
+  if (m_referenceIndexConverter != nullptr) {
+    delete m_referenceIndexConverter;
+    m_referenceIndexConverter = nullptr;
   }
 }
 
@@ -249,14 +249,14 @@ GfMenuBattleAdapter *GfMenuBattleAdapter::createFromReferenceIndex(u32 handle, m
 #line 146
   ReferenceIndexConverter *converter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) ReferenceIndexConverter(number);
   GfMenuBattleAdapter *adapter = create(handle, type);
-  adapter->unknown58 = converter;
+  adapter->m_referenceIndexConverter = converter;
   return adapter;
 }
 
 void GfMenuBattleAdapter::update(const fw::UpdateInfo &info) {
-  if (unknown58 != nullptr) {
+  if (m_referenceIndexConverter != nullptr) {
     int newIndex = 0;
-    unknown58->getIndex(newIndex);
+    m_referenceIndexConverter->getIndex(newIndex);
     if (unknown30 != newIndex) {
       unknown30 = newIndex;
       setChange();

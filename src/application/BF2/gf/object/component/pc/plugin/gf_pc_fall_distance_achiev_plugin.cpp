@@ -16,29 +16,29 @@ enum {
 
 constexpr f32 unknown017 = 10.0f; // Inferred role: achiev fall distance min; original name unknown.
 
-FallDistanceAchievPlugin::FallDistanceAchievPlugin() : unknown10(nullptr), unknown18(0.0f) {}
+FallDistanceAchievPlugin::FallDistanceAchievPlugin() : m_comPropertyPc(nullptr), unknown18(0.0f) {}
 
 FallDistanceAchievPlugin::~FallDistanceAchievPlugin() {}
 
 bool FallDistanceAchievPlugin::setup(GfComBehaviorPc &behavior) {
-  unknown10 = behavior.unknown08->getComponent<GfComPropertyPc>();
+  m_comPropertyPc = behavior.unknown08->getComponent<GfComPropertyPc>();
   return true;
 }
 
 void FallDistanceAchievPlugin::cleanup(GfComBehaviorPc &) {}
 
-void FallDistanceAchievPlugin::onActivate() { unknown18 = unknown10->unknown160.unknown00.y; }
+void FallDistanceAchievPlugin::onActivate() { unknown18 = m_comPropertyPc->unknown160.unknown00.y; }
 
 void FallDistanceAchievPlugin::onDeactivate() {
-  f32 distance = unknown18 - unknown10->unknown160.unknown00.y;
+  f32 distance = unknown18 - m_comPropertyPc->unknown160.unknown00.y;
   if (distance >= unknown017) {
     SCOM_ACHIEV_INC::create(STATS_UNKNOWN_21, distance, 0);
   }
 }
 
 void FallDistanceAchievPlugin::update(GfComBehaviorPc &, const fw::UpdateInfo &) {
-  if (unknown10->unknown160.unknown00.y > unknown18) {
-    unknown18 = unknown10->unknown160.unknown00.y;
+  if (m_comPropertyPc->unknown160.unknown00.y > unknown18) {
+    unknown18 = m_comPropertyPc->unknown160.unknown00.y;
   }
 }
 

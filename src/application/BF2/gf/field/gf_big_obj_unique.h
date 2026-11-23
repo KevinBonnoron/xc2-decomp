@@ -10,7 +10,7 @@ struct GF_OBJ_HANDLE;
 class GfBigObjUnique {
 public:
   struct CreateInfo {
-    GF_OBJ_HANDLE *unknown00; // Inferred role: object; original member name unknown.
+    GF_OBJ_HANDLE *m_GF_OBJ_HANDLE; // Inferred role: object; original member name unknown.
   };
 
   GfBigObjUnique(const CreateInfo *info);
@@ -19,9 +19,9 @@ public:
   void dispose();
   void update(f32 deltaTime);
 
-  GF_OBJ_HANDLE *unknown00; // Inferred role: object; original member name unknown.
-  f32 unknown08;            // Inferred role: time since the last unique motion; original member name unknown.
-  f32 unknown0c;            // Inferred role: previous local time of the asm; original member name unknown.
+  GF_OBJ_HANDLE *m_GF_OBJ_HANDLE; // Inferred role: object; original member name unknown.
+  f32 unknown08;                  // Inferred role: time since the last unique motion; original member name unknown.
+  f32 unknown0c;                  // Inferred role: previous local time of the asm; original member name unknown.
 };
 
 static_assert(offsetof(GfBigObjUnique, unknown08) == 0x08, "");

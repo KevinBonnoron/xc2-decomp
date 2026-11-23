@@ -65,7 +65,7 @@ static_assert(sizeof(SCOM_QUEST_GIMMICK) == 0x28, "");
 class SCOM_OBJ_WARP_POS : public SCOM {
 public:
   SCOM_OBJ_WARP_POS(GF_SCOM_HANDLE *handle, GF_OBJ_HANDLE *target, const fw::Transform &transform, bool isResetState)
-      : SCOM(handle, SCOM_TYPE_UNKNOWN_17, SCOM_EXEC_UNKNOWN_0, 1), unknown20(target), unknown30(transform), unknown50(isResetState) {}
+      : SCOM(handle, SCOM_TYPE_UNKNOWN_17, SCOM_EXEC_UNKNOWN_0, 1), m_GF_OBJ_HANDLE(target), m_transform(transform), unknown50(isResetState) {}
   bool exec(const fw::UpdateInfo &info) override;
   static GF_SCOM_HANDLE *create(GF_OBJ_HANDLE *handle, const mm::Vec3 &position, const mm::Vec3 &rotation, bool isFollow);
   static GF_SCOM_HANDLE *create(const mm::Vec3 &position, const mm::Vec3 &rotation, bool isFollow);
@@ -73,31 +73,31 @@ public:
   static GF_SCOM_HANDLE *create(const fw::Transform &transform, bool isFollow);
 
   u8 _1c[0x20 - 0x1c];
-  GF_OBJ_HANDLE *unknown20; // Inferred role: target; original member name unknown.
+  GF_OBJ_HANDLE *m_GF_OBJ_HANDLE; // Inferred role: target; original member name unknown.
   u8 _28[0x30 - 0x28];
-  fw::Transform unknown30; // Inferred role: transform; original member name unknown.
-  bool unknown50;          // Inferred role: reset state; original member name unknown.
+  fw::Transform m_transform; // Inferred role: transform; original member name unknown.
+  bool unknown50;            // Inferred role: reset state; original member name unknown.
 };
 
-static_assert(offsetof(SCOM_OBJ_WARP_POS, unknown20) == 0x20, "");
-static_assert(offsetof(SCOM_OBJ_WARP_POS, unknown30) == 0x30, "");
+static_assert(offsetof(SCOM_OBJ_WARP_POS, m_GF_OBJ_HANDLE) == 0x20, "");
+static_assert(offsetof(SCOM_OBJ_WARP_POS, m_transform) == 0x30, "");
 static_assert(offsetof(SCOM_OBJ_WARP_POS, unknown50) == 0x50, "");
 static_assert(sizeof(SCOM_OBJ_WARP_POS) == 0x60, "");
 
 class SCOM_DESTROY_GAME_OBJ : public SCOM {
 public:
   SCOM_DESTROY_GAME_OBJ(GF_SCOM_HANDLE *handle, GF_OBJ_HANDLE *target, f32 fadeTime, u32 attribute)
-      : SCOM(handle, SCOM_TYPE_UNKNOWN_0, SCOM_EXEC_UNKNOWN_0, 1), unknown20(target), unknown28(fadeTime), unknown2c(attribute) {}
+      : SCOM(handle, SCOM_TYPE_UNKNOWN_0, SCOM_EXEC_UNKNOWN_0, 1), m_GF_OBJ_HANDLE(target), unknown28(fadeTime), unknown2c(attribute) {}
   bool exec(const fw::UpdateInfo &info) override;
   static void create(GF_OBJ_HANDLE *handle, f32 fadeTime, u32 attribute);
 
   u8 _1c[0x20 - 0x1c];
-  GF_OBJ_HANDLE *unknown20; // Inferred role: target; original member name unknown.
-  f32 unknown28;            // Inferred role: fade time; original member name unknown.
-  u32 unknown2c;            // Inferred role: attribute; original member name unknown.
+  GF_OBJ_HANDLE *m_GF_OBJ_HANDLE; // Inferred role: target; original member name unknown.
+  f32 unknown28;                  // Inferred role: fade time; original member name unknown.
+  u32 unknown2c;                  // Inferred role: attribute; original member name unknown.
 };
 
-static_assert(offsetof(SCOM_DESTROY_GAME_OBJ, unknown20) == 0x20, "");
+static_assert(offsetof(SCOM_DESTROY_GAME_OBJ, m_GF_OBJ_HANDLE) == 0x20, "");
 static_assert(offsetof(SCOM_DESTROY_GAME_OBJ, unknown28) == 0x28, "");
 static_assert(offsetof(SCOM_DESTROY_GAME_OBJ, unknown2c) == 0x2c, "");
 static_assert(sizeof(SCOM_DESTROY_GAME_OBJ) == 0x30, "");

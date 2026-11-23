@@ -144,13 +144,13 @@ public:
   bool unknown40c9;           // Inferred role: access object changed; original member name unknown.
   bool unknown40ca;           // Inferred role: battle state enable; original member name unknown.
   u8 _40cb[0x40cc - 0x40cb];
-  u32 unknown40cc;                     // Inferred role: camera type; original member name unknown.
-  GfMenuCallContext *unknown40d0;      // Inferred role: call context; original member name unknown.
-  int unknown40d8;                     // Inferred role: common window result; original member name unknown.
-  mm::mtl::unknown027<32> unknown40dc; // Inferred role: battle state; original member name unknown.
-  mm::mtl::unknown027<32> unknown40e0; // Inferred role: previous battle state; original member name unknown.
-  mm::mtl::unknown027<32> unknown40e4; // Inferred role: hud state; original member name unknown.
-  mm::mtl::unknown027<32> unknown40e8; // Inferred role: previous hud state; original member name unknown.
+  u32 unknown40cc;                      // Inferred role: camera type; original member name unknown.
+  GfMenuCallContext *m_menuCallContext; // Inferred role: call context; original member name unknown.
+  int unknown40d8;                      // Inferred role: common window result; original member name unknown.
+  mm::mtl::unknown027<32> unknown40dc;  // Inferred role: battle state; original member name unknown.
+  mm::mtl::unknown027<32> unknown40e0;  // Inferred role: previous battle state; original member name unknown.
+  mm::mtl::unknown027<32> unknown40e4;  // Inferred role: hud state; original member name unknown.
+  mm::mtl::unknown027<32> unknown40e8;  // Inferred role: previous hud state; original member name unknown.
   u8 _40ec[0x40f8 - 0x40ec];
   f32 unknown40f8;    // Inferred role: update dt; original member name unknown.
   bool unknown40fc;   // Inferred role: combo route open for the target enemy; original member name unknown.
@@ -180,7 +180,7 @@ static_assert(offsetof(GfMenuManager, unknown40b0) == 0x40b0, "");
 static_assert(offsetof(GfMenuManager, unknown40b8) == 0x40b8, "");
 static_assert(offsetof(GfMenuManager, unknown40ca) == 0x40ca, "");
 static_assert(offsetof(GfMenuManager, unknown40cc) == 0x40cc, "");
-static_assert(offsetof(GfMenuManager, unknown40d0) == 0x40d0, "");
+static_assert(offsetof(GfMenuManager, m_menuCallContext) == 0x40d0, "");
 static_assert(offsetof(GfMenuManager, unknown40dc) == 0x40dc, "");
 static_assert(offsetof(GfMenuManager, unknown40e0) == 0x40e0, "");
 static_assert(offsetof(GfMenuManager, unknown40e4) == 0x40e4, "");

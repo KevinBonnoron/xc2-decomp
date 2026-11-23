@@ -14,7 +14,7 @@ u64 StreamBuffer::GetFreeSize() const { return m_bufferSize - m_dataSize; }
 u32 StreamBuffer::GetBufferSize() const { return m_bufferSize; }
 
 int StreamBuffer::Alloc(u64 size, Allocator *allocator) {
-  unknown08 = allocator;
+  m_allocator = allocator;
   SSD_ASSERT(unknown10 == nullptr, u"Assert : \"%s\", %s:%d", u"buffer_ == NULL", u"D:/ssd/ssd51/ssd/sources/stream_buffer.cpp", 0x1d);
   Allocator::Block *block = allocator->NewStreamImpl(size, 16);
   if (block == nullptr) {
@@ -22,7 +22,7 @@ int StreamBuffer::Alloc(u64 size, Allocator *allocator) {
   } else {
     unknown10 = static_cast<u8 *>(block->unknown08);
     if (unknown10 != nullptr) {
-      unknown08 = allocator;
+      m_allocator = allocator;
       unknown24 = 0;
       unknown20 = 0;
       m_bufferSize = size;
@@ -41,10 +41,10 @@ void StreamBuffer::Clear() {
 
 int StreamBuffer::Free() {
   if (unknown10 != nullptr) {
-    Allocator *allocator = unknown08;
+    Allocator *allocator = m_allocator;
     Allocator::Block *block = allocator->GetMemoryBlock(unknown10);
     allocator->DeleteStreamImpl(block);
-    unknown08 = nullptr;
+    m_allocator = nullptr;
     unknown10 = nullptr;
   }
   return 0;

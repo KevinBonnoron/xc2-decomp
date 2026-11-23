@@ -74,7 +74,7 @@ private:
   u32 unknown14;                                                       // Inferred role: disp flags; original member name unknown.
   mm::mtl::FixedVector<CamObj *, CAM_UNKNOWN_8> unknown18;             // Inferred role: cams; original member name unknown.
   mm::mtl::FixedVector<CamInterface *, INTERFACE_UNKNOWN_4> unknown60; // Inferred role: interfaces; original member name unknown.
-  CamObj *unknown88;                                                   // Inferred role: main cam; original member name unknown.
+  CamObj *m_camObj;                                                    // Inferred role: main cam; original member name unknown.
   CamFree m_freeCam;
   u32 m_offscrID;
 };

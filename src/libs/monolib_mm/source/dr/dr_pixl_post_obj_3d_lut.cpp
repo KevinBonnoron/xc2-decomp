@@ -5,6 +5,7 @@
 #include "dr/dr_man.h"
 #include "dr/dr_pixl_man.h"
 #include "dr/dr_pixl_post_parm.h"
+#include "dr/dr_pixl_render_volume.h"
 #include "dr/dr_res_filter_data.h"
 #include "dr/dr_shd_data_list.h"
 #include "dr/dr_shd_data_obj.h"
@@ -14,14 +15,19 @@
 #include "grlib/cglib_etc_uniform_block.h"
 #include "grlib/cglib_render_volume.h"
 #include "grlib/cglib_shader.h"
+#include "grlib/cglib_texture_buffer.h"
 #include "grlib/cglib_uni_base_utility.h"
 #include "mm_mtl/fixed_array.h"
-
-namespace grlib {
-class CGLibTextureBuffer;
-} // namespace grlib
+#include "mtl/alloc_handle.h"
 
 namespace ml {
+
+DrPixlPostObj3dLut::DrPixlPostObj3dLut(DrMan *man, DrPixlMan *pixlMan, DrPixlPostMan *postMan) : m_drMan(man), m_drPixlMan(pixlMan), m_drPixlPostMan(postMan), unknown18(false) {
+  unknown20[0] = new (man->unknown0c) DrPixlRenderVolume(m_drMan);
+  unknown20[0]->setTextureInfo(16.0f, 16.0f, 16.0f, GRL_SURFACE_FORMAT_RGBA8, false, 0);
+  unknown20[1] = new (m_drMan->unknown0c) DrPixlRenderVolume(m_drMan);
+  unknown20[1]->setTextureInfo(16.0f, 16.0f, 16.0f, GRL_SURFACE_FORMAT_RGBA8, false, 0);
+}
 
 DrPixlPostObj3dLut::~DrPixlPostObj3dLut() {
   grlib::CGLibRenderVolume *volume = unknown20[0];
@@ -52,13 +58,13 @@ void DrPixlPostObj3dLut::renderLUT() {
 }
 
 void DrPixlPostObj3dLut::render_updateLUT() {
-  DrPixlPostParm *postParm = unknown00->unknown120[unknown00->unknown1c98];
+  DrPixlPostParm *postParm = m_drMan->unknown120[m_drMan->unknown1c98];
   f32 farRatio = postParm->unknown298;
-  DrResFilterData *filterData = unknown00->unknown98;
-  DrAPCache *apCache = unknown00->unknown5c0;
+  DrResFilterData *filterData = m_drMan->m_drResFilterData;
+  DrAPCache *apCache = m_drMan->m_drAPCache;
   f32 nearRatio = postParm->unknown294;
   DrAPGxType::setupScreenQuads(false);
-  DrShdDataList *shdList = unknown00->unknown80->unknown00;
+  DrShdDataList *shdList = m_drMan->m_drShdMan->m_drShdDataList;
   grlib::CGLibRenderVolume *nearVolume = unknown20[0];
   grlib::CGLibRenderVolume *farVolume = unknown20[1];
   shdList->bindQuadsTex();
@@ -105,20 +111,20 @@ void DrPixlPostObj3dLut::render_updateLUT() {
 }
 
 void DrPixlPostObj3dLut::debugRender() {
-  DrPixlPostParm *postParm = unknown00->unknown120[unknown00->unknown1c98];
+  DrPixlPostParm *postParm = m_drMan->unknown120[m_drMan->unknown1c98];
   if (postParm->unknown1074 && postParm->m_colTblOn) {
-    DrResFilterData *filterData = unknown00->unknown98;
+    DrResFilterData *filterData = m_drMan->m_drResFilterData;
     grlib::CGLibTextureBuffer *nearFirst = filterData->findFilterTexture(postParm->unknown26c);
     grlib::CGLibTextureBuffer *farFirst = filterData->findFilterTexture(postParm->unknown278);
     grlib::CGLibTextureBuffer *nearSecond = filterData->findFilterTexture(postParm->unknown28c);
     grlib::CGLibTextureBuffer *farSecond = filterData->findFilterTexture(postParm->unknown290);
     f32 depth = static_cast<f32>(postParm->unknown1078) * 0.0625f + 0.03125f;
-    unknown08->debugRender3D(*nearFirst, 0, 0, 0x80, 0x80, depth, false);
-    unknown08->debugRender3D(*farFirst, 0x81, 0, 0x80, 0x80, depth, false);
-    unknown08->debugRender3D(*nearSecond, 0x103, 0, 0x80, 0x80, depth, false);
-    unknown08->debugRender3D(*farSecond, 0x184, 0, 0x80, 0x80, depth, false);
-    unknown08->debugRender3D(*unknown20[0]->unknown70, 0, 0x82, 0x80, 0x80, depth, false);
-    unknown08->debugRender3D(*unknown20[1]->unknown70, 0x81, 0x82, 0x80, 0x80, depth, false);
+    m_drPixlMan->debugRender3D(*nearFirst, 0, 0, 0x80, 0x80, depth, false);
+    m_drPixlMan->debugRender3D(*farFirst, 0x81, 0, 0x80, 0x80, depth, false);
+    m_drPixlMan->debugRender3D(*nearSecond, 0x103, 0, 0x80, 0x80, depth, false);
+    m_drPixlMan->debugRender3D(*farSecond, 0x184, 0, 0x80, 0x80, depth, false);
+    m_drPixlMan->debugRender3D(*unknown20[0]->unknown70, 0, 0x82, 0x80, 0x80, depth, false);
+    m_drPixlMan->debugRender3D(*unknown20[1]->unknown70, 0x81, 0x82, 0x80, 0x80, depth, false);
   }
 }
 

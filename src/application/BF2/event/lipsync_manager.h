@@ -47,7 +47,7 @@ private:
 
   u32 unknown10;                                               // Inferred role: flags; original member name unknown.
   mm::mtl::FixedVector<LipsyncRes *, RES_UNKNOWN_8> unknown18; // Inferred role: res list; original member name unknown.
-  LipsyncRes *unknown60;                                       // Inferred role: current res; original member name unknown.
+  LipsyncRes *m_lipsyncRes;                                    // Inferred role: current res; original member name unknown.
   mm::mtl::FixStr<128> unknown68;                              // Inferred role: target; original member name unknown.
   csvb::CCsvbData *unknownf0;                                  // Inferred role: csv; original member name unknown.
 };

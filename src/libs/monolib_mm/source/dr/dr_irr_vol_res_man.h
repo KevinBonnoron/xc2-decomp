@@ -36,17 +36,17 @@ public:
   void release();
   void onLoaded(EventFileTh *event);
 
-  DrIrrVolResMan *unknown00;    // Inferred role: owner; original member name unknown.
-  FileHandleTh *unknown08;      // Inferred role: file handle; original member name unknown.
-  void *unknown10;              // Inferred role: file data; original member name unknown.
-  const SSectorInfo *unknown18; // Inferred role: resolved sector info; original member name unknown.
-  int unknown20;                // Inferred role: loaded state; original member name unknown.
-  u32 unknown24;                // Inferred role: sector index; original member name unknown.
+  DrIrrVolResMan *m_drIrrVolResMan; // Inferred role: owner; original member name unknown.
+  FileHandleTh *m_fileHandleTh;     // Inferred role: file handle; original member name unknown.
+  void *unknown10;                  // Inferred role: file data; original member name unknown.
+  const SSectorInfo *m_sSectorInfo; // Inferred role: resolved sector info; original member name unknown.
+  int unknown20;                    // Inferred role: loaded state; original member name unknown.
+  u32 unknown24;                    // Inferred role: sector index; original member name unknown.
 };
 
-static_assert(offsetof(DrIrrVolResObj, unknown08) == 0x08, "");
+static_assert(offsetof(DrIrrVolResObj, m_fileHandleTh) == 0x08, "");
 static_assert(offsetof(DrIrrVolResObj, unknown10) == 0x10, "");
-static_assert(offsetof(DrIrrVolResObj, unknown18) == 0x18, "");
+static_assert(offsetof(DrIrrVolResObj, m_sSectorInfo) == 0x18, "");
 static_assert(offsetof(DrIrrVolResObj, unknown20) == 0x20, "");
 static_assert(offsetof(DrIrrVolResObj, unknown24) == 0x24, "");
 static_assert(sizeof(DrIrrVolResObj) == 0x28, "");
@@ -63,22 +63,22 @@ public:
   void destroy();
   void setupHeader(EventFileTh *event);
 
-  FileHandleTh *unknown08;                   // Inferred role: header file handle; original member name unknown.
-  void *unknown10;                           // Inferred role: header file buffer; original member name unknown.
-  unknown001 *unknown18;                     // Inferred role: header; original member name unknown.
-  mtl::ALLOC_HANDLE unknown20;               // Inferred role: memory handle; original member name unknown.
-  MemHandlebaseAllocator unknown28;          // Inferred role: list node allocator; original member name unknown.
-  mm::mtl::List<DrIrrVolResObj *> unknown38; // Inferred role: used sectors; original member name unknown.
-  mm::mtl::List<DrIrrVolResObj *> unknown78; // Inferred role: released sectors kept as a cache; original member name unknown.
-  u32 unknownb8;                             // Inferred role: cascade index; original member name unknown.
-  u32 unknownbc;                             // Inferred role: sector count; original member name unknown.
-  mm::mtl::FixStr<128> unknownc0;            // Inferred role: file name base; original member name unknown.
+  FileHandleTh *m_fileHandleTh;                    // Inferred role: header file handle; original member name unknown.
+  void *unknown10;                                 // Inferred role: header file buffer; original member name unknown.
+  unknown001 *unknown18;                           // Inferred role: header; original member name unknown.
+  mtl::ALLOC_HANDLE m_ALLOC_HANDLE;                // Inferred role: memory handle; original member name unknown.
+  MemHandlebaseAllocator m_memHandlebaseAllocator; // Inferred role: list node allocator; original member name unknown.
+  mm::mtl::List<DrIrrVolResObj *> unknown38;       // Inferred role: used sectors; original member name unknown.
+  mm::mtl::List<DrIrrVolResObj *> unknown78;       // Inferred role: released sectors kept as a cache; original member name unknown.
+  u32 unknownb8;                                   // Inferred role: cascade index; original member name unknown.
+  u32 unknownbc;                                   // Inferred role: sector count; original member name unknown.
+  mm::mtl::FixStr<128> unknownc0;                  // Inferred role: file name base; original member name unknown.
 };
 
-static_assert(offsetof(DrIrrVolResMan, unknown08) == 0x08, "");
+static_assert(offsetof(DrIrrVolResMan, m_fileHandleTh) == 0x08, "");
 static_assert(offsetof(DrIrrVolResMan, unknown18) == 0x18, "");
-static_assert(offsetof(DrIrrVolResMan, unknown20) == 0x20, "");
-static_assert(offsetof(DrIrrVolResMan, unknown28) == 0x28, "");
+static_assert(offsetof(DrIrrVolResMan, m_ALLOC_HANDLE) == 0x20, "");
+static_assert(offsetof(DrIrrVolResMan, m_memHandlebaseAllocator) == 0x28, "");
 static_assert(offsetof(DrIrrVolResMan, unknown38) == 0x38, "");
 static_assert(offsetof(DrIrrVolResMan, unknown78) == 0x78, "");
 static_assert(offsetof(DrIrrVolResMan, unknownb8) == 0xb8, "");

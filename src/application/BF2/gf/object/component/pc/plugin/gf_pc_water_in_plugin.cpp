@@ -33,25 +33,25 @@ struct unknown001 {
 
 } // namespace
 
-WaterInPlugin::WaterInPlugin() : unknown10(nullptr), unknown18(false) {}
+WaterInPlugin::WaterInPlugin() : m_comBehaviorPc(nullptr), unknown18(false) {}
 
 WaterInPlugin::~WaterInPlugin() {}
 
 bool WaterInPlugin::setup(GfComBehaviorPc &behavior) {
-  this->unknown10 = &behavior;
+  this->m_comBehaviorPc = &behavior;
   return true;
 }
 
-void WaterInPlugin::cleanup(GfComBehaviorPc &) { unknown10 = nullptr; }
+void WaterInPlugin::cleanup(GfComBehaviorPc &) { m_comBehaviorPc = nullptr; }
 
 void WaterInPlugin::onActivate() { unknown18 = false; }
 
 void WaterInPlugin::onDeactivate() {
   if (!unknown18) {
-    GfComEnvSensor *envSensor = unknown10->unknown08->getComponent<GfComEnvSensor>();
-    GfComPropertyPc *property = unknown10->unknown08->getComponent<GfComPropertyPc>();
-    if (envSensor != nullptr && property != nullptr && envSensor->unknown10.unknown24_1 && envSensor->unknown10.unknown30.unknown70.unknown00 >= property->unknown160.unknown00.y) {
-      onEvent(*unknown10);
+    GfComEnvSensor *envSensor = m_comBehaviorPc->unknown08->getComponent<GfComEnvSensor>();
+    GfComPropertyPc *property = m_comBehaviorPc->unknown08->getComponent<GfComPropertyPc>();
+    if (envSensor != nullptr && property != nullptr && envSensor->m_envSensor.unknown24_1 && envSensor->m_envSensor.m_verticalData.unknown70.unknown00 >= property->unknown160.unknown00.y) {
+      onEvent(*m_comBehaviorPc);
     }
   }
 }
@@ -64,7 +64,7 @@ void WaterInPlugin::onEvent(GfComBehaviorPc &behavior) {
   int threshold = 10;
   // Single-use local: places the load of the variable name before the store of the default value (0x710057cfa4 to 0x710057cfbc); without it the store comes first and the registers differ.
   const char *variableName = SND_VAR_WATER_THRESOULD_NAME;
-  sound->unknown10.getVariable(variableName, &threshold);
+  sound->m_soundVariableTable.getVariable(variableName, &threshold);
   f32 splashDepth = threshold * 0.01f;
   f32 bigDepth = property->unknown2f0;
   bool isBigFall = StateUtilField::isBigSplashFallSpeed(behavior);
@@ -115,9 +115,9 @@ void WaterInPlugin::update(GfComBehaviorPc &behavior, const fw::UpdateInfo &) {
   if (!unknown18) {
     GfComEnvSensor *envSensor = behavior.unknown08->getComponent<GfComEnvSensor>();
     GfComPropertyPc *property = behavior.unknown08->getComponent<GfComPropertyPc>();
-    if (envSensor != nullptr && property != nullptr && envSensor->unknown10.unknown24_1) {
-      if (property->unknown160.unknown00.y < property->unknown180.unknown00.y && property->unknown180.unknown00.y > envSensor->unknown10.unknown30.unknown70.unknown00 &&
-          envSensor->unknown10.unknown30.unknown70.unknown00 >= property->unknown160.unknown00.y) {
+    if (envSensor != nullptr && property != nullptr && envSensor->m_envSensor.unknown24_1) {
+      if (property->unknown160.unknown00.y < property->unknown180.unknown00.y && property->unknown180.unknown00.y > envSensor->m_envSensor.m_verticalData.unknown70.unknown00 &&
+          envSensor->m_envSensor.m_verticalData.unknown70.unknown00 >= property->unknown160.unknown00.y) {
         onEvent(behavior);
       }
     }

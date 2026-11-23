@@ -41,10 +41,10 @@ private:
 
   u32 unknown10; // Inferred role: flags; original member name unknown.
   f32 m_frame;
-  f32 unknown18;           // Inferred role: start frame; original member name unknown.
-  f32 unknown1c;           // Inferred role: pause frame; original member name unknown.
-  f32 unknown20;           // Inferred role: cpu frame; original member name unknown.
-  ml::TimeCount unknown28; // Inferred role: time count; original member name unknown.
+  f32 unknown18;             // Inferred role: start frame; original member name unknown.
+  f32 unknown1c;             // Inferred role: pause frame; original member name unknown.
+  f32 unknown20;             // Inferred role: cpu frame; original member name unknown.
+  ml::TimeCount m_timeCount; // Inferred role: time count; original member name unknown.
 };
 
 static_assert(sizeof(CpuManager) == 0x30, "");

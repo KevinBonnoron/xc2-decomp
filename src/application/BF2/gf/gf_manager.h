@@ -24,18 +24,18 @@ struct SDataOption;
 struct SDataSystem;
 
 struct GfSetupParam {
-  GfSetupParam() : unknown00(), unknown08(), _10(), unknown18(ml::MlMem::getProductMem()), unknown1c(0), unknown20(1.0f), unknown24(EXEC_STATE_UNKNOWN_0) {}
+  GfSetupParam() : unknown00(), unknown08(), _10(), m_ALLOC_HANDLE(ml::MlMem::getProductMem()), unknown1c(0), unknown20(1.0f), unknown24(EXEC_STATE_UNKNOWN_0) {}
 
   ml::Scn *unknown00;     // Inferred role: scn; original member name unknown.
   ml::WinView *unknown08; // Inferred role: view the work event of the asset manager is attached to; original member name unknown.
   u8 _10[0x18 - 0x10];
-  mtl::ALLOC_HANDLE unknown18; // Inferred role: mem handle; original member name unknown.
-  u32 unknown1c;               // Inferred role: slot mapping type; original member name unknown.
-  f32 unknown20;               // Inferred role: global speed; original member name unknown.
-  EXEC_STATE unknown24;        // Inferred role: exec; original member name unknown.
+  mtl::ALLOC_HANDLE m_ALLOC_HANDLE; // Inferred role: mem handle; original member name unknown.
+  u32 unknown1c;                    // Inferred role: slot mapping type; original member name unknown.
+  f32 unknown20;                    // Inferred role: global speed; original member name unknown.
+  EXEC_STATE unknown24;             // Inferred role: exec; original member name unknown.
 };
 
-static_assert(offsetof(GfSetupParam, unknown18) == 0x18, "");
+static_assert(offsetof(GfSetupParam, m_ALLOC_HANDLE) == 0x18, "");
 static_assert(offsetof(GfSetupParam, unknown24) == 0x24, "");
 static_assert(sizeof(GfSetupParam) == 0x28, "");
 
@@ -89,18 +89,18 @@ public:
 
   static GfManager *s_pThis;
 
-  GfSetupParam unknown18; // Inferred role: setup param; original member name unknown.
-  bool unknown40;         // Inferred role: initialized; original member name unknown.
-  bool unknown41;         // Inferred role: destroy now; original member name unknown.
-  EXEC_STATE unknown44;   // Inferred role: exec; original member name unknown.
-  u16 unknown48;          // Inferred role: exec flags; original member name unknown.
-  GAME_START unknown4c;   // Inferred role: game start; original member name unknown.
-  u32 unknown50;          // Inferred role: frame count; original member name unknown.
-  f32 unknown54;          // Inferred role: load game time; original member name unknown.
-  bool unknown58;         // Inferred role: exist save data; original member name unknown.
+  GfSetupParam m_setupParam; // Inferred role: setup param; named after the game accessor gf::GfManager::getSetupParam.
+  bool unknown40;            // Inferred role: initialized; original member name unknown.
+  bool unknown41;            // Inferred role: destroy now; original member name unknown.
+  EXEC_STATE unknown44;      // Inferred role: exec; original member name unknown.
+  u16 unknown48;             // Inferred role: exec flags; original member name unknown.
+  GAME_START unknown4c;      // Inferred role: game start; original member name unknown.
+  u32 unknown50;             // Inferred role: frame count; original member name unknown.
+  f32 unknown54;             // Inferred role: load game time; original member name unknown.
+  bool unknown58;            // Inferred role: exist save data; original member name unknown.
 };
 
-static_assert(offsetof(GfManager, unknown18) == 0x18, "");
+static_assert(offsetof(GfManager, m_setupParam) == 0x18, "");
 static_assert(offsetof(GfManager, unknown40) == 0x40, "");
 static_assert(offsetof(GfManager, unknown44) == 0x44, "");
 static_assert(offsetof(GfManager, unknown48) == 0x48, "");

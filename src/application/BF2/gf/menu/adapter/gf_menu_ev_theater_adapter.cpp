@@ -15,12 +15,12 @@ static GfMenuEvTherterAdapter::TypeInfo TYPE_INFOS[] = {
     {&GfMenuEvTherterAdapter::update_Thumb, {GfMenuAdapter::unknown004_0, 0, 0}},
 };
 
-GfMenuEvTherterAdapter::GfMenuEvTherterAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways) : GfMenuAdapter(plugin, false, isUpdateAlways), unknown50(0), unknown58(nullptr) {}
+GfMenuEvTherterAdapter::GfMenuEvTherterAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways) : GfMenuAdapter(plugin, false, isUpdateAlways), unknown50(0), m_iConverter(nullptr) {}
 
 GfMenuEvTherterAdapter::~GfMenuEvTherterAdapter() {
-  if (unknown58 != nullptr) {
-    delete unknown58;
-    unknown58 = nullptr;
+  if (m_iConverter != nullptr) {
+    delete m_iConverter;
+    m_iConverter = nullptr;
   }
 }
 
@@ -67,7 +67,7 @@ bool GfMenuEvTherterAdapter::update_Thumb(u32 evTheater) {
 GfMenuEvTherterAdapter *GfMenuEvTherterAdapter::createFromCoverter(u32 handle, u32 type, IConverter *converter, bool isUpdateAlways) {
   GfMenuEvTherterAdapter *adapter = create(handle, type, converter->getEvTheaterID(), isUpdateAlways);
   if (adapter != nullptr) {
-    adapter->unknown58 = converter;
+    adapter->m_iConverter = converter;
   }
   return adapter;
 }
@@ -78,14 +78,14 @@ GfMenuEvTherterAdapter *GfMenuEvTherterAdapter::createFromReference(u32 handle, 
   ReferenceConverter *converter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) ReferenceConverter(number);
   GfMenuEvTherterAdapter *adapter = create(handle, type, converter->getEvTheaterID(), isUpdateAlways);
   if (adapter != nullptr) {
-    adapter->unknown58 = converter;
+    adapter->m_iConverter = converter;
   }
   return adapter;
 }
 
 void GfMenuEvTherterAdapter::update(const fw::UpdateInfo &info) {
-  if (unknown58 != nullptr) {
-    u32 newEvTheater = unknown58->getEvTheaterID();
+  if (m_iConverter != nullptr) {
+    u32 newEvTheater = m_iConverter->getEvTheaterID();
     if (unknown50 != newEvTheater) {
       unknown50 = newEvTheater;
       setChange();

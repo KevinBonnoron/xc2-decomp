@@ -52,11 +52,11 @@ u32 GfDataDriverArts::getNeedLevelupWp(u32 driver, u32 arts) {
 
 u32 GfDataDriverArts::getLevelCap(u32 arts, u32 level) { return GfBdatBtl::get()->getArtsDrReleaseLv(arts, level); }
 
-u32 GfDataDriverArts::getWp(u32 driver, u32 weaponType) { return GfDataDriver::getSDataDriver(driver).unknownc0[weaponType].unknown0c; }
+u32 GfDataDriverArts::getWp(u32 driver, u32 weaponType) { return GfDataDriver::getSDataDriver(driver).unknownc0[weaponType].m_wp; }
 
 void GfDataDriverArts::addWp(u32 driver, u32 weaponType, int wp) {
   SDataDriver &dataDriver = GfDataDriver::getSDataDriver(driver);
-  dataDriver.unknownc0[weaponType].unknown0c += wp;
+  dataDriver.unknownc0[weaponType].m_wp += wp;
   if (wp > 0) {
     dataDriver.unknownc0[weaponType].unknown10 += wp;
   }
@@ -64,7 +64,7 @@ void GfDataDriverArts::addWp(u32 driver, u32 weaponType, int wp) {
 
 void GfDataDriverArts::initializeWp(u32 driver, u32 weaponType) {
   unknown114 &weapon = GfDataDriver::getSDataDriver(driver).unknownc0[weaponType];
-  weapon.unknown0c = 0;
+  weapon.m_wp = 0;
   weapon.unknown10 = 0;
 }
 

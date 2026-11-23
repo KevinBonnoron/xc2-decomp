@@ -12,40 +12,40 @@ mm::Col4 s_eventSkipFadeColor(0.0f, 0.0f, 0.0f, 1.0f);
 
 FadeCtrl::FadeCtrl() : unknown68(0) {
   for (u32 i = 0; i < PRIO_COUNT; i++) {
-    unknown08[i].setup(i);
+    m_fadeUpdater[i].setup(i);
   }
 }
 
 void FadeCtrl::clear() {
   for (u32 i = 0; i < PRIO_COUNT; i++) {
-    unknown08[i].clear();
+    m_fadeUpdater[i].clear();
   }
   unknown68 = 0;
 }
 
 void FadeCtrl::update() {
   for (u32 i = 0; i < PRIO_COUNT; i++) {
-    unknown08[i].update();
+    m_fadeUpdater[i].update();
   }
 }
 
-void FadeCtrl::fadeout(int frame, PRIO prio, const mm::Col4 *color) { unknown08[prio].reserve(true, frame, color); }
+void FadeCtrl::fadeout(int frame, PRIO prio, const mm::Col4 *color) { m_fadeUpdater[prio].reserve(true, frame, color); }
 
 void FadeCtrl::fadein(int frame) {
-  unknown08[PRIO_LOW].reserve(false, frame, nullptr);
-  unknown08[PRIO_MIDDLE].reserve(false, frame, nullptr);
+  m_fadeUpdater[PRIO_LOW].reserve(false, frame, nullptr);
+  m_fadeUpdater[PRIO_MIDDLE].reserve(false, frame, nullptr);
   if (!(unknown68 & FLAG_UNKNOWN_0)) {
-    unknown08[PRIO_UNKNOWN_2].reserve(false, frame, nullptr);
+    m_fadeUpdater[PRIO_UNKNOWN_2].reserve(false, frame, nullptr);
   }
 }
 
 void FadeCtrl::fadeoutEventSkip(int frame) {
-  unknown08[PRIO_UNKNOWN_2].reserve(true, frame, &s_eventSkipFadeColor);
+  m_fadeUpdater[PRIO_UNKNOWN_2].reserve(true, frame, &s_eventSkipFadeColor);
   unknown68 |= FLAG_UNKNOWN_0;
 }
 
 void FadeCtrl::fadeinEventSkip(int frame) {
-  unknown08[PRIO_UNKNOWN_2].reserve(false, frame, &s_eventSkipFadeColor);
+  m_fadeUpdater[PRIO_UNKNOWN_2].reserve(false, frame, &s_eventSkipFadeColor);
   unknown68 &= ~FLAG_UNKNOWN_0;
 }
 

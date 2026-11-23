@@ -39,6 +39,7 @@ public:
   void removeResource(ResourceObject *resource);
   ResourceObject *searchResource(u32 type, mtl::ALLOC_HANDLE handle, const char *path);
   ResourceObject *searchResource(u32 type, mm::mtl::IAllocator *allocator, const char *path);
+  ResourceObject *searchResource(u32 type, const char *path, ResourceObject *after);
   static void addDelayReleaseExtention(const char *extension);
   static bool isDelayReleaseExtention(const char *path);
   void addSafeObject(mm::mtl::ReferenceObject *object, eResourceType type);

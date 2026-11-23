@@ -6,18 +6,18 @@
 
 namespace ml {
 
-DrResQueryAcc::DrResQueryAcc() : unknown00(nullptr) {}
+DrResQueryAcc::DrResQueryAcc() : m_drResQueryObj(nullptr) {}
 
 void DrResQueryAcc::releaseQuery() {
-  if (unknown00 != nullptr) {
-    unknown00->unknown28 = nullptr;
-    unknown00 = nullptr;
+  if (m_drResQueryObj != nullptr) {
+    m_drResQueryObj->m_drResUseQueryObj = nullptr;
+    m_drResQueryObj = nullptr;
   }
 }
 
 u32 DrResQueryAcc::getOccPixel() {
-  if (unknown00 != nullptr && (unknown00->unknown38 & (4 << DrMan::s_nDblNowIdx))) {
-    return unknown00->unknown10.getQueryPixel();
+  if (m_drResQueryObj != nullptr && (m_drResQueryObj->unknown38 & (4 << DrMan::s_nDblNowIdx))) {
+    return m_drResQueryObj->m_cGLibOcclusionQuery.getQueryPixel();
   }
   return 0;
 }

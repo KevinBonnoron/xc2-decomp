@@ -52,7 +52,7 @@ public:
   void validateDisp() const;
   void onGobEvent(gf::IGfObjListener::OBJEVT event, gf::GF_OBJ_HANDLE *handle) override;
 
-  const BdatInfo *getBdatInfo() const { return reinterpret_cast<const BdatInfo *>(unknown20.unknown10); }
+  const BdatInfo *getBdatInfo() const { return reinterpret_cast<const BdatInfo *>(m_createInfo.unknown10); }
 
   gf::GF_OBJ_HANDLE *unknown48; // Inferred role: handle; original member name unknown.
   mutable bool unknown50;       // Inferred role: disp; original member name unknown.
@@ -91,7 +91,7 @@ public:
   const IGmkList *getBindedRoutePointList() const override;
   void onGobEvent(gf::IGfObjListener::OBJEVT event, gf::GF_OBJ_HANDLE *handle) override;
 
-  const GmkMapObj::BdatInfo *getBdatInfo() const { return reinterpret_cast<const GmkMapObj::BdatInfo *>(unknown20.unknown10); }
+  const GmkMapObj::BdatInfo *getBdatInfo() const { return reinterpret_cast<const GmkMapObj::BdatInfo *>(m_createInfo.unknown10); }
 
   gf::GF_OBJ_HANDLE *unknown50; // Inferred role: handle; original member name unknown.
   mutable bool unknown58;       // Inferred role: disp; original member name unknown.

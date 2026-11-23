@@ -3,11 +3,8 @@
 #include <stddef.h>
 
 #include "dr/dr_mdo_ctl_seam.h"
+#include "mm_math/mm_vec3.h"
 #include "types.h"
-
-namespace mm {
-struct Vec3;
-} // namespace mm
 
 namespace ml {
 class DrPixlShadowCacheObj;
@@ -18,9 +15,16 @@ class DrResMdoSeamWrkBase;
 struct unknown700 {
   f32 unknown00[3]; // Inferred role: maximum position of the area; original member name unknown.
   f32 unknown0c[3]; // Inferred role: minimum position of the area; original member name unknown.
+  // Inferred role: true when the position is outside of the area grown by the radius; original name unknown. The game has this test inlined twice in DrResMdoSeamWrkBase::update
+  // (0x710087c9a0): for the position of the parameter (0x710087ca8c) and for each position of its list (0x710087cb08).
+  bool unknown001(f32 radius, const mm::Vec3 &position) const {
+    return unknown00[0] + radius < position.x || unknown0c[0] - radius > position.x || unknown00[1] + radius < position.y || unknown0c[1] - radius > position.y || unknown00[2] + radius < position.z ||
+           unknown0c[2] - radius > position.z;
+  }
+
   u8 _18[0x28 - 0x18];
-  u32 unknown28; // Inferred role: flags; original member name unknown.
-  u8 _2c[0x34 - 0x2c];
+  u8 unknown28; // Inferred role: flags, the game reads this byte (ldrb 0x710087cc2c in DrResMdoSeamWrkBase::update); original member name unknown.
+  u8 _29[0x34 - 0x29];
   u32 unknown34; // Inferred role: data offset; original member name unknown.
   s32 unknown38; // Inferred role: memory size; original member name unknown.
   u8 _3c[0x4c - 0x3c];

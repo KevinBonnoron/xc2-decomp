@@ -11,27 +11,27 @@ GfGmkLocator::GfGmkLocator(const CreateInfo *info) {
 }
 
 void GfGmkLocator::create(const CreateInfo &info) {
-  unknown10.dispose();
-  unknown00.unknown00 = nullptr;
-  unknown00.unknown08 = false;
-  unknown00.unknown08 = info.unknown08;
-  unknown00.unknown00 = info.unknown00;
+  m_gmkAcc.dispose();
+  m_createInfo.unknown00 = nullptr;
+  m_createInfo.unknown08 = false;
+  m_createInfo.unknown08 = info.unknown08;
+  m_createInfo.unknown00 = info.unknown00;
   gmk::GmkAcc::CreateInfo accInfo;
   accInfo.validate(*info.unknown00);
-  unknown10.create(accInfo);
+  m_gmkAcc.create(accInfo);
 }
 
 void GfGmkLocator::dispose() {
-  unknown10.dispose();
-  unknown00.unknown00 = nullptr;
-  unknown00.unknown08 = false;
+  m_gmkAcc.dispose();
+  m_createInfo.unknown00 = nullptr;
+  m_createInfo.unknown08 = false;
 }
 
 const gmk::AGmkBase *GfGmkLocator::getBindedGmk() const {
-  if (unknown00.unknown08) {
-    return unknown10.unknown38;
+  if (m_createInfo.unknown08) {
+    return m_gmkAcc.m_aGmkBase;
   }
-  return unknown00.unknown00;
+  return m_createInfo.unknown00;
 }
 
 u32 GfGmkLocator::getFsId() const {

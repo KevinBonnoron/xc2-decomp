@@ -50,11 +50,11 @@ public:
 
   // Inferred role: player; original type name unknown.
   struct unknown004 {
-    unknown004() : unknown00(0xffffffff), unknown08(reinterpret_cast<GF_OBJ_HANDLE *>(-1)), unknown10(true) {}
+    unknown004() : unknown00(0xffffffff), m_playerHandle(reinterpret_cast<GF_OBJ_HANDLE *>(-1)), unknown10(true) {}
 
-    u32 unknown00;            // Inferred role: follow index; original member name unknown.
-    GF_OBJ_HANDLE *unknown08; // Inferred role: handle; original member name unknown.
-    bool unknown10;           // Inferred role: main pc; original member name unknown.
+    u32 unknown00;                 // Inferred role: follow index; original member name unknown.
+    GF_OBJ_HANDLE *m_playerHandle; // Inferred role: handle; named after the game accessor gf::GfGamePlayerPicker::getPlayerHandle.
+    bool unknown10;                // Inferred role: main pc; original member name unknown.
   };
 
   static void build(const GfSetupParam &param);

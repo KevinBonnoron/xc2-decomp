@@ -40,8 +40,8 @@ public:
   void dispose() override;
   void debugUpdateMmf() override;
 
-  const Data *getData() const { return static_cast<const Data *>(unknown20.unknown08); }
-  Data *getData() { return static_cast<Data *>(unknown20.unknown08); }
+  const Data *getData() const { return static_cast<const Data *>(m_createInfo.unknown08); }
+  Data *getData() { return static_cast<Data *>(m_createInfo.unknown08); }
 
   u8 _48[0x50 - 0x48];
 };
@@ -76,8 +76,8 @@ public:
   void debugUpdateMmf() override;
   virtual const IGmkList *getBindedFormPcnpcList() const;
 
-  const Data *getData() const { return static_cast<const Data *>(unknown20.unknown08); }
-  Data *getData() { return static_cast<Data *>(unknown20.unknown08); }
+  const Data *getData() const { return static_cast<const Data *>(m_createInfo.unknown08); }
+  Data *getData() { return static_cast<Data *>(m_createInfo.unknown08); }
 
   u8 _48[0x50 - 0x48];
 };

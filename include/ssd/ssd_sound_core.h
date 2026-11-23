@@ -191,7 +191,7 @@ public:
     u8 _05[0x08 - 0x05];
     f32 unknown08; // Inferred role: effect volume; original member name unknown.
     u8 _0c[0x10 - 0x0c];
-    SoundEffecter *unknown10;             // Inferred role: effecter; original member name unknown.
+    SoundEffecter *m_soundEffecter;       // Inferred role: effecter; original member name unknown.
     void *unknown18;                      // Inferred role: effect work buffer; original member name unknown.
     nn::audio::BufferMixerType unknown20; // Inferred role: effect output mixer; original member name unknown.
     nn::audio::DelayType unknown28;       // Inferred role: delay effect; original member name unknown.
@@ -240,7 +240,7 @@ public:
   u8 _1c0[0x1d8 - 0x1c0];
   nn::audio::AudioRendererHandle unknown1d8; // Inferred role: audio renderer; original member name unknown.
   s8 unknown1e8[6];                          // Inferred role: final mix buffer indices; original member name unknown.
-  EffectBusInfo unknown1f0[2];               // Inferred role: effect buses; original member name unknown.
+  EffectBusInfo m_effectBusInfo[2];          // Inferred role: effect buses; original member name unknown.
   nn::audio::FinalMixType unknown260;        // Inferred role: final mix; original member name unknown.
   u32 unknown268;                            // Inferred role: sample rate; original member name unknown.
   u32 unknown26c;                            // Inferred role: sample count; original member name unknown.
@@ -255,7 +255,7 @@ static_assert(offsetof(SystemCorePlatform, unknown138) == 0x138, "");
 static_assert(offsetof(SystemCorePlatform, unknown168) == 0x168, "");
 static_assert(offsetof(SystemCorePlatform, unknown1d8) == 0x1d8, "");
 static_assert(offsetof(SystemCorePlatform, unknown1e8) == 0x1e8, "");
-static_assert(offsetof(SystemCorePlatform, unknown1f0) == 0x1f0, "");
+static_assert(offsetof(SystemCorePlatform, m_effectBusInfo) == 0x1f0, "");
 static_assert(offsetof(SystemCorePlatform, unknown260) == 0x260, "");
 static_assert(offsetof(SystemCorePlatform, unknown26c) == 0x26c, "");
 static_assert(offsetof(SystemCorePlatform::EffectBusInfo, unknown03) == 0x03, "");
@@ -357,20 +357,20 @@ public:
 
   // Inferred role: counters and times of the frames; the game has an unnamed type before the voice handle one (SystemCore::{unnamed type#2}); original type name unknown.
   struct {
-    u64 unknown270; // Inferred role: game frame counter; original member name unknown.
-    u64 unknown278; // Inferred role: audio frame counter; original member name unknown.
-    f64 unknown280; // Inferred role: audio timer counter; original member name unknown.
-    u64 unknown288; // Inferred role: processed audio frame count; original member name unknown.
-    f64 unknown290; // Inferred role: audio frames per second; original member name unknown.
-    f64 unknown298; // Inferred role: audio frame time; original member name unknown.
-    f64 unknown2a0; // Inferred role: audio frame delta time; original member name unknown.
-    f64 unknown2a8; // Inferred role: last audio frame time; original member name unknown.
-    f64 unknown2b0; // Inferred role: last game frame time; original member name unknown.
-    f64 unknown2b8; // Inferred role: game frame delta time; original member name unknown.
-    f32 unknown2c0; // Inferred role: game frame delta time passed to UpdateGameFrame; original member name unknown.
+    u64 m_gameFrameCounter;  // Inferred role: game frame counter; named after the game accessor ssd::SoundCore::GetGameFrameCounter.
+    u64 unknown278;          // Inferred role: audio frame counter; original member name unknown.
+    f64 m_audioTimerCounter; // Inferred role: audio timer counter; named after the game accessor ssd::SoundCore::GetAudioTimerCounter.
+    u64 unknown288;          // Inferred role: processed audio frame count; original member name unknown.
+    f64 unknown290;          // Inferred role: audio frames per second; original member name unknown.
+    f64 unknown298;          // Inferred role: audio frame time; original member name unknown.
+    f64 unknown2a0;          // Inferred role: audio frame delta time; original member name unknown.
+    f64 unknown2a8;          // Inferred role: last audio frame time; original member name unknown.
+    f64 unknown2b0;          // Inferred role: last game frame time; original member name unknown.
+    f64 unknown2b8;          // Inferred role: game frame delta time; original member name unknown.
+    f32 unknown2c0;          // Inferred role: game frame delta time passed to UpdateGameFrame; original member name unknown.
     u8 _2c4[0x2c8 - 0x2c4];
   };
-  CommandManager unknown2c8; // Inferred role: commands queued by the game thread; original member name unknown.
+  CommandManager m_commandManager; // Inferred role: commands queued by the game thread; original member name unknown.
   OutputMode::Type m_outputMode;
   u8 _304[0x308 - 0x304];
   BehaviorInstance<SystemCore> unknown308; // Inferred role: master volume; original member name unknown.
@@ -386,30 +386,30 @@ public:
   u8 _3fc[0x400 - 0x3fc];
   VoiceHandle **unknown400; // Inferred role: active voice handles; original member name unknown.
   VoiceHandle **unknown408; // Inferred role: voice handles to free; original member name unknown.
-  int unknown410;           // Inferred role: hw alloc voice count; original member name unknown.
+  int m_hWAllocVoiceCount;  // Inferred role: hw alloc voice count; named after the game accessor ssd::SoundCore::GetHWAllocVoiceCount.
   u8 _414[0x418 - 0x414];
   List<SoundBank> unknown418;      // Inferred role: sound banks; original member name unknown.
   List<SoundActor> unknown440;     // Inferred role: connected sound actors; original member name unknown.
   Array<SoundCategory> unknown468; // Inferred role: categories; original member name unknown.
-  SoundGroup unknown480;           // Inferred role: default sound group; original member name unknown.
-  SoundActor *unknown4a0;          // Inferred role: default sound actor; original member name unknown.
+  SoundGroup m_soundGroup;         // Inferred role: default sound group; original member name unknown.
+  SoundActor *m_soundActor;        // Inferred role: default sound actor; original member name unknown.
   u8 _4a8[0x4b0 - 0x4a8];
   Array<SoundListener *> unknown4b0; // Inferred role: sound listeners; original member name unknown.
   Array<SoundEffecter *> unknown4c8; // Inferred role: sound effecters; original member name unknown.
   f32 m_speedOfSound;
   bool unknown4e4; // Inferred role: doppler enabled; original member name unknown.
   u8 _4e5[0x4e8 - 0x4e5];
-  Thread unknown4e8;                    // Inferred role: audio thread; original member name unknown.
-  mutable Mutex unknown708;             // Inferred role: audio mutex; original member name unknown.
-  Thread unknown730;                    // Inferred role: stream thread; original member name unknown.
-  List<StreamController> unknown950;    // Inferred role: stream controllers; original member name unknown.
-  List<BehaviorControl> unknown978;     // Inferred role: behaviors; original member name unknown.
-  XorShift128Random unknown9a0;         // Inferred role: random number generator; original member name unknown.
-  Mutex unknown9b8;                     // Inferred role: delegate mutex; original member name unknown.
-  Array<Delegate::Handle *> unknown9e0; // Inferred role: delegate handles; original member name unknown.
-  unknown002 unknown9f8[2];             // Inferred role: cpu loads; original member name unknown.
-  f64 unknowna18;                       // Inferred role: last cpu load time; original member name unknown.
-  s32 unknowna20;                       // Inferred role: cpu load index; original member name unknown.
+  Thread unknown4e8;                     // Inferred role: audio thread; original member name unknown.
+  mutable Mutex unknown708;              // Inferred role: audio mutex; original member name unknown.
+  Thread unknown730;                     // Inferred role: stream thread; original member name unknown.
+  List<StreamController> unknown950;     // Inferred role: stream controllers; original member name unknown.
+  List<BehaviorControl> unknown978;      // Inferred role: behaviors; original member name unknown.
+  XorShift128Random m_xorShift128Random; // Inferred role: random number generator; original member name unknown.
+  Mutex unknown9b8;                      // Inferred role: delegate mutex; original member name unknown.
+  Array<Delegate::Handle *> unknown9e0;  // Inferred role: delegate handles; original member name unknown.
+  unknown002 unknown9f8[2];              // Inferred role: cpu loads; original member name unknown.
+  f64 unknowna18;                        // Inferred role: last cpu load time; original member name unknown.
+  s32 unknowna20;                        // Inferred role: cpu load index; original member name unknown.
 
   static DebugInfo debugInfo_;
 };
@@ -417,16 +417,16 @@ public:
 static_assert(sizeof(SystemCore::DebugInfo) == 0x10, "");
 static_assert(offsetof(SystemCore, unknown288) == 0x288, "");
 static_assert(offsetof(SystemCore, unknown298) == 0x298, "");
-static_assert(offsetof(SystemCore, unknown2c8) == 0x2c8, "");
+static_assert(offsetof(SystemCore, m_commandManager) == 0x2c8, "");
 static_assert(offsetof(SystemCore, m_outputMode) == 0x300, "");
 static_assert(offsetof(SystemCore, unknown3f8) == 0x3f8, "");
 static_assert(offsetof(SystemCore, unknown400) == 0x400, "");
 static_assert(offsetof(SystemCore, unknown408) == 0x408, "");
-static_assert(offsetof(SystemCore, unknown270) == 0x270, "");
+static_assert(offsetof(SystemCore, m_gameFrameCounter) == 0x270, "");
 static_assert(offsetof(SystemCore, unknown3a0) == 0x3a0, "");
 static_assert(offsetof(SystemCore, unknown3c8) == 0x3c8, "");
 static_assert(offsetof(SystemCore, unknown3f0) == 0x3f0, "");
-static_assert(offsetof(SystemCore, unknown410) == 0x410, "");
+static_assert(offsetof(SystemCore, m_hWAllocVoiceCount) == 0x410, "");
 static_assert(offsetof(SystemCore, unknown418) == 0x418, "");
 static_assert(offsetof(SystemCore, unknown440) == 0x440, "");
 static_assert(offsetof(SystemCore, unknown950) == 0x950, "");

@@ -9,7 +9,7 @@ DrResMdoSeamColi::DrResMdoSeamColi(int index) : unknown08(nullptr), m_cache(null
 DrResMdoSeamColi::~DrResMdoSeamColi() {}
 
 void DrResMdoSeamColi::createColi(const void *data, const MdsSeamColiData *coliData) {
-  unknown20 = coliData;
+  m_mdsSeamColiData = coliData;
   unknown28 = data;
   unknown3e = 0;
   unknown42 = 3;

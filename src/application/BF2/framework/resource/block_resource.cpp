@@ -29,8 +29,8 @@ BlockResource *BlockResource::request(mtl::ALLOC_HANDLE handle, const char *path
 }
 
 BlockResource::BlockResource(mtl::ALLOC_HANDLE handle, LOAD_PRIO priority) : ResourceObject(6, handle, priority, 0), unknown128(false), unknown12c(handle), unknown130(priority) {
-  unknownd8.setMemHandle(FrameworkMemory::getMem(5));
-  unknownb0.setAllocator(&unknownd8);
+  m_memHandlebaseAllocator.setMemHandle(FrameworkMemory::getMem(5));
+  unknownb0.setAllocator(&m_memHandlebaseAllocator);
   unknownb0.reserve(16);
 }
 

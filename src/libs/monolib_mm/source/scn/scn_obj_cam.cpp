@@ -109,9 +109,9 @@ void ScnObjCam::setTargetDist(const f32 &dist) {
   info->m_targetPos.z = info->unknown00.unknown10.z - offset.z;
 }
 
-WinView *ScnObjCam::getView() { return unknown08->unknown28->getView(m_info); }
+WinView *ScnObjCam::getView() { return m_scn->m_scnCamMan->getView(m_info); }
 
-const WinView *ScnObjCam::getView() const { return unknown08->unknown28->getView(m_info); }
+const WinView *ScnObjCam::getView() const { return m_scn->m_scnCamMan->getView(m_info); }
 
 void ScnObjCam::apply() {
   RENDER_INFO *info = unknown70.m_front;
@@ -121,7 +121,7 @@ void ScnObjCam::apply() {
   } else {
     info->unknown1f0 = static_cast<f32>(viewport.width) / static_cast<f32>(viewport.height);
   }
-  ScnRenderDrSys *render = unknown08->unknown38;
+  ScnRenderDrSys *render = m_scn->unknown38;
   if (render != nullptr) {
     render->applyCamera(this);
   }
@@ -190,15 +190,15 @@ void ScnObjCam::infoInit(RENDER_INFO *info) {
 }
 
 ScnObjCam *ScnObjCam::create(Scn *scn, int screen) {
-  if (!scn->unknown20->isValidInsert(TYPE_UNKNOWN_2)) {
+  if (!scn->m_scnPoolObj->isValidInsert(TYPE_UNKNOWN_2)) {
     return nullptr;
   }
   mm::mtl::FixStr<32> name;
   name.format("Camera%d", screen);
-  ScnObjCam *cam = new (scn->unknown64) ScnObjCam(scn, name.c_str());
+  ScnObjCam *cam = new (scn->m_ALLOC_HANDLE) ScnObjCam(scn, name.c_str());
   cam->m_info = screen;
   cam->setDefault();
-  scn->unknown20->insert(cam);
+  scn->m_scnPoolObj->insert(cam);
   return cam;
 }
 

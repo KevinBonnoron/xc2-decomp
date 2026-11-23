@@ -23,9 +23,11 @@ public:
   virtual ~UICtrlCursorColor();
   virtual void update(const fw::UpdateInfo &info);
 
-  static UICtrlObject *create(u32 object, const CursorSetting &setting, UISelectObjList *list);
+  static UICtrlCursorColor *create(u32 object, const CursorSetting &setting, UISelectObjList *list);
   void open(s32 index);
   void setIndex(u32 index);
+  void setDisp(bool disp);
+  bool inputChange(u32 index);
 
   CursorSetting unknown30;    // Inferred role: setting; original member name unknown.
   UISelectObjList *unknown50; // Inferred role: list; original member name unknown.

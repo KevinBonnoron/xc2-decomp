@@ -7,24 +7,24 @@
 namespace idcoli {
 
 IDColiObjBase::IDColiObjBase(IDColiTreeTop *tree) {
-  unknown1a8 = tree;
-  unknown1b0.unknown00 = nullptr;
+  m_iDColiTreeTop = tree;
+  m_iDColiTreeObj.unknown00 = nullptr;
   m_size.x = 0.5f;
-  unknown1b0.unknown08 = nullptr;
+  m_iDColiTreeObj.unknown08 = nullptr;
   unknown1c0 = this;
   m_size.y = 2.0f;
   m_size.z = 0.5f;
-  unknown70 = mm::Mat44::identity;
+  m_matrix = mm::Mat44::identity;
   unknownc0 = SHAPE_TYPE_UNKNOWN_3;
   unknown198[0] = nullptr;
   unknown198[1] = nullptr;
   unknownc4 = IDColiBaseType_UNKNOWN_3;
-  unknown1cc = 100;
+  m_priority = 100;
   unknown1c8 = -1;
-  unknown50 = mm::Vec3(1.0f, 1.0f, 1.0f);
-  unknown60 = mm::Vec3(-1.0f, -1.0f, -1.0f);
-  unknown2c = 0;
-  unknownc8 = 0;
+  m_max = mm::Vec3(1.0f, 1.0f, 1.0f);
+  m_min = mm::Vec3(-1.0f, -1.0f, -1.0f);
+  m_materialBit = 0;
+  m_offMaterialBit = 0;
   unknown180[0] = 0.0f;
   unknown180[1] = 0.0f;
   unknown188[0] = nullptr;
@@ -92,7 +92,7 @@ bool IDColiObjBase::sweepUpdate(IdSweepAxisType sweepAxis, IdVectorAxisType vect
   IDColiObjBase *target = nullptr;
   do {
     IDColiObjBase *node = next;
-    if ((&unknown60.x)[vectorAxis] >= (&node->unknown60.x)[vectorAxis]) {
+    if ((&m_min.x)[vectorAxis] >= (&node->m_min.x)[vectorAxis]) {
       if (target == nullptr) {
         return false;
       }
@@ -123,8 +123,8 @@ void IDColiObjBase::sweepTreeMax(IdSweepAxisType sweepAxis, IdVectorAxisType vec
       unknown180[sweepAxis] = unknown198[sweepAxis]->unknown180[sweepAxis];
     }
   } else {
-    unknown180[sweepAxis] = (&unknown50.x)[vectorAxis];
-    if (unknown198[sweepAxis] != nullptr && (&unknown50.x)[vectorAxis] < unknown198[sweepAxis]->unknown180[sweepAxis]) {
+    unknown180[sweepAxis] = (&m_max.x)[vectorAxis];
+    if (unknown198[sweepAxis] != nullptr && (&m_max.x)[vectorAxis] < unknown198[sweepAxis]->unknown180[sweepAxis]) {
       unknown180[sweepAxis] = unknown198[sweepAxis]->unknown180[sweepAxis];
     }
   }
@@ -132,17 +132,17 @@ void IDColiObjBase::sweepTreeMax(IdSweepAxisType sweepAxis, IdVectorAxisType vec
 
 void IDColiObjBase::releaseDefTree() {
   if (unknown1c8 != -1) {
-    unknown1a8->releaseTreeList(&unknown1b0, unknown1c8);
+    m_iDColiTreeTop->releaseTreeList(&m_iDColiTreeObj, unknown1c8);
     unknown1c8 = -1;
   }
 }
 
-void IDColiObjBase::defTreeUpdate() { unknown1c8 = unknown1a8->setupTreeList(&unknown1b0, unknown50, unknown60); }
+void IDColiObjBase::defTreeUpdate() { unknown1c8 = m_iDColiTreeTop->setupTreeList(&m_iDColiTreeObj, m_max, m_min); }
 
 void IDColiObjBase::updateBaseTree() {
   unknown1c8 = -1;
   if (!(unknown1c & 0x80)) {
-    unknown1c8 = unknown1a8->setupTreeList(&unknown1b0, unknown50, unknown60);
+    unknown1c8 = m_iDColiTreeTop->setupTreeList(&m_iDColiTreeObj, m_max, m_min);
   }
 }
 
@@ -158,10 +158,10 @@ void IDColiObjPhantom::sizeUpdate() {
   }
 
   void *prim = unknownd0;
-  IDColiPrimitive::s_CallPrimSet[unknownc0](prim, unknownc4, unknown70, m_size);
-  unknown50 = mm::Vec3(-100000.0f, -100000.0f, -100000.0f);
-  unknown60 = mm::Vec3(100000.0f, 100000.0f, 100000.0f);
-  IDColiPrimitive::s_CallAaBb[unknownc4](unknown50, unknown60, unknownd0);
+  IDColiPrimitive::s_CallPrimSet[unknownc0](prim, unknownc4, m_matrix, m_size);
+  m_max = mm::Vec3(-100000.0f, -100000.0f, -100000.0f);
+  m_min = mm::Vec3(100000.0f, 100000.0f, 100000.0f);
+  IDColiPrimitive::s_CallAaBb[unknownc4](m_max, m_min, unknownd0);
 }
 
 bool IDColiObjPhantom::SweepAndPruneUpdate() {
@@ -177,7 +177,7 @@ bool IDColiObjPhantom::SweepAndPruneUpdate() {
 void IDColiObjPhantom::consistentUpdate() { updateBaseTree(); }
 
 bool IDColiObjPhantomCheck::testResultLine(IDColiResult &result, const IDColiInput &input) {
-  if (!(result.unknowne8 & unknown2c) && !(unknown1c & 3)) {
+  if (!(result.unknowne8 & m_materialBit) && !(unknown1c & 3)) {
     const void *data = unknownd0;
     return IDColiUtilColiResult::s_CallLine[unknownc4](result, input, data);
   }
@@ -185,7 +185,7 @@ bool IDColiObjPhantomCheck::testResultLine(IDColiResult &result, const IDColiInp
 }
 
 bool IDColiObjPhantomCheck::testResultRay(IDColiResult &result, const IDColiInput &input) {
-  if (!(result.unknowne8 & unknown2c) && !(unknown1c & 3)) {
+  if (!(result.unknowne8 & m_materialBit) && !(unknown1c & 3)) {
     const void *data = unknownd0;
     return IDColiUtilColiResult::s_CallRay[unknownc4](result, input, data);
   }
@@ -193,7 +193,7 @@ bool IDColiObjPhantomCheck::testResultRay(IDColiResult &result, const IDColiInpu
 }
 
 bool IDColiObjPhantomCheck::testResultSphere(IDColiResult &result, const IDColiInput &input) {
-  if (!(result.unknowne8 & unknown2c) && !(unknown1c & 3)) {
+  if (!(result.unknowne8 & m_materialBit) && !(unknown1c & 3)) {
     const void *data = unknownd0;
     return IDColiUtilColiResult::s_CallSphere[unknownc4](result, input, data);
   }
@@ -201,7 +201,7 @@ bool IDColiObjPhantomCheck::testResultSphere(IDColiResult &result, const IDColiI
 }
 
 bool IDColiObjPhantomCheck::testResultCapsule(IDColiResult &result, const IDColiInput &input) {
-  if (!(result.unknowne8 & unknown2c) && !(unknown1c & 3)) {
+  if (!(result.unknowne8 & m_materialBit) && !(unknown1c & 3)) {
     const void *data = unknownd0;
     return IDColiUtilColiResult::s_CallCapsule[unknownc4](result, input, data);
   }
@@ -209,7 +209,7 @@ bool IDColiObjPhantomCheck::testResultCapsule(IDColiResult &result, const IDColi
 }
 
 bool IDColiObjPhantomCheck::testCheckLine(IDColiResult &result, const IDColiInput &input) {
-  if (!(result.unknowne8 & unknown2c) && !(unknown1c & 3)) {
+  if (!(result.unknowne8 & m_materialBit) && !(unknown1c & 3)) {
     const void *data = unknownd0;
     return IDColiUtilColiSimple::s_CallLine[unknownc4](result, input, data);
   }
@@ -217,7 +217,7 @@ bool IDColiObjPhantomCheck::testCheckLine(IDColiResult &result, const IDColiInpu
 }
 
 bool IDColiObjPhantomCheck::testCheckRay(IDColiResult &result, const IDColiInput &input) {
-  if (!(result.unknowne8 & unknown2c) && !(unknown1c & 3)) {
+  if (!(result.unknowne8 & m_materialBit) && !(unknown1c & 3)) {
     const void *data = unknownd0;
     return IDColiUtilColiSimple::s_CallRay[unknownc4](result, input, data);
   }
@@ -225,7 +225,7 @@ bool IDColiObjPhantomCheck::testCheckRay(IDColiResult &result, const IDColiInput
 }
 
 bool IDColiObjPhantomCheck::testCheckSphere(IDColiResult &result, const IDColiInput &input) {
-  if (!(result.unknowne8 & unknown2c) && !(unknown1c & 3)) {
+  if (!(result.unknowne8 & m_materialBit) && !(unknown1c & 3)) {
     const void *data = unknownd0;
     return IDColiUtilColiSimple::s_CallSphere[unknownc4](result, input, data);
   }
@@ -233,7 +233,7 @@ bool IDColiObjPhantomCheck::testCheckSphere(IDColiResult &result, const IDColiIn
 }
 
 bool IDColiObjPhantomCheck::testCheckCapsule(IDColiResult &result, const IDColiInput &input) {
-  if (!(result.unknowne8 & unknown2c) && !(unknown1c & 3)) {
+  if (!(result.unknowne8 & m_materialBit) && !(unknown1c & 3)) {
     const void *data = unknownd0;
     return IDColiUtilColiSimple::s_CallCapsule[unknownc4](result, input, data);
   }
@@ -244,9 +244,9 @@ IDColiObjData::IDColiObjData(IDColiTreeTop *tree) : IDColiObjBase(tree) {
   unknown1d0 = nullptr;
   unknown1e0 = nullptr;
   unknown1e8 = nullptr;
-  unknown1f8 = 0;
+  m_boneMax = 0;
   unknown1fc = 0;
-  unknown200 = nullptr;
+  m_iDColiObjGrdChar = nullptr;
 }
 
 void IDColiObjData::workNodeClear() {
@@ -257,14 +257,14 @@ void IDColiObjData::workNodeClear() {
     unknown1e0 = nullptr;
   }
   unknown1e8 = nullptr;
-  unknown1f8 = 0;
+  m_boneMax = 0;
   unknown1fc = 0;
 }
 
 IDColiObjChar::~IDColiObjChar() { workNodeClear(); }
 
 void IDColiObjChar::release() {
-  unknown48 = nullptr;
+  m_userData = nullptr;
   setDeleteCall();
   unknown021();
 }
@@ -287,10 +287,10 @@ void IDColiObjChar::sizeUpdate() {
   }
 
   void *prim = unknownd0;
-  IDColiPrimitive::s_CallPrimSet[unknownc0](prim, unknownc4, unknown70, m_size);
-  unknown50 = mm::Vec3(-100000.0f, -100000.0f, -100000.0f);
-  unknown60 = mm::Vec3(100000.0f, 100000.0f, 100000.0f);
-  IDColiPrimitive::s_CallAaBb[unknownc4](unknown50, unknown60, unknownd0);
+  IDColiPrimitive::s_CallPrimSet[unknownc0](prim, unknownc4, m_matrix, m_size);
+  m_max = mm::Vec3(-100000.0f, -100000.0f, -100000.0f);
+  m_min = mm::Vec3(100000.0f, 100000.0f, 100000.0f);
+  IDColiPrimitive::s_CallAaBb[unknownc4](m_max, m_min, unknownd0);
 }
 
 bool IDColiObjChar::SweepAndPruneUpdate() {

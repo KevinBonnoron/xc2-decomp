@@ -16,7 +16,7 @@ static_assert(sizeof(MenuDriverInfo) == 0x4, "");
 class GfMenuDriverList : public ui::UIListInfo<MenuDriverInfo> {
 public:
   struct PartySetup {
-    SetupParam unknown00;               // Inferred role: param; original member name unknown.
+    SetupParam m_setupParam;            // Inferred role: param; original member name unknown.
     GfPartySelect::LIST_TYPE unknown14; // Inferred role: list type; original member name unknown.
     bool unknown18;                     // Inferred role: option; original member name unknown.
   };

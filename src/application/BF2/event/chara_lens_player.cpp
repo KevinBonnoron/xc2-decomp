@@ -23,12 +23,12 @@ CharaLensPlayer::CharaLensPlayer() : unknown08() {
   unknown20.y = y;
   unknown30.x = x;
   unknown30.y = y;
-  unknown40 = nullptr;
+  m_charaIKUpdater = nullptr;
 }
 
-void CharaLensPlayer::create(CharaIKUpdater *ik) { unknown40 = ik; }
+void CharaLensPlayer::create(CharaIKUpdater *ik) { m_charaIKUpdater = ik; }
 
-void CharaLensPlayer::destroy() { unknown40 = nullptr; }
+void CharaLensPlayer::destroy() { m_charaIKUpdater = nullptr; }
 
 void CharaLensPlayer::render(const mm::Vec3 &position, f32 height) {
   ml::ScnObjCam *cam = Manager::get()->getScn()->getCam(-1);

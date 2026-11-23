@@ -12,17 +12,17 @@ namespace gf {
 
 constexpr size_t MOVIE_SLOT_UNKNOWN_5242880 = 0x500000; // Inferred role: movie slot size; original name unknown.
 
-GfArtsMovie::GfArtsMovie() : unknown10(unknown006), unknown18(nullptr), unknown20(0), m_state(0) { unknown28.clear(); }
+GfArtsMovie::GfArtsMovie() : m_GF_SLOT_HANDLE(unknown006), unknown18(nullptr), unknown20(0), m_state(0) { unknown28.clear(); }
 
 GfArtsMovie::~GfArtsMovie() { ; }
 
 void GfArtsMovie::startSetup(const char *name) {
-  unknown10 = GfAssetManager::allocateFromAssetTypeSlot(ASSET_TYPE_UNKNOWN_18, MOVIE_SLOT_UNKNOWN_5242880);
-  if (unknown10 != unknown006) {
+  m_GF_SLOT_HANDLE = GfAssetManager::allocateFromAssetTypeSlot(ASSET_TYPE_UNKNOWN_18, MOVIE_SLOT_UNKNOWN_5242880);
+  if (m_GF_SLOT_HANDLE != unknown006) {
     size_t size;
     {
       void *buffer;
-      GfAssetManager::getSlotInfo(unknown18, buffer, size, unknown10);
+      GfAssetManager::getSlotInfo(unknown18, buffer, size, m_GF_SLOT_HANDLE);
     }
     mm::mtl::FixStr<128> path;
     path.format("/stream/movie/%s.webm", name);
@@ -50,8 +50,8 @@ void GfArtsMovie::updateForPlay(const fw::UpdateInfo &) {
 
 void GfArtsMovie::updateForMemorySafe(const fw::UpdateInfo &) {
   GfMovieManager::get()->close();
-  GfAssetManager::releaseSlotHandle(unknown10);
-  unknown10 = unknown006;
+  GfAssetManager::releaseSlotHandle(m_GF_SLOT_HANDLE);
+  m_GF_SLOT_HANDLE = unknown006;
   unknown18 = nullptr;
   m_state = 3;
   unknown28.clear();

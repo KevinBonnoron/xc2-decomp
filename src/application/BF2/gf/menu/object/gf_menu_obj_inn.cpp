@@ -34,15 +34,15 @@ namespace gf {
 constexpr u32 CALL_UNKNOWN_86 = 86;
 
 GfMenuObjInn::GfMenuObjInn(u32 handle)
-    : GfMenuObject(handle), unknown28(nullptr), unknown30(nullptr), unknown38(nullptr), unknown40(nullptr), unknown48(nullptr), unknown50(nullptr), unknown58(nullptr), unknown88(1), unknown98(false),
-      unknown0a0(this) {}
+    : GfMenuObject(handle), unknown28(nullptr), unknown30(nullptr), unknown38(nullptr), unknown40(nullptr), m_menuDriverList(nullptr), unknown50(nullptr), unknown58(nullptr), unknown88(1),
+      unknown98(false), unknown0a0(this) {}
 
 GfMenuObjInn::~GfMenuObjInn() {
   mm::mtl::safeRelease(unknown28);
   mm::mtl::safeRelease(unknown30);
   mm::mtl::safeRelease(unknown38);
   mm::mtl::safeRelease(unknown40);
-  mm::mtl::safeRelease(unknown48);
+  mm::mtl::safeRelease(m_menuDriverList);
   mm::mtl::safeRelease(unknown58);
   mm::mtl::safeRelease(unknown50);
 }
@@ -189,7 +189,7 @@ void GfMenuObjInn::sendEvent(u32 handle, u32 type, u32 param) { unknown140(handl
 
 void GfMenuObjInn::ModeListener::reciveEvent(const ui::EventData &event, u32 handle) {
   ui::UIObjectAcc acc(handle);
-  ui::UIObjectAcc owner(unknown20->unknown18);
+  ui::UIObjectAcc owner(m_menuObjInn->unknown18);
   switch (event.unknown00) {
   case 1: {
     GfMenuObjUtil::setChildDisp(handle, "IMG_mode_select_cursor", true);
@@ -198,40 +198,40 @@ void GfMenuObjInn::ModeListener::reciveEvent(const ui::EventData &event, u32 han
     param.unknown04 = acc.searchChild("IMG_mode_select_cursor");
     param.unknown08 = "TXT_mode_select@%02d";
     param.unknown1a = 1;
-    param.unknown20.unknown18 = 1;
-    unknown20->unknown38 = GfMenuObjUtil::createCursor(param);
-    unknown20->unknown38->open(0);
+    param.m_cursorSetting.unknown18 = 1;
+    m_menuObjInn->unknown38 = GfMenuObjUtil::createCursor(param);
+    m_menuObjInn->unknown38->open(0);
     ui::UIObjectListener::reciveEvent(event, handle);
     break;
   }
   case 6: {
     // The game loads the parameter before the cursor pointer unknown38 (0x7100478b80/0x7100478b84); without the local the cursor pointer is loaded first.
     u32 index = event.unknown08;
-    unknown20->unknown38->inputChange(index);
+    m_menuObjInn->unknown38->inputChange(index);
     break;
   }
   case 8:
     if (event.unknown0c == 1) {
       acc.setDisp(false);
       if (event.unknown08 == 0) {
-        unknown20->unknown28->reset();
-        GfMenuObjCommonText::open(unknown20->unknown28, 0xf, 0);
-        GfMenuObject::setCallContextEventHandler(unknown20->unknown28, handle);
-        unknown20->unknown88 = 0;
+        m_menuObjInn->unknown28->reset();
+        GfMenuObjCommonText::open(m_menuObjInn->unknown28, 0xf, 0);
+        GfMenuObject::setCallContextEventHandler(m_menuObjInn->unknown28, handle);
+        m_menuObjInn->unknown88 = 0;
         break;
       }
       if (event.unknown08 == 1) {
         unknown163(owner.searchChild("LAY_dr_select"), GfMenuTypes::unknown003_33, 0);
-        unknown20->unknown88 = 1;
+        m_menuObjInn->unknown88 = 1;
         break;
       }
       if (event.unknown08 == 2) {
         unknown163(owner.searchChild("LAY_dr_select"), GfMenuTypes::unknown003_33, 0);
-        unknown20->unknown88 = 2;
+        m_menuObjInn->unknown88 = 2;
         break;
       }
     } else if (event.unknown0c == 2) {
-      if (unknown20->unknown98) {
+      if (m_menuObjInn->unknown98) {
         unknown163(owner.searchChild("LAY_lv_up"), 0x105, 0);
         acc.setDisp(false);
         break;
@@ -252,30 +252,30 @@ void GfMenuObjInn::ModeListener::reciveEvent(const ui::EventData &event, u32 han
     setFadeOut(handle);
     break;
   case 0x41:
-    if (unknown20->unknown28 == nullptr || unknown20->unknown28->unknown0c != event.unknown08) {
+    if (m_menuObjInn->unknown28 == nullptr || m_menuObjInn->unknown28->unknown0c != event.unknown08) {
       break;
     }
     if (event.unknown10_u16 != 0) {
       acc.setDisp(true);
       break;
     }
-    unknown20->unknown60.clear();
-    for (u32 i = 0; i < unknown20->unknown48->getSize(); i++) {
-      u32 driver = unknown20->unknown48->getContents(i).unknown00;
+    m_menuObjInn->unknown60.clear();
+    for (u32 i = 0; i < m_menuObjInn->m_menuDriverList->getSize(); i++) {
+      u32 driver = m_menuObjInn->m_menuDriverList->getContents(i).unknown00;
       if (GfDataDriver::isEnableLevelUp(driver)) {
-        unknown20->unknown60.push(driver);
+        m_menuObjInn->unknown60.push(driver);
       }
     }
     unknown164(handle, 0x104);
     unknown163(owner.searchChild("LAY_dr_list"), 0x103, 0);
     break;
   case 0x104:
-    if (!unknown20->unknown60.empty()) {
-      unknown20->unknown60.unknown002(unknown20->unknown8c);
+    if (!m_menuObjInn->unknown60.empty()) {
+      m_menuObjInn->unknown60.unknown002(m_menuObjInn->unknown8c);
       u32 maxLevel;
-      GfDataDriver::getEnableLevel(unknown20->unknown90, maxLevel, unknown20->unknown8c);
+      GfDataDriver::getEnableLevel(m_menuObjInn->unknown90, maxLevel, m_menuObjInn->unknown8c);
       unknown163(owner.searchChild("LAY_lv_up"), GfMenuTypes::unknown003_33, 0);
-      GfMenuReference::setReferenceDriverID(0, unknown20->unknown8c);
+      GfMenuReference::setReferenceDriverID(0, m_menuObjInn->unknown8c);
     } else {
       unknown163(owner.searchChild("LAY_dr_list"), 0x102, 0);
       unknown163(owner.searchChild("LAY_lv_up"), 0x105, 0);
@@ -325,9 +325,9 @@ void GfMenuObjInn::MainListener::reciveEvent(const ui::EventData &event, u32 han
   case GfMenuTypes::unknown003_33:
     break;
   case GfMenuTypes::unknown003_34:
-    unknown20->unknown0a0.unknown005();
-    unknown20->unknown0a0.unknown002(&GfMenuObjInn::seqFadeOut);
-    unknown20->unknown0a0.unknown002(&GfMenuObjInn::seqFadeOutWait);
+    m_menuObjInn->unknown0a0.unknown005();
+    m_menuObjInn->unknown0a0.unknown002(&GfMenuObjInn::seqFadeOut);
+    m_menuObjInn->unknown0a0.unknown002(&GfMenuObjInn::seqFadeOutWait);
     break;
   default:
     ui::UIObjectListener::reciveEvent(event, handle);
@@ -337,18 +337,18 @@ void GfMenuObjInn::MainListener::reciveEvent(const ui::EventData &event, u32 han
 
 void GfMenuObjInn::DriverListener::reciveEvent(const ui::EventData &event, u32 handle) {
   ui::UIObjectAcc acc(handle);
-  ui::UIObjectAcc owner(unknown20->unknown18);
+  ui::UIObjectAcc owner(m_menuObjInn->unknown18);
   switch (event.unknown00) {
   case 1:
-    unknown20->unknown48 = GfMenuDriverList::create();
-    if (unknown20->unknown48 != nullptr) {
+    m_menuObjInn->m_menuDriverList = GfMenuDriverList::create();
+    if (m_menuObjInn->m_menuDriverList != nullptr) {
       GfMenuDriverList::PartySetup setup;
       setup.unknown18 = false;
       setup.unknown14 = GfPartySelect::LIST_TYPE_UNKNOWN_2;
-      setup.unknown00.unknown08 = 5;
-      unknown20->unknown48->setupFromParty(setup);
+      setup.m_setupParam.unknown08 = 5;
+      m_menuObjInn->m_menuDriverList->setupFromParty(setup);
     }
-    setupDriverAdapter(acc, unknown20->unknown48);
+    setupDriverAdapter(acc, m_menuObjInn->m_menuDriverList);
     unknown163(handle, GfMenuTypes::unknown003_33, 0);
     break;
   case 3:
@@ -367,9 +367,9 @@ void GfMenuObjInn::DriverListener::reciveEvent(const ui::EventData &event, u32 h
       name.format("LAY_dr@%02d", i + 1);
       u32 driver = acc.searchChild(name.c_str());
       ui::UIObjectAcc driverAcc(driver);
-      if (i == unknown20->unknown48->getIndex(true)) {
+      if (i == m_menuObjInn->m_menuDriverList->getIndex(true)) {
         driverAcc.setDispPriority(driverAcc.getDispPriority() + 1);
-        GfMenuReference::setReferenceDriverID(0, unknown20->unknown48->getContents(i).unknown00);
+        GfMenuReference::setReferenceDriverID(0, m_menuObjInn->m_menuDriverList->getContents(i).unknown00);
       }
       GfMenuObjUtil::CtrlParam param;
       driverAcc.getPos(param.unknown26);
@@ -391,7 +391,7 @@ void GfMenuObjInn::DriverListener::reciveEvent(const ui::EventData &event, u32 h
       u32 driver = acc.searchChild(name.c_str());
       ui::UIObjectAcc driverAcc(driver);
       driverAcc.setDisp(true);
-      if (i == unknown20->unknown48->getIndex(true)) {
+      if (i == m_menuObjInn->m_menuDriverList->getIndex(true)) {
         driverAcc.setDispPriority(driverAcc.getDispPriority() - 1);
       }
       name.format("driver%02d", i + 1);
@@ -457,7 +457,7 @@ void GfMenuObjInn::DriverListener::reciveEvent(const ui::EventData &event, u32 h
 
 void GfMenuObjInn::ManualListener::reciveEvent(const ui::EventData &event, u32 handle) {
   ui::UIObjectAcc acc(handle);
-  ui::UIObjectAcc owner(unknown20->unknown18);
+  ui::UIObjectAcc owner(m_menuObjInn->unknown18);
   switch (event.unknown00) {
   case 1: {
     GfMenuObjUtil::setChildDisp(handle, "IMG_dr_cursor", true);
@@ -466,36 +466,36 @@ void GfMenuObjInn::ManualListener::reciveEvent(const ui::EventData &event, u32 h
     param.unknown04 = handle;
     param.unknown08 = "LAY_dr@%02d";
     param.unknown1a = 1;
-    param.unknown20.unknown18 = 5;
-    unknown20->unknown40 = GfMenuObjUtil::createCursor(param);
-    unknown20->unknown40->open(0);
+    param.m_cursorSetting.unknown18 = 5;
+    m_menuObjInn->unknown40 = GfMenuObjUtil::createCursor(param);
+    m_menuObjInn->unknown40->open(0);
     acc.setDisp(false);
     break;
   }
   case 6: {
     u32 index = event.unknown08;
-    unknown20->unknown48->setIndex(index);
-    u32 selected = unknown20->unknown48->getIndex(true);
-    unknown20->unknown40->inputChange(selected);
+    m_menuObjInn->m_menuDriverList->setIndex(index);
+    u32 selected = m_menuObjInn->m_menuDriverList->getIndex(true);
+    m_menuObjInn->unknown40->inputChange(selected);
     break;
   }
   case 8:
     switch (event.unknown0c) {
     case 1: {
-      GfMenuDriverList *drivers = unknown20->unknown48;
+      GfMenuDriverList *drivers = m_menuObjInn->m_menuDriverList;
       if (!GfDataDriver::isEnableLevelUp(drivers->getContents(drivers->getIndex(false)).unknown00)) {
         break;
       }
-      if (unknown20->unknown88 != 2) {
-        unknown20->unknown28->reset();
-        GfMenuObjCommonText::open(unknown20->unknown28, 0xf, 0);
-        GfMenuObject::setCallContextEventHandler(unknown20->unknown28, handle);
+      if (m_menuObjInn->unknown88 != 2) {
+        m_menuObjInn->unknown28->reset();
+        GfMenuObjCommonText::open(m_menuObjInn->unknown28, 0xf, 0);
+        GfMenuObject::setCallContextEventHandler(m_menuObjInn->unknown28, handle);
         GfMenuObject::disableInput(handle);
         break;
       }
       unknown164(handle, GfMenuTypes::unknown003_34);
       unknown163(owner.searchChild("LAY_lv_select"), GfMenuTypes::unknown003_33, 0);
-      u32 index = unknown20->unknown48->getIndex(true);
+      u32 index = m_menuObjInn->m_menuDriverList->getIndex(true);
       unknown163(owner.searchChild("LAY_dr_list"), 0x101, index);
       break;
     }
@@ -506,7 +506,7 @@ void GfMenuObjInn::ManualListener::reciveEvent(const ui::EventData &event, u32 h
     }
     break;
   case GfMenuTypes::unknown003_33:
-    GfMenuObject::setupInputSelectionFromList(handle, *unknown20->unknown48);
+    GfMenuObject::setupInputSelectionFromList(handle, *m_menuObjInn->m_menuDriverList);
     GfMenuObject::enableInput(handle);
     acc.setDisp(true);
     break;
@@ -515,18 +515,18 @@ void GfMenuObjInn::ManualListener::reciveEvent(const ui::EventData &event, u32 h
     acc.setDisp(false);
     break;
   case 0x41:
-    if (unknown20->unknown28 == nullptr) {
+    if (m_menuObjInn->unknown28 == nullptr) {
       break;
     }
-    if (unknown20->unknown28->unknown0c == event.unknown08) {
+    if (m_menuObjInn->unknown28->unknown0c == event.unknown08) {
       if (event.unknown10_u16 == 0) {
         unknown164(handle, GfMenuTypes::unknown003_34);
         unknown163(owner.searchChild("LAY_dr_list"), 0x103, 0);
-        GfMenuDriverList *drivers = unknown20->unknown48;
-        unknown20->unknown8c = drivers->getContents(drivers->getIndex(false)).unknown00;
+        GfMenuDriverList *drivers = m_menuObjInn->m_menuDriverList;
+        m_menuObjInn->unknown8c = drivers->getContents(drivers->getIndex(false)).unknown00;
         u32 maxLevel;
-        GfDataDriver::getEnableLevel(unknown20->unknown90, maxLevel, unknown20->unknown8c);
-        GfMenuReference::setReferenceDriverID(0, unknown20->unknown8c);
+        GfDataDriver::getEnableLevel(m_menuObjInn->unknown90, maxLevel, m_menuObjInn->unknown8c);
+        GfMenuReference::setReferenceDriverID(0, m_menuObjInn->unknown8c);
         unknown163(owner.searchChild("LAY_lv_up"), GfMenuTypes::unknown003_33, 0);
       } else {
         GfMenuObject::enableInput(handle);
@@ -540,29 +540,30 @@ void GfMenuObjInn::ManualListener::reciveEvent(const ui::EventData &event, u32 h
 
 void GfMenuObjInn::LvSelectListener::reciveEvent(const ui::EventData &event, u32 handle) {
   ui::UIObjectAcc acc(handle);
-  ui::UIObjectAcc owner(unknown20->unknown18);
+  ui::UIObjectAcc owner(m_menuObjInn->unknown18);
   switch (event.unknown00) {
   case 1: {
     ui::UISelectObjList::CreateParam createParam;
     createParam.allocator = getAllocator(ALLOCATOR_UNKNOWN_0);
-    unknown20->unknown58 = ui::UISelectObjList::create(createParam);
-    setupLvSelectAdapter(acc, unknown20->unknown58);
+    m_menuObjInn->unknown58 = ui::UISelectObjList::create(createParam);
+    setupLvSelectAdapter(acc, m_menuObjInn->unknown58);
     break;
   }
   case 6: {
     int index = event.unknown08;
-    unknown20->unknown58->setIndex(index);
-    GfMenuReference::setDriverVirtualLevel(unknown20->unknown58->getIndex(true) + GfDataDriver::getLevel(unknown20->unknown48->getContents(unknown20->unknown48->getIndex(false)).unknown00));
+    m_menuObjInn->unknown58->setIndex(index);
+    GfMenuReference::setDriverVirtualLevel(m_menuObjInn->unknown58->getIndex(true) +
+                                           GfDataDriver::getLevel(m_menuObjInn->m_menuDriverList->getContents(m_menuObjInn->m_menuDriverList->getIndex(false)).unknown00));
     ui::UIObjectAcc(acc.searchChild("IMG_lv_select_arrow_prev")).setDisp(index > 0);
-    ui::UIObjectAcc(acc.searchChild("IMG_lv_select_arrow_next")).setDisp(index < static_cast<int>(unknown20->unknown58->getSize() - 1));
+    ui::UIObjectAcc(acc.searchChild("IMG_lv_select_arrow_next")).setDisp(index < static_cast<int>(m_menuObjInn->unknown58->getSize() - 1));
     break;
   }
   case 8:
     switch (event.unknown0c) {
     case 1: {
       unknown164(handle, GfMenuTypes::unknown003_34);
-      unknown20->unknown8c = unknown20->unknown48->getContents(unknown20->unknown48->getIndex(false)).unknown00;
-      unknown20->unknown90 = GfDataDriver::getLevel(unknown20->unknown8c) + unknown20->unknown58->getIndex(true);
+      m_menuObjInn->unknown8c = m_menuObjInn->m_menuDriverList->getContents(m_menuObjInn->m_menuDriverList->getIndex(false)).unknown00;
+      m_menuObjInn->unknown90 = GfDataDriver::getLevel(m_menuObjInn->unknown8c) + m_menuObjInn->unknown58->getIndex(true);
       unknown163(owner.searchChild("LAY_lv_up"), GfMenuTypes::unknown003_33, 0);
       unknown163(owner.searchChild("LAY_dr_list"), GfMenuTypes::unknown003_259, 0);
       break;
@@ -575,7 +576,7 @@ void GfMenuObjInn::LvSelectListener::reciveEvent(const ui::EventData &event, u32
     }
     break;
   case GfMenuTypes::unknown003_33: {
-    u32 driver = unknown20->unknown48->getContents(unknown20->unknown48->getIndex(false)).unknown00;
+    u32 driver = m_menuObjInn->m_menuDriverList->getContents(m_menuObjInn->m_menuDriverList->getIndex(false)).unknown00;
     u32 level = GfDataDriver::getLevel(driver);
     u32 enableLevel;
     u32 maxLevel;
@@ -583,20 +584,20 @@ void GfMenuObjInn::LvSelectListener::reciveEvent(const ui::EventData &event, u32
     if (enableLevel < level) {
       enableLevel = level;
     }
-    for (u32 i = 0; i < unknown20->unknown58->getSize(); i++) {
-      ui::UIObjectAcc object(unknown20->unknown58->getContents(i));
+    for (u32 i = 0; i < m_menuObjInn->unknown58->getSize(); i++) {
+      ui::UIObjectAcc object(m_menuObjInn->unknown58->getContents(i));
       object.setTerm();
     }
-    unknown20->unknown58->clear();
+    m_menuObjInn->unknown58->clear();
     ui::UIListInfoBase::SetupParam setup;
     setup.unknown08 = enableLevel - level + 1;
-    unknown20->unknown58->setup(getAllocator(ALLOCATOR_UNKNOWN_0), setup);
+    m_menuObjInn->unknown58->setup(getAllocator(ALLOCATOR_UNKNOWN_0), setup);
     {
       ui::UIObjectAcc numbers(acc.searchChild("LAY_lv_select_num"));
       for (u32 i = 0; i < enableLevel - level + 1; i++) {
         ui::UIObjectAcc number(numbers.duplicateChild("LAY_lv_select_num@01"));
         number.setDisp(true);
-        unknown20->unknown58->addObject(number.unknown10);
+        m_menuObjInn->unknown58->addObject(number.unknown10);
         ui::UIObjectNumberPlugin *plugin = ui::UIObjectNumberPlugin::create(number.searchChild("TXT_lv_select_num@01"));
         if (plugin != nullptr) {
           plugin->setNumber(level + i);
@@ -604,9 +605,9 @@ void GfMenuObjInn::LvSelectListener::reciveEvent(const ui::EventData &event, u32
         }
       }
       ui::UIObjectAcc center(acc.searchChild("LAY_lv_select_num@02"));
-      if (unknown20->unknown50 != nullptr) {
-        unknown20->unknown50->release();
-        unknown20->unknown50 = nullptr;
+      if (m_menuObjInn->unknown50 != nullptr) {
+        m_menuObjInn->unknown50->release();
+        m_menuObjInn->unknown50 = nullptr;
       }
       ui::UICtrlSlideSelect::SlideSetting setting;
       setting.unknown08 = 3;
@@ -614,16 +615,16 @@ void GfMenuObjInn::LvSelectListener::reciveEvent(const ui::EventData &event, u32
       center.getPosCenter(setting.unknown0c);
       setting.unknown10.x = 0x70;
       setting.unknown10.y = 0;
-      unknown20->unknown50 = ui::UICtrlSlideSelect::create(handle, setting, unknown20->unknown58);
+      m_menuObjInn->unknown50 = ui::UICtrlSlideSelect::create(handle, setting, m_menuObjInn->unknown58);
     }
-    detailOpen(unknown20, acc, "lv_select_dr_detail", unknown20->unknown48->getContents(unknown20->unknown48->getIndex(false)).unknown00);
-    GfMenuObject::setupInputSelectionFromList(handle, *unknown20->unknown58);
+    detailOpen(m_menuObjInn, acc, "lv_select_dr_detail", m_menuObjInn->m_menuDriverList->getContents(m_menuObjInn->m_menuDriverList->getIndex(false)).unknown00);
+    GfMenuObject::setupInputSelectionFromList(handle, *m_menuObjInn->unknown58);
     GfMenuObject::enableInput(handle);
     setFadeIn(handle);
     break;
   }
   case GfMenuTypes::unknown003_34:
-    GfMenuObjCommonDetail::close(unknown20->unknown30);
+    GfMenuObjCommonDetail::close(m_menuObjInn->unknown30);
     GfMenuObject::disableInput(handle);
     setFadeOut(handle);
     break;
@@ -635,7 +636,7 @@ void GfMenuObjInn::LvSelectListener::reciveEvent(const ui::EventData &event, u32
 
 void GfMenuObjInn::LvUpListener::reciveEvent(const ui::EventData &event, u32 handle) {
   ui::UIObjectAcc acc(handle);
-  ui::UIObjectAcc owner(unknown20->unknown18);
+  ui::UIObjectAcc owner(m_menuObjInn->unknown18);
   switch (event.unknown00) {
   case 1:
     setupLvUpAdapter(acc);
@@ -652,8 +653,8 @@ void GfMenuObjInn::LvUpListener::reciveEvent(const ui::EventData &event, u32 han
       param.unknown04 = 3;
       param.unknown00 = 0.25f;
       param.unknown14 = 4;
-      unknown20->unknown94 = GfMenuObjUtil::startCtrl(label, param, nullptr);
-      GfMenuObject::hookCtrlEvent(acc.unknown10, unknown20->unknown94);
+      m_menuObjInn->unknown94 = GfMenuObjUtil::startCtrl(label, param, nullptr);
+      GfMenuObject::hookCtrlEvent(acc.unknown10, m_menuObjInn->unknown94);
       break;
     }
     case 3: {
@@ -673,16 +674,16 @@ void GfMenuObjInn::LvUpListener::reciveEvent(const ui::EventData &event, u32 han
       param.unknown04 = 5;
       param.unknown00 = 0.5f;
       param.unknown14 = 8;
-      param.unknown18 = unknown20->unknown94;
+      param.unknown18 = m_menuObjInn->unknown94;
       GfMenuObjUtil::startCtrl(label, param, nullptr);
-      GfMenuObject::hookCtrlEvent(acc.unknown10, unknown20->unknown94);
+      GfMenuObject::hookCtrlEvent(acc.unknown10, m_menuObjInn->unknown94);
       break;
     }
     case 5:
-      GfGameUtil::execLevelUp(unknown20->unknown8c, unknown20->unknown90);
-      unknown20->unknown98 = true;
+      GfGameUtil::execLevelUp(m_menuObjInn->unknown8c, m_menuObjInn->unknown90);
+      m_menuObjInn->unknown98 = true;
       unknown164(handle, GfMenuTypes::unknown003_34);
-      if (unknown20->unknown88 != 0) {
+      if (m_menuObjInn->unknown88 != 0) {
         unknown163(owner.searchChild("LAY_dr_list"), GfMenuTypes::unknown003_258, 0);
         unknown163(owner.searchChild("LAY_dr_select"), GfMenuTypes::unknown003_33, 0);
       } else {
@@ -692,26 +693,26 @@ void GfMenuObjInn::LvUpListener::reciveEvent(const ui::EventData &event, u32 han
     }
     break;
   case GfMenuTypes::unknown003_33:
-    detailOpen(unknown20, acc, "lv_up_detail", unknown20->unknown8c);
-    GfMenuReference::setDriverVirtualLevel(unknown20->unknown90);
+    detailOpen(m_menuObjInn, acc, "lv_up_detail", m_menuObjInn->unknown8c);
+    GfMenuReference::setDriverVirtualLevel(m_menuObjInn->unknown90);
     GfMenuObject::enableInput(handle);
     setFadeIn(handle);
     GfMenuObjUtil::setChildDisp(handle, "LAY_lv_up_label", false);
     break;
   case GfMenuTypes::unknown003_34:
-    GfMenuObjCommonDetail::close(unknown20->unknown30);
+    GfMenuObjCommonDetail::close(m_menuObjInn->unknown30);
     GfMenuObject::disableInput(handle);
     setFadeOut(handle);
     break;
   case 0x41:
-    if (unknown20->unknown28 != nullptr && unknown20->unknown28->unknown0c == event.unknown08) {
+    if (m_menuObjInn->unknown28 != nullptr && m_menuObjInn->unknown28->unknown0c == event.unknown08) {
       unknown164(owner.searchChild("LAY_dr_list"), GfMenuTypes::unknown003_34);
     }
     break;
   case 0x105:
-    unknown20->unknown28->reset();
-    GfMenuObjCommonText::open(unknown20->unknown28, 0x10, 0);
-    GfMenuObject::setCallContextEventHandler(unknown20->unknown28, handle);
+    m_menuObjInn->unknown28->reset();
+    GfMenuObjCommonText::open(m_menuObjInn->unknown28, 0x10, 0);
+    GfMenuObject::setCallContextEventHandler(m_menuObjInn->unknown28, handle);
   default:
     ui::UIObjectListener::reciveEvent(event, handle);
     break;

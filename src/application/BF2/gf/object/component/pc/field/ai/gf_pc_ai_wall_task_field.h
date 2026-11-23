@@ -27,7 +27,7 @@ class TaskFieldWallPrepare : public ai::TaskNode {
 public:
   static mm::mtl::RTTI m_rtti;
 
-  TaskFieldWallPrepare(const char *name) : ai::TaskNode(name, 7), unknown40() {}
+  TaskFieldWallPrepare(const char *name) : ai::TaskNode(name, 7), m_wallAiContextField() {}
   const mm::mtl::RTTI *getRTTI() const override { return &m_rtti; }
   void onEvent(ai::BlackBoard &blackBoard, const ai::Event &event) override;
   void onChangeActivate(BlackBoardField &blackBoard, const ai::ActivateEvent &event);
@@ -40,12 +40,12 @@ public:
 #line 25
   UNKNOWN001
 
-  mm::mtl::UniquePtr<ai::Fsm> unknown38; // Inferred role: wall state machine; original member name unknown.
-  WallAiContextField unknown40;          // Inferred role: owner of the state machine; original member name unknown.
+  mm::mtl::UniquePtr<ai::Fsm> unknown38;   // Inferred role: wall state machine; original member name unknown.
+  WallAiContextField m_wallAiContextField; // Inferred role: owner of the state machine; original member name unknown.
 };
 
 static_assert(offsetof(TaskFieldWallPrepare, unknown38) == 0x38, "");
-static_assert(offsetof(TaskFieldWallPrepare, unknown40) == 0x40, "");
+static_assert(offsetof(TaskFieldWallPrepare, m_wallAiContextField) == 0x40, "");
 static_assert(sizeof(TaskFieldWallPrepare) == 0x48, "");
 
 // Layout evidence: BehaviorTree::createTask<TaskFieldWallFollow> (0x7100541248) allocates 0x38 bytes and passes flags 0

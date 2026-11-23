@@ -26,8 +26,8 @@ void VolumeManager::clear() {
   for (u32 i = 0; i < CATE_COUNT; i++) {
     resetCategoryVolume(static_cast<CATE>(i), 30.0f);
   }
-  unknown50.clear();
-  unknowna0.clear();
+  m_volumeSeamless.clear();
+  m_volumeSkip.clear();
   mm::mtl::Singleton<VolumePlayer>::get().clear();
 }
 
@@ -50,101 +50,101 @@ void VolumeManager::resetCategoryVolume(CATE cate, f32 frame) {
   f32 playFrame = mm::mtl::Singleton<SkipManager>::getPtr()->isSkip() ? 0.0f : frame;
   switch (cate) {
   case CATE_UNKNOWN_0:
-    if (!unknowna0.isStart()) {
+    if (!m_volumeSkip.isStart()) {
       mm::mtl::Singleton<VolumePlayer>::get().reset(gf::CATEGORY_BGM, unknown18[0], playFrame);
     }
-    unknown50.mask(VolumeSeamless::MASK_TYPE_UNKNOWN_0, false);
-    unknowna0.setResetVolume(VolumeSkip::TYPE_UNKNOWN_0, unknown18[0]);
+    m_volumeSeamless.mask(VolumeSeamless::MASK_TYPE_UNKNOWN_0, false);
+    m_volumeSkip.setResetVolume(VolumeSkip::TYPE_UNKNOWN_0, unknown18[0]);
     break;
   case CATE_UNKNOWN_1:
-    if (!unknowna0.isStart()) {
+    if (!m_volumeSkip.isStart()) {
       mm::mtl::Singleton<VolumePlayer>::get().reset(gf::CATEGORY_VOICE, unknown18[1], playFrame);
     }
-    unknown50.mask(VolumeSeamless::MASK_TYPE_UNKNOWN_1, false);
-    unknowna0.setResetVolume(VolumeSkip::TYPE_UNKNOWN_1, unknown18[1]);
+    m_volumeSeamless.mask(VolumeSeamless::MASK_TYPE_UNKNOWN_1, false);
+    m_volumeSkip.setResetVolume(VolumeSkip::TYPE_UNKNOWN_1, unknown18[1]);
     break;
   case CATE_UNKNOWN_2:
-    if (!unknowna0.isStart()) {
+    if (!m_volumeSkip.isStart()) {
       mm::mtl::Singleton<VolumePlayer>::get().reset(gf::CATEGORY_BATTLE, unknown18[2], playFrame);
     }
-    unknown50.mask(VolumeSeamless::MASK_TYPE_UNKNOWN_3, false);
-    unknowna0.setResetVolume(VolumeSkip::TYPE_UNKNOWN_2, unknown18[2]);
+    m_volumeSeamless.mask(VolumeSeamless::MASK_TYPE_UNKNOWN_3, false);
+    m_volumeSkip.setResetVolume(VolumeSkip::TYPE_UNKNOWN_2, unknown18[2]);
     break;
   case CATE_UNKNOWN_3:
-    if (!unknowna0.isStart()) {
+    if (!m_volumeSkip.isStart()) {
       mm::mtl::Singleton<VolumePlayer>::get().reset(gf::CATEGORY_FIELD, unknown18[3], playFrame);
     }
-    unknown50.mask(VolumeSeamless::MASK_TYPE_UNKNOWN_4, false);
-    unknowna0.setResetVolume(VolumeSkip::TYPE_UNKNOWN_3, unknown18[3]);
+    m_volumeSeamless.mask(VolumeSeamless::MASK_TYPE_UNKNOWN_4, false);
+    m_volumeSkip.setResetVolume(VolumeSkip::TYPE_UNKNOWN_3, unknown18[3]);
     break;
   case CATE_UNKNOWN_4:
-    if (!unknowna0.isStart()) {
+    if (!m_volumeSkip.isStart()) {
       mm::mtl::Singleton<VolumePlayer>::get().reset(gf::CATEGORY_GIMMICK, unknown18[4], playFrame);
     }
-    unknown50.mask(VolumeSeamless::MASK_TYPE_UNKNOWN_5, false);
-    unknowna0.setResetVolume(VolumeSkip::TYPE_UNKNOWN_4, unknown18[4]);
+    m_volumeSeamless.mask(VolumeSeamless::MASK_TYPE_UNKNOWN_5, false);
+    m_volumeSkip.setResetVolume(VolumeSkip::TYPE_UNKNOWN_4, unknown18[4]);
     break;
   case CATE_UNKNOWN_5:
-    if (!unknowna0.isStart()) {
+    if (!m_volumeSkip.isStart()) {
       mm::mtl::Singleton<VolumePlayer>::get().reset(gf::CATEGORY_ENV, unknown18[5], playFrame);
     }
-    unknown50.mask(VolumeSeamless::MASK_TYPE_UNKNOWN_6, false);
-    unknowna0.setResetVolume(VolumeSkip::TYPE_UNKNOWN_5, unknown18[5]);
+    m_volumeSeamless.mask(VolumeSeamless::MASK_TYPE_UNKNOWN_6, false);
+    m_volumeSkip.setResetVolume(VolumeSkip::TYPE_UNKNOWN_5, unknown18[5]);
     break;
   case CATE_UNKNOWN_6:
-    if (!unknowna0.isStart()) {
+    if (!m_volumeSkip.isStart()) {
       mm::mtl::Singleton<VolumePlayer>::get().reset(gf::CATEGORY_WEATHER, unknown18[6], playFrame);
     }
-    unknown50.mask(VolumeSeamless::MASK_TYPE_UNKNOWN_7, false);
-    unknowna0.setResetVolume(VolumeSkip::TYPE_UNKNOWN_6, unknown18[6]);
+    m_volumeSeamless.mask(VolumeSeamless::MASK_TYPE_UNKNOWN_7, false);
+    m_volumeSkip.setResetVolume(VolumeSkip::TYPE_UNKNOWN_6, unknown18[6]);
     break;
   case CATE_UNKNOWN_7:
-    if (!unknowna0.isStart()) {
+    if (!m_volumeSkip.isStart()) {
       mm::mtl::Singleton<VolumePlayer>::get().reset(gf::CATEGORY_EVT_CS, unknown18[7], playFrame);
     }
-    unknowna0.setResetVolume(VolumeSkip::TYPE_UNKNOWN_7, unknown18[7]);
+    m_volumeSkip.setResetVolume(VolumeSkip::TYPE_UNKNOWN_7, unknown18[7]);
     break;
   case CATE_UNKNOWN_8:
-    if (!unknowna0.isStart()) {
+    if (!m_volumeSkip.isStart()) {
       mm::mtl::Singleton<VolumePlayer>::get().reset(gf::CATEGORY_EVT_VOICE, unknown18[8], playFrame);
     }
-    unknown50.mask(VolumeSeamless::MASK_TYPE_UNKNOWN_9, false);
-    unknowna0.setResetVolume(VolumeSkip::TYPE_UNKNOWN_8, unknown18[8]);
+    m_volumeSeamless.mask(VolumeSeamless::MASK_TYPE_UNKNOWN_9, false);
+    m_volumeSkip.setResetVolume(VolumeSkip::TYPE_UNKNOWN_8, unknown18[8]);
     break;
   case CATE_UNKNOWN_9:
-    if (!unknowna0.isStart()) {
+    if (!m_volumeSkip.isStart()) {
       mm::mtl::Singleton<VolumePlayer>::get().reset(gf::CATEGORY_EVT_SE, unknown18[9], playFrame);
     }
-    unknown50.mask(VolumeSeamless::MASK_TYPE_UNKNOWN_10, false);
-    unknowna0.setResetVolume(VolumeSkip::TYPE_UNKNOWN_9, unknown18[9]);
+    m_volumeSeamless.mask(VolumeSeamless::MASK_TYPE_UNKNOWN_10, false);
+    m_volumeSkip.setResetVolume(VolumeSkip::TYPE_UNKNOWN_9, unknown18[9]);
     break;
   case CATE_UNKNOWN_10:
-    if (!unknowna0.isStart()) {
+    if (!m_volumeSkip.isStart()) {
       mm::mtl::Singleton<VolumePlayer>::get().reset(gf::CATEGORY_CH_SE, unknown18[10], playFrame);
     }
-    unknown50.mask(VolumeSeamless::MASK_TYPE_UNKNOWN_11, false);
-    unknowna0.setResetVolume(VolumeSkip::TYPE_UNKNOWN_10, unknown18[10]);
+    m_volumeSeamless.mask(VolumeSeamless::MASK_TYPE_UNKNOWN_11, false);
+    m_volumeSkip.setResetVolume(VolumeSkip::TYPE_UNKNOWN_10, unknown18[10]);
     break;
   case CATE_UNKNOWN_11:
-    if (!unknowna0.isStart()) {
+    if (!m_volumeSkip.isStart()) {
       mm::mtl::Singleton<VolumePlayer>::get().reset(gf::CATEGORY_CH_SE_NS, unknown18[11], playFrame);
     }
-    unknown50.mask(VolumeSeamless::MASK_TYPE_UNKNOWN_12, false);
-    unknowna0.setResetVolume(VolumeSkip::TYPE_UNKNOWN_11, unknown18[11]);
+    m_volumeSeamless.mask(VolumeSeamless::MASK_TYPE_UNKNOWN_12, false);
+    m_volumeSkip.setResetVolume(VolumeSkip::TYPE_UNKNOWN_11, unknown18[11]);
     break;
   case CATE_UNKNOWN_12:
-    if (!unknowna0.isStart()) {
+    if (!m_volumeSkip.isStart()) {
       mm::mtl::Singleton<VolumePlayer>::get().reset(gf::CATEGORY_ENE_VO, unknown18[12], playFrame);
     }
-    unknown50.mask(VolumeSeamless::MASK_TYPE_UNKNOWN_13, false);
-    unknowna0.setResetVolume(VolumeSkip::TYPE_UNKNOWN_12, unknown18[12]);
+    m_volumeSeamless.mask(VolumeSeamless::MASK_TYPE_UNKNOWN_13, false);
+    m_volumeSkip.setResetVolume(VolumeSkip::TYPE_UNKNOWN_12, unknown18[12]);
     break;
   case CATE_UNKNOWN_13:
-    if (!unknowna0.isStart()) {
+    if (!m_volumeSkip.isStart()) {
       mm::mtl::Singleton<VolumePlayer>::get().reset(gf::CATEGORY_NAREVO, unknown18[13], playFrame);
     }
-    unknown50.mask(VolumeSeamless::MASK_TYPE_UNKNOWN_14, false);
-    unknowna0.setResetVolume(VolumeSkip::TYPE_UNKNOWN_13, unknown18[13]);
+    m_volumeSeamless.mask(VolumeSeamless::MASK_TYPE_UNKNOWN_14, false);
+    m_volumeSkip.setResetVolume(VolumeSkip::TYPE_UNKNOWN_13, unknown18[13]);
     break;
   }
 }
@@ -153,13 +153,13 @@ void VolumeManager::init() {
   for (u32 i = 0; i < CATE_COUNT; i++) {
     unknown18[i] = 1.0f;
   }
-  unknown50.clear();
-  unknowna0.clear();
+  m_volumeSeamless.clear();
+  m_volumeSkip.clear();
   mm::mtl::Singleton<VolumePlayer>::get().clear();
 }
 
 void VolumeManager::update() {
-  unknown50.update();
+  m_volumeSeamless.update();
   mm::mtl::Singleton<VolumePlayer>::get().update();
 }
 
@@ -245,7 +245,7 @@ void VolumeManager::render() {
     fw::debug::drawFont(posX + 20, height - 105, "NAREVO");
     fw::debug::drawFont(posX, barY, "%.2f", gf::GfGameEvent::getCategoryVolume(static_cast<fw::SoundCategory>(16)));
   }
-  unknown50.draw();
+  m_volumeSeamless.draw();
 }
 
 void VolumeManager::changeCategoryVolume(CATE cate, f32 volume, f32 frame) {
@@ -255,88 +255,88 @@ void VolumeManager::changeCategoryVolume(CATE cate, f32 volume, f32 frame) {
   f32 playFrame = mm::mtl::Singleton<SkipManager>::getPtr()->isSkip() ? 0.0f : frame;
   switch (cate) {
   case CATE_UNKNOWN_0:
-    if (!unknowna0.isStart()) {
+    if (!m_volumeSkip.isStart()) {
       mm::mtl::Singleton<VolumePlayer>::get().change(gf::CATEGORY_BGM, volume, playFrame);
     }
-    unknown50.mask(VolumeSeamless::MASK_TYPE_UNKNOWN_0, true);
-    unknowna0.setResetVolume(VolumeSkip::TYPE_UNKNOWN_0, volume);
+    m_volumeSeamless.mask(VolumeSeamless::MASK_TYPE_UNKNOWN_0, true);
+    m_volumeSkip.setResetVolume(VolumeSkip::TYPE_UNKNOWN_0, volume);
     break;
   case CATE_UNKNOWN_3:
-    if (!unknowna0.isStart()) {
+    if (!m_volumeSkip.isStart()) {
       mm::mtl::Singleton<VolumePlayer>::get().change(gf::CATEGORY_FIELD, volume, playFrame);
     }
-    unknown50.mask(VolumeSeamless::MASK_TYPE_UNKNOWN_4, true);
-    unknowna0.setResetVolume(VolumeSkip::TYPE_UNKNOWN_3, volume);
+    m_volumeSeamless.mask(VolumeSeamless::MASK_TYPE_UNKNOWN_4, true);
+    m_volumeSkip.setResetVolume(VolumeSkip::TYPE_UNKNOWN_3, volume);
     break;
   case CATE_UNKNOWN_4:
-    if (!unknowna0.isStart()) {
+    if (!m_volumeSkip.isStart()) {
       mm::mtl::Singleton<VolumePlayer>::get().change(gf::CATEGORY_GIMMICK, volume, playFrame);
     }
-    unknown50.mask(VolumeSeamless::MASK_TYPE_UNKNOWN_5, true);
-    unknowna0.setResetVolume(VolumeSkip::TYPE_UNKNOWN_4, volume);
+    m_volumeSeamless.mask(VolumeSeamless::MASK_TYPE_UNKNOWN_5, true);
+    m_volumeSkip.setResetVolume(VolumeSkip::TYPE_UNKNOWN_4, volume);
     break;
   case CATE_UNKNOWN_5:
-    if (!unknowna0.isStart()) {
+    if (!m_volumeSkip.isStart()) {
       mm::mtl::Singleton<VolumePlayer>::get().change(gf::CATEGORY_ENV, volume, playFrame);
     }
-    unknown50.mask(VolumeSeamless::MASK_TYPE_UNKNOWN_6, true);
-    unknowna0.setResetVolume(VolumeSkip::TYPE_UNKNOWN_5, volume);
+    m_volumeSeamless.mask(VolumeSeamless::MASK_TYPE_UNKNOWN_6, true);
+    m_volumeSkip.setResetVolume(VolumeSkip::TYPE_UNKNOWN_5, volume);
     break;
   case CATE_UNKNOWN_6:
-    if (!unknowna0.isStart()) {
+    if (!m_volumeSkip.isStart()) {
       mm::mtl::Singleton<VolumePlayer>::get().change(gf::CATEGORY_WEATHER, volume, playFrame);
     }
-    unknown50.mask(VolumeSeamless::MASK_TYPE_UNKNOWN_7, true);
-    unknowna0.setResetVolume(VolumeSkip::TYPE_UNKNOWN_6, volume);
+    m_volumeSeamless.mask(VolumeSeamless::MASK_TYPE_UNKNOWN_7, true);
+    m_volumeSkip.setResetVolume(VolumeSkip::TYPE_UNKNOWN_6, volume);
     break;
   case CATE_UNKNOWN_7:
-    if (!unknowna0.isStart()) {
+    if (!m_volumeSkip.isStart()) {
       mm::mtl::Singleton<VolumePlayer>::get().change(gf::CATEGORY_EVT_CS, volume, playFrame);
     }
-    unknowna0.setResetVolume(VolumeSkip::TYPE_UNKNOWN_7, volume);
+    m_volumeSkip.setResetVolume(VolumeSkip::TYPE_UNKNOWN_7, volume);
     break;
   case CATE_UNKNOWN_8:
-    if (!unknowna0.isStart()) {
+    if (!m_volumeSkip.isStart()) {
       mm::mtl::Singleton<VolumePlayer>::get().change(gf::CATEGORY_EVT_VOICE, volume, playFrame);
     }
-    unknown50.mask(VolumeSeamless::MASK_TYPE_UNKNOWN_9, true);
-    unknowna0.setResetVolume(VolumeSkip::TYPE_UNKNOWN_8, volume);
+    m_volumeSeamless.mask(VolumeSeamless::MASK_TYPE_UNKNOWN_9, true);
+    m_volumeSkip.setResetVolume(VolumeSkip::TYPE_UNKNOWN_8, volume);
     break;
   case CATE_UNKNOWN_9:
-    if (!unknowna0.isStart()) {
+    if (!m_volumeSkip.isStart()) {
       mm::mtl::Singleton<VolumePlayer>::get().change(gf::CATEGORY_EVT_SE, volume, playFrame);
     }
-    unknown50.mask(VolumeSeamless::MASK_TYPE_UNKNOWN_10, true);
-    unknowna0.setResetVolume(VolumeSkip::TYPE_UNKNOWN_9, volume);
+    m_volumeSeamless.mask(VolumeSeamless::MASK_TYPE_UNKNOWN_10, true);
+    m_volumeSkip.setResetVolume(VolumeSkip::TYPE_UNKNOWN_9, volume);
     break;
   }
 }
 
 void VolumeManager::setSeamlessVolume(bool isEnable, f32 volume, u32 target, const mm::mtl::FixedArray<f32, VolumeSeamless::RESET_VOLUME_UNKNOWN_13> *resetVolumes) {
-  unknown50.set(isEnable, volume, target, resetVolumes);
+  m_volumeSeamless.set(isEnable, volume, target, resetVolumes);
 }
 
 void VolumeManager::startSeamlessVolume(f32 frame) {
-  if (!unknowna0.isStart()) {
-    unknown50.start(frame);
+  if (!m_volumeSkip.isStart()) {
+    m_volumeSeamless.start(frame);
   }
 }
 
 void VolumeManager::endSeamlessVolume(f32 frame) {
-  if (!unknowna0.isStart()) {
-    unknown50.end(frame);
+  if (!m_volumeSkip.isStart()) {
+    m_volumeSeamless.end(frame);
   }
 }
 
-void VolumeManager::maskSeamlessVolume(VolumeSeamless::MASK_TYPE type, bool isMask) { unknown50.mask(type, isMask); }
+void VolumeManager::maskSeamlessVolume(VolumeSeamless::MASK_TYPE type, bool isMask) { m_volumeSeamless.mask(type, isMask); }
 
 void VolumeManager::setSkipVolume(bool isEnable, f32 volume, f32 inFrame, f32 outFrame, const mm::mtl::FixedArray<f32, CATE_COUNT> *resetVolumes) {
-  unknowna0.set(isEnable, volume, inFrame, outFrame, resetVolumes);
+  m_volumeSkip.set(isEnable, volume, inFrame, outFrame, resetVolumes);
 }
 
-void VolumeManager::startSkipVolume() { unknowna0.start(); }
+void VolumeManager::startSkipVolume() { m_volumeSkip.start(); }
 
-void VolumeManager::endSkipVolume() { unknowna0.end(); }
+void VolumeManager::endSkipVolume() { m_volumeSkip.end(); }
 
 void VolumeManager::setDisp(bool isDisp) { setDispFlag(DISP_FLAG_UNKNOWN_0, isDisp); }
 

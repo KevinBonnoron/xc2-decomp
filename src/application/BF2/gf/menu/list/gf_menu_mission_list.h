@@ -15,8 +15,8 @@ static_assert(sizeof(MenuMissionInfo) == 0x4, "");
 class GfMenuMissionList : public ui::UIListInfo<MenuMissionInfo> {
 public:
   struct MissionSetup {
-    SetupParam unknown00; // Inferred role: param; original member name unknown.
-    u32 unknown14;        // Inferred role: zone; original member name unknown.
+    SetupParam m_setupParam; // Inferred role: param; original member name unknown.
+    u32 unknown14;           // Inferred role: zone; original member name unknown.
   };
 
   GfMenuMissionList();

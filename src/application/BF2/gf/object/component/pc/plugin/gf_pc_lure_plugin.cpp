@@ -38,11 +38,11 @@ bool isActiveRangeLure(GfComPropertyPc &property, const AccessParam &param, GF_O
   return isActive;
 }
 
-LurePlugin::LurePlugin() : unknown10(unknown020), unknown20(nullptr) {}
+LurePlugin::LurePlugin() : m_GF_OBJ_HANDLE(unknown020), m_comBehaviorPc(nullptr) {}
 
 bool LurePlugin::setup(GfComBehaviorPc &behavior) {
   unknown18 = fw::ParamManager::get()->unknown408[7];
-  this->unknown20 = &behavior;
+  this->m_comBehaviorPc = &behavior;
   return true;
 }
 
@@ -51,8 +51,8 @@ void LurePlugin::cleanup(GfComBehaviorPc &) {}
 void LurePlugin::onActivate() {}
 
 void LurePlugin::onDeactivate() {
-  if (unknown10 != unknown020) {
-    unknown10 = unknown020;
+  if (m_GF_OBJ_HANDLE != unknown020) {
+    m_GF_OBJ_HANDLE = unknown020;
   }
 }
 
@@ -74,8 +74,8 @@ void LurePlugin::update(GfComBehaviorPc &behavior, const fw::UpdateInfo &info) {
       target = unknown020;
     }
   }
-  if (unknown10 != target) {
-    unknown10 = target;
+  if (m_GF_OBJ_HANDLE != target) {
+    m_GF_OBJ_HANDLE = target;
   }
 }
 

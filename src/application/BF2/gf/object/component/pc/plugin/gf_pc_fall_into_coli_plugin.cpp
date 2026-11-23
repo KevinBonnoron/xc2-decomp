@@ -22,9 +22,9 @@ FallIntoColiPlugin::FallIntoColiPlugin() : unknown0c(0.0f), unknown10(0.0f) {}
 FallIntoColiPlugin::~FallIntoColiPlugin() {}
 
 void FallIntoColiPlugin::cleanup(GfComBehaviorPc &) {
-  if (unknown18 != unknown012) {
-    GfGameSearchObj::destroyObj(unknown18);
-    unknown18 = unknown012;
+  if (m_GF_SEARCH_OBJ != unknown012) {
+    GfGameSearchObj::destroyObj(m_GF_SEARCH_OBJ);
+    m_GF_SEARCH_OBJ = unknown012;
   }
 }
 
@@ -33,19 +33,19 @@ void FallIntoColiPlugin::onActivate() {
   unknown10 = 0.0f;
 }
 
-void FallIntoColiPlugin::onDeactivate() { GfGameSearchObj::setEnable(unknown18, false); }
+void FallIntoColiPlugin::onDeactivate() { GfGameSearchObj::setEnable(m_GF_SEARCH_OBJ, false); }
 
 void FallIntoColiPlugin::update(GfComBehaviorPc &behavior, const fw::UpdateInfo &info) {
   unknown0c += info.unknown04;
   if (unknown0c >= 10.0f) {
-    if (!GfGameSearchObj::isEnable(unknown18)) {
-      GfGameSearchObj::setEnable(unknown18, true);
+    if (!GfGameSearchObj::isEnable(m_GF_SEARCH_OBJ)) {
+      GfGameSearchObj::setEnable(m_GF_SEARCH_OBJ, true);
       unknown20 = getHeight(behavior);
     }
 
     if (fabsf(getHeight(behavior) - unknown20) <= 1.0f) {
       unknown10 += info.unknown04;
-      if (unknown10 >= 5.0f && GfGameSearchObj::getObj(unknown18)->size() != 0) {
+      if (unknown10 >= 5.0f && GfGameSearchObj::getObj(m_GF_SEARCH_OBJ)->size() != 0) {
         MsgObjectNotifyDead message(0, nullptr);
         message.unknown08 = DEAD_TYPE_UNKNOWN_7;
         StateUtil::notifyDead(behavior, message, true);

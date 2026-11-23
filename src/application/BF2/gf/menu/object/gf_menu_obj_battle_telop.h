@@ -16,7 +16,7 @@ class GfMenuObjBattleTelop : public GfMenuObject {
 public:
   class MainListener : public ui::UIObjectListener {
   public:
-    MainListener(GfMenuObjBattleTelop *owner) : unknown0c(0), unknown10(), _18(), unknown20(owner) {}
+    MainListener(GfMenuObjBattleTelop *owner) : unknown0c(0), unknown10(), _18(), m_menuObjBattleTelop(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     int unknown0c; // Inferred role: fade control; original member name unknown.
@@ -26,19 +26,19 @@ public:
       int unknown04; // Inferred role: fade in flag; original member name unknown.
     } unknown10;
     u8 _18[0x1c - 0x18];
-    GfMenuObjBattleTelop *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjBattleTelop *m_menuObjBattleTelop; // Inferred role: owner; original member name unknown.
   };
 
   class UniteComboListener : public ui::UIObjectListener {
   public:
-    UniteComboListener(GfMenuObjBattleTelop *owner) : unknown0c(0), unknown10(0), unknown14(0), unknown18(0), unknown20(owner) {}
+    UniteComboListener(GfMenuObjBattleTelop *owner) : unknown0c(0), unknown10(0), unknown14(0), unknown18(0), m_menuObjBattleTelop(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
-    int unknown0c;                   // Inferred role: combo display state (1 fight combo shown, 2 bonus shown, 4 elemental combo shown); original member name unknown.
-    int unknown10;                   // Inferred role: combo shown flag; original member name unknown.
-    int unknown14;                   // Inferred role: number of combo steps; original member name unknown.
-    int unknown18;                   // Inferred role: element combo control, -1 when none; original member name unknown.
-    GfMenuObjBattleTelop *unknown20; // Inferred role: owner; original member name unknown.
+    int unknown0c;                              // Inferred role: combo display state (1 fight combo shown, 2 bonus shown, 4 elemental combo shown); original member name unknown.
+    int unknown10;                              // Inferred role: combo shown flag; original member name unknown.
+    int unknown14;                              // Inferred role: number of combo steps; original member name unknown.
+    int unknown18;                              // Inferred role: element combo control, -1 when none; original member name unknown.
+    GfMenuObjBattleTelop *m_menuObjBattleTelop; // Inferred role: owner; original member name unknown.
   };
 
   struct OpenParam {
@@ -83,13 +83,13 @@ public:
 static_assert(offsetof(GfMenuObjBattleTelop::MainListener, unknown0c) == 0x0c, "");
 static_assert(offsetof(GfMenuObjBattleTelop::MainListener, unknown10) == 0x10, "");
 static_assert(offsetof(GfMenuObjBattleTelop::MainListener::unknown004, unknown04) == 0x04, "");
-static_assert(offsetof(GfMenuObjBattleTelop::MainListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjBattleTelop::MainListener, m_menuObjBattleTelop) == 0x20, "");
 static_assert(sizeof(GfMenuObjBattleTelop::MainListener) == 0x28, "");
 static_assert(offsetof(GfMenuObjBattleTelop::UniteComboListener, unknown0c) == 0x0c, "");
 static_assert(offsetof(GfMenuObjBattleTelop::UniteComboListener, unknown10) == 0x10, "");
 static_assert(offsetof(GfMenuObjBattleTelop::UniteComboListener, unknown14) == 0x14, "");
 static_assert(offsetof(GfMenuObjBattleTelop::UniteComboListener, unknown18) == 0x18, "");
-static_assert(offsetof(GfMenuObjBattleTelop::UniteComboListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjBattleTelop::UniteComboListener, m_menuObjBattleTelop) == 0x20, "");
 static_assert(sizeof(GfMenuObjBattleTelop::UniteComboListener) == 0x28, "");
 static_assert(sizeof(GfMenuObjBattleTelop::OpenUniteParam::unknown008) == 0x04, "");
 static_assert(offsetof(GfMenuObjBattleTelop::OpenUniteParam, unknown08) == 0x08, "");

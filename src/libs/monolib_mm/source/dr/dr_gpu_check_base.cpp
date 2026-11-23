@@ -8,10 +8,10 @@
 
 namespace ml {
 
-bool DrGpuCheckBase::isClip(const mm::Vec3 &position, f32 radius) { return DrMan::get()->unknown580->unknown10->unknown4e0.clipTest(position, radius); }
+bool DrGpuCheckBase::isClip(const mm::Vec3 &position, f32 radius) { return DrMan::get()->m_drCalcMan->m_drCalcViewWork->m_drCalcClipWorkViewPlane.clipTest(position, radius); }
 
-DrGpuCheckBase *DrGpuCheckBase::createGpuCheckObj(int type) { return DrMan::get()->unknown88->createGpuCheckObj(type); }
+DrGpuCheckBase *DrGpuCheckBase::createGpuCheckObj(int type) { return DrMan::get()->m_drMdlMan->createGpuCheckObj(type); }
 
-DrGpuCheckBase *DrGpuCheckBase::createEffGpuCheckObj(int type) { return DrMan::get()->unknown88->createEffGpuCheckObj(type); }
+DrGpuCheckBase *DrGpuCheckBase::createEffGpuCheckObj(int type) { return DrMan::get()->m_drMdlMan->createEffGpuCheckObj(type); }
 
 } // namespace ml

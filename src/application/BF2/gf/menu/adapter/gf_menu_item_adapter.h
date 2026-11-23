@@ -205,15 +205,15 @@ public:
   void changeItem(const MenuItemInfo &info) override;
   void update(const fw::UpdateInfo &info) override;
 
-  MenuItemInfo unknown38;                                  // Inferred role: item; original member name unknown.
+  MenuItemInfo m_menuItemInfo;                             // Inferred role: item; original member name unknown.
   mm::mtl::Delegate<bool(const MenuItemInfo &)> unknown48; // Inferred role: updater; original member name unknown.
-  IConverter *unknown68;                                   // Inferred role: converter; original member name unknown.
+  IConverter *m_iConverter;                                // Inferred role: converter; original member name unknown.
   u32 unknown70;                                           // Inferred role: index of the shown parameter; original member name unknown.
 };
 
-static_assert(offsetof(GfMenuItemAdapter, unknown38) == 0x38, "");
+static_assert(offsetof(GfMenuItemAdapter, m_menuItemInfo) == 0x38, "");
 static_assert(offsetof(GfMenuItemAdapter, unknown48) == 0x48, "");
-static_assert(offsetof(GfMenuItemAdapter, unknown68) == 0x68, "");
+static_assert(offsetof(GfMenuItemAdapter, m_iConverter) == 0x68, "");
 static_assert(offsetof(GfMenuItemAdapter, unknown70) == 0x70, "");
 static_assert(sizeof(GfMenuItemAdapter) == 0x78, "");
 

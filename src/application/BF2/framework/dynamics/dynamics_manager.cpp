@@ -5,6 +5,7 @@
 #include "framework/anim/anim_manager.h"
 #include "framework/memory/allocator.h"
 #include "framework/memory/framework_memory.h"
+#include "mm_mtl/algorithm.h"
 
 namespace mm {
 namespace mtl {
@@ -58,7 +59,7 @@ void DyanmicsManager::updateDynamics(const UpdateInfo &info, u32 layers) {
       mm::mtl::IntrusiveList<DynamicsUpdaterInterface>::iterator it = list.begin();
       for (int count = unknown18[layer].unknown18.size(); count != 0; count--) {
         DynamicsUpdateJob job(1);
-        job.unknown20 = &info;
+        job.m_updateInfo = &info;
         job.unknown10[0] = &*it;
         ++it;
         unknown618->unknown001(job);
@@ -68,6 +69,15 @@ void DyanmicsManager::updateDynamics(const UpdateInfo &info, u32 layers) {
 
   pool->processAllJob(*unknown618);
   pool->waitForCompletion();
+}
+
+void DyanmicsManager::drawDebug(u32 layers) {
+  for (u32 layer = 0; layer < LAYER_UNKNOWN_32; layer++) {
+    if ((layers & 1 << layer) != 0) {
+      mm::mtl::IntrusiveList<DynamicsUpdaterInterface> &list = unknown18[layer].unknown00;
+      mm::mtl::for_each(list.begin(), list.end(), [](DynamicsUpdaterInterface &updater) { updater.drawDebug(); });
+    }
+  }
 }
 
 const char *DyanmicsManager::getName() const { return "DyanmicsManager"; }

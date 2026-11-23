@@ -39,7 +39,7 @@ struct unknown012 {
 LayerObjTopMaskObj::LayerObjTopMaskObj(const void *data) {
   unknown18 = LAYER_OBJ_TYPE_MASK;
   unknowna8 |= 0x20000;
-  unknown250 = nullptr;
+  m_layerResViewPortInfo = nullptr;
   unknown238 = nullptr;
   createWorkBuffer(data);
 }
@@ -50,42 +50,42 @@ LayerObjTopMaskObj::~LayerObjTopMaskObj() {
 }
 
 void LayerObjTopMaskObj::createWorkBuffer(const void *data) {
-  unknownb8 = data;
+  m_resData = data;
   const unknown010 *header = static_cast<const unknown010 *>(data);
   if (header->unknown24 != 0) {
-    unknown2c8 = LayerManager::get()->unknown58->unknown40->createTextureObj(static_cast<const u8 *>(data) + header->unknown24);
+    m_layerTextureObj = LayerManager::get()->m_layerShdManager->m_layerTextureMan->createTextureObj(static_cast<const u8 *>(data) + header->unknown24);
   }
   if (header->unknown08 & 0x2) {
-    unknown2d2 = reinterpret_cast<const unknown012 *>(static_cast<const u8 *>(unknownb8) + header->unknown2c)->unknown00;
+    unknown2d2 = reinterpret_cast<const unknown012 *>(static_cast<const u8 *>(m_resData) + header->unknown2c)->unknown00;
   } else {
     unknown2d2 = 0;
   }
   unknown2d0 = 0;
-  unknown290.setup(0x50);
-  const unknown011 *info = reinterpret_cast<const unknown011 *>(static_cast<const u8 *>(unknownb8) + header->unknown0c);
-  unknown180.unknown00 = info->unknown10;
-  unknown180.unknown04 = info->unknown14;
-  unknown180.unknown08 = 1.0f;
-  unknown180.unknown0c = static_cast<f32>(info->unknown0c) / static_cast<f32>(info->unknown04);
-  unknown180.unknown10 = 0;
-  unknown180.unknown12 = 0;
-  unknown180.unknown14 = info->unknown04;
-  unknown180.unknown16 = info->unknown0c;
+  m_cGLibDblUniformBlock.setup(0x50);
+  const unknown011 *info = reinterpret_cast<const unknown011 *>(static_cast<const u8 *>(m_resData) + header->unknown0c);
+  m_layerResRenderInfo.unknown00 = info->unknown10;
+  m_layerResRenderInfo.unknown04 = info->unknown14;
+  m_layerResRenderInfo.unknown08 = 1.0f;
+  m_layerResRenderInfo.unknown0c = static_cast<f32>(info->unknown0c) / static_cast<f32>(info->unknown04);
+  m_layerResRenderInfo.m_pixelX = 0;
+  m_layerResRenderInfo.m_pixelY = 0;
+  m_layerResRenderInfo.m_pixelWidth = info->unknown04;
+  m_layerResRenderInfo.m_pixelHeight = info->unknown0c;
 }
 
 void LayerObjTopMaskObj::releaseWorkBuffer() {
-  unknown290.release();
-  if (unknown2c8 != nullptr) {
-    unknown2c8->release();
-    unknown2c8 = nullptr;
+  m_cGLibDblUniformBlock.release();
+  if (m_layerTextureObj != nullptr) {
+    m_layerTextureObj->release();
+    m_layerTextureObj = nullptr;
   }
 }
 
-const grlib::CGLibTextureBuffer &LayerObjTopMaskObj::getTexture() const { return *unknown2c8->getTexture(0); }
+const grlib::CGLibTextureBuffer &LayerObjTopMaskObj::getTexture() const { return *m_layerTextureObj->getTexture(0); }
 
 void LayerObjTopMaskObj::resourceInit() {
-  if (unknown2c8 != nullptr) {
-    unknown2c8->setupResource();
+  if (m_layerTextureObj != nullptr) {
+    m_layerTextureObj->setupResource();
   }
 }
 

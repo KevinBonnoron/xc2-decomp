@@ -41,15 +41,15 @@ public:
   static void fadeFieldBgm(f32 time, f32 volume);
   static void fadeOutFieldBgm(f32 time);
 
-  bool unknown08;                                // Inferred role: initialized; original member name unknown.
-  mm::mtl::FixedVector<unknown001, 8> unknown10; // Inferred role: playing jingles; original member name unknown.
-  GF_SE_CATEGORY_HANDLE *unknown78;              // Inferred role: category handle; original member name unknown.
+  bool unknown08;                                 // Inferred role: initialized; original member name unknown.
+  mm::mtl::FixedVector<unknown001, 8> unknown10;  // Inferred role: playing jingles; original member name unknown.
+  GF_SE_CATEGORY_HANDLE *m_GF_SE_CATEGORY_HANDLE; // Inferred role: category handle; original member name unknown.
 };
 
 static_assert(sizeof(GfMenuSoundManager::unknown001) == 0xc, "");
 static_assert(offsetof(GfMenuSoundManager, unknown08) == 0x08, "");
 static_assert(offsetof(GfMenuSoundManager, unknown10) == 0x10, "");
-static_assert(offsetof(GfMenuSoundManager, unknown78) == 0x78, "");
+static_assert(offsetof(GfMenuSoundManager, m_GF_SE_CATEGORY_HANDLE) == 0x78, "");
 static_assert(sizeof(GfMenuSoundManager) == 0x80, "");
 
 } // namespace gf

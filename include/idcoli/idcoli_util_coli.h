@@ -12,12 +12,16 @@ class IDColiObj;
 // Inferred role: material record of a hit, 0x1c bytes as zeroed by fw::TColiCheckResult::getMaterial; original type name unknown.
 struct unknown250 {
   u16 unknown00; // Inferred role: material type; original member name unknown.
-  u8 _02[0x08 - 0x02];
+  u8 _02[0x04 - 0x02];
+  u32 unknown04; // Inferred role: ground material copied by gf::GfComEnvSensor::flushGroundSingle; original member name unknown.
   u32 unknown08; // Inferred role: flags, bit 7 selects the vector table; original member name unknown.
-  u8 _0c[0x1c - 0x0c];
+  u8 _0c[0x18 - 0x0c];
+  u8 unknown18[4]; // Inferred role: color, red, green, blue, alpha; original member name unknown.
 };
 
+static_assert(offsetof(unknown250, unknown04) == 0x04, "");
 static_assert(offsetof(unknown250, unknown08) == 0x08, "");
+static_assert(offsetof(unknown250, unknown18) == 0x18, "");
 static_assert(sizeof(unknown250) == 0x1c, "");
 
 struct IDColiCallArg {
@@ -59,7 +63,7 @@ public:
     unknowne4 = 0;
     unknowne8 = 0;
     unknownf8 = nullptr;
-    unknown100 = nullptr;
+    m_iDColiCallBack = nullptr;
     unknown108 = nullptr;
   }
 
@@ -76,8 +80,8 @@ public:
 
   // Inferred helper: notifies the callback of a hit and returns true; original name unknown.
   bool unknown001() {
-    if (unknown100 != nullptr) {
-      unknown100->coli_callback(unknownf0);
+    if (m_iDColiCallBack != nullptr) {
+      m_iDColiCallBack->coli_callback(unknownf0);
     }
     return true;
   }
@@ -106,10 +110,10 @@ public:
   u32 unknowne4;                // Inferred role: stock max; original member name unknown.
   u32 unknowne8;                // Inferred role: material bits to skip; original member name unknown.
   u8 _ec[0xf0 - 0xec];
-  void *unknownf0;            // Inferred role: callback argument; original member name unknown.
-  IDColiObj *unknownf8;       // Inferred role: tested object; original member name unknown.
-  IDColiCallBack *unknown100; // Inferred role: callback; original member name unknown.
-  IDColiObj *unknown108;      // Inferred role: object to skip; original member name unknown.
+  void *unknownf0;                  // Inferred role: callback argument; original member name unknown.
+  IDColiObj *unknownf8;             // Inferred role: tested object; original member name unknown.
+  IDColiCallBack *m_iDColiCallBack; // Inferred role: callback; original member name unknown.
+  IDColiObj *unknown108;            // Inferred role: object to skip; original member name unknown.
 };
 
 static_assert(offsetof(IDColiResult, unknown10) == 0x10, "");
@@ -126,7 +130,7 @@ static_assert(offsetof(IDColiResult, unknowne0) == 0xe0, "");
 static_assert(offsetof(IDColiResult, unknowne8) == 0xe8, "");
 static_assert(offsetof(IDColiResult, unknownf0) == 0xf0, "");
 static_assert(offsetof(IDColiResult, unknownf8) == 0xf8, "");
-static_assert(offsetof(IDColiResult, unknown100) == 0x100, "");
+static_assert(offsetof(IDColiResult, m_iDColiCallBack) == 0x100, "");
 static_assert(offsetof(IDColiResult, unknown108) == 0x108, "");
 static_assert(sizeof(IDColiResult) == 0x110, "");
 
@@ -186,7 +190,7 @@ struct CLLineWork {
 static_assert(offsetof(CLLineWork, unknown60) == 0x60, "");
 
 struct CLRayWork {
-  CLLineWork unknown00[2]; // Inferred role: lines; original member name unknown.
+  CLLineWork m_cLLineWork[2]; // Inferred role: lines; original member name unknown.
 };
 
 struct IDColiInput {
@@ -243,6 +247,7 @@ class IDColiUtilMath {
 public:
   static void getNearLineToLine(mm::Vec3 &near1, mm::Vec3 &near2, const mm::Vec3 &start1, const mm::Vec3 &end1, const mm::Vec3 &start2, const mm::Vec3 &end2);
   static void getNearLineToPoint(mm::Vec3 &near, const mm::Vec3 &start, const mm::Vec3 &end, const mm::Vec3 &point);
+  static bool isTriangleBoxHitCheck(const mm::Vec3 &boxMax, const mm::Vec3 &boxMin, const mm::Vec3 &a, const mm::Vec3 &b, const mm::Vec3 &c);
 };
 
 class IDColiUtilColiResult {

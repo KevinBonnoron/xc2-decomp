@@ -8,12 +8,12 @@
 namespace skd {
 
 // Hit information filled by the detect jobs; the buffer below holds them and the apply job averages the enabled ones.
-// Layout evidence: executeDetectSphereJob (0x7100982db4) writes the world position at 0x10 and the hit flag at 0x20,
+// Layout evidence: executeDetectSphereJob (0x7100982db4) writes the push offset at 0x10 and the hit flag at 0x20,
 // addDetectSphereJob (0x7100982eac) writes the node index at 0x0, and DetectInfoBuffer entries are 0x30 bytes apart.
 struct DetectInfo {
   u16 unknown00; // Inferred role: node index; original member name unknown.
   u8 _02[0x0e];
-  mm::Vec3 unknown10; // Inferred role: world position; original member name unknown.
+  mm::Vec3 unknown10; // Inferred role: push offset, summed and averaged by executeApplyDetectJob and added to the node position; original member name unknown.
   bool unknown20;     // Inferred role: enabled; original member name unknown.
   u8 _21[0x0f];
 };

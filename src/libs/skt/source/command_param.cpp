@@ -1,9 +1,8 @@
-#include "skt/command_manager.h"
-
 #include <stdlib.h>
 
-#include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/fixstr.h"
+#include "skt/command_manager.h"
+#include "skt/fixed_vector.h"
 #include "types.h"
 
 namespace skt {

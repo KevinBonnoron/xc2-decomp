@@ -6,7 +6,7 @@
 
 namespace event {
 
-AttachActorMdl::AttachActorMdl(const char *name, ModelObj *model) : AttachActorBase(name, model->getHandle()), unknowna0(model) {}
+AttachActorMdl::AttachActorMdl(const char *name, ModelObj *model) : AttachActorBase(name, model->getHandle()), m_modelObj(model) {}
 
 AttachActorMdl::~AttachActorMdl() {}
 
@@ -14,17 +14,17 @@ void AttachActorMdl::render() { AttachActorBase::render(); }
 
 void AttachActorMdl::setEffectCaster(bool isSet, u32 effect) {
   if (isSet) {
-    AttachUtil::setCaster(true, unknowna0->getHandle(), effect);
+    AttachUtil::setCaster(true, m_modelObj->getHandle(), effect);
   } else {
-    AttachUtil::setCaster(false, unknowna0->getHandle(), effect);
+    AttachUtil::setCaster(false, m_modelObj->getHandle(), effect);
   }
 }
 
 void AttachActorMdl::setEffectMount(bool isSet, u32 effect, const char *bone, const mm::Vec3 &offset, bool isRotate, ATTACH_TYPE type) {
   if (isSet) {
-    AttachUtil::setMount(true, unknowna0->getHandle(), effect, bone, offset, isRotate, type);
+    AttachUtil::setMount(true, m_modelObj->getHandle(), effect, bone, offset, isRotate, type);
   } else {
-    AttachUtil::setMount(false, unknowna0->getHandle(), effect, bone, offset, isRotate, type);
+    AttachUtil::setMount(false, m_modelObj->getHandle(), effect, bone, offset, isRotate, type);
   }
 }
 
@@ -38,7 +38,7 @@ bool AttachActorMdl::getEfpMat(mm::Mat44 &mat, const char *name) const {
   if (*name == '\0') {
     return false;
   }
-  return unknowna0->getEfpMat(mat, name);
+  return m_modelObj->getEfpMat(mat, name);
 }
 
 bool AttachActorMdl::getBoneMat(mm::Mat44 &mat, const char *name) const {
@@ -46,7 +46,7 @@ bool AttachActorMdl::getBoneMat(mm::Mat44 &mat, const char *name) const {
   if (*name == '\0') {
     return false;
   }
-  return unknowna0->getBoneMat(mat, name);
+  return m_modelObj->getBoneMat(mat, name);
 }
 
 void AttachActorMdl::setTransform(const mm::Mat44 &transform) { unknown60 = transform; }

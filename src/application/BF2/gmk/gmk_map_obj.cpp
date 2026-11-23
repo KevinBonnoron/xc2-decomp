@@ -105,7 +105,7 @@ void GmkMapObj::update(f32 deltaTime) {
 }
 
 bool GmkMapObj::canPopGobInst() const {
-  if (unknown48 != gf::unknown020 || !getBdatInfo()->isPopCondMatched(unknown08.unknown08->unknown00)) {
+  if (unknown48 != gf::unknown020 || !getBdatInfo()->isPopCondMatched(m_createBaseInfo.m_xform->unknown00)) {
     return false;
   }
   if (unknown51 && !unknown52) {
@@ -120,16 +120,16 @@ void GmkMapObj::createGobInst() {
   }
   disposeGobInst(false);
   CBdatWrapper bdat = {getBindedBdatFp()};
-  unknown48 = gf::GfObjFactory::createGmkMapObj(bdat, unknown20.unknown18);
+  unknown48 = gf::GfObjFactory::createGmkMapObj(bdat, m_createInfo.unknown18);
   bindToGameObj(unknown48);
   validateDisp();
   gf::GfObjSetupGimmick *setup = gf::GfObjUtil::getObjSetup<gf::GfObjSetupGimmick>(unknown48);
-  unknown003(setup, unknown08.unknown08);
-  setup->setInitialScale(unknown08.unknown08->unknown20.x);
+  unknown003(setup, m_createBaseInfo.m_xform);
+  setup->setInitialScale(m_createBaseInfo.m_xform->unknown20.x);
 }
 
 bool GmkMapObj::canDepopGobInst() const {
-  if (unknown48 != gf::unknown020 && (getBdatInfo()->isDepopCondMatched(unknown08.unknown08->unknown00) || (unknown51 && !unknown52))) {
+  if (unknown48 != gf::unknown020 && (getBdatInfo()->isDepopCondMatched(m_createBaseInfo.m_xform->unknown00) || (unknown51 && !unknown52))) {
     return true;
   }
   return false;
@@ -214,11 +214,11 @@ void GmkRoutedMapObj::createGobInst() {
   }
   disposeGobInst();
   CBdatWrapper bdat = {getBindedBdatFp()};
-  unknown50 = gf::GfObjFactory::createGmkMapObj(bdat, unknown20.unknown18);
+  unknown50 = gf::GfObjFactory::createGmkMapObj(bdat, m_createInfo.unknown18);
   bindToGameObj(unknown50);
   validateDisp();
   gf::GfObjSetupGimmick *setup = mm::mtl::dynamicCast<gf::GfObjSetupGimmick>(gf::GfObjManager::getObjInfo(unknown50)->unknown30);
-  unknown003(setup, unknown08.unknown08);
+  unknown003(setup, m_createBaseInfo.m_xform);
 }
 
 void GmkRoutedMapObj::validateDisp() const {
@@ -228,7 +228,7 @@ void GmkRoutedMapObj::validateDisp() const {
   setEventDisp(unknown50, unknown58 && debugIsDispGmkType(getGmkType()));
 }
 
-const IGmkList *GmkRoutedMapObj::getBindedRoutePointList() const { return unknown08.unknown00->getCreateInfo().unknown08->unknown1b8[GMK_TYPE_UNKNOWN_8]; }
+const IGmkList *GmkRoutedMapObj::getBindedRoutePointList() const { return m_createBaseInfo.m_ownerGmkEnemyList->getCreateInfo().m_gmkSet->unknown1b8[GMK_TYPE_UNKNOWN_8]; }
 
 void GmkRoutedMapObj::onGobEvent(gf::IGfObjListener::OBJEVT event, gf::GF_OBJ_HANDLE *handle) {
   AGmkBase::onGobEvent(event, handle);

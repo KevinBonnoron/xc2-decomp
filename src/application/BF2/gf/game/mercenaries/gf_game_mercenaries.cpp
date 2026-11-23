@@ -225,7 +225,7 @@ bool GfGameMercenaries::orderMission(u32 teamID, u32 mission) {
     QuestID quest = GfDataMercenaries::getMissionQuestID(mission);
     if (!quest.empty()) {
       team->unknown14 = mission;
-      team->unknown0c = quest;
+      team->m_questID = quest;
       team->unknown1c = elapseTime;
       team->unknown20 = elapseTime;
       team->unknown18 = 0.0f;
@@ -324,7 +324,7 @@ void GfGameMercenaries::cancelMission(u32 mission) {
       GfDataMercenaries::getMissionQuestID(mission);
       unknown120 *team = GfDataMercenaries::getTeamByMissionID(mission);
       if (team != nullptr) {
-        team->unknown0c = QuestID();
+        team->m_questID = QuestID();
         team->unknown1c = ElapseTime();
         team->unknown20 = ElapseTime();
         team->unknown14 = 0;
@@ -342,14 +342,14 @@ void GfGameMercenaries::cancelMission(u32 mission) {
 }
 
 void GfGameMercenaries::applyCompleteMission(const QuestCompleteParam &param) {
-  u32 mission = GfDataMercenaries::getMissionByQuestID(param.unknown04);
+  u32 mission = GfDataMercenaries::getMissionByQuestID(param.m_questID);
   if (mission != 0 && GfDataMercenaries::getMissionFlag(mission) == 2) {
     setMissionComplete(mission);
   }
 }
 
 void GfGameMercenaries::qevOrderQuest(const QuestOrderParam &param) {
-  u32 mission = GfDataMercenaries::getMissionByQuestID(param.unknown04);
+  u32 mission = GfDataMercenaries::getMissionByQuestID(param.m_questID);
   if (mission != 0 && GfDataMercenaries::getMissionFlag(mission) == 1) {
     setMissionFlag(mission, 2);
   }
@@ -468,16 +468,16 @@ void GfGameMercenaries::execMissionReward(u32 mission) {
   }
   {
     GfQuestReward reward;
-    if (GfQuestUtil::getReward(reward, GfDataMercenaries::getMissionRewardID(mission), false) && reward.unknown00[QUEST_REWARD_UNKNOWN_7].unknown44 != 0) {
-      SCOM_ADD_MERCENARIES_POINT::create(reward.unknown00[QUEST_REWARD_UNKNOWN_7].unknown44);
+    if (GfQuestUtil::getReward(reward, GfDataMercenaries::getMissionRewardID(mission), false) && reward.m_param[QUEST_REWARD_UNKNOWN_7].unknown44 != 0) {
+      SCOM_ADD_MERCENARIES_POINT::create(reward.m_param[QUEST_REWARD_UNKNOWN_7].unknown44);
     }
   }
   {
     GfQuestReward reward;
     if (GfQuestUtil::getReward(reward, GfDataMercenaries::getMissionRewardID(mission), false)) {
-      for (u32 i = QUEST_REWARD_UNKNOWN_8; i < sizeof(reward.unknown00) / sizeof(reward.unknown00[0]); i++) {
-        if (reward.unknown00[i].unknown44 != 0) {
-          SCOM_ADD_ITEM::create(reward.unknown00[i].unknown44, reward.unknown00[i].m_developZone);
+      for (u32 i = QUEST_REWARD_UNKNOWN_8; i < sizeof(reward.m_param) / sizeof(reward.m_param[0]); i++) {
+        if (reward.m_param[i].unknown44 != 0) {
+          SCOM_ADD_ITEM::create(reward.m_param[i].unknown44, reward.m_param[i].m_developZone);
         }
       }
     }
@@ -486,7 +486,7 @@ void GfGameMercenaries::execMissionReward(u32 mission) {
   execMissionAchievementForBlade(mission);
   if (team != nullptr) {
     team->unknown14 = 0;
-    team->unknown0c = toQuestID(0);
+    team->m_questID = toQuestID(0);
   }
   setMissionFlag(mission, 4);
   GfQuestManager::requestOrderAchievementQuestForce();
@@ -509,21 +509,21 @@ void GfGameMercenaries::execMissionRewardByTeamID(u32 team) {
 u32 GfGameMercenaries::getRewardGold(u32 mission, bool) {
   GfQuestReward reward;
   bool isValid = GfQuestUtil::getReward(reward, GfDataMercenaries::getMissionRewardID(mission), false);
-  u32 gold = isValid ? reward.unknown00[QUEST_REWARD_UNKNOWN_0].unknown44_u32 : 0;
+  u32 gold = isValid ? reward.m_param[QUEST_REWARD_UNKNOWN_0].unknown44_u32 : 0;
   return gold + getRewardGoldHosei(mission, false);
 }
 
 u32 GfGameMercenaries::getRewardExp(u32 mission, bool) {
   GfQuestReward reward;
   bool isValid = GfQuestUtil::getReward(reward, GfDataMercenaries::getMissionRewardID(mission), false);
-  u32 exp = isValid ? reward.unknown00[QUEST_REWARD_UNKNOWN_3].unknown44_u32 : 0;
+  u32 exp = isValid ? reward.m_param[QUEST_REWARD_UNKNOWN_3].unknown44_u32 : 0;
   return static_cast<u32>(exp * unknown002() * 0.01f) + exp;
 }
 
 u32 GfGameMercenaries::getRewardDevelop(u32 mission, bool) {
   GfQuestReward reward;
   bool isValid = GfQuestUtil::getReward(reward, GfDataMercenaries::getMissionRewardID(mission), false);
-  u32 develop = isValid ? reward.unknown00[QUEST_REWARD_UNKNOWN_4].unknown44 : 0;
+  u32 develop = isValid ? reward.m_param[QUEST_REWARD_UNKNOWN_4].unknown44 : 0;
   return develop + getRewardDevelopHosei(mission, false);
 }
 
@@ -531,7 +531,7 @@ u32 GfGameMercenaries::getRewardDevelopZone(u32 mission) {
   GfQuestReward reward;
   u16 zone = 0;
   if (GfQuestUtil::getReward(reward, GfDataMercenaries::getMissionRewardID(mission), false)) {
-    zone = reward.unknown00[QUEST_REWARD_UNKNOWN_4].getDevelopZone();
+    zone = reward.m_param[QUEST_REWARD_UNKNOWN_4].getDevelopZone();
   }
   return zone;
 }
@@ -539,14 +539,14 @@ u32 GfGameMercenaries::getRewardDevelopZone(u32 mission) {
 u32 GfGameMercenaries::getRewardTrust(u32 mission) {
   GfQuestReward reward;
   bool isValid = GfQuestUtil::getReward(reward, GfDataMercenaries::getMissionRewardID(mission), false);
-  return isValid ? reward.unknown00[QUEST_REWARD_UNKNOWN_5].unknown44 : 0;
+  return isValid ? reward.m_param[QUEST_REWARD_UNKNOWN_5].unknown44 : 0;
 }
 
 u32 GfGameMercenaries::getRewardMercenariesPoint(u32 mission) {
   GfQuestReward reward;
   u32 point = 0;
   if (GfQuestUtil::getReward(reward, GfDataMercenaries::getMissionRewardID(mission), false)) {
-    point = reward.unknown00[QUEST_REWARD_UNKNOWN_7].unknown44;
+    point = reward.m_param[QUEST_REWARD_UNKNOWN_7].unknown44;
   }
   return point;
 }
@@ -554,26 +554,26 @@ u32 GfGameMercenaries::getRewardMercenariesPoint(u32 mission) {
 u16 GfGameMercenaries::getRewardIdeaPoint(u32 mission) {
   GfQuestReward reward;
   bool isValid = GfQuestUtil::getReward(reward, GfDataMercenaries::getMissionRewardID(mission), false);
-  return isValid ? reward.unknown00[QUEST_REWARD_UNKNOWN_6].unknown44 : 0;
+  return isValid ? reward.m_param[QUEST_REWARD_UNKNOWN_6].unknown44 : 0;
 }
 
 u16 GfGameMercenaries::getRewardIdeaType(u32 mission) {
   GfQuestReward reward;
   bool isValid = GfQuestUtil::getReward(reward, GfDataMercenaries::getMissionRewardID(mission), false);
-  return isValid ? reward.unknown00[QUEST_REWARD_UNKNOWN_6].m_developZone : 0;
+  return isValid ? reward.m_param[QUEST_REWARD_UNKNOWN_6].m_developZone : 0;
 }
 
 u32 GfGameMercenaries::getRewardGoldHosei(u32 mission, bool) {
   GfQuestReward reward;
   bool isValid = GfQuestUtil::getReward(reward, GfDataMercenaries::getMissionRewardID(mission), false);
-  f32 gold = isValid ? reward.unknown00[QUEST_REWARD_UNKNOWN_0].unknown44_u32 : 0;
+  f32 gold = isValid ? reward.m_param[QUEST_REWARD_UNKNOWN_0].unknown44_u32 : 0;
   return gold * unknown002() * 0.01f;
 }
 
 u32 GfGameMercenaries::getRewardDevelopHosei(u32 mission, bool) {
   GfQuestReward reward;
   bool isValid = GfQuestUtil::getReward(reward, GfDataMercenaries::getMissionRewardID(mission), false);
-  f32 develop = isValid ? reward.unknown00[QUEST_REWARD_UNKNOWN_4].unknown44 : 0;
+  f32 develop = isValid ? reward.m_param[QUEST_REWARD_UNKNOWN_4].unknown44 : 0;
   return develop * unknown002() * 0.01f;
 }
 
@@ -612,8 +612,8 @@ bool GfGameMercenaries::getRewardItem(u32 &item, u32 &number, u32 mission, QUEST
   if (!GfQuestUtil::getReward(reward, GfDataMercenaries::getMissionRewardID(mission), false)) {
     return false;
   }
-  item = reward.unknown00[type].unknown44;
-  number = reward.unknown00[type].m_developZone;
+  item = reward.m_param[type].unknown44;
+  number = reward.m_param[type].m_developZone;
   return item != 0;
 }
 
@@ -677,7 +677,7 @@ void GfGameMercenaries::applyMercenariesLevel(const QuestCompleteParam &param) {
   GfBdatBtl *bdatBtl = GfBdatBtl::get();
   u32 level = GfDataMercenaries::getLevel();
   for (u32 i = 1; i <= 6; i++) {
-    if (bdatBtl->getWildcardDatavalueU2(unknown019[i - 1]) == param.unknown04.unknown00 && level < i) {
+    if (bdatBtl->getWildcardDatavalueU2(unknown019[i - 1]) == param.m_questID.unknown00 && level < i) {
       level = i;
     }
   }

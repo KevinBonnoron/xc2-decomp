@@ -156,7 +156,7 @@ bool DrResMdoSeamRead::read(int &handleNum, u32 offset, u32 size, DrResMdoSeamMe
   param.unknown50 = size;
   param.unknown40 = memObj->m_buffer;
   param.unknown48 = memObj->m_size;
-  param.unknown68 = DrMan::get()->unknown1d94;
+  param.unknown68 = DrMan::get()->m_seamMapPriMdl;
   if (unknown4c & FLAG_UNKNOWN_2) {
     DevFileTh::rfRead(unknown08[num], param);
   } else {
@@ -186,7 +186,7 @@ bool DrResMdoSeamRead::readColi(int &handleNum, u32 offset, u32 size, DrResMdoSe
   param.unknown50 = size;
   param.unknown40 = memObj->m_buffer;
   param.unknown48 = memObj->m_size;
-  param.unknown68 = DrMan::get()->unknown1d94;
+  param.unknown68 = DrMan::get()->m_seamMapPriMdl;
   if (unknown4c & FLAG_UNKNOWN_2) {
     DevFileTh::rfRead(unknown08[num], param);
   } else {

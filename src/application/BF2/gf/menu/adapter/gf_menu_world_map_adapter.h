@@ -56,14 +56,14 @@ public:
   u32 convMap2Zone(u32 mapId);
 
   mm::mtl::Delegate<bool()> unknown30; // Inferred role: updater; original member name unknown.
-  IConverter *unknown50;               // Inferred role: converter; original member name unknown.
+  IConverter *m_iConverter;            // Inferred role: converter; original member name unknown.
   u16 unknown58;                       // Inferred role: map id; original member name unknown.
   u8 _5a[0x5c - 0x5a];
   u32 unknown5c; // Inferred role: unused; original member name unknown.
 };
 
 static_assert(offsetof(GfMenuWorldMapAdapter, unknown30) == 0x30, "");
-static_assert(offsetof(GfMenuWorldMapAdapter, unknown50) == 0x50, "");
+static_assert(offsetof(GfMenuWorldMapAdapter, m_iConverter) == 0x50, "");
 static_assert(offsetof(GfMenuWorldMapAdapter, unknown58) == 0x58, "");
 static_assert(offsetof(GfMenuWorldMapAdapter, unknown5c) == 0x5c, "");
 static_assert(sizeof(GfMenuWorldMapAdapter) == 0x60, "");

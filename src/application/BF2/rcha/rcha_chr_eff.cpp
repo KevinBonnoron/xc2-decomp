@@ -24,7 +24,7 @@ bool RchaChrEff::getVolumeFade(int &type, f32 frame) const { return unknown001(t
 
 int RchaChrEff::getValueInt(int slot, f32 frame, int defaultValue) const {
   if (unknown19a4[slot] >= 0) {
-    return unknown10[unknown19a4[slot]].getValueInt(frame);
+    return m_rchaAnm[unknown19a4[slot]].getValueInt(frame);
   }
   return defaultValue;
 }
@@ -39,7 +39,7 @@ void RchaChrEff::getVolumeFadeUVWScale(mm::Vec3 &scale, f32 frame) const {
 
 f32 RchaChrEff::getValue(int slot, f32 frame, f32 defaultValue) const {
   if (unknown19a4[slot] >= 0) {
-    return unknown10[unknown19a4[slot]].getValue(frame);
+    return m_rchaAnm[unknown19a4[slot]].getValue(frame);
   }
   return defaultValue;
 }

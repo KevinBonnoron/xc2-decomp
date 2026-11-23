@@ -45,10 +45,10 @@ public:
   bool isPlaying() const;
 
 private:
-  Warp unknown08;                         // Inferred role: cmd warp; original member name unknown.
-  Wait unknown10;                         // Inferred role: cmd wait; original member name unknown.
-  Reply unknown18;                        // Inferred role: cmd reply; original member name unknown.
-  Reset unknown20;                        // Inferred role: cmd reset; original member name unknown.
+  Warp m_warp;                            // Inferred role: cmd warp; original member name unknown.
+  Wait m_wait;                            // Inferred role: cmd wait; original member name unknown.
+  Reply m_reply;                          // Inferred role: cmd reply; original member name unknown.
+  Reset m_reset;                          // Inferred role: cmd reset; original member name unknown.
   CmdQueue<QUEUE_UNKNOWN_8, 0> unknown28; // Inferred role: queue; original member name unknown.
   u32 unknown978;                         // Inferred role: flags; original member name unknown.
 };

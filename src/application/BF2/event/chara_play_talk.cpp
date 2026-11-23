@@ -53,7 +53,7 @@ void CharaPlayTalk::render(const mm::Vec3 &position, f32 eyeOffset) {
     s32 lipY = y + 45;
     fw::debug::drawFontColor(mm::Col4(1.0f, 1.0f, 1.0f, 1.0f));
     fw::debug::drawFont(labelX, lipY, "lip:");
-    if (unknown18->unknown08 & CharaPlayFacial::FLAG_UNKNOWN_2) {
+    if (m_charaPlayFacial->unknown08 & CharaPlayFacial::FLAG_UNKNOWN_2) {
       fw::debug::drawFontColor(mm::Col4(0.5f, 0.5f, 0.5f, 1.0f));
     }
     if (!unknown40) {
@@ -71,7 +71,7 @@ void CharaPlayTalk::render(const mm::Vec3 &position, f32 eyeOffset) {
       fw::debug::drawFont(valueX, lipValueY, "lip   =on(%.1f)", unknown60);
     }
     s32 weightY = y + 75;
-    if (!(unknown18->unknown08 & CharaPlayFacial::FLAG_UNKNOWN_2)) {
+    if (!(m_charaPlayFacial->unknown08 & CharaPlayFacial::FLAG_UNKNOWN_2)) {
       fw::debug::drawFontColor(mm::Col4(1.0f, 1.0f, 1.0f, 1.0f));
     } else {
       fw::debug::drawFontColor(mm::Col4(0.5f, 0.5f, 0.5f, 1.0f));
@@ -83,12 +83,12 @@ void CharaPlayTalk::render(const mm::Vec3 &position, f32 eyeOffset) {
     s32 headY = y + 125;
     fw::debug::drawFontColor(mm::Col4(1.0f, 1.0f, 1.0f, 1.0f));
     fw::debug::drawFont(labelX, headY, "head:");
-    if (unknown18->unknown08 & CharaPlayFacial::FLAG_UNKNOWN_2) {
+    if (m_charaPlayFacial->unknown08 & CharaPlayFacial::FLAG_UNKNOWN_2) {
       fw::debug::drawFontColor(mm::Col4(0.5f, 0.5f, 0.5f, 1.0f));
     }
     fw::debug::drawFont(valueX, headY, "weight=%.1f", unknown4c);
     fw::debug::drawFont(valueX, y + 140, "speed =%.1f", unknown50);
-    if (unknown18->unknown08 & CharaPlayFacial::FLAG_UNKNOWN_2) {
+    if (m_charaPlayFacial->unknown08 & CharaPlayFacial::FLAG_UNKNOWN_2) {
       fw::debug::drawFont(labelX, lipY, "       --------------");
       fw::debug::drawFont(labelX, lipValueY, "       --------------");
       fw::debug::drawFont(labelX, weightY, "       --------------");

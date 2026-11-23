@@ -8,7 +8,7 @@ namespace idcoli {
 
 IDColiObjGrdChar::IDColiObjGrdChar() {
   unknown88 = 0;
-  unknown78 = nullptr;
+  m_iDColiObj = nullptr;
   unknown80 = nullptr;
   unknown70 = nullptr;
   unknown50 = mm::Vec3(1.0f, 1.0f, 1.0f);
@@ -21,7 +21,7 @@ void IDColiObjGrdChar::update() {
   unknown50 = mm::Vec3(-1000000.0f, -1000000.0f, -1000000.0f);
   unknown60 = mm::Vec3(1000000.0f, 1000000.0f, 1000000.0f);
   for (int i = 0; i < unknown88; i++) {
-    const IDCmfPosData &posData = unknown80[i].unknown00;
+    const IDCmfPosData &posData = unknown80[i].m_iDCmfPosData;
     if (unknown50.x < posData.unknown80.x) {
       unknown50.x = posData.unknown80.x;
     }
@@ -48,7 +48,7 @@ IDColiObjGrdChar::~IDColiObjGrdChar() { workClear(); }
 void IDColiObjGrdChar::workClear() {
   if (unknown88 != 0) {
     for (int i = 0; i < unknown88; i++) {
-      unknown80[i].unknowna0->~IDColiObjGrand();
+      unknown80[i].m_iDColiObjGrand->~IDColiObjGrand();
     }
     unknown88 = 0;
     unknown80 = nullptr;
@@ -78,9 +78,9 @@ bool IDColiObjGrdChar::testLine(IDColiResult &result, const IDColiInput &input) 
   bool isHit = false;
   for (int i = 0; i < unknown88; i++) {
     const unknown019 &work = unknown80[i];
-    IDColiObjGrand *grand = work.unknowna0;
+    IDColiObjGrand *grand = work.m_iDColiObjGrand;
     int mode = result.unknown00;
-    bool hit = grand->unknown051(result, input, &work.unknown00);
+    bool hit = grand->unknown051(result, input, &work.m_iDCmfPosData);
     if (mode == 0) {
       if (hit) {
         return true;
@@ -99,9 +99,9 @@ bool IDColiObjGrdChar::testRay(IDColiResult &result, const IDColiInput &input) {
   bool isHit = false;
   for (int i = 0; i < unknown88; i++) {
     const unknown019 &work = unknown80[i];
-    IDColiObjGrand *grand = work.unknowna0;
+    IDColiObjGrand *grand = work.m_iDColiObjGrand;
     int mode = result.unknown00;
-    bool hit = grand->unknown052(result, input, &work.unknown00);
+    bool hit = grand->unknown052(result, input, &work.m_iDCmfPosData);
     if (mode == 0) {
       if (hit) {
         return true;
@@ -120,9 +120,9 @@ bool IDColiObjGrdChar::testSphere(IDColiResult &result, const IDColiInput &input
   bool isHit = false;
   for (int i = 0; i < unknown88; i++) {
     const unknown019 &work = unknown80[i];
-    IDColiObjGrand *grand = work.unknowna0;
+    IDColiObjGrand *grand = work.m_iDColiObjGrand;
     int mode = result.unknown00;
-    bool hit = grand->unknown053(result, input, false, &work.unknown00);
+    bool hit = grand->unknown053(result, input, false, &work.m_iDCmfPosData);
     if (mode == 0) {
       if (hit) {
         return true;
@@ -141,9 +141,9 @@ bool IDColiObjGrdChar::testCapsule(IDColiResult &result, const IDColiInput &inpu
   bool isHit = false;
   for (int i = 0; i < unknown88; i++) {
     const unknown019 &work = unknown80[i];
-    IDColiObjGrand *grand = work.unknowna0;
+    IDColiObjGrand *grand = work.m_iDColiObjGrand;
     int mode = result.unknown00;
-    bool hit = grand->unknown054(result, input, false, &work.unknown00);
+    bool hit = grand->unknown054(result, input, false, &work.m_iDCmfPosData);
     if (mode == 0) {
       if (hit) {
         return true;
@@ -162,9 +162,9 @@ bool IDColiObjGrdChar::testWallSphere(IDColiResult &result, const IDColiInput &i
   bool isHit = false;
   for (int i = 0; i < unknown88; i++) {
     const unknown019 &work = unknown80[i];
-    IDColiObjGrand *grand = work.unknowna0;
+    IDColiObjGrand *grand = work.m_iDColiObjGrand;
     int mode = result.unknown00;
-    bool hit = grand->unknown053(result, input, true, &work.unknown00);
+    bool hit = grand->unknown053(result, input, true, &work.m_iDCmfPosData);
     if (mode == 0) {
       if (hit) {
         return true;
@@ -183,9 +183,9 @@ bool IDColiObjGrdChar::testWallCapsule(IDColiResult &result, const IDColiInput &
   bool isHit = false;
   for (int i = 0; i < unknown88; i++) {
     const unknown019 &work = unknown80[i];
-    IDColiObjGrand *grand = work.unknowna0;
+    IDColiObjGrand *grand = work.m_iDColiObjGrand;
     int mode = result.unknown00;
-    bool hit = grand->unknown054(result, input, true, &work.unknown00);
+    bool hit = grand->unknown054(result, input, true, &work.m_iDCmfPosData);
     if (mode == 0) {
       if (hit) {
         return true;

@@ -27,15 +27,15 @@ void StateWalk::updateGoalPos(GfComBehaviorNpc &behavior) {
   if (navi == nullptr) {
     gmk::AGmkBase *gmk = behavior.getBindedGmkInst();
     if (gmk != nullptr) {
-      behavior.setGoalPos(gmk->unknown08.unknown08->unknown00);
+      behavior.setGoalPos(gmk->m_createBaseInfo.m_xform->unknown00);
     }
   } else {
     const mm::Vec3 &position = behavior.getPos();
-    validateGmkRouteNaviConsideringGfLocalSteer(*navi, behavior.unknown350, position);
+    validateGmkRouteNaviConsideringGfLocalSteer(*navi, behavior.m_fieldLocalSteer, position);
     gmk::GmkRouteNavi::UpdateInfo info;
     info.position = position;
     navi->update(info);
-    if (navi->unknown00.isValid() && navi->unknown28.isValid()) {
+    if (navi->m_createInfo.isValid() && navi->m_gmkAcc.isValid()) {
       behavior.setGoalPos(navi->unknown90);
     }
   }
@@ -110,7 +110,7 @@ void StateWalk::seqWaitMoveEnd(GfComBehaviorNpc &behavior, const fw::UpdateInfo 
     return;
   }
 
-  mm::Vec3 rotation = gmk->unknown08.unknown08->unknown10;
+  mm::Vec3 rotation = gmk->m_createBaseInfo.m_xform->unknown10;
   mm::Quat quat = mm::unknown005(rotation);
   mm::Vec3 front = quat.rotate(mm::Vec3::unitZ);
   behavior.execTurnCmd(atan2f(front.x, front.z));

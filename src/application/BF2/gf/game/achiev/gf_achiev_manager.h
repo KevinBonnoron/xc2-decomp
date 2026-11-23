@@ -34,7 +34,7 @@ public:
 class GfAchievManager : public mm::mtl::PtrSingleton<GfAchievManager> {
 public:
   struct IncQuest {
-    QuestID unknown00; // Inferred role: quest; original member name unknown.
+    QuestID m_questID; // Inferred role: quest; original member name unknown.
     u32 unknown04;     // Inferred role: count; original member name unknown.
     u32 unknown08;     // Inferred role: added count; original member name unknown.
   };

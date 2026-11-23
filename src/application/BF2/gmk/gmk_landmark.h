@@ -46,14 +46,14 @@ public:
   void beginEvent();
   void endEvent();
 
-  const BdatInfo *getBdatInfo() const { return reinterpret_cast<const BdatInfo *>(unknown20.unknown10); }
+  const BdatInfo *getBdatInfo() const { return reinterpret_cast<const BdatInfo *>(m_createInfo.unknown10); }
 
-  GmkPhantom unknown60; // Inferred role: phantom; original member name unknown.
-  bool unknownf0;       // Inferred role: condition matched; original member name unknown.
-  bool unknownf1;       // Inferred role: event started; original member name unknown.
+  GmkPhantom m_gmkPhantom; // Inferred role: phantom; original member name unknown.
+  bool unknownf0;          // Inferred role: condition matched; original member name unknown.
+  bool unknownf1;          // Inferred role: event started; original member name unknown.
 };
 
-static_assert(offsetof(GmkLandmark, unknown60) == 0x60, "");
+static_assert(offsetof(GmkLandmark, m_gmkPhantom) == 0x60, "");
 static_assert(offsetof(GmkLandmark, unknownf0) == 0xf0, "");
 static_assert(offsetof(GmkLandmark, unknownf1) == 0xf1, "");
 

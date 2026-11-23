@@ -18,13 +18,13 @@ public:
   virtual void FreeStream(void *pointer) = 0;
 
   struct Block {
-    Allocator *unknown00; // Inferred role: allocator; original member name unknown.
-    void *unknown08;      // Inferred role: aligned address; original member name unknown.
-    void *unknown10;      // Inferred role: allocated address; original member name unknown.
-    u32 unknown18;        // Inferred role: requested size; original member name unknown.
-    u32 unknown1c;        // Inferred role: aligned size; original member name unknown.
-    u32 unknown20;        // Inferred role: element size; original member name unknown.
-    u32 unknown24;        // Inferred role: element count; original member name unknown.
+    Allocator *m_allocator; // Inferred role: allocator; original member name unknown.
+    void *unknown08;        // Inferred role: aligned address; original member name unknown.
+    void *unknown10;        // Inferred role: allocated address; original member name unknown.
+    u32 unknown18;          // Inferred role: requested size; original member name unknown.
+    u32 unknown1c;          // Inferred role: aligned size; original member name unknown.
+    u32 unknown20;          // Inferred role: element size; original member name unknown.
+    u32 unknown24;          // Inferred role: element count; original member name unknown.
   };
 
   Block *NewInstanceImpl(size_t size, size_t count, size_t alignment);

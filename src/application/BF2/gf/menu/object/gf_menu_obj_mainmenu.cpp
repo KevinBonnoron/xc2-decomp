@@ -25,7 +25,8 @@ namespace gf {
 static const mm::Col3 unknown002(0.5f, 0.5f, 0.5f);
 
 GfMenuObjMainMenu::GfMenuObjMainMenu(u32 handle)
-    : GfMenuObject(handle), unknown68(this), unknown300(nullptr), unknown308(0), unknown30c(0), unknown310(0), unknown318(nullptr), unknown320(nullptr), unknown328(0), unknown350(-1), unknown354(0) {}
+    : GfMenuObject(handle), unknown68(this), m_menuCallContext(nullptr), unknown308(0), unknown30c(0), unknown310(0), unknown318(nullptr), unknown320(nullptr), unknown328(0), unknown350(-1),
+      unknown354(0) {}
 
 GfMenuObjMainMenu::~GfMenuObjMainMenu() { ; }
 
@@ -83,7 +84,7 @@ void GfMenuObjMainMenu::setBustupCtrlChar(u32 character, u32 flag, bool isDisp) 
 void GfMenuObjMainMenu::finalize() {
   mm::mtl::safeRelease(unknown320);
   mm::mtl::safeRelease(unknown318);
-  mm::mtl::safeRelease(unknown300);
+  mm::mtl::safeRelease(m_menuCallContext);
   GfMenuObject::finalize();
 }
 
@@ -130,11 +131,11 @@ bool GfMenuObjMainMenu::seqAppearPhase2() {
 }
 
 bool GfMenuObjMainMenu::seqAppearPhase3() {
-  if (unknown300 == nullptr) {
+  if (m_menuCallContext == nullptr) {
     ui::UIObjectAcc acc(unknown18, "LAY_main");
     GfMenuObjCommonJog::OpenParam param;
-    if (unknown300 == nullptr) {
-      unknown300 = GfMenuCallContext::create();
+    if (m_menuCallContext == nullptr) {
+      m_menuCallContext = GfMenuCallContext::create();
     }
     GfMenuTypes::Param layerParam;
     if (getFSLayerParam(unknown20, layerParam)) {
@@ -142,11 +143,11 @@ bool GfMenuObjMainMenu::seqAppearPhase3() {
       removeFSLayerParam(unknown20);
     }
     param.unknown00 = 1;
-    GfMenuObjCommonJog::open(unknown300, param);
-    GfMenuObject::setCallContextEventHandler(unknown300, acc.unknown10);
+    GfMenuObjCommonJog::open(m_menuCallContext, param);
+    GfMenuObject::setCallContextEventHandler(m_menuCallContext, acc.unknown10);
   }
   GfMenuCallContext::GfMenuResult result;
-  return !unknown300->unknown18.empty() && unknown300->popResult(result) && result.unknown04 == 0;
+  return !m_menuCallContext->unknown18.empty() && m_menuCallContext->popResult(result) && result.unknown04 == 0;
 }
 
 bool GfMenuObjMainMenu::seqAppearPhase4() {
@@ -173,8 +174,8 @@ void GfMenuObjMainMenu::suspendInput() {
   ui::UIObjectAcc acc(unknown18, "LAY_main");
   GfMenuObject::disableInput(acc.unknown10);
   GfMenuObject::disableFSSwitching();
-  if (unknown300 != nullptr) {
-    GfMenuObjCommonJog::disable(unknown300);
+  if (m_menuCallContext != nullptr) {
+    GfMenuObjCommonJog::disable(m_menuCallContext);
   }
 }
 
@@ -182,8 +183,8 @@ void GfMenuObjMainMenu::resumeInput() {
   ui::UIObjectAcc acc(unknown18, "LAY_main");
   GfMenuObject::enableInput(acc.unknown10);
   GfMenuObject::enableFSSwitching();
-  if (unknown300 != nullptr) {
-    GfMenuObjCommonJog::enable(unknown300);
+  if (m_menuCallContext != nullptr) {
+    GfMenuObjCommonJog::enable(m_menuCallContext);
   }
 }
 
@@ -193,27 +194,27 @@ bool GfMenuObjMainMenu::seqStartCommon() {
 }
 
 bool GfMenuObjMainMenu::seqCloseJog() {
-  if (unknown300 != nullptr) {
-    GfMenuObjCommonJog::close(unknown300);
+  if (m_menuCallContext != nullptr) {
+    GfMenuObjCommonJog::close(m_menuCallContext);
   }
   GfMenuCallContext::GfMenuResult result;
-  if (!unknown300->unknown18.empty() && unknown300->popResult(result) && result.unknown04 == 1) {
-    unknown300->reset();
+  if (!m_menuCallContext->unknown18.empty() && m_menuCallContext->popResult(result) && result.unknown04 == 1) {
+    m_menuCallContext->reset();
     return true;
   }
   return false;
 }
 
 bool GfMenuObjMainMenu::seqOpenJog() {
-  if (!unknown300->isActive()) {
+  if (!m_menuCallContext->isActive()) {
     ui::UIObjectAcc acc(unknown18, "LAY_main");
     GfMenuObjCommonJog::OpenParam param;
     param.unknown00 = unknown310;
-    GfMenuObjCommonJog::open(unknown300, param);
-    GfMenuObject::setCallContextEventHandler(unknown300, acc.unknown10);
+    GfMenuObjCommonJog::open(m_menuCallContext, param);
+    GfMenuObject::setCallContextEventHandler(m_menuCallContext, acc.unknown10);
   }
   GfMenuCallContext::GfMenuResult result;
-  return !unknown300->unknown18.empty() && unknown300->popResult(result) && result.unknown04 == 0;
+  return !m_menuCallContext->unknown18.empty() && m_menuCallContext->popResult(result) && result.unknown04 == 0;
 }
 
 bool GfMenuObjMainMenu::seqSwapPhase2() { return true; }
@@ -222,13 +223,13 @@ void GfMenuObjMainMenu::MainListener::reciveEvent(const ui::EventData &event, u3
   ui::UIObjectAcc acc(handle);
   switch (event.unknown00) {
   case 1:
-    unknown20->unknown68.unknown005();
-    unknown20->unknown68.unknown002(&GfMenuObjMainMenu::seqStartOpen);
-    unknown20->unknown68.unknown002(&GfMenuObjMainMenu::seqAppearPhase1);
-    unknown20->unknown68.unknown002(&GfMenuObjMainMenu::seqAppearPhase2);
-    unknown20->unknown68.unknown002(&GfMenuObjMainMenu::seqAppearPhase3);
-    unknown20->unknown68.unknown002(&GfMenuObjMainMenu::seqAppearPhase4);
-    unknown20->unknown68.unknown002(&GfMenuObjMainMenu::seqEndCommon);
+    m_menuObjMainMenu->unknown68.unknown005();
+    m_menuObjMainMenu->unknown68.unknown002(&GfMenuObjMainMenu::seqStartOpen);
+    m_menuObjMainMenu->unknown68.unknown002(&GfMenuObjMainMenu::seqAppearPhase1);
+    m_menuObjMainMenu->unknown68.unknown002(&GfMenuObjMainMenu::seqAppearPhase2);
+    m_menuObjMainMenu->unknown68.unknown002(&GfMenuObjMainMenu::seqAppearPhase3);
+    m_menuObjMainMenu->unknown68.unknown002(&GfMenuObjMainMenu::seqAppearPhase4);
+    m_menuObjMainMenu->unknown68.unknown002(&GfMenuObjMainMenu::seqEndCommon);
     break;
   case 2: {
     GfMenuObjUtil::CtrlParam param;
@@ -237,8 +238,8 @@ void GfMenuObjMainMenu::MainListener::reciveEvent(const ui::EventData &event, u3
     param.unknown14 = 1;
     GfMenuObjUtil::startCtrl(acc.unknown10, param, nullptr);
     RQ_SETUP_PARTY party;
-    u32 index = unknown20->unknown320->getIndex(false);
-    u32 size = unknown20->unknown320->getSize();
+    u32 index = m_menuObjMainMenu->unknown320->getIndex(false);
+    u32 size = m_menuObjMainMenu->unknown320->getSize();
     bool isRotated;
     if (index == 0) {
       GfGameParty::getCurrentPartyInfo(party);
@@ -259,7 +260,7 @@ void GfMenuObjMainMenu::MainListener::reciveEvent(const ui::EventData &event, u3
       }
       isRotated = true;
     }
-    if (unknown20->unknown330[index] == 1) {
+    if (m_menuObjMainMenu->unknown330[index] == 1) {
       party.unknowncc = party.unknown00[0].unknown08[0];
       party.unknownc8 = 4;
     } else if (!isRotated) {
@@ -270,8 +271,8 @@ void GfMenuObjMainMenu::MainListener::reciveEvent(const ui::EventData &event, u3
   }
   case 6: {
     u32 index = event.unknown08;
-    unknown20->unknown328 = unknown20->unknown320->getSelectObject();
-    unknown20->unknown320->setIndex(index);
+    m_menuObjMainMenu->unknown328 = m_menuObjMainMenu->unknown320->getSelectObject();
+    m_menuObjMainMenu->unknown320->setIndex(index);
     break;
   }
   case 8: {
@@ -280,13 +281,13 @@ void GfMenuObjMainMenu::MainListener::reciveEvent(const ui::EventData &event, u3
     int index = param;
     if (type == 9) {
       if (index != -1 && GfMenuObjUtil::isBladeContorolable(index, 0)) {
-        unknown20->setBustupCtrlChar(index, unknown20->unknown330[index] ^ 1, true);
+        m_menuObjMainMenu->setBustupCtrlChar(index, m_menuObjMainMenu->unknown330[index] ^ 1, true);
       }
     } else if (type == 2) {
-      if (unknown20->unknown30c == 0) {
+      if (m_menuObjMainMenu->unknown30c == 0) {
         GfMenuObject::closeFSLayer(acc.unknown10, true, true);
       } else {
-        GfMenuObjCommonJog::pop(unknown20->unknown300);
+        GfMenuObjCommonJog::pop(m_menuObjMainMenu->m_menuCallContext);
       }
     } else if (type == 10) {
       GfMenuObject::changeFSSubLayer(acc.unknown10, 1, 0x1b, true);
@@ -296,36 +297,36 @@ void GfMenuObjMainMenu::MainListener::reciveEvent(const ui::EventData &event, u3
   }
   case 0xe:
     if (ui::UICtrlObject::getEventCtrlObjID(event) == 1) {
-      unknown20->listenerPartySelect(event);
+      m_menuObjMainMenu->listenerPartySelect(event);
     }
   default:
     ui::UIObjectListener::reciveEvent(event, handle);
     break;
   case 0x41: {
-    if (unknown20->unknown300 == nullptr || unknown20->unknown300->unknown0c != event.unknown08) {
+    if (m_menuObjMainMenu->m_menuCallContext == nullptr || m_menuObjMainMenu->m_menuCallContext->unknown0c != event.unknown08) {
       break;
     }
     u16 value = event.unknown14_u16;
     switch (event.unknown10_u16) {
     case 2:
-      if (unknown20->unknown30c == 0) {
+      if (m_menuObjMainMenu->unknown30c == 0) {
         GfMenuTypes::Param layerParam;
         unknown001 layer;
         layer.unknown00 = value;
         layerParam.set(layer);
-        GfMenuObject::registFSLayerParam(unknown20->unknown20, layerParam);
+        GfMenuObject::registFSLayerParam(m_menuObjMainMenu->unknown20, layerParam);
       }
       break;
     case 3:
       GfMenuObject::changeFSSubLayer(acc.unknown10, 1, value, true);
       break;
     case 4:
-      unknown20->unknown30c = value;
-      unknown20->suspendInput();
+      m_menuObjMainMenu->unknown30c = value;
+      m_menuObjMainMenu->suspendInput();
       break;
     case 5:
-      unknown20->unknown30c = value;
-      unknown20->resumeInput();
+      m_menuObjMainMenu->unknown30c = value;
+      m_menuObjMainMenu->resumeInput();
       break;
     }
     break;

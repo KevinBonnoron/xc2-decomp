@@ -17,11 +17,11 @@ public:
   void deallocate(void *pointer) override;
   const char *getName() const override { return m_name.c_str(); }
 
-  mtl::ALLOC_HANDLE unknown08; // Inferred role: handle; original member name unknown.
+  mtl::ALLOC_HANDLE m_memHandle; // Inferred role: handle; named after the game accessor fw::MemHandlebaseAllocator::getMemHandle.
   mm::mtl::FixStr<64> m_name;
 };
 
-static_assert(offsetof(MemHandlebaseAllocator, unknown08) == 0x08, "");
+static_assert(offsetof(MemHandlebaseAllocator, m_memHandle) == 0x08, "");
 static_assert(offsetof(MemHandlebaseAllocator, m_name) == 0x0c, "");
 static_assert(sizeof(MemHandlebaseAllocator) == 0x50, "");
 

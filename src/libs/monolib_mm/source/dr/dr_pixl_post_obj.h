@@ -41,8 +41,9 @@ class DrPixlPostObj {
 public:
   DrPixlPostObj(DrMan *drMan, DrPixlMan *pixlMan, DrPixlPostMan *postMan);
   static float gaussianDistribution(float x, float y, float rho);
-  static void getSampleOffsets_GaussBlur_Horizontally(f32 a, f32 b, int count, f32 *offsets, f32 c, f32 d);
-  static void getSampleOffsets_GaussBlur_Verticaly(f32 a, f32 b, int count, f32 *offsets, f32 c, f32 d);
+  static void getSampleOffsets_GaussBlur_Horizontally(f32 width, f32 height, int count, f32 *offsets, f32 multiplier, f32 rho);
+  static void getSampleOffsets_GaussBlur_Verticaly(f32 width, f32 height, int count, f32 *offsets, f32 multiplier, f32 rho);
+  static void getSampleOffsets_Bloom(int width, f32 *offsets, f32 *weights, f32 rho, f32 multiplier, int axis);
   static void getSampleOffsetDownScale4x4(int width, int height, float *offsets);
   static void calc1PixlOfs(float &x, float &y);
   static void getSampleOffsets_DownScale2x2(int width, int height, float *offsets);
@@ -55,9 +56,9 @@ public:
   void setScaleShader(DrPixlRenderTarget *source);
   void setShaderBloom(DrShdDataObj *shader, grlib::CGLibUniformEtcUtility &uniform);
 
-  DrMan *unknown00;         // Inferred role: driver manager; original member name unknown.
-  DrPixlMan *unknown08;     // Inferred role: pixel manager; original member name unknown.
-  DrPixlPostMan *unknown10; // Inferred role: post manager; original member name unknown.
+  DrMan *m_drMan;                 // Inferred role: driver manager; original member name unknown.
+  DrPixlMan *m_drPixlMan;         // Inferred role: pixel manager; original member name unknown.
+  DrPixlPostMan *m_drPixlPostMan; // Inferred role: post manager; original member name unknown.
 };
 
 } // namespace ml

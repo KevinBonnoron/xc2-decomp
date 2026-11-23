@@ -44,7 +44,7 @@ GfFieldLookIk::GfFieldLookIk(GF_OBJ_HANDLE *handle) {
 
 void GfFieldLookIk::create(GF_OBJ_HANDLE *handle) {
   dispose();
-  unknown00 = handle;
+  m_GF_OBJ_HANDLE = handle;
 }
 
 void GfFieldLookIk::create(GF_OBJ_HANDLE *handle, const CBdatWrapper &bdat, int id) {
@@ -52,7 +52,7 @@ void GfFieldLookIk::create(GF_OBJ_HANDLE *handle, const CBdatWrapper &bdat, int 
   static const u32 unknown001[] = {9, 5, 3};
 
   dispose();
-  unknown00 = handle;
+  m_GF_OBJ_HANDLE = handle;
   u8 lookAt = bdat.getValCheck("LookAt", id, gmk::BDAT_TYPE_UNKNOWN_1);
   if (lookAt == 0) {
     unknown1c = false;
@@ -69,14 +69,14 @@ void GfFieldLookIk::create(GF_OBJ_HANDLE *handle, const CBdatWrapper &bdat, int 
 
 void GfFieldLookIk::dispose() {
   unknown30 = false;
-  if (unknown00 != unknown020) {
-    GfObjAcc acc(unknown00);
+  if (m_GF_OBJ_HANDLE != unknown020) {
+    GfObjAcc acc(m_GF_OBJ_HANDLE);
     if (!acc.isDestroy() && !acc.testFlag(OBJ_FLAG_UNKNOWN_17)) {
       GfObj *obj = acc.getObj();
       if (obj != nullptr) {
         GfComIK *ik = obj->getComponent<GfComIK>();
         if (ik != nullptr) {
-          const mm::mtl::Vector<mm::mtl::IntrusivePtr<fw::IkSolver>> &solvers = ik->unknown10.unknown10;
+          const mm::mtl::Vector<mm::mtl::IntrusivePtr<fw::IkSolver>> &solvers = ik->m_ikResolver.unknown10;
           fw::LookIkSolver *look = castSolver<fw::LookIkSolver>(solvers[unknown08]);
           if (look != nullptr) {
             look->fadeOut(unknown18);
@@ -84,16 +84,16 @@ void GfFieldLookIk::dispose() {
         }
       }
     }
-    unknown00 = unknown020;
+    m_GF_OBJ_HANDLE = unknown020;
   }
 }
 
 void GfFieldLookIk::update(f32 deltaTime) {
-  if (unknown00 == unknown020 || !unknown1c) {
+  if (m_GF_OBJ_HANDLE == unknown020 || !unknown1c) {
     return;
   }
 
-  GfObjAcc acc(unknown00);
+  GfObjAcc acc(m_GF_OBJ_HANDLE);
   GfObj *obj = acc.getObj();
   if (obj == nullptr) {
     dispose();
@@ -102,7 +102,7 @@ void GfFieldLookIk::update(f32 deltaTime) {
 
   GfComIK *ik = obj->getComponent<GfComIK>();
   if (ik != nullptr) {
-    const mm::mtl::Vector<mm::mtl::IntrusivePtr<fw::IkSolver>> &solvers = ik->unknown10.unknown10;
+    const mm::mtl::Vector<mm::mtl::IntrusivePtr<fw::IkSolver>> &solvers = ik->m_ikResolver.unknown10;
     if (unknown08 == 3) {
       fw::LookIkSolver *look = castSolver<fw::LookIkSolver>(solvers[unknown002_3]);
       if (look != nullptr) {
@@ -131,7 +131,7 @@ bool GfFieldLookIk::isCondMatched(const mm::Vec3 &target) const {
     return false;
   }
   direction *= 1.0f / distance;
-  GfObjAcc acc(unknown00);
+  GfObjAcc acc(m_GF_OBJ_HANDLE);
   mm::Quat rotation = acc.getWorldTransformNoSync().unknown10;
   mm::Quat::inverse(rotation);
   mm::Vec3 local = rotation.rotate(direction);
@@ -160,7 +160,7 @@ bool GfFieldLookIk::isCondMatched() const {
 }
 
 bool GfFieldLookIk::findTargetPos(mm::Vec3 &position) const {
-  GfObjAcc acc(unknown00);
+  GfObjAcc acc(m_GF_OBJ_HANDLE);
   GfObj *obj = acc.getObj();
   if (obj == nullptr) {
     return false;
@@ -186,7 +186,7 @@ bool GfFieldLookIk::findTargetPos(mm::Vec3 &position) const {
 }
 
 bool GfFieldLookIk::findPos(mm::Vec3 &position) const {
-  GfObjAcc acc(unknown00);
+  GfObjAcc acc(m_GF_OBJ_HANDLE);
   GfObj *obj = acc.getObj();
   if (obj == nullptr) {
     return false;

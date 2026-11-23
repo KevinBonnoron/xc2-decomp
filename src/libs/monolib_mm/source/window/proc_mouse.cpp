@@ -19,20 +19,20 @@ bool unknown001 = true;
 
 class WorkObj;
 
-ProcMouse::ProcMouse(const char *name, WorkObj *parent) : WinProc(name, parent, 10), unknown1f8(0, 0), unknown200(0, 0), unknown208(0, 0), unknown234(false) { unknown210 = "ARROW"; }
+ProcMouse::ProcMouse(const char *name, WorkObj *parent) : WinProc(name, parent, 10), m_pos(0, 0), unknown200(0, 0), m_move(0, 0), unknown234(false) { unknown210 = "ARROW"; }
 
 ProcMouse::~ProcMouse() {}
 
 void ProcMouse::setDisp(bool isDisp) { unknown001 = isDisp; }
 
-mm::Pnt<int> *ProcMouse::getPos() { return &get()->unknown1f8; }
+mm::Pnt<int> *ProcMouse::getPos() { return &get()->m_pos; }
 
-mm::Pnt<int> *ProcMouse::getMove() { return &get()->unknown208; }
+mm::Pnt<int> *ProcMouse::getMove() { return &get()->m_move; }
 
 void ProcMouse::setPos(const mm::Pnt<int> &position) {
   ProcMouse *mouse = get();
   mouse->unknown200 = position;
-  mouse->unknown1f8 = position;
+  mouse->m_pos = position;
 }
 
 void ProcMouse::setCursorResize(MCURSOR cursor) {
@@ -69,11 +69,11 @@ void ProcMouse::update(bool isUpdate) {
   if (view == nullptr) {
     return;
   }
-  get()->unknown208 = DevMouse::getMove();
-  get()->unknown200 = get()->unknown1f8;
-  get()->unknown1f8 = DevMouse::getPos();
+  get()->m_move = DevMouse::getMove();
+  get()->unknown200 = get()->m_pos;
+  get()->m_pos = DevMouse::getPos();
   mouse = get();
-  const mm::Pnt<int> &pos = mouse->unknown1f8;
+  const mm::Pnt<int> &pos = mouse->m_pos;
   const mm::Pnt<int> &prev = mouse->unknown200;
   if (pos.x != prev.x || pos.y != prev.y) {
     mouse->unknown235 = 60;
@@ -107,8 +107,8 @@ void ProcMouse::wkRenderAfter() {
   draw->setCol(1.0f, 1.0f, 1.0f, 1.0f);
   draw->setAlphaBlend(true);
   draw->begin(2, 2);
-  draw->add(unknown1f8.x, unknown1f8.y - 10, unknown1f8.x, unknown1f8.y + 10);
-  draw->add(unknown1f8.x - 10, unknown1f8.y, unknown1f8.x + 10, unknown1f8.y);
+  draw->add(m_pos.x, m_pos.y - 10, m_pos.x, m_pos.y + 10);
+  draw->add(m_pos.x - 10, m_pos.y, m_pos.x + 10, m_pos.y);
   draw->end();
   draw->setZComp(true);
   draw->setZWrite(true);
@@ -121,7 +121,7 @@ bool ProcMouse::wkStandbyLogin() {
   view->unknown3c0.add(5);
   view->unknown528 = 2;
   view->unknown3b8 |= 8;
-  get()->unknown1f8 = mm::Pnt<int>(0, 0);
+  get()->m_pos = mm::Pnt<int>(0, 0);
   get()->unknown200 = mm::Pnt<int>(0, 0);
   return WinProc::wkStandbyLogin();
 }

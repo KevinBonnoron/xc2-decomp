@@ -62,7 +62,7 @@ void GfFieldTime::clear() {
   getRealTime(unknown20);
   unknown18 = unknown20;
   setTime(START_UNKNOWN_7, 0);
-  GfDataManager::getDataGame()->unknown1098c0 = m_gameTime;
+  GfDataManager::getDataGame()->m_gameTime = m_gameTime;
 }
 
 u32 GfFieldTime::getTimeRange(u32 hour, u32 minute) const {
@@ -94,9 +94,9 @@ void GfFieldTime::getRealTime(RealTime &realTime) const {
 void GfFieldTime::setTime(u32 hour, u32 minute) {
   unknown34 = unknown30 = calcGameTime(hour, minute);
   unknown38 = 0.0f;
-  m_gameTime.unknown01_4 = hour;
-  m_gameTime.unknown00_6 = minute;
-  m_gameTime.unknown00_0 = 0;
+  m_gameTime.m_hour = hour;
+  m_gameTime.m_min = minute;
+  m_gameTime.m_sec = 0;
   m_timeRange = getTimeRange(hour, minute);
   unknown48 = getTimeRangeDN();
   saveRealTime();
@@ -105,8 +105,8 @@ void GfFieldTime::setTime(u32 hour, u32 minute) {
 const GameTime &GfFieldTime::getGameTime() const { return m_gameTime; }
 
 void GfFieldTime::setupGame() {
-  setElapseTime(GfDataManager::getDataGame()->unknown1098c4);
-  setGameTime(GfDataManager::getDataGame()->unknown1098c0);
+  setElapseTime(GfDataManager::getDataGame()->m_elapseTime);
+  setGameTime(GfDataManager::getDataGame()->m_gameTime);
   setTimeStop(GfDataManager::getDataGame()->unknown24 != 0);
 }
 
@@ -117,9 +117,9 @@ void GfFieldTime::setElapseTime(const ElapseTime &elapseTime) {
 }
 
 void GfFieldTime::setGameTime(const GameTime &gameTime) {
-  unknown30 = unknown34 = calcGameTime(fmodf(gameTime.unknown01_4, HOURS_UNKNOWN_24), fmodf(gameTime.unknown00_6, MINUTES_PER_UNKNOWN_60));
+  unknown30 = unknown34 = calcGameTime(fmodf(gameTime.m_hour, HOURS_UNKNOWN_24), fmodf(gameTime.m_min, MINUTES_PER_UNKNOWN_60));
   m_gameTime = gameTime;
-  m_timeRange = getTimeRange(gameTime.unknown01_4, gameTime.unknown00_6);
+  m_timeRange = getTimeRange(gameTime.m_hour, gameTime.m_min);
   unknown48 = getTimeRangeDN();
   saveRealTime();
 }
@@ -181,16 +181,16 @@ bool GfFieldTime::getTimeRangeName(u8 *&bdat, u32 &textId) const { return GfData
 
 void GfFieldTime::getGameTime(mm::mtl::FixStr<16> &string) const {
   mm::mtl::FixStr<16> work;
-  work.format("%2d", m_gameTime.unknown01_4);
+  work.format("%2d", m_gameTime.m_hour);
   string = work.c_str();
   string += ":";
-  work.format("%02d", m_gameTime.unknown00_6);
+  work.format("%02d", m_gameTime.m_min);
   string += work.c_str();
 }
 
-u32 GfFieldTime::getHour() const { return m_gameTime.unknown01_4; }
+u32 GfFieldTime::getHour() const { return m_gameTime.m_hour; }
 
-u32 GfFieldTime::getMin() const { return m_gameTime.unknown00_6; }
+u32 GfFieldTime::getMin() const { return m_gameTime.m_min; }
 
 void GfFieldTime::getElapseTime(mm::mtl::FixStr<16> &string) const {
   mm::mtl::FixStr<16> work;
@@ -206,10 +206,10 @@ void GfFieldTime::getElapseTime(mm::mtl::FixStr<16> &string) const {
 
 const ElapseTime &GfFieldTime::getElapseTime() const { return m_elapseTime; }
 
-void GfFieldTime::nextDay() { m_gameTime.unknown02_1++; }
+void GfFieldTime::nextDay() { m_gameTime.m_day++; }
 
 void GfFieldTime::setDay(u32 day) {
-  m_gameTime.unknown02_1 = day;
+  m_gameTime.m_day = day;
   saveRealTime();
 }
 
@@ -217,9 +217,9 @@ void GfFieldTime::setHour(u32 hour) {
   u32 minute = getMin();
   unknown34 = unknown30 = calcGameTime(hour, minute);
   unknown38 = 0.0f;
-  m_gameTime.unknown01_4 = hour;
-  m_gameTime.unknown00_6 = minute;
-  m_gameTime.unknown00_0 = 0;
+  m_gameTime.m_hour = hour;
+  m_gameTime.m_min = minute;
+  m_gameTime.m_sec = 0;
   m_timeRange = getTimeRange(hour, 0);
   unknown48 = getTimeRangeDN();
   saveRealTime();
@@ -229,9 +229,9 @@ void GfFieldTime::setMin(u32 minute) {
   u32 hour = getHour();
   unknown34 = unknown30 = calcGameTime(hour, minute);
   unknown38 = 0.0f;
-  m_gameTime.unknown01_4 = hour;
-  m_gameTime.unknown00_6 = minute;
-  m_gameTime.unknown00_0 = 0;
+  m_gameTime.m_hour = hour;
+  m_gameTime.m_min = minute;
+  m_gameTime.m_sec = 0;
   saveRealTime();
 }
 
@@ -242,11 +242,11 @@ u32 GfFieldTime::getTime(u32 &hour, u32 &minute) const {
   return fmodf(time, unknown043) * 2.0f;
 }
 
-u32 GfFieldTime::getDay() const { return m_gameTime.unknown02_1; }
+u32 GfFieldTime::getDay() const { return m_gameTime.m_day; }
 
-u32 GfFieldTime::getSec() const { return m_gameTime.unknown00_0; }
+u32 GfFieldTime::getSec() const { return m_gameTime.m_sec; }
 
-u32 GfFieldTime::getTime() const { return m_gameTime.unknown01_4 * SECONDS_PER_UNKNOWN_3600 + m_gameTime.unknown00_6 * SECONDS_UNKNOWN_60 + m_gameTime.unknown00_0; }
+u32 GfFieldTime::getTime() const { return m_gameTime.m_hour * SECONDS_PER_UNKNOWN_3600 + m_gameTime.m_min * SECONDS_UNKNOWN_60 + m_gameTime.m_sec; }
 
 void GfFieldTime::setTimeSpeed(f32 timeSpeed) { m_timeSpeed = timeSpeed; }
 
@@ -326,10 +326,10 @@ void GfFieldTime::setDebugStop(bool isStop) { m_debugStop = isStop; }
 bool GfFieldTime::isDebugStop() const { return m_debugStop; }
 
 GameTime operator+(const GameTime &gameTime, const GameTime &otherGameTime) {
-  u32 second = gameTime.unknown00_0 + otherGameTime.unknown00_0;
-  u32 minute = gameTime.unknown00_6 + otherGameTime.unknown00_6;
-  u32 hour = gameTime.unknown01_4 + otherGameTime.unknown01_4;
-  u32 day = gameTime.unknown02_1 + otherGameTime.unknown02_1;
+  u32 second = gameTime.m_sec + otherGameTime.m_sec;
+  u32 minute = gameTime.m_min + otherGameTime.m_min;
+  u32 hour = gameTime.m_hour + otherGameTime.m_hour;
+  u32 day = gameTime.m_day + otherGameTime.m_day;
   if (second >= SECONDS_UNKNOWN_60) {
     second -= SECONDS_UNKNOWN_60;
     minute++;
@@ -344,18 +344,18 @@ GameTime operator+(const GameTime &gameTime, const GameTime &otherGameTime) {
   }
 
   GameTime result;
-  result.unknown00_0 = second;
-  result.unknown00_6 = minute;
-  result.unknown01_4 = hour;
-  result.unknown02_1 = day;
+  result.m_sec = second;
+  result.m_min = minute;
+  result.m_hour = hour;
+  result.m_day = day;
   return result;
 }
 
 GameTime operator-(const GameTime &gameTime, const GameTime &otherGameTime) {
-  s32 second = gameTime.unknown00_0 - otherGameTime.unknown00_0;
-  s32 minute = gameTime.unknown00_6 - otherGameTime.unknown00_6;
-  s32 hour = gameTime.unknown01_4 - otherGameTime.unknown01_4;
-  s32 day = gameTime.unknown02_1 - otherGameTime.unknown02_1;
+  s32 second = gameTime.m_sec - otherGameTime.m_sec;
+  s32 minute = gameTime.m_min - otherGameTime.m_min;
+  s32 hour = gameTime.m_hour - otherGameTime.m_hour;
+  s32 day = gameTime.m_day - otherGameTime.m_day;
   if (second < 0) {
     second += SECONDS_UNKNOWN_60;
     minute--;
@@ -370,16 +370,16 @@ GameTime operator-(const GameTime &gameTime, const GameTime &otherGameTime) {
   }
 
   GameTime result;
-  result.unknown00_0 = second;
-  result.unknown00_6 = minute;
-  result.unknown01_4 = hour;
-  result.unknown02_1 = day;
+  result.m_sec = second;
+  result.m_min = minute;
+  result.m_hour = hour;
+  result.m_day = day;
   return result;
 }
 
-u32 GameTime::convMin() const { return unknown02_1 * MINUTES_PER_UNKNOWN_1440 + unknown01_4 * MINUTES_PER_UNKNOWN_60 + unknown00_6; }
+u32 GameTime::convMin() const { return m_day * MINUTES_PER_UNKNOWN_1440 + m_hour * MINUTES_PER_UNKNOWN_60 + m_min; }
 
-u32 GameTime::convSec() const { return unknown02_1 * SECONDS_PER_UNKNOWN_86400 + unknown01_4 * SECONDS_PER_UNKNOWN_3600 + unknown00_6 * SECONDS_UNKNOWN_60 + unknown00_0; }
+u32 GameTime::convSec() const { return m_day * SECONDS_PER_UNKNOWN_86400 + m_hour * SECONDS_PER_UNKNOWN_3600 + m_min * SECONDS_UNKNOWN_60 + m_sec; }
 
 ElapseTime operator-(const ElapseTime &elapseTime, const ElapseTime &otherElapseTime) {
   s32 hour = elapseTime.unknown01_4 - otherElapseTime.unknown01_4;

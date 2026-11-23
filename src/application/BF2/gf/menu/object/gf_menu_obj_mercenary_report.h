@@ -16,20 +16,20 @@ class GfMenuObjMercenaryReport : public GfMenuObject {
 public:
   class MainListener : public ui::UIObjectListener {
   public:
-    MainListener(GfMenuObjMercenaryReport *owner) : _0c(), unknown20(owner) {}
+    MainListener(GfMenuObjMercenaryReport *owner) : _0c(), m_menuObjMercenaryReport(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
-    GfMenuObjMercenaryReport *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjMercenaryReport *m_menuObjMercenaryReport; // Inferred role: owner; original member name unknown.
   };
 
   class RewardListener : public ui::UIObjectListener {
   public:
-    RewardListener(GfMenuObjMercenaryReport *owner) : _0c(), unknown20(owner) {}
+    RewardListener(GfMenuObjMercenaryReport *owner) : _0c(), m_menuObjMercenaryReport(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
-    GfMenuObjMercenaryReport *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjMercenaryReport *m_menuObjMercenaryReport; // Inferred role: owner; original member name unknown.
   };
 
   GfMenuObjMercenaryReport(u32 handle);
@@ -48,7 +48,7 @@ public:
   bool seqWaitLoadKizuna();
 
   u32 unknown24;                                           // Inferred role: team; original member name unknown.
-  GfMenuBladeList *unknown28;                              // Inferred role: team blades; original member name unknown.
+  GfMenuBladeList *m_menuBladeList;                        // Inferred role: team blades; original member name unknown.
   GfMenuSequence<GfMenuObjMercenaryReport, 10> unknown30;  // Inferred role: report steps; original member name unknown.
   bool unknown358;                                         // Inferred role: animation or control started flag; original member name unknown.
   bool unknown359;                                         // Inferred role: reward closed flag; original member name unknown.
@@ -57,12 +57,12 @@ public:
   GfMenuCallContext *unknown370;                           // Inferred role: kizuna ring call context; original member name unknown.
 };
 
-static_assert(offsetof(GfMenuObjMercenaryReport::MainListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjMercenaryReport::MainListener, m_menuObjMercenaryReport) == 0x20, "");
 static_assert(sizeof(GfMenuObjMercenaryReport::MainListener) == 0x28, "");
-static_assert(offsetof(GfMenuObjMercenaryReport::RewardListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjMercenaryReport::RewardListener, m_menuObjMercenaryReport) == 0x20, "");
 static_assert(sizeof(GfMenuObjMercenaryReport::RewardListener) == 0x28, "");
 static_assert(offsetof(GfMenuObjMercenaryReport, unknown24) == 0x24, "");
-static_assert(offsetof(GfMenuObjMercenaryReport, unknown28) == 0x28, "");
+static_assert(offsetof(GfMenuObjMercenaryReport, m_menuBladeList) == 0x28, "");
 static_assert(offsetof(GfMenuObjMercenaryReport, unknown30) == 0x30, "");
 static_assert(offsetof(GfMenuObjMercenaryReport, unknown358) == 0x358, "");
 static_assert(offsetof(GfMenuObjMercenaryReport, unknown359) == 0x359, "");

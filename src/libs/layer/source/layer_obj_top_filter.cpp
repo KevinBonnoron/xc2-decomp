@@ -54,11 +54,11 @@ void LayerObjTopFilter::releaseWorkBuffer() {
     delete unknown278[1];
     unknown278[1] = nullptr;
   }
-  unknown290.release();
+  m_cGLibDblUniformBlock.release();
 }
 
 void LayerObjTopFilter::resourceInit() {
-  unknown290.setup(0x80);
+  m_cGLibDblUniformBlock.setup(0x80);
   if (unknown270 != nullptr) {
     unknown270->resourceInit();
   }
@@ -85,9 +85,9 @@ void LayerObjTopFilter::applyPartsSetup() {
 }
 
 void LayerObjTopFilter::applyParams(const LayerRenderView *view, const LayerResMatrix &matrix, const LayerResColor &color) {
-  unknown250 = view->unknown08;
-  unknown170.unknown001();
-  LayerObjUtil::calcDispInfo(unknown170, matrix, unknown180);
+  m_layerResViewPortInfo = view->m_layerResViewPortInfo;
+  m_layerResDispInfo.unknown001();
+  LayerObjUtil::calcDispInfo(m_layerResDispInfo, matrix, m_layerResRenderInfo);
   if (unknowna8 & 0x90000) {
     return;
   }
@@ -95,15 +95,15 @@ void LayerObjTopFilter::applyParams(const LayerRenderView *view, const LayerResM
     return;
   }
   const grlib::CGLibRenderTarget *target = nullptr;
-  if (view->unknown08 != nullptr) {
-    target = view->unknown08->unknown10;
+  if (view->m_layerResViewPortInfo != nullptr) {
+    target = view->m_layerResViewPortInfo->unknown10;
   }
   if (target == nullptr) {
-    target = LayerManager::get()->unknown58->getDefRenderTarget();
+    target = LayerManager::get()->m_layerShdManager->getDefRenderTarget();
   }
-  updateDefUniformBlock(unknown290, matrix, color, target);
+  updateDefUniformBlock(m_cGLibDblUniformBlock, matrix, color, target);
   unknown270->update(matrix, color, view, unknown1f8);
-  unknown2c8 = color.unknown00.a < 1.0f;
+  unknown2c8 = color.m_mulCol.a < 1.0f;
 }
 
 void LayerObjTopFilter::setDrawList(LayerSortMan *sortMan, bool is3D) {
@@ -112,12 +112,12 @@ void LayerObjTopFilter::setDrawList(LayerSortMan *sortMan, bool is3D) {
   }
   if (is3D) {
     if (unknowna8 & 0x400) {
-      LayerManager::get()->unknown60->unknown10->set3DSpace(&unknown258, unknown200);
+      LayerManager::get()->m_layerObjManager->m_layerSortMan->set3DSpace(&m_layerObjSortFilter, unknown200);
     } else if (!isClip()) {
-      sortMan->set2DSpace(&unknown258, unknownc0);
+      sortMan->set2DSpace(&m_layerObjSortFilter, m_priority);
     }
   } else if (!isClip()) {
-    sortMan->set2DSpace(&unknown258, unknownc0);
+    sortMan->set2DSpace(&m_layerObjSortFilter, m_priority);
   }
 }
 
@@ -131,19 +131,19 @@ void LayerObjTopFilter::createGaussianBlur(u32 width, u32 height) {
     unknown270->releaseCall();
   }
   f32 sclY = static_cast<f32>(height) / static_cast<f32>(width);
-  unknown180.unknown08 = 1.0f;
-  unknown180.unknown0c = sclY;
+  m_layerResRenderInfo.unknown08 = 1.0f;
+  m_layerResRenderInfo.unknown0c = sclY;
   f32 sclX = 1.0f;
   if (width <= height) {
     sclY = 1.0f;
     sclX = static_cast<f32>(width) / static_cast<f32>(height);
   }
-  unknown180.unknown00 = sclX;
-  unknown180.unknown04 = sclY;
-  unknown180.unknown10 = 0;
-  unknown180.unknown12 = 0;
-  unknown180.unknown14 = width;
-  unknown180.unknown16 = height;
+  m_layerResRenderInfo.unknown00 = sclX;
+  m_layerResRenderInfo.unknown04 = sclY;
+  m_layerResRenderInfo.m_pixelX = 0;
+  m_layerResRenderInfo.m_pixelY = 0;
+  m_layerResRenderInfo.m_pixelWidth = width;
+  m_layerResRenderInfo.m_pixelHeight = height;
   LayerFilterGsBlurObj *filter = new (LayerManager::get()->unknown28) LayerFilterGsBlurObj(width, height);
   if (unknown270 == nullptr && unknown278[0] == nullptr && unknown278[1] == nullptr) {
     unknown270 = filter;
@@ -161,19 +161,19 @@ void LayerObjTopFilter::createFlowMap(u32 width, u32 height, const void *data) {
     unknown270->releaseCall();
   }
   f32 sclY = static_cast<f32>(height) / static_cast<f32>(width);
-  unknown180.unknown08 = 1.0f;
-  unknown180.unknown0c = sclY;
+  m_layerResRenderInfo.unknown08 = 1.0f;
+  m_layerResRenderInfo.unknown0c = sclY;
   f32 sclX = 1.0f;
   if (width <= height) {
     sclY = 1.0f;
     sclX = static_cast<f32>(width) / static_cast<f32>(height);
   }
-  unknown180.unknown00 = sclX;
-  unknown180.unknown04 = sclY;
-  unknown180.unknown10 = 0;
-  unknown180.unknown12 = 0;
-  unknown180.unknown14 = width;
-  unknown180.unknown16 = height;
+  m_layerResRenderInfo.unknown00 = sclX;
+  m_layerResRenderInfo.unknown04 = sclY;
+  m_layerResRenderInfo.m_pixelX = 0;
+  m_layerResRenderInfo.m_pixelY = 0;
+  m_layerResRenderInfo.m_pixelWidth = width;
+  m_layerResRenderInfo.m_pixelHeight = height;
   LayerFilterFlowMapObj *filter = new (LayerManager::get()->unknown28) LayerFilterFlowMapObj(width, height, data);
   if (unknown270 == nullptr && unknown278[0] == nullptr && unknown278[1] == nullptr) {
     unknown270 = filter;
@@ -185,12 +185,12 @@ void LayerObjTopFilter::createFlowMap(u32 width, u32 height, const void *data) {
 void LayerObjTopFilter::setFlowMapParameter(f32 speed, f32 strength) { static_cast<LayerFilterFlowMapObj *>(getFilterObj())->setParameter(speed, strength); }
 
 void LayerObjTopFilter::finalRender() {
-  LayerShdManager *shader = LayerManager::get()->unknown58;
+  LayerShdManager *shader = LayerManager::get()->m_layerShdManager;
   shader->setShaderMaskOff();
   unknown270->render();
   grlib::CGLibRenderTarget *target = shader->getDefRenderTarget();
   target->setRenderTarget();
-  if (!shader->unknown002(unknown248, unknown250)) {
+  if (!shader->unknown002(m_layerObjTopMaskObj, m_layerResViewPortInfo)) {
     return;
   }
   if (unknown2c8) {
@@ -204,7 +204,7 @@ void LayerObjTopFilter::finalRender() {
   shader->setSecTexture(unknown220[2]);
   shader->setupVertex(static_cast<LayerDefVertType>(1));
   shader->unknown4f0 = 1;
-  shader->setupShader(&unknown290);
+  shader->setupShader(&m_cGLibDblUniformBlock);
   shader->setupTexture(*unknown270->getTexture(), static_cast<LayerSamplerType>(unknown270->unknown0c), 0);
   shader->setupTexture(*target->unknown70, static_cast<LayerSamplerType>(2), 1);
   shader->renderQuadsIndex();

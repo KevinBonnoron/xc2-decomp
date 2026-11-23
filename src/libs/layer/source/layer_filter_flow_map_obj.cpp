@@ -31,38 +31,38 @@ LayerFilterFlowMapObj::LayerFilterFlowMapObj(u32 width, u32 height, const void *
   unknown418 = data;
   const unknown001 *header = static_cast<const unknown001 *>(data);
   if (header->unknown24 != 0) {
-    unknown420 = LayerManager::get()->unknown58->unknown40->createTextureObj(static_cast<const u8 *>(data) + header->unknown24);
+    m_layerTextureObj = LayerManager::get()->m_layerShdManager->m_layerTextureMan->createTextureObj(static_cast<const u8 *>(data) + header->unknown24);
   }
 }
 
 LayerFilterFlowMapObj::~LayerFilterFlowMapObj() {
-  if (unknown420 != nullptr) {
-    unknown420->release();
-    unknown420 = nullptr;
+  if (m_layerTextureObj != nullptr) {
+    m_layerTextureObj->release();
+    m_layerTextureObj = nullptr;
   }
 }
 
 void LayerFilterFlowMapObj::resourceInit() {
-  unknown18.setTextureInfo(static_cast<f32>(unknown428), static_cast<f32>(unknown42c), GRL_SURFACE_FORMAT_R11G11B10F, false, 0);
-  unknown3e0.setup(LayerObjUtil::getUniformBlockSizeAlOff(LAYER_UNI_TYPE_UNKNOWN_10));
-  unknown420->setupResource();
+  m_cGLibRenderTarget.setTextureInfo(static_cast<f32>(unknown428), static_cast<f32>(unknown42c), GRL_SURFACE_FORMAT_R11G11B10F, false, 0);
+  m_cGLibDblUniformBlock.setup(LayerObjUtil::getUniformBlockSizeAlOff(LAYER_UNI_TYPE_UNKNOWN_10));
+  m_layerTextureObj->setupResource();
 }
 
 void LayerFilterFlowMapObj::render() {
-  LayerShdManager *shader = LayerManager::get()->unknown58;
+  LayerShdManager *shader = LayerManager::get()->m_layerShdManager;
   shader->unknown003(2);
   shader->setupVertex(static_cast<LayerDefVertType>(3));
   shader->unknown4f0 = 8;
-  unknown18.setRenderTarget();
+  m_cGLibRenderTarget.setRenderTarget();
   shader->unknown4f8 = 1;
-  shader->setupShader(&unknown3e0);
+  shader->setupShader(&m_cGLibDblUniformBlock);
   shader->setupTexture(*shader->getDefRenderTarget()->unknown70, static_cast<LayerSamplerType>(3), 0);
-  shader->setupTexture(*unknown420->getTexture(0), static_cast<LayerSamplerType>(3), 1);
+  shader->setupTexture(*m_layerTextureObj->getTexture(0), static_cast<LayerSamplerType>(3), 1);
   shader->renderQuadsIndex();
   grlib::CGLibCtlShader::setMemoryBarrierBit(2);
 }
 
-grlib::CGLibTextureBuffer *LayerFilterFlowMapObj::getTexture() { return unknown18.unknown70; }
+grlib::CGLibTextureBuffer *LayerFilterFlowMapObj::getTexture() { return m_cGLibRenderTarget.unknown70; }
 
 void LayerFilterFlowMapObj::setParameter(f32 speed, f32 strength) {
   unknown430 = speed;

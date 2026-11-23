@@ -188,9 +188,9 @@ void SoundListener::UpdateGameFrame(f32 deltaTime) {
   UpdateMatrix();
 }
 
-void SoundListener::UpdateMatrix() { Mat34LookAt(&unknown88, &unknown48.unknown00, &unknown48.unknown0c, &unknown48.unknown18); }
+void SoundListener::UpdateMatrix() { Mat34LookAt(&m_mat34, &unknown48.unknown00, &unknown48.unknown0c, &unknown48.unknown18); }
 
-void SoundListener::Vec3Transform(const Vec3 *in, Vec3 *out) { ssd::Vec3Transform(&unknown88, in, out); }
+void SoundListener::Vec3Transform(const Vec3 *in, Vec3 *out) { ssd::Vec3Transform(&m_mat34, in, out); }
 
 template class Array<SoundListener *>;
 

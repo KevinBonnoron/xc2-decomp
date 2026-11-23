@@ -1,3 +1,4 @@
+#include "framework/layer_list.h"
 #include "framework/model/model_manager.h"
 #include "framework/reference_frame.h"
 #include "fw/fw_model_object.h"
@@ -27,6 +28,18 @@ ModelObject::~ModelObject() {
     unknown28 = nullptr;
   }
   ModelManager::get()->unknown18[unknown38].unknown00.erase(this);
+}
+
+void ModelObject::changeLayer(u32 layer) {
+  if (unknown38 != layer) {
+    ModelManager::get()->unknown18[unknown38].unknown00.erase(this);
+    unknown38 = layer;
+    mm::mtl::IntrusiveList<unknown083> &objects = ModelManager::get()->unknown18[layer].unknown00;
+    mm::mtl::IntrusiveList<unknown083>::iterator it = unknown001(objects.begin(), objects.end(), this);
+    if (objects.end() == it) {
+      objects.push_back(this);
+    }
+  }
 }
 
 void ModelObject::update() {

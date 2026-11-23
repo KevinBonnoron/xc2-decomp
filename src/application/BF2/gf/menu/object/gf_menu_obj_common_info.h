@@ -36,7 +36,7 @@ public:
 
   // Queued by GfMenuManyObjects. The game's sendOpen calls two virtuals of the parameter at 0x10 to get the texts.
   struct CommonInfo : GfMenuManyObjects::InfoType {
-    ParamBase *unknown10; // Inferred role: parameter of the popup; original member name unknown.
+    ParamBase *m_paramBase; // Inferred role: parameter of the popup; original member name unknown.
   };
 
   GfMenuObjCommonInfo(u32 handle);
@@ -54,7 +54,7 @@ public:
   static void continuePickup();
 };
 
-static_assert(offsetof(GfMenuObjCommonInfo::CommonInfo, unknown10) == 0x10, "");
+static_assert(offsetof(GfMenuObjCommonInfo::CommonInfo, m_paramBase) == 0x10, "");
 static_assert(sizeof(GfMenuObjCommonInfo::CommonInfo) == 0x18, "");
 
 } // namespace gf

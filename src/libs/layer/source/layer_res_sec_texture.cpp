@@ -35,11 +35,11 @@ struct unknown004 {
 
 } // namespace
 
-LayerResSecTexture::LayerResSecTexture(const void *data) : unknown08(nullptr) {
+LayerResSecTexture::LayerResSecTexture(const void *data) : m_layerTextureObj(nullptr) {
   unknown00 = data;
   const unknown002 *header = static_cast<const unknown002 *>(data);
   if (header->unknown24 != 0) {
-    unknown08 = LayerManager::get()->unknown58->unknown40->createTextureObj(static_cast<const u8 *>(data) + header->unknown24);
+    m_layerTextureObj = LayerManager::get()->m_layerShdManager->m_layerTextureMan->createTextureObj(static_cast<const u8 *>(data) + header->unknown24);
   }
   if (header->unknown08 & 0x2) {
     unknown12 = reinterpret_cast<const unknown003 *>(static_cast<const u8 *>(unknown00) + header->unknown2c)->unknown00;
@@ -53,19 +53,19 @@ LayerResSecTexture::LayerResSecTexture(const void *data) : unknown08(nullptr) {
 LayerResSecTexture::~LayerResSecTexture() { release(); }
 
 void LayerResSecTexture::release() {
-  if (unknown08 != nullptr) {
-    LayerManager::get()->unknown58->unknown40->releaseTextureObj(unknown08);
-    unknown08 = nullptr;
+  if (m_layerTextureObj != nullptr) {
+    LayerManager::get()->m_layerShdManager->m_layerTextureMan->releaseTextureObj(m_layerTextureObj);
+    m_layerTextureObj = nullptr;
   }
-  unknown18.release();
+  m_cGLibDblUniformBlock.release();
 }
 
-grlib::CGLibTextureBuffer *LayerResSecTexture::getTexture() { return unknown08->unknown30; }
+grlib::CGLibTextureBuffer *LayerResSecTexture::getTexture() { return m_layerTextureObj->m_texture; }
 
-void LayerResSecTexture::resourceInit() { unknown18.setup(LayerObjUtil::getUniformBlockSizeAlOff(LAYER_UNI_TYPE_UNKNOWN_10)); }
+void LayerResSecTexture::resourceInit() { m_cGLibDblUniformBlock.setup(LayerObjUtil::getUniformBlockSizeAlOff(LAYER_UNI_TYPE_UNKNOWN_10)); }
 
 void LayerResSecTexture::update() {
-  f32 *uniform = static_cast<f32 *>(unknown18.getBuff());
+  f32 *uniform = static_cast<f32 *>(m_cGLibDblUniformBlock.getBuff());
   if (unknown12 == 0) {
     uniform[0] = 1.0f;
     uniform[1] = 1.0f;
@@ -83,7 +83,7 @@ void LayerResSecTexture::update() {
   uniform[5] = 0.0f;
   uniform[6] = 0.0f;
   uniform[7] = 0.0f;
-  unknown18.updateData();
+  m_cGLibDblUniformBlock.updateData();
 }
 
 } // namespace layer

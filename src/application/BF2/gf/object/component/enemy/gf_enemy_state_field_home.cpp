@@ -61,7 +61,7 @@ void StateFieldHome::update(GfComBehaviorEnemy *behavior, const fw::UpdateInfo &
     }
   }
 
-  if (behavior->isStateCondMatch(STATE_ID_UNKNOWN_1) && behavior->unknown140.isArrivedToGoal() && !unknown60) {
+  if (behavior->isStateCondMatch(STATE_ID_UNKNOWN_1) && behavior->m_behaviorEnemyField.isArrivedToGoal() && !unknown60) {
     unknown60 = true;
     SCOM_DESTROY_GAME_OBJ::create(static_cast<GfObj *>(behavior->unknown08)->unknownf8, 1.0f, 0);
   }
@@ -79,17 +79,17 @@ void StateFieldHome::seqWaitIdle(GfComBehaviorEnemy &behavior, const fw::UpdateI
 }
 
 void StateFieldHome::seqInitHomePos(GfComBehaviorEnemy &behavior, const fw::UpdateInfo &info) {
-  gmk::GmkRouteNavi *navi = behavior.unknown140.getGmkRouteNavi();
+  gmk::GmkRouteNavi *navi = behavior.m_behaviorEnemyField.getGmkRouteNavi();
   mm::Vec3 position;
   if (navi == nullptr) {
     GfObjSetupEnemy *setup = mm::mtl::dynamicCast<GfObjSetupEnemy>(GfObjManager::getObjInfo(static_cast<GfObj *>(behavior.unknown08)->unknownf8)->unknown30);
     position = setup->unknown20;
   } else {
-    if (!navi->unknown00.isValid()) {
+    if (!navi->m_createInfo.isValid()) {
       return;
     }
 
-    if (!navi->unknown28.isValid()) {
+    if (!navi->m_gmkAcc.isValid()) {
       return;
     }
 
@@ -104,14 +104,14 @@ void StateFieldHome::seqInitHomePos(GfComBehaviorEnemy &behavior, const fw::Upda
     position = navi->unknown90;
   }
 
-  behavior.unknown140.unknownc0 = position;
+  behavior.m_behaviorEnemyField.unknownc0 = position;
   behavior.execTurnCmdToGoal();
   unknown50 = &StateFieldHome::seqWaitTurnEnd;
 }
 
 void StateFieldHome::seqWaitTurnEnd(GfComBehaviorEnemy &behavior, const fw::UpdateInfo &info) {
   if (behavior.unknown53f0.unknown6c) {
-    behavior.unknown140.applyFieldMoveSpeed(GfBehaviorEnemyField::MOVE_SPEED_UNKNOWN_1, behavior);
+    behavior.m_behaviorEnemyField.applyFieldMoveSpeed(GfBehaviorEnemyField::MOVE_SPEED_UNKNOWN_1, behavior);
     unknown50 = &StateFieldHome::seqMoveToHomePos;
     unknown18.create(TFieldExecCmd<GfComAsm>::CreateInfo(static_cast<GfObj *>(behavior.unknown08)->unknownf8, "C_move"));
   }

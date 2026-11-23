@@ -45,7 +45,7 @@ void StateFieldWallPrepareJump::update(GfComBehaviorPc *behavior, const fw::Upda
     }
   } else if (StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_CLIMBJUMP_00)) {
     GfComPropertyPc *property = behavior->unknown08->getComponent<GfComPropertyPc>();
-    MsgPcFieldNotifyWallJumpStart message(property->unknown310.getWallJumpInfo());
+    MsgPcFieldNotifyWallJumpStart message(property->m_propertyField.getWallJumpInfo());
     StateUtil::broadcastMainChar(*behavior, message);
     reqState(STATE_ID_UNKNOWN_50);
   }
@@ -67,11 +67,11 @@ bool StateFieldWallPrepareJump::recieveMessage(void *owner, fw::MessageObject *s
 
 void StateFieldWallPrepareJump::procMsgPcFieldNotifyWallJump(GfComBehaviorPc *behavior, fw::MessageObject *sender, MsgPcFieldNotifyWallJump &message) {
   GfComPropertyPc *property = behavior->unknown08->getComponent<GfComPropertyPc>();
-  property->unknown310.setWallJump(&message);
+  property->m_propertyField.setWallJump(&message);
   if (sender != nullptr) {
     GfObj *object = mm::mtl::dynamicCast<GfObj>(sender);
     if (object != nullptr) {
-      property->unknown310.unknown78 = object->unknownf8;
+      property->m_propertyField.m_GF_OBJ_HANDLE = object->unknownf8;
     }
   }
   unknown18 = true;

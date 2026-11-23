@@ -61,7 +61,7 @@ const char *getValidName(const char *name) {
 
 const char *getRscValue(const GfAssetSetup *setup, u32 table, const char *member) {
   CBdatWrapper rsc = {GfDataBdat::getFP(table)};
-  const CBdatWrapper *bdat = setup->unknown18 != nullptr ? setup->unknown18 : &rsc;
+  const CBdatWrapper *bdat = setup->m_cBdatWrapper != nullptr ? setup->m_cBdatWrapper : &rsc;
   return reinterpret_cast<const char *>(bdat->getValCheck(member, setup->unknown08, BDAT_TYPE_UNKNOWN_7));
 }
 
@@ -105,7 +105,7 @@ GfAssetType makeMotionAssetName(mm::mtl::FixStr<128> &name, GfAssetType type, co
 
 } // namespace
 
-GfAssetSetup::GfAssetSetup() : unknown08(0), unknown10(unknown018), unknown18(nullptr), unknownf0(false) { unknowne8 = nullptr; }
+GfAssetSetup::GfAssetSetup() : unknown08(0), m_GF_ASSET_HANDLE(unknown018), m_cBdatWrapper(nullptr), unknownf0(false) { m_initParam = nullptr; }
 
 GfAssetSetup::~GfAssetSetup() {
   for (unknown002 *&resource : unknown20) {
@@ -114,21 +114,21 @@ GfAssetSetup::~GfAssetSetup() {
       resource = nullptr;
     }
   }
-  GfAssetManager::lockEnterRersource(unknown10);
-  if (unknown18 != nullptr) {
-    delete unknown18;
-    unknown18 = nullptr;
+  GfAssetManager::lockEnterRersource(m_GF_ASSET_HANDLE);
+  if (m_cBdatWrapper != nullptr) {
+    delete m_cBdatWrapper;
+    m_cBdatWrapper = nullptr;
   }
 }
 
 void GfAssetSetup::setupParam(GF_ASSET_HANDLE *handle, const GfInitParam &param) {
-  this->unknown10 = handle;
+  this->m_GF_ASSET_HANDLE = handle;
   unknown08 = param.m_bladeID;
-  unknowne8 = &param;
-  if (param.unknown18 != nullptr) {
+  m_initParam = &param;
+  if (param.m_cBdatWrapper != nullptr) {
     // __LINE__ must be 100 as in the original source: it is the line argument of operator new.
 #line 100
-    unknown18 = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) CBdatWrapper(*param.unknown18);
+    m_cBdatWrapper = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) CBdatWrapper(*param.m_cBdatWrapper);
   }
 }
 
@@ -139,7 +139,7 @@ void GfAssetSetup::requestCoreResource(GfAssetPack *pack, GF_ASSET_HANDLE *handl
 
   GfAssetFiles &files = pack->m_assetType;
 
-  if (const char *file = getMdlFile(files.unknown00)) {
+  if (const char *file = getMdlFile(files.m_assetType)) {
     if (!setupReference(pack, file, getMdlSlot())) {
       GfAssetManager::setModelInfo(handle, file);
       mm::mtl::FixStr<128> path;
@@ -148,7 +148,7 @@ void GfAssetSetup::requestCoreResource(GfAssetPack *pack, GF_ASSET_HANDLE *handl
     }
   }
 
-  if (const char *file = getArcFile(files.unknown00)) {
+  if (const char *file = getArcFile(files.m_assetType)) {
     if (!setupReference(pack, file, getArcSlot())) {
       mm::mtl::FixStr<128> path;
       path.format("%s%s%s", getPath(), file, ".arc");
@@ -156,7 +156,7 @@ void GfAssetSetup::requestCoreResource(GfAssetPack *pack, GF_ASSET_HANDLE *handl
     }
   }
 
-  if (const char *file = getMotFile(files.unknown00)) {
+  if (const char *file = getMotFile(files.m_assetType)) {
     if (!setupReference(pack, file, getMotSlot())) {
       GfAssetManager::setMotionInfo(handle, file);
       mm::mtl::FixStr<128> path;
@@ -165,7 +165,7 @@ void GfAssetSetup::requestCoreResource(GfAssetPack *pack, GF_ASSET_HANDLE *handl
     }
   }
 
-  if (const char *file = getEvtMotFile(files.unknown00)) {
+  if (const char *file = getEvtMotFile(files.m_assetType)) {
     if (!setupReference(pack, file, getEvtMotSlot())) {
       mm::mtl::FixStr<128> path;
       path.format("%s%s%s", getEvtPath(), file, ".mot");
@@ -173,7 +173,7 @@ void GfAssetSetup::requestCoreResource(GfAssetPack *pack, GF_ASSET_HANDLE *handl
     }
   }
 
-  if (const char *file = getEfpFile(files.unknown00)) {
+  if (const char *file = getEfpFile(files.m_assetType)) {
     if (!setupReference(pack, file, getEfpSlot())) {
       mm::mtl::FixStr<128> path;
       path.format("%s%s%s", getPath(), file, ".wiefp");
@@ -183,7 +183,7 @@ void GfAssetSetup::requestCoreResource(GfAssetPack *pack, GF_ASSET_HANDLE *handl
     }
   }
 
-  if (const char *file = getEabFile(files.unknown00)) {
+  if (const char *file = getEabFile(files.m_assetType)) {
     if (!setupReference(pack, file, getEabSlot())) {
       mm::mtl::FixStr<128> path;
       path.format("%s%s%s", getEffPath(), file, ".wieab");
@@ -191,7 +191,7 @@ void GfAssetSetup::requestCoreResource(GfAssetPack *pack, GF_ASSET_HANDLE *handl
     }
   }
 
-  if (const char *file = getEfbFile(files.unknown00)) {
+  if (const char *file = getEfbFile(files.m_assetType)) {
     if (!setupReference(pack, file, getEfbSlot())) {
       mm::mtl::FixStr<128> path;
       path.format("%s%s%s", getEffPath(), file, ".wiefb");
@@ -199,10 +199,10 @@ void GfAssetSetup::requestCoreResource(GfAssetPack *pack, GF_ASSET_HANDLE *handl
     }
   }
 
-  if (const char *file = getStpFile(files.unknown00)) {
+  if (const char *file = getStpFile(files.m_assetType)) {
     mm::mtl::FixStr<128> name;
     GfAssetFilesInfo info;
-    info.unknown00 = handle;
+    info.m_GF_ASSET_HANDLE = handle;
     info.unknown08 = ASSET_TYPE_UNKNOWN_12;
     info.unknown30 = name.c_str();
     makeAssetNamePrefix(name, ASSET_TYPE_UNKNOWN_12, file, "Stp");
@@ -214,10 +214,10 @@ void GfAssetSetup::requestCoreResource(GfAssetPack *pack, GF_ASSET_HANDLE *handl
     }
   }
 
-  if (const char *file = getEvtStpFile(files.unknown00)) {
+  if (const char *file = getEvtStpFile(files.m_assetType)) {
     mm::mtl::FixStr<128> name;
     GfAssetFilesInfo info;
-    info.unknown00 = handle;
+    info.m_GF_ASSET_HANDLE = handle;
     info.unknown08 = ASSET_TYPE_UNKNOWN_12;
     info.unknown30 = name.c_str();
     makeAssetNamePrefix(name, ASSET_TYPE_UNKNOWN_12, file, "EvtStp");
@@ -259,8 +259,8 @@ bool GfAssetSetup::checkValidResource() {
     return true;
   }
 
-  GfAssetManager::destroy(unknown10);
-  unknown10 = unknown018;
+  GfAssetManager::destroy(m_GF_ASSET_HANDLE);
+  m_GF_ASSET_HANDLE = unknown018;
   return false;
 }
 
@@ -473,7 +473,7 @@ void GfAssetSetupSalvage::setup(GF_ASSET_HANDLE *handle, const GfInitParamDriver
 
   mm::mtl::FixStr<128> name;
   GfAssetFilesInfo info;
-  info.unknown00 = handle;
+  info.m_GF_ASSET_HANDLE = handle;
   info.unknown30 = name.c_str();
   info.unknown40 = param.unknown44;
   info.unknown08 = getAssetType();
@@ -762,7 +762,7 @@ const char *GfAssetSetupBladeForUi::getUiStpFile(GfAssetType type) {
   return nullptr;
 }
 
-GfAssetSetupEnemy::GfAssetSetupEnemy() : unknown200(nullptr) {}
+GfAssetSetupEnemy::GfAssetSetupEnemy() : m_initParamEnemy(nullptr) {}
 
 void GfAssetSetupEnemy::makeEnemyEffectAssetName(mm::mtl::FixStr<128> &name, const GfInitParamEnemy &param, u32 attribute) {
   makeAssetNamePrefix(name, ASSET_TYPE_UNKNOWN_13, getEabFile(ASSET_TYPE_UNKNOWN_13), "");
@@ -842,7 +842,7 @@ void GfAssetSetupEnemy::getEnemyEfbFileName(mm::mtl::FixStr<128> &name, const Gf
 }
 
 void GfAssetSetupEnemy::setup(GF_ASSET_HANDLE *handle, const GfInitParamEnemy &param) {
-  unknown200 = &param;
+  m_initParamEnemy = &param;
   setupParam(handle, param);
   if (!checkValidResource()) {
     return;
@@ -850,7 +850,7 @@ void GfAssetSetupEnemy::setup(GF_ASSET_HANDLE *handle, const GfInitParamEnemy &p
 
   mm::mtl::FixStr<128> name;
   GfAssetFilesInfo info;
-  info.unknown00 = handle;
+  info.m_GF_ASSET_HANDLE = handle;
   info.unknown08 = getAssetType();
   info.unknown30 = name.c_str();
   info.unknown40 = param.unknown44;
@@ -1061,7 +1061,7 @@ const char *GfAssetSetupEnemy::getSePackFile() const {
 }
 
 u32 GfAssetSetupEnemy::getFootStepId() const {
-  DataParamAcc dataParamAcc(OBJECT_TYPE_ENEMY, unknown200->getEnArrangeID(), GIMMICK_TYPE_UNKNOWN_0);
+  DataParamAcc dataParamAcc(OBJECT_TYPE_ENEMY, m_initParamEnemy->getEnArrangeID(), GIMMICK_TYPE_UNKNOWN_0);
   return dataParamAcc.getFootStep();
 }
 
@@ -1141,7 +1141,7 @@ const char *GfAssetSetupEnemyBlade::getMdlFile(GfAssetType type) {
   if (resource != nullptr && !resource->unknown00.empty()) {
     return resource->unknown00.c_str();
   }
-  return GfDataBlade::getResourceNameModel(unknown200->m_bladeID);
+  return GfDataBlade::getResourceNameModel(m_initParamEnemy->m_bladeID);
 }
 
 const char *GfAssetSetupEnemyBlade::getMotFile(GfAssetType type) {
@@ -1152,7 +1152,7 @@ const char *GfAssetSetupEnemyBlade::getMotFile(GfAssetType type) {
   if (resource != nullptr && !resource->unknown00.empty()) {
     return resource->unknown00.c_str();
   }
-  return GfDataBlade::getResourceNameMotion(unknown200->m_bladeID);
+  return GfDataBlade::getResourceNameMotion(m_initParamEnemy->m_bladeID);
 }
 
 const char *GfAssetSetupEnemyBlade::getRetargetMotFile(GfAssetType type) {
@@ -1163,13 +1163,13 @@ const char *GfAssetSetupEnemyBlade::getRetargetMotFile(GfAssetType type) {
   if (resource != nullptr && !resource->unknown00.empty()) {
     return resource->unknown00.c_str();
   }
-  return GfDataBlade::getResourceNameMotion(unknown200->m_bladeID);
+  return GfDataBlade::getResourceNameMotion(m_initParamEnemy->m_bladeID);
 }
 
 const char *GfAssetSetupEnemyBlade::getPath() const { return GfAssetPath::getMdoModel(); }
 
 void GfAssetSetupEventEnemy::setup(GF_ASSET_HANDLE *handle, const GfInitParamEnemy &param) {
-  unknown200 = &param;
+  m_initParamEnemy = &param;
   setupParam(handle, param);
   if (!checkValidResource()) {
     return;
@@ -1177,7 +1177,7 @@ void GfAssetSetupEventEnemy::setup(GF_ASSET_HANDLE *handle, const GfInitParamEne
 
   mm::mtl::FixStr<128> name;
   GfAssetFilesInfo info;
-  info.unknown00 = handle;
+  info.m_GF_ASSET_HANDLE = handle;
   info.unknown08 = getAssetType();
   info.unknown30 = name.c_str();
   info.unknown40 = param.unknown44;
@@ -1298,7 +1298,7 @@ void GfAssetSetupNpc::setup(GF_ASSET_HANDLE *handle, const GfInitParamNpc &param
 
   mm::mtl::FixStr<128> name;
   GfAssetFilesInfo info;
-  info.unknown00 = handle;
+  info.m_GF_ASSET_HANDLE = handle;
   info.unknown08 = getAssetType();
   info.unknown30 = name.c_str();
   info.unknown40 = param.unknown44;
@@ -1495,7 +1495,7 @@ void GfAssetSetupEventNpc::setup(GF_ASSET_HANDLE *handle, const GfInitParamNpc &
 
   mm::mtl::FixStr<128> name;
   GfAssetFilesInfo info;
-  info.unknown00 = handle;
+  info.m_GF_ASSET_HANDLE = handle;
   info.unknown30 = name.c_str();
   info.unknown40 = param.unknown44;
   info.unknown08 = getAssetType();
@@ -1636,7 +1636,7 @@ void GfAssetSetupMob::setup(GF_ASSET_HANDLE *handle, const GfInitParamMob &param
 
   mm::mtl::FixStr<128> name;
   GfAssetFilesInfo info;
-  info.unknown00 = handle;
+  info.m_GF_ASSET_HANDLE = handle;
   info.unknown08 = getAssetType();
   info.unknown30 = name.c_str();
   info.unknown40 = param.unknown44;
@@ -1735,7 +1735,7 @@ void GfAssetSetupEventMob::setup(GF_ASSET_HANDLE *handle, const GfInitParamMob &
 
   mm::mtl::FixStr<128> name;
   GfAssetFilesInfo info;
-  info.unknown00 = handle;
+  info.m_GF_ASSET_HANDLE = handle;
   info.unknown08 = getAssetType();
   info.unknown30 = name.c_str();
   info.unknown40 = param.unknown44;
@@ -1801,7 +1801,7 @@ void GfAssetSetupGimmick::setup(GF_ASSET_HANDLE *handle, const GfInitParamGimmic
 
   mm::mtl::FixStr<128> name;
   GfAssetFilesInfo info;
-  info.unknown00 = handle;
+  info.m_GF_ASSET_HANDLE = handle;
   info.unknown30 = name.c_str();
   info.unknown40 = param.unknown44;
   makeAssetNamePrefix(name, getAssetType(), getMdlFile(getAssetType()), "");
@@ -1849,7 +1849,7 @@ const char *GfAssetSetupGimmick::getMdlFile(GfAssetType type) {
   if (resource != nullptr && !resource->unknown00.empty()) {
     return resource->unknown00.c_str();
   }
-  const char *model = reinterpret_cast<const char *>(unknown18->getValCheck("Model", unknown08, BDAT_TYPE_UNKNOWN_7));
+  const char *model = reinterpret_cast<const char *>(m_cBdatWrapper->getValCheck("Model", unknown08, BDAT_TYPE_UNKNOWN_7));
   if (model == nullptr || *model == '\0') {
     return nullptr;
   }
@@ -1864,7 +1864,7 @@ const char *GfAssetSetupGimmick::getMotFile(GfAssetType type) {
     if (resource != nullptr && !resource->unknown00.empty()) {
       return resource->unknown00.c_str();
     }
-    const char *motion = reinterpret_cast<const char *>(unknown18->getValCheck("Motion", unknown08, BDAT_TYPE_UNKNOWN_7));
+    const char *motion = reinterpret_cast<const char *>(m_cBdatWrapper->getValCheck("Motion", unknown08, BDAT_TYPE_UNKNOWN_7));
     if (motion == nullptr || *motion == '\0') {
       return nullptr;
     }
@@ -1880,7 +1880,7 @@ const char *GfAssetSetupGimmick::getEabFile(GfAssetType type) {
   if (resource != nullptr && !resource->unknown00.empty()) {
     return resource->unknown00.c_str();
   }
-  const CBdatWrapper *rsc = unknown18;
+  const CBdatWrapper *rsc = m_cBdatWrapper;
   const char *effect = reinterpret_cast<const char *>(rsc->getValCheck("Comp_Eff", unknown08, BDAT_TYPE_UNKNOWN_7));
   if (effect == nullptr || *effect == '\0') {
     effect = getValidName(reinterpret_cast<const char *>(rsc->getValCheck("Model", unknown08, BDAT_TYPE_UNKNOWN_7)));
@@ -1897,7 +1897,7 @@ const char *GfAssetSetupGimmick::getEfbFile(GfAssetType type) {
 
 const char *GfAssetSetupGimmick::getStpFile(GfAssetType type) {
   if (getAssetType() == type) {
-    const char *motion = reinterpret_cast<const char *>(unknown18->getValCheck("Motion", unknown08, BDAT_TYPE_UNKNOWN_7));
+    const char *motion = reinterpret_cast<const char *>(m_cBdatWrapper->getValCheck("Motion", unknown08, BDAT_TYPE_UNKNOWN_7));
     if (motion == nullptr || *motion == '\0') {
       return nullptr;
     }
@@ -1918,7 +1918,7 @@ void GfAssetSetupMapObj::setup(GF_ASSET_HANDLE *handle, const GfInitParamMapObj 
 
   mm::mtl::FixStr<128> name;
   GfAssetFilesInfo info;
-  info.unknown00 = handle;
+  info.m_GF_ASSET_HANDLE = handle;
   info.unknown08 = getAssetType();
   info.unknown30 = name.c_str();
   info.unknown40 = param.unknown44;
@@ -1958,7 +1958,7 @@ const char *GfAssetSetupMapObj::getMdlFile(GfAssetType type) {
   if (resource != nullptr && !resource->unknown00.empty()) {
     return resource->unknown00.c_str();
   }
-  const char *model = reinterpret_cast<const char *>(unknown18->getValCheck("Model", unknown08, BDAT_TYPE_UNKNOWN_7));
+  const char *model = reinterpret_cast<const char *>(m_cBdatWrapper->getValCheck("Model", unknown08, BDAT_TYPE_UNKNOWN_7));
   if (model == nullptr || *model == '\0') {
     return nullptr;
   }
@@ -1973,7 +1973,7 @@ const char *GfAssetSetupMapObj::getMotFile(GfAssetType type) {
     if (resource != nullptr && !resource->unknown00.empty()) {
       return resource->unknown00.c_str();
     }
-    const char *motion = reinterpret_cast<const char *>(unknown18->getValCheck("Motion", unknown08, BDAT_TYPE_UNKNOWN_7));
+    const char *motion = reinterpret_cast<const char *>(m_cBdatWrapper->getValCheck("Motion", unknown08, BDAT_TYPE_UNKNOWN_7));
     if (motion == nullptr || *motion == '\0') {
       return nullptr;
     }
@@ -1996,7 +1996,7 @@ void GfAssetSetupFobj::setup(GF_ASSET_HANDLE *handle, const GfInitParamFobj &par
 
   mm::mtl::FixStr<128> name;
   GfAssetFilesInfo info;
-  info.unknown00 = handle;
+  info.m_GF_ASSET_HANDLE = handle;
   info.unknown08 = getAssetType();
   info.unknown30 = name.c_str();
   info.unknown40 = param.unknown44;
@@ -2010,7 +2010,7 @@ const char *GfAssetSetupFobj::getMdlFile(GfAssetType type) {
   if (resource != nullptr && !resource->unknown00.empty()) {
     return resource->unknown00.c_str();
   }
-  const char *model = reinterpret_cast<const char *>(unknown18->getValCheck("mdo", unknown08, BDAT_TYPE_UNKNOWN_7));
+  const char *model = reinterpret_cast<const char *>(m_cBdatWrapper->getValCheck("mdo", unknown08, BDAT_TYPE_UNKNOWN_7));
   if (model == nullptr || *model == '\0') {
     return nullptr;
   }
@@ -2025,14 +2025,14 @@ GfAssetSetupWeapon::GfAssetSetupWeapon() {}
 
 void GfAssetSetupWeapon::setup(GF_ASSET_HANDLE *handle, const GfInitParamWeapon &param) {
   setupParam(handle, param);
-  unknown200 = param.unknown98;
+  m_append = param.m_append;
   if (!checkValidResource()) {
     return;
   }
 
   mm::mtl::FixStr<128> name;
   GfAssetFilesInfo info;
-  info.unknown00 = handle;
+  info.m_GF_ASSET_HANDLE = handle;
   info.unknown08 = getAssetType();
   info.unknown30 = name.c_str();
   info.unknown40 = param.unknown44;
@@ -2048,10 +2048,10 @@ const char *GfAssetSetupWeapon::getMdlFile(GfAssetType type) {
   static mm::mtl::FixStr<128> s_model;
   unknown002 *resource = getRefResource(getMdlSlot());
   if (resource != nullptr) {
-    unknown001(s_model, resource->unknown00, unknown200.getModelName(), unknowne8->unknown83);
+    unknown001(s_model, resource->unknown00, m_append.getModelName(), m_initParam->unknown83);
   } else {
     mm::mtl::FixStr<128> empty;
-    unknown001(s_model, empty, unknown200.getModelName(), unknowne8->unknown83);
+    unknown001(s_model, empty, m_append.getModelName(), m_initParam->unknown83);
   }
   return s_model.empty() ? nullptr : s_model.c_str();
 }
@@ -2060,10 +2060,10 @@ const char *GfAssetSetupWeapon::getArcFile(GfAssetType type) {
   static mm::mtl::FixStr<128> s_arc;
   unknown002 *resource = getRefResource(getMdlSlot());
   if (resource != nullptr) {
-    unknown001(s_arc, resource->unknown00, unknown200.getModelName(), unknowne8->unknown83);
+    unknown001(s_arc, resource->unknown00, m_append.getModelName(), m_initParam->unknown83);
   } else {
     mm::mtl::FixStr<128> empty;
-    unknown001(s_arc, empty, unknown200.getModelName(), unknowne8->unknown83);
+    unknown001(s_arc, empty, m_append.getModelName(), m_initParam->unknown83);
   }
   return s_arc.empty() ? nullptr : s_arc.c_str();
 }
@@ -2072,10 +2072,10 @@ const char *GfAssetSetupWeapon::getMotFile(GfAssetType type) {
   static mm::mtl::FixStr<128> s_motion;
   unknown002 *resource = getRefResource(getMotSlot());
   if (resource != nullptr) {
-    unknown001(s_motion, resource->unknown00, unknown200.getMotionName(), unknowne8->unknown83);
+    unknown001(s_motion, resource->unknown00, m_append.getMotionName(), m_initParam->unknown83);
   } else {
     mm::mtl::FixStr<128> empty;
-    unknown001(s_motion, empty, unknown200.getMotionName(), unknowne8->unknown83);
+    unknown001(s_motion, empty, m_append.getMotionName(), m_initParam->unknown83);
   }
   return s_motion.empty() ? nullptr : s_motion.c_str();
 }
@@ -2084,15 +2084,15 @@ const char *GfAssetSetupWeapon::getEfpFile(GfAssetType type) {
   static mm::mtl::FixStr<128> s_efp;
   unknown002 *resource = getRefResource(getMdlSlot());
   if (resource != nullptr) {
-    unknown001(s_efp, resource->unknown00, unknown200.getModelName(), unknowne8->unknown83);
+    unknown001(s_efp, resource->unknown00, m_append.getModelName(), m_initParam->unknown83);
   } else {
     mm::mtl::FixStr<128> empty;
-    unknown001(s_efp, empty, unknown200.getModelName(), unknowne8->unknown83);
+    unknown001(s_efp, empty, m_append.getModelName(), m_initParam->unknown83);
   }
   return s_efp.empty() ? nullptr : s_efp.c_str();
 }
 
-const char *GfAssetSetupWeapon::getStpFile(GfAssetType type) { return getValidName(unknown200.getModelName()); }
+const char *GfAssetSetupWeapon::getStpFile(GfAssetType type) { return getValidName(m_append.getModelName()); }
 
 const char *GfAssetSetupWeapon::getPath() const { return GfAssetPath::getMdoModel(); }
 
@@ -2106,7 +2106,7 @@ void GfAssetSetupWeaponEventCS::setup(GF_ASSET_HANDLE *handle, const GfInitParam
 
   mm::mtl::FixStr<128> name;
   GfAssetFilesInfo info;
-  info.unknown00 = handle;
+  info.m_GF_ASSET_HANDLE = handle;
   info.unknown30 = name.c_str();
   info.unknown40 = param.unknown44;
   info.unknown08 = ASSET_TYPE_UNKNOWN_18;
@@ -2137,14 +2137,14 @@ GfAssetSetupEnWeapon::GfAssetSetupEnWeapon() {}
 
 void GfAssetSetupEnWeapon::setup(GF_ASSET_HANDLE *handle, const GfInitParamEnWeapon &param) {
   setupParam(handle, param);
-  unknown200 = param.unknown98;
+  m_append = param.m_append;
   if (!checkValidResource()) {
     return;
   }
 
   mm::mtl::FixStr<128> name;
   GfAssetFilesInfo info;
-  info.unknown00 = handle;
+  info.m_GF_ASSET_HANDLE = handle;
   info.unknown08 = getAssetType();
   info.unknown30 = name.c_str();
   info.unknown40 = param.unknown44;
@@ -2158,7 +2158,7 @@ const char *GfAssetSetupEnWeapon::getMdlFile(GfAssetType type) {
   if (resource != nullptr && !resource->unknown00.empty()) {
     return resource->unknown00.c_str();
   }
-  const char *model = unknown200.getModelName();
+  const char *model = m_append.getModelName();
   if (model == nullptr || *model == '\0') {
     return nullptr;
   }
@@ -2172,7 +2172,7 @@ const char *GfAssetSetupEnWeapon::getMotFile(GfAssetType type) {
   if (resource != nullptr && !resource->unknown00.empty()) {
     return resource->unknown00.c_str();
   }
-  const char *motion = unknown200.getMotionName();
+  const char *motion = m_append.getMotionName();
   if (motion == nullptr || *motion == '\0') {
     return nullptr;
   }
@@ -2181,7 +2181,7 @@ const char *GfAssetSetupEnWeapon::getMotFile(GfAssetType type) {
 
 const char *GfAssetSetupEnWeapon::getEfpFile(GfAssetType type) { return getMdlFile(type); }
 
-const char *GfAssetSetupEnWeapon::getStpFile(GfAssetType type) { return getValidName(unknown200.getModelName()); }
+const char *GfAssetSetupEnWeapon::getStpFile(GfAssetType type) { return getValidName(m_append.getModelName()); }
 
 const char *GfAssetSetupEnWeapon::getPath() const { return GfAssetPath::getMdoModel(); }
 
@@ -2189,14 +2189,14 @@ GfAssetSetupBelonging::GfAssetSetupBelonging() {}
 
 void GfAssetSetupBelonging::setup(GF_ASSET_HANDLE *handle, const GfInitParamBelonging &param) {
   setupParam(handle, param);
-  unknown200 = param.unknown90;
+  m_append = param.m_append;
   if (!checkValidResource()) {
     return;
   }
 
   mm::mtl::FixStr<128> name;
   GfAssetFilesInfo info;
-  info.unknown00 = handle;
+  info.m_GF_ASSET_HANDLE = handle;
   info.unknown08 = getAssetType();
   info.unknown30 = name.c_str();
   info.unknown40 = param.unknown44;
@@ -2210,7 +2210,7 @@ const char *GfAssetSetupBelonging::getMdlFile(GfAssetType type) {
   if (resource != nullptr && !resource->unknown00.empty()) {
     return resource->unknown00.c_str();
   }
-  const char *model = unknown200.getModelName();
+  const char *model = m_append.getModelName();
   if (model == nullptr || *model == '\0') {
     return nullptr;
   }
@@ -2225,7 +2225,7 @@ const char *GfAssetSetupBelonging::getMotFile(GfAssetType type) {
     if (resource != nullptr && !resource->unknown00.empty()) {
       return resource->unknown00.c_str();
     }
-    const char *motion = unknown200.getMotionName();
+    const char *motion = m_append.getMotionName();
     if (motion == nullptr || *motion == '\0') {
       return nullptr;
     }
@@ -2240,14 +2240,14 @@ GfAssetSetupExtra::GfAssetSetupExtra() {}
 
 void GfAssetSetupExtra::setup(GF_ASSET_HANDLE *handle, const GfInitParamExtra &param) {
   setupParam(handle, param);
-  unknown200 = param.unknown90;
+  m_append = param.m_append;
   if (!checkValidResource()) {
     return;
   }
 
   mm::mtl::FixStr<128> name;
   GfAssetFilesInfo info;
-  info.unknown00 = handle;
+  info.m_GF_ASSET_HANDLE = handle;
   info.unknown08 = getAssetType();
   info.unknown30 = name.c_str();
   info.unknown40 = param.unknown44;
@@ -2261,7 +2261,7 @@ const char *GfAssetSetupExtra::getMdlFile(GfAssetType type) {
   if (resource != nullptr && !resource->unknown00.empty()) {
     return resource->unknown00.c_str();
   }
-  const char *model = unknown200.getModelName();
+  const char *model = m_append.getModelName();
   if (model == nullptr || *model == '\0') {
     return nullptr;
   }
@@ -2275,14 +2275,14 @@ const char *GfAssetSetupExtra::getMotFile(GfAssetType type) {
   if (resource != nullptr && !resource->unknown00.empty()) {
     return resource->unknown00.c_str();
   }
-  const char *motion = unknown200.getMotionName();
+  const char *motion = m_append.getMotionName();
   if (motion == nullptr || *motion == '\0') {
     return nullptr;
   }
   return motion;
 }
 
-const char *GfAssetSetupExtra::getStpFile(GfAssetType type) { return getValidName(unknown200.getModelName()); }
+const char *GfAssetSetupExtra::getStpFile(GfAssetType type) { return getValidName(m_append.getModelName()); }
 
 const char *GfAssetSetupExtra::getPath() const { return GfAssetPath::getMdoModel(); }
 
@@ -2389,7 +2389,7 @@ void GfAssetSetupMapMdl::setup(GF_ASSET_HANDLE *handle, const GfInitParamMap &pa
   }
 
   GfAssetFilesInfo info;
-  info.unknown00 = handle;
+  info.m_GF_ASSET_HANDLE = handle;
   info.unknown40 = param.unknown44;
   info.unknown08 = getAssetType();
   info.unknown30 = util::getFilePtrFromPath(getPath());
@@ -2419,10 +2419,10 @@ GfAssetSetupEventObj::GfAssetSetupEventObj() {}
 
 void GfAssetSetupEventObj::setup(GF_ASSET_HANDLE *handle, const GfInitParamEventObj &param) {
   setupParam(handle, param);
-  if (param.unknown18 != nullptr) {
+  if (param.m_cBdatWrapper != nullptr) {
     // __LINE__ must be 5106 as in the original source: it is the line argument of operator new.
 #line 5106
-    unknown18 = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) CBdatWrapper(*param.unknown18);
+    m_cBdatWrapper = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) CBdatWrapper(*param.m_cBdatWrapper);
   }
   if (!checkValidResource()) {
     return;
@@ -2430,7 +2430,7 @@ void GfAssetSetupEventObj::setup(GF_ASSET_HANDLE *handle, const GfInitParamEvent
 
   mm::mtl::FixStr<128> name;
   GfAssetFilesInfo info;
-  info.unknown00 = handle;
+  info.m_GF_ASSET_HANDLE = handle;
   info.unknown08 = getAssetType();
   info.unknown30 = name.c_str();
   info.unknown40 = param.unknown44;
@@ -2493,7 +2493,7 @@ void GfAssetSetupUiObj::setup(GF_ASSET_HANDLE *handle, const GfInitParamUiObj &p
 
   mm::mtl::FixStr<128> name;
   GfAssetFilesInfo info;
-  info.unknown00 = handle;
+  info.m_GF_ASSET_HANDLE = handle;
   info.unknown30 = name.c_str();
   info.unknown40 = param.unknown44;
   info.unknown08 = getAssetType();

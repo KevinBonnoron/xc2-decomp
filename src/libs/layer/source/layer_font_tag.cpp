@@ -9,7 +9,7 @@ const u16 LayerFontTag::FONT_INSTANCE_SIZE = 0x24;
 const char *LayerFontTag::s_resTagTbl[4] = {"System:Color", "System:Ruby", "ML:icon", "ML:wide"};
 
 LayerFontTag::LayerFontTag(const LayerFontResObj *res, const LayerFontStyleObj *style, const LyrFontStyleData *styleData, const LayerFontIconObj *icon, LayerFontSetting setting)
-    : unknown10(res), unknown18(icon), unknown20(styleData), unknown28(false), unknown29(false) {
+    : m_layerFontResObj(res), m_layerFontIconObj(icon), m_lyrFontStyleData(styleData), unknown28(false), unknown29(false) {
   unknown68 = mm::Col4(1.0f, 1.0f, 1.0f, 0.0f);
   unknown78 = mm::Col4(1.0f, 1.0f, 1.0f, 0.0f);
   unknown494[0] = 0;
@@ -21,13 +21,13 @@ LayerFontTag::LayerFontTag(const LayerFontResObj *res, const LayerFontStyleObj *
   unknown60 = nullptr;
   unknown38 = setting;
   unknown3c = setting != 0;
-  unknown08 = style;
+  m_layerFontStyleObj = style;
   unknown40 = setting == 0;
 }
 
 void LayerFontTag::getWorkSize(LayerTagWork &work, const u8 *string) {
   unknown28 = false;
-  unknown30 = &work;
+  m_layerTagWork = &work;
   calcParseString(string);
   u32 length = 0;
   while (length < 10000 && string[length] != 0) {
@@ -39,7 +39,7 @@ void LayerFontTag::getWorkSize(LayerTagWork &work, const u8 *string) {
 
 void LayerFontTag::getWorkSize(LayerTagWork &work, const wchar_t *string) {
   unknown28 = false;
-  unknown30 = &work;
+  m_layerTagWork = &work;
   calcParseString(string);
   u32 length = 0;
   while (length < 10000 && string[length] != 0) {
@@ -124,7 +124,7 @@ void LayerFontTag::parseNotTag(const u8 *string, u32 &index) {
       position += 1;
     }
     index = position;
-    unknown30->unknown00++;
+    m_layerTagWork->unknown00++;
   }
 }
 

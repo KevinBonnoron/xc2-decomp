@@ -50,7 +50,7 @@ public:
 
   // The first four members are those of CreateInfo: the constructor gives them its default values, and GfMenuObjWorldMap::initialize copies them
   // with the implicit CreateInfo assignment (one 64-bit load and store for the two ints, 0x71004e6a68, then the two vectors component by component).
-  CreateInfo unknown00;                       // Inferred role: map, map of the area and area bounds that the atlas was created with; original member name unknown.
+  CreateInfo m_createInfo;                    // Inferred role: map, map of the area and area bounds that the atlas was created with; original member name unknown.
   mm::mtl::Vector<BdatInfo> unknown30;        // Inferred role: level bdat infos; original member name unknown.
   int unknown58;                              // Inferred role: first level bdat id; original member name unknown.
   gmk::GmkSet *unknown60;                     // Inferred role: gimmick set of the locators; original member name unknown.

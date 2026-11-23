@@ -1,4 +1,6 @@
 // Original file name inferred from the job type strings and the skd_detect_info.h assertion file path.
+#include <float.h>
+
 #include "anm/anm_array-inl.h"
 #include "anm/anm_job.h"
 #include "anm/anm_job_queue.h"
@@ -119,6 +121,23 @@ void detectCollisionSpheres(const ResNodeCollision &nodeCollision, const Collion
 void detectCollisionCapsules(const ResNodeCollision &nodeCollision, const CollionArray &collisions, u32 mask, NodeArray *nodes) { unknown004(nodeCollision, collisions.unknown30, mask, nodes); }
 
 void detectCollisionPlanes(const ResNodeCollision &nodeCollision, const CollionArray &collisions, u32 mask, NodeArray *nodes) { unknown004(nodeCollision, collisions.unknown58, mask, nodes); }
+
+void executeApplyDetectJob(anm::Job &job) {
+  ApplyDetectJob &applyJob = static_cast<ApplyDetectJob &>(job);
+  mm::Vec3 offset = mm::Vec3::zero;
+  f32 count = 0.0f;
+  const DetectInfo *const *hit = applyJob.unknown18;
+  const DetectInfo *const *end = hit + applyJob.unknown118;
+  for (; hit != end; hit++) {
+    const DetectInfo *info = *hit;
+    offset += info->unknown10;
+    count += 1.0f;
+  }
+  if (count > FLT_EPSILON) {
+    offset *= 1.0f / count;
+    applyJob.unknown120->unknown10[applyJob.unknown10].unknown50 += offset;
+  }
+}
 
 void executeDetectSphereJob(anm::Job &job) { unknown002<DetectSphereJob>(job); }
 

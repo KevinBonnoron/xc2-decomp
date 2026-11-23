@@ -23,28 +23,28 @@
 
 namespace event {
 
-EffectEvaPlayer::EffectEvaPlayer() : unknown08(nullptr), unknown10(nullptr), unknown18(0.0f) {}
+EffectEvaPlayer::EffectEvaPlayer() : m_effectCtrl(nullptr), m_rchaEff(nullptr), unknown18(0.0f) {}
 
 EffectEvaPlayer::~EffectEvaPlayer() { stop(); }
 
 void EffectEvaPlayer::stop() {
-  if (unknown10 != nullptr) {
-    delete unknown10;
-    unknown10 = nullptr;
+  if (m_rchaEff != nullptr) {
+    delete m_rchaEff;
+    m_rchaEff = nullptr;
   }
-  unknown08 = nullptr;
+  m_effectCtrl = nullptr;
 }
 
 void EffectEvaPlayer::play(EffectCtrl *ctrl, void *data) {
   stop();
-  this->unknown08 = ctrl;
-  unknown10 = new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) RchaEff;
-  unknown10->setup(mtl::ALLOC_HANDLE(), data);
+  this->m_effectCtrl = ctrl;
+  m_rchaEff = new (mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), nullptr, 0, 4, false) RchaEff;
+  m_rchaEff->setup(mtl::ALLOC_HANDLE(), data);
   unknown18 = 0.0f;
 }
 
 ICmd::RESULT EffectPlayEff::update(const Param &param) {
-  if (unknown10 == nullptr) {
+  if (m_effectCtrl == nullptr) {
     return RESULT_UNKNOWN_1;
   }
   f32 delta = static_cast<EffectObj *>(param.val(0).getUserdata())->getFrameInfo().unknown04;
@@ -54,12 +54,12 @@ ICmd::RESULT EffectPlayEff::update(const Param &param) {
     f32 skip = param.val(3).getF32();
     int prio = param.val(4).getS32();
     if (!mm::mtl::Singleton<EffectManager>::getPtr()->isStreamMode()) {
-      unknown10->genelate();
-      unknown10->setSpeed(speed);
-      unknown10->setSkip(skip);
-      unknown10->setPrio(prio);
+      m_effectCtrl->genelate();
+      m_effectCtrl->setSpeed(speed);
+      m_effectCtrl->setSkip(skip);
+      m_effectCtrl->setPrio(prio);
     } else {
-      unknown10->setPrio(prio);
+      m_effectCtrl->setPrio(prio);
     }
     this->unknown18 = life;
   }
@@ -68,9 +68,9 @@ ICmd::RESULT EffectPlayEff::update(const Param &param) {
     return RESULT_UNKNOWN_2;
   }
   if (!mm::mtl::Singleton<EffectManager>::getPtr()->isStreamMode()) {
-    unknown10->dead();
+    m_effectCtrl->dead();
   } else {
-    unknown10->kill();
+    m_effectCtrl->kill();
   }
   return RESULT_UNKNOWN_1;
 }
@@ -78,7 +78,7 @@ ICmd::RESULT EffectPlayEff::update(const Param &param) {
 void EffectPlayEff::term() { unknown18 = -1.0f; }
 
 void EffectPlayEff::render(const mm::Vec3 &pos) {
-  if (unknown08 == nullptr || unknown10 == nullptr) {
+  if (m_effectObj == nullptr || m_effectCtrl == nullptr) {
     return;
   }
   ml::ScnObjCam *cam = Manager::get()->getScn()->getCam(-1);
@@ -98,20 +98,20 @@ void EffectPlayEff::render(const mm::Vec3 &pos) {
   textX = x - 100;
   textY = y - 5;
   fw::debug::drawFontColor(mm::Col4(1.0f, 1.0f, 1.0f, 1.0f));
-  fw::debug::drawFont(textX, textY, unknown08->getName());
+  fw::debug::drawFont(textX, textY, m_effectObj->getName());
   textY = y + 10;
   fw::debug::drawFontColor(mm::Col4(1.0f, 1.0f, 1.0f, 1.0f));
-  fw::debug::drawFont(textX, textY, "count %d", unknown10->getEffCount());
+  fw::debug::drawFont(textX, textY, "count %d", m_effectCtrl->getEffCount());
   textY = y + 25;
   fw::debug::drawFontColor(mm::Col4(0.8f, 0.8f, 1.0f, 1.0f));
-  fw::debug::drawFont(textX, textY, "pos %.2f %.2f %.2f", unknown10->getPos().x, unknown10->getPos().y, unknown10->getPos().z);
-  fw::debug::drawFont(textX, y + 40, "rot %.2f %.2f %.2f", unknown10->getRot().x * mm::RAD_TO_DEG, unknown10->getRot().y * mm::RAD_TO_DEG, unknown10->getRot().z * mm::RAD_TO_DEG);
-  fw::debug::drawFont(textX, y + 55, "sca %.2f", unknown10->getScale().x);
-  fw::debug::drawFont(textX, y + 70, "col %.2f %.2f %.2f %.2f", unknown10->getColor().r, unknown10->getColor().g, unknown10->getColor().b, unknown10->getColor().a);
+  fw::debug::drawFont(textX, textY, "pos %.2f %.2f %.2f", m_effectCtrl->getPos().x, m_effectCtrl->getPos().y, m_effectCtrl->getPos().z);
+  fw::debug::drawFont(textX, y + 40, "rot %.2f %.2f %.2f", m_effectCtrl->getRot().x * mm::RAD_TO_DEG, m_effectCtrl->getRot().y * mm::RAD_TO_DEG, m_effectCtrl->getRot().z * mm::RAD_TO_DEG);
+  fw::debug::drawFont(textX, y + 55, "sca %.2f", m_effectCtrl->getScale().x);
+  fw::debug::drawFont(textX, y + 70, "col %.2f %.2f %.2f %.2f", m_effectCtrl->getColor().r, m_effectCtrl->getColor().g, m_effectCtrl->getColor().b, m_effectCtrl->getColor().a);
 }
 
 ICmd::RESULT EffectPlayEva::update(const Param &param) {
-  if (unknown08 != nullptr) {
+  if (m_effectCtrl != nullptr) {
     f32 delta = static_cast<EffectObj *>(param.val(0).getUserdata())->getFrameInfo().unknown0c;
     if (param.getFrame() <= 0) {
       const char *name = param.val(1).getStr();
@@ -125,17 +125,17 @@ ICmd::RESULT EffectPlayEva::update(const Param &param) {
       if (data == nullptr) {
         return RESULT_UNKNOWN_1;
       }
-      unknown20.play(unknown08, data);
+      m_effectEvaPlayer.play(m_effectCtrl, data);
       unknown18 = param.val(2).getF32();
       this->unknown10 = data;
     }
-    unknown20.update(delta);
+    m_effectEvaPlayer.update(delta);
     unknown18 -= delta;
     if (!(unknown18 < 0.0f)) {
       return RESULT_UNKNOWN_2;
     }
   }
-  unknown20.stop();
+  m_effectEvaPlayer.stop();
   if (mm::mtl::Singleton<EffectManager>::getPtr()->isStreamMode() && unknown10 != nullptr) {
     mm::mtl::Singleton<MotstmManager>::getPtr()->free(unknown10);
   }
@@ -144,7 +144,7 @@ ICmd::RESULT EffectPlayEva::update(const Param &param) {
 }
 
 void EffectPlayEva::render(const mm::Vec3 &pos) {
-  if (unknown08 == nullptr || unknown10 == nullptr) {
+  if (m_effectCtrl == nullptr || unknown10 == nullptr) {
     return;
   }
   ml::ScnObjCam *cam = Manager::get()->getScn()->getCam(-1);
@@ -174,100 +174,100 @@ void EffectPlayEva::term() {
 }
 
 ICmd::RESULT EffectLinearPos::update(const Param &param) {
-  if (unknown08 == nullptr) {
+  if (m_effectCtrl == nullptr) {
     return RESULT_UNKNOWN_1;
   }
   EffectObj *obj = static_cast<EffectObj *>(param.val(0).getUserdata());
   f32 delta = obj->getFrameInfo().unknown0c;
   if (param.getFrame() == 0) {
     mm::Vec3 pos(param.val(1).getF32(), param.val(2).getF32(), param.val(3).getF32());
-    unknown10.clear();
-    unknown10.append(0.0f, obj->getPos(), CV_TYPE_UNKNOWN_0);
-    unknown10.append(param.val(4).getF32(), pos, static_cast<CV_TYPE>(param.val(5).getS32()));
+    m_anmVec.clear();
+    m_anmVec.append(0.0f, obj->getPos(), CV_TYPE_UNKNOWN_0);
+    m_anmVec.append(param.val(4).getF32(), pos, static_cast<CV_TYPE>(param.val(5).getS32()));
   }
-  unknown10.update(delta);
-  unknown08->setPos(unknown10.getValue());
-  if (!unknown10.isEnd()) {
+  m_anmVec.update(delta);
+  m_effectCtrl->setPos(m_anmVec.getValue());
+  if (!m_anmVec.isEnd()) {
     return RESULT_UNKNOWN_2;
   }
-  unknown10.clear();
+  m_anmVec.clear();
   return RESULT_UNKNOWN_1;
 }
 
-const mm::Vec3 &EffectObj::getPos() const { return unknown50.getPos(); }
+const mm::Vec3 &EffectObj::getPos() const { return m_effectCtrl.getPos(); }
 
 ICmd::RESULT EffectLinearRot::update(const Param &param) {
-  if (unknown08 == nullptr) {
+  if (m_effectCtrl == nullptr) {
     return RESULT_UNKNOWN_1;
   }
   EffectObj *obj = static_cast<EffectObj *>(param.val(0).getUserdata());
   f32 delta = obj->getFrameInfo().unknown0c;
   if (param.getFrame() == 0) {
     mm::Vec3 rot(param.val(1).getF32(), param.val(2).getF32(), param.val(3).getF32());
-    unknown10.clear();
-    unknown10.append(0.0f, obj->getRot(), CV_TYPE_UNKNOWN_0);
-    unknown10.append(param.val(4).getF32(), rot, static_cast<CV_TYPE>(param.val(5).getS32()));
+    m_anmVec.clear();
+    m_anmVec.append(0.0f, obj->getRot(), CV_TYPE_UNKNOWN_0);
+    m_anmVec.append(param.val(4).getF32(), rot, static_cast<CV_TYPE>(param.val(5).getS32()));
   }
-  unknown10.update(delta);
-  unknown08->setRot(unknown10.getValue());
-  if (!unknown10.isEnd()) {
+  m_anmVec.update(delta);
+  m_effectCtrl->setRot(m_anmVec.getValue());
+  if (!m_anmVec.isEnd()) {
     return RESULT_UNKNOWN_2;
   }
-  unknown10.clear();
+  m_anmVec.clear();
   return RESULT_UNKNOWN_1;
 }
 
-const mm::Vec3 &EffectObj::getRot() const { return unknown50.getRot(); }
+const mm::Vec3 &EffectObj::getRot() const { return m_effectCtrl.getRot(); }
 
 ICmd::RESULT EffectLinearCol::update(const Param &param) {
-  if (unknown08 == nullptr) {
+  if (m_effectCtrl == nullptr) {
     return RESULT_UNKNOWN_1;
   }
   EffectObj *obj = static_cast<EffectObj *>(param.val(0).getUserdata());
   f32 delta = obj->getFrameInfo().unknown0c;
   if (param.getFrame() == 0) {
     mm::Col4 color(param.val(1).getF32(), param.val(2).getF32(), param.val(3).getF32(), param.val(4).getF32());
-    unknown10.clear();
-    unknown10.append(0.0f, obj->getColor(), CV_TYPE_UNKNOWN_0);
-    unknown10.append(param.val(5).getF32(), color, static_cast<CV_TYPE>(param.val(6).getS32()));
+    m_anmCol.clear();
+    m_anmCol.append(0.0f, obj->getColor(), CV_TYPE_UNKNOWN_0);
+    m_anmCol.append(param.val(5).getF32(), color, static_cast<CV_TYPE>(param.val(6).getS32()));
   }
-  unknown10.update(delta);
-  unknown08->setColor(unknown10.getValue());
-  if (unknown10.isEnd()) {
-    unknown10.clear();
+  m_anmCol.update(delta);
+  m_effectCtrl->setColor(m_anmCol.getValue());
+  if (m_anmCol.isEnd()) {
+    m_anmCol.clear();
     return RESULT_UNKNOWN_1;
   }
   return RESULT_UNKNOWN_2;
 }
 
-const mm::Col4 &EffectObj::getColor() const { return unknown50.getColor(); }
+const mm::Col4 &EffectObj::getColor() const { return m_effectCtrl.getColor(); }
 
-EffectObj::EffectObj(const char *name) : unknown08(name), unknownfa8() {}
+EffectObj::EffectObj(const char *name) : unknown08(name), m_frameInfo() {}
 
 EffectObj::~EffectObj() {
-  unknown50.kill();
-  unknown50.destroy();
+  m_effectCtrl.kill();
+  m_effectCtrl.destroy();
 }
 
 void EffectObj::start() {}
 
 void EffectObj::end() {
   unknown260.eraseAll();
-  unknown50.kill();
+  m_effectCtrl.kill();
 }
 
 void EffectObj::update(const FrameInfo &info) {
-  unknownfa8 = info;
+  m_frameInfo = info;
   if (info.unknown0c > 0.0f) {
     unknown260.update();
   }
 }
 
-void EffectObj::renderEffect(const mm::Vec3 &pos) { unknown960.render(pos); }
+void EffectObj::renderEffect(const mm::Vec3 &pos) { m_effectPlayEff.render(pos); }
 
-void EffectObj::renderEva(const mm::Vec3 &pos) { unknown980.render(pos); }
+void EffectObj::renderEva(const mm::Vec3 &pos) { m_effectPlayEva.render(pos); }
 
-void EffectObj::tail() { unknown50.update(); }
+void EffectObj::tail() { m_effectCtrl.update(); }
 
 void EffectObj::play(const char *name, f32 life, f32 speed, f32 skip, int prio, int offscrId) {
   if (mm::mtl::Singleton<SkipManager>::getPtr()->isSkipFast()) {
@@ -284,40 +284,40 @@ void EffectObj::play(const char *name, f32 life, f32 speed, f32 skip, int prio, 
     mm::mtl::Singleton<EffectManager>::getPtr()->replaceFile(file);
   }
   stop();
-  unknown50.create(file.c_str(), offscrId);
-  unknown960.setup(this, &unknown50);
-  unknown9c0.setCtrl(&unknown50);
-  unknownbc0.setCtrl(&unknown50);
-  unknowndc0.setCtrl(&unknown50);
-  unknown980.setCtrl(&unknown50);
+  m_effectCtrl.create(file.c_str(), offscrId);
+  m_effectPlayEff.setup(this, &m_effectCtrl);
+  m_effectLinearPos.setCtrl(&m_effectCtrl);
+  m_effectLinearRot.setCtrl(&m_effectCtrl);
+  m_effectLinearCol.setCtrl(&m_effectCtrl);
+  m_effectPlayEva.setCtrl(&m_effectCtrl);
   CmdParam param;
   param.val(0).setUserdata(this);
   param.val(1).setF32(life);
   param.val(2).setF32(speed);
   param.val(3).setF32(skip);
   param.val(4).setS32(prio);
-  unknown260.push_back(&unknown960, param);
+  unknown260.push_back(&m_effectPlayEff, param);
 }
 
 void EffectObj::stop() {
-  unknown260.erase(&unknown960);
+  unknown260.erase(&m_effectPlayEff);
   if (!mm::mtl::Singleton<EffectManager>::getPtr()->isStreamMode()) {
-    unknown50.dead();
+    m_effectCtrl.dead();
   } else {
-    unknown50.kill();
+    m_effectCtrl.kill();
   }
-  unknown50.destroy();
+  m_effectCtrl.destroy();
 }
 
-void EffectObj::dead() { unknown50.dead(); }
+void EffectObj::dead() { m_effectCtrl.dead(); }
 
-void EffectObj::kill() { unknown50.kill(); }
+void EffectObj::kill() { m_effectCtrl.kill(); }
 
 void EffectObj::setPos(const mm::Vec3 &pos) {
   if (mm::mtl::Singleton<SkipManager>::getPtr()->isSkipFast()) {
     return;
   }
-  unknown50.setPos(pos);
+  m_effectCtrl.setPos(pos);
 }
 
 void EffectObj::moveTo(const mm::Vec3 &pos, f32 frame, CV_TYPE cv) {
@@ -331,14 +331,14 @@ void EffectObj::moveTo(const mm::Vec3 &pos, f32 frame, CV_TYPE cv) {
   param.val(3).setF32(pos.z);
   param.val(4).setF32(frame);
   param.val(5).setS32(cv);
-  unknown260.push_back(&unknown9c0, param);
+  unknown260.push_back(&m_effectLinearPos, param);
 }
 
 void EffectObj::setRot(const mm::Vec3 &rot) {
   if (mm::mtl::Singleton<SkipManager>::getPtr()->isSkipFast()) {
     return;
   }
-  unknown50.setRot(rot);
+  m_effectCtrl.setRot(rot);
 }
 
 void EffectObj::turnTo(const mm::Vec3 &rot, f32 frame, CV_TYPE cv) {
@@ -352,23 +352,23 @@ void EffectObj::turnTo(const mm::Vec3 &rot, f32 frame, CV_TYPE cv) {
   param.val(3).setF32(rot.z);
   param.val(4).setF32(frame);
   param.val(5).setS32(cv);
-  unknown260.push_back(&unknownbc0, param);
+  unknown260.push_back(&m_effectLinearRot, param);
 }
 
 void EffectObj::setScale(const mm::Vec3 &scale) {
   if (mm::mtl::Singleton<SkipManager>::getPtr()->isSkipFast()) {
     return;
   }
-  unknown50.setScale(scale);
+  m_effectCtrl.setScale(scale);
 }
 
-const mm::Vec3 &EffectObj::getScale() const { return unknown50.getScale(); }
+const mm::Vec3 &EffectObj::getScale() const { return m_effectCtrl.getScale(); }
 
 void EffectObj::setColor(const mm::Col4 &color) {
   if (mm::mtl::Singleton<SkipManager>::getPtr()->isSkipFast()) {
     return;
   }
-  unknown50.setColor(color);
+  m_effectCtrl.setColor(color);
 }
 
 void EffectObj::colorTo(const mm::Col4 &color, f32 frame, CV_TYPE cv) {
@@ -383,7 +383,7 @@ void EffectObj::colorTo(const mm::Col4 &color, f32 frame, CV_TYPE cv) {
   param.val(4).setF32(color.a);
   param.val(5).setF32(frame);
   param.val(6).setS32(cv);
-  unknown260.push_back(&unknowndc0, param);
+  unknown260.push_back(&m_effectLinearCol, param);
 }
 
 void EffectObj::playAnim(const char *name, f32 frame) {
@@ -396,13 +396,13 @@ void EffectObj::playAnim(const char *name, f32 frame) {
     param.val(0).setUserdata(this);
     param.val(1).setStr(name);
     param.val(2).setF32(frame);
-    unknown260.push_back(&unknown980, param);
+    unknown260.push_back(&m_effectPlayEva, param);
   }
 }
 
 void EffectObj::stopAnim() {
   if (mm::mtl::Singleton<EffectManager>::getPtr()->isStreamMode()) {
-    unknown260.erase(&unknown980);
+    unknown260.erase(&m_effectPlayEva);
   }
 }
 
@@ -410,16 +410,16 @@ void EffectObj::setCaster(IAttachActor *caster) {
   if (mm::mtl::Singleton<SkipManager>::getPtr()->isSkipFast()) {
     return;
   }
-  unknown50.setCaster(caster);
+  m_effectCtrl.setCaster(caster);
 }
 
 void EffectObj::setMount(IAttachActor *mount, const char *bone, const mm::Vec3 &offset, bool isRotate, ATTACH_TYPE type) {
   if (mm::mtl::Singleton<SkipManager>::getPtr()->isSkipFast()) {
     return;
   }
-  unknown50.setMount(mount, bone, offset, isRotate, type);
+  m_effectCtrl.setMount(mount, bone, offset, isRotate, type);
 }
 
-size_t EffectObj::getEffCount() const { return unknown50.getEffCount(); }
+size_t EffectObj::getEffCount() const { return m_effectCtrl.getEffCount(); }
 
 } // namespace event

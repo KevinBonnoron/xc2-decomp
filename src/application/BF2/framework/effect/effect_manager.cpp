@@ -1,5 +1,7 @@
 #include "framework/effect/effect_manager.h"
 
+#include <math.h>
+
 #include "dr/dr_creator.h"
 #include "dr/dr_light_man.h"
 #include "dr/dr_light_obj.h"
@@ -233,6 +235,25 @@ void EffectManager::setMasterPause(bool isPause) {
 }
 
 bool EffectManager::isMasterPause() const { return m_masterPause; }
+
+// The search of getCaster is written out again (ruling 8, 2026-11-13): every call form (`if (getCaster(caster) != nullptr) return;`,
+// `== nullptr` around the creation, a plain truth test) compiles to 48 instructions against the game's 46 (an extra b/cbnz after the
+// inlined loop, 1.0.0: 0x71001712b8); testing with EffectCasterSend::checkCaster (another unit, so a call) gives 51.
+void EffectManager::addCaster(EffectCasterBase *caster) {
+  for (u32 i = 0; i < LAYER_MAX; i++) {
+    mm::mtl::IntrusiveList<EffectCasterSend> &casters = unknown48[i].unknown00;
+    for (mm::mtl::IntrusiveList<EffectCasterSend>::iterator it = casters.begin(); it != casters.end(); ++it) {
+      if (it.get()->m_caster == caster) {
+        return;
+      }
+    }
+  }
+  EffectCasterSend *send = EffectCasterSend::create(caster, caster->unknown30, caster->unknown38);
+  if (send != nullptr) {
+    send->unknown70 = caster->unknown10;
+    unknown48[caster->unknown3c].unknown00.push_back(send);
+  }
+}
 
 void EffectManager::removeCaster(EffectCasterBase *caster) {
   mm::mtl::IntrusiveList<EffectCasterSend> &casters = unknown48[caster->unknown3c].unknown00;
@@ -531,6 +552,41 @@ void EffectManager::setParam(u32 handle, const mm::Mat44 &matrix, const mm::Vec3
 void EffectManager::setParam(u32 handle, const mm::Vec3 &position, const mm::Vec3 &scale) {
   effect::SendParam param;
   param.unknown00.unknown007(position);
+  param.unknown60 = scale;
+  param.unknown40 = mm::Col4(1.0f, 1.0f, 1.0f, 1.0f);
+  effect::SystemManager::getPtr()->es_set_param(handle, &param);
+}
+
+// The rotation matrix is written out as in mm::Mat44::setRotXYZ because no call reproduces the game (1.0.0:
+// 0x710017242c): setRotXYZ reloads each component of the rotation after every sinf/cosf call (115 instructions against
+// 116) and unknown011 takes a Vec3 by value and loads x and y with one ldp (117). The game loads each component once,
+// right before its sinf/cosf pair, and stores rows[3][3] together with the z of the translation (stp at 0x710017259c).
+void EffectManager::setParam(u32 handle, const mm::Vec3 &position, const mm::Vec3 &rotation, const mm::Vec3 &scale) {
+  effect::SendParam param;
+  mm::Mat44 &matrix = param.unknown00;
+  f32 rotX = rotation.x;
+  f32 sinX = sinf(rotX);
+  f32 cosX = cosf(rotX);
+  f32 rotY = rotation.y;
+  f32 sinY = sinf(rotY);
+  f32 cosY = cosf(rotY);
+  f32 rotZ = rotation.z;
+  f32 sinZ = sinf(rotZ);
+  f32 cosZ = cosf(rotZ);
+  matrix.rows[0][0] = cosY * cosZ;
+  matrix.rows[0][1] = cosY * sinZ;
+  matrix.rows[0][2] = -sinY;
+  matrix.rows[1][0] = sinX * sinY * cosZ - cosX * sinZ;
+  matrix.rows[1][1] = sinX * sinY * sinZ + cosX * cosZ;
+  matrix.rows[1][2] = sinX * cosY;
+  matrix.rows[2][0] = cosX * sinY * cosZ + sinX * sinZ;
+  matrix.rows[2][1] = cosX * sinY * sinZ - sinX * cosZ;
+  matrix.rows[2][2] = cosX * cosY;
+  matrix.rows[0][3] = 0.0f;
+  matrix.rows[1][3] = 0.0f;
+  matrix.rows[2][3] = 0.0f;
+  matrix.setTrans(position);
+  matrix.rows[3][3] = 1.0f;
   param.unknown60 = scale;
   param.unknown40 = mm::Col4(1.0f, 1.0f, 1.0f, 1.0f);
   effect::SystemManager::getPtr()->es_set_param(handle, &param);
@@ -993,9 +1049,38 @@ void EffectManager::destroyHateRing(u32 handle) { remove(handle); }
 
 u32 EffectManager::createHateRingVec() { return create("cmn_000_001", nullptr, true); }
 
+bool EffectManager::updateHateRingVec(u32 handle, const mm::Vec3 &position, const f32 &rotation, const f32 &scale, const mm::Col4 &color) {
+  effect::SendParam param;
+  param.unknown40 = color;
+  param.unknown60.x = scale;
+  mm::Mat44 matrix;
+  matrix.setRotY(rotation);
+  param.unknown00 = param.unknown00 * matrix;
+  param.unknown00.setTrans(mm::Vec3(position));
+  param.unknowna0 = 4;
+  if (handle != 0) {
+    effect::SystemManager::getPtr()->es_set_param(handle, &param);
+  }
+  return true;
+}
+
 void EffectManager::destroyHateRingVec(u32 handle) { remove(handle); }
 
 u32 EffectManager::createHateArrow() { return create("cmn_000_002", nullptr, true); }
+
+bool EffectManager::updateHateArrow(u32 handle, const mm::Vec3 &position, const f32 &rotation, const f32 &scale, const mm::Col4 &color) {
+  effect::SendParam param;
+  param.unknown40 = color;
+  param.unknown60.x = scale;
+  mm::Mat44 matrix;
+  matrix.setRotY(rotation);
+  param.unknown00 = param.unknown00 * matrix;
+  param.unknown00.setTrans(mm::Vec3(position));
+  if (handle != 0) {
+    effect::SystemManager::getPtr()->es_set_param(handle, &param);
+  }
+  return true;
+}
 
 void EffectManager::destroyHateArrow(u32 handle) { remove(handle); }
 

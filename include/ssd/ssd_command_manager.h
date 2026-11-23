@@ -66,11 +66,11 @@ public:
   ~HandlePlay() override { unknown08 = nullptr; }
   void Exec() override;
 
-  SoundHandle *unknown08;      // Inferred role: sound handle; original member name unknown.
-  const SoundEntry *unknown10; // Inferred role: sound entry; original member name unknown.
-  SoundActor *unknown18;       // Inferred role: sound actor; original member name unknown.
-  f32 unknown20;               // Inferred role: volume; original member name unknown.
-  f32 unknown24;               // Inferred role: fade time; original member name unknown.
+  SoundHandle *unknown08;         // Inferred role: sound handle; original member name unknown.
+  const SoundEntry *m_soundEntry; // Inferred role: sound entry; original member name unknown.
+  SoundActor *m_soundActor;       // Inferred role: sound actor; original member name unknown.
+  f32 unknown20;                  // Inferred role: volume; original member name unknown.
+  f32 unknown24;                  // Inferred role: fade time; original member name unknown.
 };
 
 static_assert(offsetof(HandlePlay, unknown08) == 0x8, "");

@@ -8,7 +8,7 @@ namespace idcoli {
 
 IDColiParmsBone::IDColiParmsBone(IDColiObj *object) : m_data(static_cast<IDColiObjData *>(object)) {}
 
-int IDColiParmsBone::getBoneMax() const { return m_data->unknown1f8; }
+int IDColiParmsBone::getBoneMax() const { return m_data->m_boneMax; }
 
 const char *IDColiParmsBone::getBoneName(int index) const { return m_data->getBoneName(index); }
 

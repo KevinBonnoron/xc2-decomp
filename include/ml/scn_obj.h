@@ -18,7 +18,7 @@ public:
     TYPE_UNKNOWN_6 = 6, // Inferred role: clip; original name unknown.
   };
 
-  ScnObj(Scn *scn, u16 type) : unknown08(scn), unknown10(type), m_delete(false) {}
+  ScnObj(Scn *scn, u16 type) : m_scn(scn), unknown10(type), m_delete(false) {}
   virtual ~ScnObj() {}
   virtual void update() {}
   virtual void renderDebug(DebDraw *debDraw) {}
@@ -27,12 +27,12 @@ public:
   virtual const char *getName() const = 0;
   virtual void setDelete();
 
-  Scn *unknown08; // Inferred role: scn; original member name unknown.
-  u16 unknown10;  // Inferred role: type; original member name unknown.
+  Scn *m_scn;    // Inferred role: scn; original member name unknown.
+  u16 unknown10; // Inferred role: type; original member name unknown.
   bool m_delete;
 };
 
-static_assert(offsetof(ScnObj, unknown08) == 0x08, "");
+static_assert(offsetof(ScnObj, m_scn) == 0x08, "");
 static_assert(offsetof(ScnObj, unknown10) == 0x10, "");
 static_assert(offsetof(ScnObj, m_delete) == 0x12, "");
 

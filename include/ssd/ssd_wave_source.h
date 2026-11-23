@@ -69,7 +69,7 @@ public:
   u64 unknown88;               // Inferred role: cleared by Quit; original member name unknown.
   const unknown002 *unknown90; // Inferred role: adpcm headers; original member name unknown.
   void *unknown98;             // Inferred role: audio data buffer; original member name unknown.
-  String unknowna0;            // Inferred role: name; original member name unknown.
+  String m_string;             // Inferred role: name; original member name unknown.
 };
 
 static_assert(sizeof(WaveSource::unknown003) == 0x80, "");
@@ -95,7 +95,7 @@ static_assert(offsetof(WaveSource, unknown80) == 0x80, "");
 static_assert(offsetof(WaveSource, unknown88) == 0x88, "");
 static_assert(offsetof(WaveSource, unknown90) == 0x90, "");
 static_assert(offsetof(WaveSource, unknown98) == 0x98, "");
-static_assert(offsetof(WaveSource, unknowna0) == 0xa0, "");
+static_assert(offsetof(WaveSource, m_string) == 0xa0, "");
 static_assert(sizeof(WaveSource) == 0xd0, "");
 
 } // namespace ssd

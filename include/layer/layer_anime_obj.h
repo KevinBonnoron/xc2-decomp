@@ -44,14 +44,14 @@ public:
   void calcParm(LayerResParmInfo &parm, const LayerAnimeInfo &info, f32 rate);
   static LayerAnimeObj *createAnimObj(int id);
 
-  f32 unknown00;               // Inferred role: elapsed time; original member name unknown.
-  u16 unknown04;               // Inferred role: current anime index; original member name unknown.
-  u16 unknown06;               // Inferred role: flags; original member name unknown.
-  u16 unknown08[2];            // Inferred role: select idx; original member name unknown.
-  LayerAnimeInfo *unknown10;   // Inferred role: anime infos; original member name unknown.
-  s32 unknown18;               // Inferred role: anime info count; original member name unknown.
-  s32 unknown1c;               // Inferred role: anime info capacity; original member name unknown.
-  mtl::ALLOC_HANDLE unknown20; // Inferred role: memory handle; original member name unknown.
+  f32 unknown00;                    // Inferred role: elapsed time; original member name unknown.
+  u16 unknown04;                    // Inferred role: current anime index; original member name unknown.
+  u16 unknown06;                    // Inferred role: flags; original member name unknown.
+  u16 unknown08[2];                 // Inferred role: select idx; original member name unknown.
+  LayerAnimeInfo *m_layerAnimeInfo; // Inferred role: anime infos; original member name unknown.
+  s32 unknown18;                    // Inferred role: anime info count; original member name unknown.
+  s32 unknown1c;                    // Inferred role: anime info capacity; original member name unknown.
+  mtl::ALLOC_HANDLE m_ALLOC_HANDLE; // Inferred role: memory handle; original member name unknown.
   u8 _24[0x28 - 0x24];
   u64 unknown28; // Inferred role: zero initialised by the constructor; original member name unknown.
   u32 unknown30; // Inferred role: zero initialised by the constructor; original member name unknown.
@@ -60,8 +60,8 @@ public:
 static_assert(offsetof(LayerAnimeObj, unknown04) == 0x04, "");
 static_assert(offsetof(LayerAnimeObj, unknown06) == 0x06, "");
 static_assert(offsetof(LayerAnimeObj, unknown08) == 0x08, "");
-static_assert(offsetof(LayerAnimeObj, unknown10) == 0x10, "");
+static_assert(offsetof(LayerAnimeObj, m_layerAnimeInfo) == 0x10, "");
 static_assert(offsetof(LayerAnimeObj, unknown18) == 0x18, "");
-static_assert(offsetof(LayerAnimeObj, unknown20) == 0x20, "");
+static_assert(offsetof(LayerAnimeObj, m_ALLOC_HANDLE) == 0x20, "");
 
 } // namespace layer

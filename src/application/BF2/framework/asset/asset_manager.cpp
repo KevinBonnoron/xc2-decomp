@@ -72,7 +72,7 @@ AssetData *AssetManager::searchAsset(mtl::ALLOC_HANDLE handle, const char *name)
   u32 hash = getHash(fileName.c_str());
   for (u32 i = 0; i < unknown18.size(); i++) {
     AssetData *item = unknown18[i];
-    if (item != nullptr && item->unknown0c == handle && item->unknown18 == hash && strcmp(item->unknown30.c_str(), fileName.c_str()) == 0) {
+    if (item != nullptr && item->m_ALLOC_HANDLE == handle && item->unknown18 == hash && strcmp(item->unknown30.c_str(), fileName.c_str()) == 0) {
       return item;
     }
   }
@@ -143,7 +143,7 @@ AssetCsvb *AssetManager::searchCsvb(mtl::ALLOC_HANDLE handle, const char *name) 
   u32 hash = getHash(fileName.c_str());
   for (u32 i = 0; i < unknown18.size(); i++) {
     AssetCsvb *item = unknown40[i];
-    if (item != nullptr && item->unknown0c == handle && item->unknown18 == hash && strcmp(item->unknown28.c_str(), fileName.c_str()) == 0) {
+    if (item != nullptr && item->m_ALLOC_HANDLE == handle && item->unknown18 == hash && strcmp(item->unknown28.c_str(), fileName.c_str()) == 0) {
       return item;
     }
   }
@@ -208,7 +208,7 @@ AssetLoader *AssetManager::searchLoader(mtl::ALLOC_HANDLE handle, const char *pa
   u32 hash = getHash(path);
   for (u32 i = 0; i < unknown68.size(); i++) {
     AssetLoader *item = unknown68[i];
-    if (item != nullptr && item->unknown100 == handle && item->unknown110 == hash && strcmp(item->unknown0c.c_str(), path) == 0) {
+    if (item != nullptr && item->m_ALLOC_HANDLE == handle && item->unknown110 == hash && strcmp(item->unknown0c.c_str(), path) == 0) {
       return item;
     }
   }

@@ -29,14 +29,14 @@ enum SoundOutputType : int;
 
 // Inferred role: sound volume fade; original type name unknown.
 struct unknown129 {
-  unknown129() : unknown00(1.0f), unknown04(1.0f), unknown08(1.0f), unknown0c(0.0f), unknown10(0.0f) {}
+  unknown129() : m_masterVolumeOrg(1.0f), unknown04(1.0f), unknown08(1.0f), unknown0c(0.0f), unknown10(0.0f) {}
 
   void start(f32 target, f32 fadeTime) {
     if (fadeTime > 0.0f) {
-      unknown08 = unknown00;
+      unknown08 = m_masterVolumeOrg;
     } else {
       fadeTime = 0.0f;
-      unknown00 = target;
+      m_masterVolumeOrg = target;
       unknown08 = target;
     }
 
@@ -49,17 +49,17 @@ struct unknown129 {
     unknown10 += deltaTime;
     if (unknown10 >= unknown0c) {
       unknown10 = unknown0c;
-      unknown00 = unknown04;
+      m_masterVolumeOrg = unknown04;
     } else {
-      unknown00 = unknown08 + (unknown04 - unknown08) * (unknown10 / unknown0c);
+      m_masterVolumeOrg = unknown08 + (unknown04 - unknown08) * (unknown10 / unknown0c);
     }
   }
 
-  f32 unknown00; // Inferred role: volume; original member name unknown.
-  f32 unknown04; // Inferred role: target volume; original member name unknown.
-  f32 unknown08; // Inferred role: start volume; original member name unknown.
-  f32 unknown0c; // Inferred role: duration; original member name unknown.
-  f32 unknown10; // Inferred role: time; original member name unknown.
+  f32 m_masterVolumeOrg; // Inferred role: volume; named after the game accessor fw::SoundManager::getMasterVolumeOrg.
+  f32 unknown04;         // Inferred role: target volume; original member name unknown.
+  f32 unknown08;         // Inferred role: start volume; original member name unknown.
+  f32 unknown0c;         // Inferred role: duration; original member name unknown.
+  f32 unknown10;         // Inferred role: time; original member name unknown.
 };
 
 class SoundManager : public ManagerObject, public mm::mtl::PtrSingleton<SoundManager> {
@@ -161,7 +161,7 @@ public:
   f32 getMasterVolumeOrg() const;
   void setMasterMute(bool isMute, f32 time);
 
-  ISoundDriver *unknown18;                           // Inferred role: driver; original member name unknown.
+  ISoundDriver *m_iSoundDriver;                      // Inferred role: driver; original member name unknown.
   mm::mtl::FixedVector<SoundSsdBank *, 8> unknown20; // Inferred role: system banks; original member name unknown.
   u32 unknown68;                                     // Inferred role: debug display flags; original member name unknown.
   unknown129 m_masterVolumeOrg;
@@ -174,10 +174,10 @@ public:
   ResourceObject *unknowne8[BATTLE_RESOURCE_UNKNOWN_3];         // Inferred role: battle resources; original member name unknown.
   mm::mtl::FixedVector<SoundHandleDebugInfo, 128> unknown100;   // Inferred role: handle debug infos; original member name unknown.
   mm::mtl::FixedVector<SoundCategoryDebugInfo, 18> unknown4110; // Inferred role: category debug infos; original member name unknown.
-  SoundResSourceManager unknown4478;                            // Inferred role: resource sources; original member name unknown.
+  SoundResSourceManager m_soundResSourceManager;                // Inferred role: resource sources; original member name unknown.
 };
 
-static_assert(offsetof(SoundManager, unknown18) == 0x18, "");
+static_assert(offsetof(SoundManager, m_iSoundDriver) == 0x18, "");
 static_assert(offsetof(SoundManager, unknown20) == 0x20, "");
 static_assert(offsetof(SoundManager, unknown68) == 0x68, "");
 static_assert(offsetof(SoundManager, m_masterVolumeOrg) == 0x6c, "");
@@ -188,7 +188,7 @@ static_assert(offsetof(SoundManager, unknowna0) == 0xa0, "");
 static_assert(offsetof(SoundManager, unknowne0) == 0xe0, "");
 static_assert(offsetof(SoundManager, unknown100) == 0x100, "");
 static_assert(offsetof(SoundManager, unknown4110) == 0x4110, "");
-static_assert(offsetof(SoundManager, unknown4478) == 0x4478, "");
+static_assert(offsetof(SoundManager, m_soundResSourceManager) == 0x4478, "");
 static_assert(sizeof(SoundManager) == 0x44d0, "");
 
 } // namespace fw

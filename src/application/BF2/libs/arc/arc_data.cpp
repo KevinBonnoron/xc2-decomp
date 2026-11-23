@@ -9,17 +9,17 @@
 
 namespace arc {
 
-CArcData::CArcData(void *data) : unknown00(nullptr), unknown08(nullptr) {
+CArcData::CArcData(void *data) : unknown00(nullptr), m_fileHeader(nullptr) {
   if (data != nullptr) {
     unknown00 = static_cast<unknown001 *>(data);
-    unknown08 = reinterpret_cast<unknown002 *>(static_cast<u8 *>(data) + unknown00->unknown10);
+    m_fileHeader = reinterpret_cast<unknown002 *>(static_cast<u8 *>(data) + unknown00->unknown10);
   }
 }
 
 void CArcData::setData(void *data) {
   if (data != nullptr) {
     unknown00 = static_cast<unknown001 *>(data);
-    unknown08 = reinterpret_cast<unknown002 *>(static_cast<u8 *>(data) + unknown00->unknown10);
+    m_fileHeader = reinterpret_cast<unknown002 *>(static_cast<u8 *>(data) + unknown00->unknown10);
   }
 }
 
@@ -37,11 +37,11 @@ const char *CArcData::getStr() const {
   return "";
 }
 
-const CArcData::unknown002 *CArcData::getFileHeader(u32 index) const { return &unknown08[index]; }
+const CArcData::unknown002 *CArcData::getFileHeader(u32 index) const { return &m_fileHeader[index]; }
 
 void *CArcData::getFileAdr(u32 index) const {
-  if (unknown00 != nullptr && index < unknown00->m_files && unknown08[index].m_fileSize != 0) {
-    return reinterpret_cast<u8 *>(unknown00) + unknown08[index].unknown00;
+  if (unknown00 != nullptr && index < unknown00->m_files && m_fileHeader[index].m_fileSize != 0) {
+    return reinterpret_cast<u8 *>(unknown00) + m_fileHeader[index].unknown00;
   }
   return nullptr;
 }
@@ -64,7 +64,7 @@ u32 CArcData::find(const char *name) const {
     int high = getFiles();
     while (low <= high) {
       int mid = (low + high) >> 1;
-      const unknown002 &entry = unknown08[mid];
+      const unknown002 &entry = m_fileHeader[mid];
       if (hash == entry.m_fileHash) {
         int result = strcmp(name, entry.m_fileName);
         if (result == 0) {
@@ -94,49 +94,49 @@ u32 CArcData::find(const char *name) const {
 
 u32 CArcData::getFileSize(u32 index) const {
   if (unknown00 != nullptr && index < unknown00->m_files) {
-    return unknown08[index].m_fileSize;
+    return m_fileHeader[index].m_fileSize;
   }
   return 0;
 }
 
 const char *CArcData::getFileName(u32 index) const {
   if (unknown00 != nullptr && index < unknown00->m_files) {
-    return unknown08[index].m_fileName;
+    return m_fileHeader[index].m_fileName;
   }
   return "";
 }
 
 u32 CArcData::getFileHash(u32 index) const {
   if (unknown00 != nullptr && index < unknown00->m_files) {
-    return unknown08[index].m_fileHash;
+    return m_fileHeader[index].m_fileHash;
   }
   return 0;
 }
 
 u32 CArcData::calcHash(const char *name) { return mm::mtl::hashStrCrc(name); }
 
-CArcData::unknown002 *CArcData::begin() { return unknown08; }
+CArcData::unknown002 *CArcData::begin() { return m_fileHeader; }
 
 CArcData::unknown002 *CArcData::end() {
   u32 files = 0;
   if (unknown00 != nullptr) {
     files = unknown00->m_files;
   }
-  if (unknown08 != nullptr) {
-    return unknown08 + files;
+  if (m_fileHeader != nullptr) {
+    return m_fileHeader + files;
   }
   return nullptr;
 }
 
-const CArcData::unknown002 *CArcData::begin() const { return unknown08; }
+const CArcData::unknown002 *CArcData::begin() const { return m_fileHeader; }
 
 const CArcData::unknown002 *CArcData::end() const {
   u32 files = 0;
   if (unknown00 != nullptr) {
     files = unknown00->m_files;
   }
-  if (unknown08 != nullptr) {
-    return unknown08 + files;
+  if (m_fileHeader != nullptr) {
+    return m_fileHeader + files;
   }
   return nullptr;
 }

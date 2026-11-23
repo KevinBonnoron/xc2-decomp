@@ -134,7 +134,7 @@ bool GfDataMap::isZoneCompleteFlag(u32 zone) {
   return false;
 }
 
-unknown118 *GfDataMap::getSDataMap() { return &GfDataManager::getDataGame()->unknown1097f0; }
+unknown118 *GfDataMap::getSDataMap() { return &GfDataManager::getDataGame()->m_sDataMap; }
 
 const char *GfDataMap::getMapResourceName(u32 mapJump) {
   u32 map = getMapID(mapJump);

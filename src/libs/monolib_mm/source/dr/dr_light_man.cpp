@@ -43,13 +43,13 @@ void DrLightMan::stockBegin() {
   unknown1b8 = false;
   unknown1b9 = false;
   unknown168 = 0;
-  unknowne0->unknown80->unknown18->stockBegin();
+  m_drMan->m_drShdMan->m_drShdLgtMan->stockBegin();
 }
 
 void DrLightMan::stockEnd() {
   updateAfterPnt();
   updateAfterSpt();
-  unknowne0->unknown80->unknown18->stockEnd();
+  m_drMan->m_drShdMan->m_drShdLgtMan->stockEnd();
 }
 
 DrLightMan::~DrLightMan() { releaseAll(); }
@@ -73,12 +73,12 @@ void DrLightMan::releaseAll() {
   unknown104 = 0;
   unknown108 = 0;
   unknown10c = 0;
-  unknown0f0 = nullptr;
-  unknown0f8 = nullptr;
+  m_drLightObjAmb = nullptr;
+  m_drLightObjDir = nullptr;
 }
 
 void DrLightMan::renderDebugPnt() {
-  DrShdLgtMan *shdLgtMan = unknowne0->unknown80->unknown18;
+  DrShdLgtMan *shdLgtMan = m_drMan->m_drShdMan->m_drShdLgtMan;
   DrAPGxType::setupCullingFront();
   DrAPGxType::setupDepthContl(1, 0, 3);
   for (DrLightObj *light = unknown020; light != nullptr; light = light->unknown10) {
@@ -89,7 +89,7 @@ void DrLightMan::renderDebugPnt() {
 }
 
 void DrLightMan::renderDebugSpt() {
-  DrShdLgtMan *shdLgtMan = unknowne0->unknown80->unknown18;
+  DrShdLgtMan *shdLgtMan = m_drMan->m_drShdMan->m_drShdLgtMan;
   for (DrLightObj *light = unknown030; light != nullptr; light = light->unknown10) {
     if (!light->isCullON()) {
       shdLgtMan->renderDebugSpt(static_cast<DrLightObjSpt *>(light));
@@ -104,7 +104,7 @@ void DrLightMan::debugRender() {
 
 DrLightObjAmb *DrLightMan::createAmbLight() {
   CS lock(DrMan::getCriticalSection());
-  DrLightObjAmb *light = new (unknowne0->unknown10) DrLightObjAmb(unknowne0->unknown78);
+  DrLightObjAmb *light = new (m_drMan->unknown10) DrLightObjAmb(m_drMan->m_drPixlMan);
   ml::unknown100<DrLightObj>(unknown040[DrMan::s_nDblStockIdx][0], unknown040[DrMan::s_nDblStockIdx][1], light);
   unknown100++;
   return light;
@@ -112,7 +112,7 @@ DrLightObjAmb *DrLightMan::createAmbLight() {
 
 DrLightObjDir *DrLightMan::createDirLight() {
   CS lock(DrMan::getCriticalSection());
-  DrLightObjDir *light = new (unknowne0->unknown10) DrLightObjDir(unknowne0->unknown78);
+  DrLightObjDir *light = new (m_drMan->unknown10) DrLightObjDir(m_drMan->m_drPixlMan);
   ml::unknown100<DrLightObj>(unknown060[DrMan::s_nDblStockIdx][0], unknown060[DrMan::s_nDblStockIdx][1], light);
   unknown104++;
   return light;
@@ -120,7 +120,7 @@ DrLightObjDir *DrLightMan::createDirLight() {
 
 DrLightObjPnt *DrLightMan::createPntLight() {
   CS lock(DrMan::getCriticalSection());
-  DrLightObjPnt *light = new (unknowne0->unknown10) DrLightObjPnt(unknowne0->unknown78);
+  DrLightObjPnt *light = new (m_drMan->unknown10) DrLightObjPnt(m_drMan->m_drPixlMan);
   ml::unknown100<DrLightObj>(unknown080[DrMan::s_nDblStockIdx][0], unknown080[DrMan::s_nDblStockIdx][1], light);
   unknown108++;
   return light;
@@ -128,21 +128,21 @@ DrLightObjPnt *DrLightMan::createPntLight() {
 
 DrLightObjSpt *DrLightMan::createSptLight() {
   CS lock(DrMan::getCriticalSection());
-  DrLightObjSpt *light = new (unknowne0->unknown10) DrLightObjSpt(unknowne0->unknown78);
+  DrLightObjSpt *light = new (m_drMan->unknown10) DrLightObjSpt(m_drMan->m_drPixlMan);
   ml::unknown100<DrLightObj>(unknown0a0[DrMan::s_nDblStockIdx][0], unknown0a0[DrMan::s_nDblStockIdx][1], light);
   unknown10c++;
   return light;
 }
 
 DrLightObjPnt *DrLightMan::createInstantPntLight() {
-  DrLightObjPnt *light = new (unknowne0->unknown10) DrLightObjPnt(unknowne0->unknown78);
+  DrLightObjPnt *light = new (m_drMan->unknown10) DrLightObjPnt(m_drMan->m_drPixlMan);
   ml::unknown100<DrLightObj>(unknown0c0[0], unknown0c0[1], light);
   unknown108++;
   return light;
 }
 
 DrLightObjSpt *DrLightMan::createInstantSptLight() {
-  DrLightObjSpt *light = new (unknowne0->unknown10) DrLightObjSpt(unknowne0->unknown78);
+  DrLightObjSpt *light = new (m_drMan->unknown10) DrLightObjSpt(m_drMan->m_drPixlMan);
   ml::unknown100<DrLightObj>(unknown0d0[0], unknown0d0[1], light);
   unknown10c++;
   return light;
@@ -185,18 +185,18 @@ void DrLightMan::releaseSptLight(DrLightObjSpt *light) {
 }
 
 void DrLightMan::releaseFastLight() {
-  if (unknown0f0 != nullptr) {
-    releaseAmbLight(unknown0f0);
-    unknown0f0 = nullptr;
+  if (m_drLightObjAmb != nullptr) {
+    releaseAmbLight(m_drLightObjAmb);
+    m_drLightObjAmb = nullptr;
   }
-  if (unknown0f8 != nullptr) {
-    releaseDirLight(unknown0f8);
-    unknown0f8 = nullptr;
+  if (m_drLightObjDir != nullptr) {
+    releaseDirLight(m_drLightObjDir);
+    m_drLightObjDir = nullptr;
   }
 }
 
 f32 DrLightMan::getSkyLuminance() const {
-  DrPixlPostParm *parm = unknowne0->unknown120[unknowne0->unknown1c98];
+  DrPixlPostParm *parm = m_drMan->unknown120[m_drMan->unknown1c98];
   f32 second = parm->unknown46c;
   f32 first = parm->unknown468;
   f32 r = second * unknown12c.r + first * unknown120.r;
@@ -232,8 +232,8 @@ void DrLightMan::updateAmb() {
   while (light != nullptr) {
     if (light->unknown1c & (DrLightObj::FLAG_UNKNOWN_16 << index)) {
       DrLightObj *next = light->unknown10;
-      if (light == unknown0f0) {
-        unknown0f0 = nullptr;
+      if (light == m_drLightObjAmb) {
+        m_drLightObjAmb = nullptr;
       }
       unknown004(unknown000, unknown008, light);
       delete light;

@@ -2266,7 +2266,7 @@ CBdatWrapper *QuestListAcc::getFp(QuestID &quest) const {
     return unknown00[QTYPE_UNKNOWN_2 - 1].fp;
   }
 
-  quest.unknown00 = info.unknown10.unknown00;
+  quest.unknown00 = info.m_questID.unknown00;
   return unknown00[info.unknown08 - 1].getFp(info.unknown00);
 }
 
@@ -3288,7 +3288,7 @@ void QuestListAcc::clear() {
 
 QuestListAcc::~QuestListAcc() {}
 
-QuestListAcc *QuestListAcc::get() { return GfBdatQuest::get()->unknown130; }
+QuestListAcc *QuestListAcc::get() { return GfBdatQuest::get()->m_questListAcc; }
 
 QuestID QuestListAcc::getQuestID(u32 index) const {
   CBdatWrapper *fp;
@@ -3330,14 +3330,14 @@ bool QuestListAcc::getTaskInfoByIndex(CBdatWrapper *&fp, u16 &purpose, u32 index
 
 void QuestListAcc::getQuestInfo(QIDXINFO &info) const {
   if (info.unknown0c == 0) {
-    if (info.unknown10.empty()) {
+    if (info.m_questID.empty()) {
       info.unknown08 = QTYPE_UNKNOWN_0;
       info.unknown00 = 0;
       info.unknown04 = 0;
       return;
     }
 
-    u32 entry = unknown17c40.unknown00[info.unknown10.unknown00];
+    u32 entry = unknown17c40.unknown00[info.m_questID.unknown00];
     info.unknown08 = static_cast<QTYPE>(entry >> 24);
     info.unknown00 = entry & 0xffffff;
     info.unknown04 = unknown00[info.unknown08 - 1].begin;
@@ -3407,7 +3407,7 @@ qlist_iterator qlist_iterator::operator++() {
     } else {
       CBdatWrapper *fp;
       u16 id;
-      isValid = unknown00->getQuestListByIndex(fp, id, unknown0c + 1);
+      isValid = m_questListAcc->getQuestListByIndex(fp, id, unknown0c + 1);
     }
 
     if (isValid) {
@@ -3460,7 +3460,7 @@ u32 QuestListAcc::getCollectUseFlagIndexNewVersion(const QuestTaskParam &param) 
 }
 
 u32 QuestListAcc::getCollectUseFlagIndexOldVersion(const QuestTaskParam &param) const {
-  u16 index = unknown4310c[param.unknown04.unknown00 * QUEST_UNKNOWN_4 + param.unknown0c];
+  u16 index = unknown4310c[param.m_questID.unknown00 * QUEST_UNKNOWN_4 + param.unknown0c];
   if (index == 0) {
     return 0;
   }
@@ -3714,18 +3714,18 @@ u32 QuestListAcc::getTaskFlag(u32 purpose, u32 taskIndex) const {
 }
 
 qlist_iterator::qlist_iterator(QTYPE type) : unknown08(type), unknown0c(-1) {
-  unknown00 = QuestListAcc::get();
-  unknown10 = unknown00->getCategory(type);
+  m_questListAcc = QuestListAcc::get();
+  unknown10 = m_questListAcc->getCategory(type);
 }
 
 tlist_iterator::tlist_iterator(QTYPE type) : unknown08(type), unknown0c(-1) {
-  unknown00 = QuestListAcc::get();
-  unknown10 = unknown00->getTaskCategory(type);
+  m_questListAcc = QuestListAcc::get();
+  unknown10 = m_questListAcc->getTaskCategory(type);
 }
 
 QuestID qlist_iterator::getQuestID() const {
   if (unknown08 == QTYPE_UNKNOWN_0) {
-    return unknown00->getQuestID(unknown0c);
+    return m_questListAcc->getQuestID(unknown0c);
   }
 
   return QuestID(unknown10->ids[unknown0c], 0);
@@ -3735,7 +3735,7 @@ u16 tlist_iterator::getPurposeID() const {
   if (unknown08 == QTYPE_UNKNOWN_0) {
     CBdatWrapper *fp;
     u16 purpose;
-    unknown00->getTaskInfoByIndex(fp, purpose, unknown0c);
+    m_questListAcc->getTaskInfoByIndex(fp, purpose, unknown0c);
     return purpose;
   }
 
@@ -3750,7 +3750,7 @@ tlist_iterator tlist_iterator::operator++() {
     } else {
       CBdatWrapper *fp;
       u16 purpose;
-      isValid = unknown00->getTaskInfoByIndex(fp, purpose, unknown0c + 1);
+      isValid = m_questListAcc->getTaskInfoByIndex(fp, purpose, unknown0c + 1);
     }
 
     if (isValid) {

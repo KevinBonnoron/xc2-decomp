@@ -145,7 +145,7 @@ void unknown001(const DataParamAcc &paramAcc, bool isDead, bool isSwim) { // Inf
   if (!paramAcc.isValid()) {
     return;
   }
-  GfObj *obj = GfObjUtil::getObj(paramAcc.unknown10);
+  GfObj *obj = GfObjUtil::getObj(paramAcc.m_GF_OBJ_HANDLE);
   if (obj == nullptr) {
     return;
   }
@@ -209,7 +209,7 @@ bool isInvalidSavePos(const mm::Vec3 &position) { return position.x < unknown026
 
 void GfGameScene::EvtPlayerStop::startPlayerStop() {
   if (unknown08 != STATE_UNKNOWN_1) {
-    unknown00->setPlayerStopFlag(unknown0c, true);
+    m_gameScene->setPlayerStopFlag(unknown0c, true);
     unknown08 = STATE_UNKNOWN_1;
   }
 }
@@ -217,16 +217,16 @@ void GfGameScene::EvtPlayerStop::startPlayerStop() {
 void GfGameScene::setPlayerStopFlag(PLSTOP flag, bool isStop) { unknown1d8.push((isStop ? 0x80 : 0) | flag); }
 
 void GfGameScene::EvtPlayerStop::endPlayerStop() {
-  if (unknown00->isPlayerStopFlag(unknown0c)) {
-    unknown00->setPlayerStopFlag(unknown0c, false);
+  if (m_gameScene->isPlayerStopFlag(unknown0c)) {
+    m_gameScene->setPlayerStopFlag(unknown0c, false);
     GfGameManager::setGmkTutorialMoverOK(false);
   }
   unknown08 = STATE_UNKNOWN_0;
 }
 
 void GfGameScene::EvtPlayerStop::resetState() {
-  if (unknown00->isPlayerStopFlag(unknown0c)) {
-    unknown00->setPlayerStopFlag(unknown0c, false);
+  if (m_gameScene->isPlayerStopFlag(unknown0c)) {
+    m_gameScene->setPlayerStopFlag(unknown0c, false);
     GfGameManager::setGmkTutorialMoverOK(false);
   }
   unknown08 = STATE_UNKNOWN_0;
@@ -268,20 +268,20 @@ void GfGameScene::BattleAchievement::battleEnd() {
 }
 
 void GfGameScene::BattleAchievement::enemyDamage(GF_OBJ_HANDLE *, const MsgObjectNotifyDamage &damage) {
-  if (unknown08 < damage.unknown08->unknown08) {
-    unknown08 = damage.unknown08->unknown08;
-    SCOM_ACHIEV_INC::createDamageMax(damage.unknown10, damage.unknown08->unknown08);
+  if (unknown08 < damage.m_msgObjectDamage->unknown08) {
+    unknown08 = damage.m_msgObjectDamage->unknown08;
+    SCOM_ACHIEV_INC::createDamageMax(damage.m_GF_OBJ_HANDLE, damage.m_msgObjectDamage->unknown08);
   }
-  SCOM_ACHIEV_INC::createDamageAdd(damage.unknown10, damage.unknown08->unknown08);
-  if (damage.unknown08->unknown28_1) {
-    SCOM_ACHIEV_INC::createCriticalHit(damage.unknown10);
+  SCOM_ACHIEV_INC::createDamageAdd(damage.m_GF_OBJ_HANDLE, damage.m_msgObjectDamage->unknown08);
+  if (damage.m_msgObjectDamage->unknown28_1) {
+    SCOM_ACHIEV_INC::createCriticalHit(damage.m_GF_OBJ_HANDLE);
   }
   unknown04++;
 }
 
 void GfGameScene::BattleAchievement::driverDamage(GF_OBJ_HANDLE *handle, const MsgObjectNotifyDamage &damage) {
-  SCOM_ACHIEV_INC::createDamageGet(handle, damage.unknown08->unknown08);
-  if (damage.unknown08->unknown28_1) {
+  SCOM_ACHIEV_INC::createDamageGet(handle, damage.m_msgObjectDamage->unknown08);
+  if (damage.m_msgObjectDamage->unknown28_1) {
     SCOM_ACHIEV_INC::createCriticalGet(handle);
   }
   unknown04++;
@@ -395,8 +395,8 @@ void GfGameScene::clear() {
   m_forceBossBattleBgm = false;
   unknown132 = false;
   m_forceEventBgm = 0.0f;
-  unknown138 = false;
-  unknown139 = false;
+  m_playerTalkForce = false;
+  m_gimmickCameraPause = false;
   m_autoBattle = false;
   unknown1bc = false;
   unknown1bd = false;
@@ -444,8 +444,8 @@ void GfGameScene::setupGame() {
   m_forceBossBattleBgm = false;
   unknown132 = false;
   m_forceEventBgm = 0.0f;
-  unknown138 = false;
-  unknown139 = false;
+  m_playerTalkForce = false;
+  m_gimmickCameraPause = false;
   m_autoBattle = false;
   unknown1a9 = true;
   unknown1d0 = false;
@@ -673,11 +673,11 @@ void GfGameScene::setForceEventBgm(f32 time) { m_forceEventBgm = time; }
 
 bool GfGameScene::isForceEventBgm() const { return m_forceEventBgm > 0.0f; }
 
-bool GfGameScene::isPlayerTalkForce() { return unknown138 || unknown139; }
+bool GfGameScene::isPlayerTalkForce() { return m_playerTalkForce || m_gimmickCameraPause; }
 
-void GfGameScene::setPlayerTalkForce(bool isForce) { unknown138 = isForce; }
+void GfGameScene::setPlayerTalkForce(bool isForce) { m_playerTalkForce = isForce; }
 
-void GfGameScene::setGimmickCameraPause(bool isPause) { unknown139 = isPause; }
+void GfGameScene::setGimmickCameraPause(bool isPause) { m_gimmickCameraPause = isPause; }
 
 void GfGameScene::refreshGimmickFlag() {}
 
@@ -738,7 +738,7 @@ u32 GfGameScene::getDeadType() { return m_deadType; }
 
 void GfGameScene::setDamageCharacter(GF_OBJ_HANDLE *handle) {
   for (unknown004 &character : unknown20) {
-    if (character.unknown00 == handle) {
+    if (character.m_GF_OBJ_HANDLE == handle) {
       character.unknown08 = 0.0f;
       return;
     }
@@ -917,7 +917,7 @@ void GfGameScene::gevBladeActivate(u32 blade, ActivateType activateType, Activat
       GfEquipUtil::equipBladeOrb(BLADE_SUZAKU, 0, slot, GfItemHandle(0));
     }
     SDataBlade &dataBlade = GfDataBlade::getSDataBlade(BLADE_SUZAKU);
-    dataBlade.unknown82c = GfBdatChrBl::get()->getChrBlDefWeapon(BLADE_SUZAKU);
+    dataBlade.m_equipWeapon = GfBdatChrBl::get()->getChrBlDefWeapon(BLADE_SUZAKU);
   }
   if (activateType == 0 && oldActivateType != 0 && !GfDataBlade::isUnselect(blade)) {
     GfGameUtil::execSaveAchievementPopup(blade);
@@ -1032,7 +1032,7 @@ void GfGameScene::gevChangeTimeRange(u32 timeRange) {
 void GfGameScene::gevControllFree(bool) {}
 
 void GfGameScene::gevBattleStart() {
-  unknown120.battleStart();
+  m_battleAchievement.battleStart();
   if (m_forceBossBattleBgm) {
     if (GfGameManager::isExistBossEnemy() || GfFieldBgm::get()->isBossBgmCopied()) {
       unknown132 = true;
@@ -1048,7 +1048,7 @@ void GfGameScene::gevBattleEnd() {
     for (u32 partyId = 0; partyId < 3; partyId++) {
       DataParamAcc paramAcc(GfGameParty::getHandleDriver(partyId));
       if (paramAcc.isValid() && paramAcc.getHp() == 0) {
-        GfObj *obj = GfObjUtil::getObj(paramAcc.unknown10);
+        GfObj *obj = GfObjUtil::getObj(paramAcc.m_GF_OBJ_HANDLE);
         if (obj != nullptr) {
           MsgObjectHealHp message(1, HEAL_TYPE_UNKNOWN_0);
           obj->sendMessage(obj, message);
@@ -1056,7 +1056,7 @@ void GfGameScene::gevBattleEnd() {
       }
     }
   }
-  unknown120.battleEnd();
+  m_battleAchievement.battleEnd();
   if (unknown648) {
     m_forceBossBattleBgm = true;
   } else {
@@ -1203,7 +1203,7 @@ void GfGameScene::updatePlayerState() {
       if (move->unknown80) {
         state.unknown04 = MOVER_STATE_UNKNOWN_4;
       }
-      if (move->unknownc0 != unknown020) {
+      if (move->m_GF_OBJ_HANDLE != unknown020) {
         state.unknown04 = MOVER_STATE_UNKNOWN_5;
       }
       if (move->unknownc8 != 0.0f) {
@@ -1338,7 +1338,7 @@ void GfGameScene::setForceStopBattle(bool isStop) {
 }
 
 void GfGameScene::addDamage(GF_OBJ_HANDLE *handle, const MsgObjectNotifyDamage &damage) {
-  unknown120.addDamage(handle, damage);
+  m_battleAchievement.addDamage(handle, damage);
   setDamageCharacter(handle);
 }
 
@@ -1633,13 +1633,13 @@ void GfGameScene::updateAutoHeal(const fw::UpdateInfo &info) {
     unknown004 &character = unknown20[partyId];
     GF_OBJ_HANDLE *driver = GfGameParty::getHandleDriver(partyId);
     if (driver == unknown020) {
-      if (character.unknown00 != unknown020) {
-        character.unknown00 = unknown020;
+      if (character.m_GF_OBJ_HANDLE != unknown020) {
+        character.m_GF_OBJ_HANDLE = unknown020;
       }
       continue;
     }
-    if (character.unknown00 != driver) {
-      character.unknown00 = driver;
+    if (character.m_GF_OBJ_HANDLE != driver) {
+      character.m_GF_OBJ_HANDLE = driver;
     }
     if (unknown240[partyId].unknown0c) {
       character.unknown08 = 0.0f;

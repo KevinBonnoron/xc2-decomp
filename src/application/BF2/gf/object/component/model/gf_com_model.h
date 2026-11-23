@@ -62,12 +62,12 @@ public:
   class ViewerListener {
   public:
     virtual void onWkStandbyLogout() {
-      if (unknown08 != nullptr) {
-        unknown08->unknown11a8 = nullptr;
+      if (m_comModel != nullptr) {
+        m_comModel->unknown11a8 = nullptr;
       }
     }
 
-    GfComModel *unknown08; // Inferred role: owner; original member name unknown.
+    GfComModel *m_comModel; // Inferred role: owner; original member name unknown.
   };
 
   GfComModel();
@@ -105,13 +105,13 @@ public:
   const anm::Skeleton *unknown28;                      // Inferred role: skeleton; original member name unknown.
   anm::Pose *unknown30;                                // Inferred role: pose; original member name unknown.
   anm::ExtraTruckBuffer *unknown38;                    // Inferred role: extra truck buffer; original member name unknown.
-  fw::AnimPoseModifier unknown40;                      // Inferred role: pose modifier; original member name unknown.
-  fw::AnimVolumeFadeModifier unknown10c8;              // Inferred role: volume fade modifier; original member name unknown.
+  fw::AnimPoseModifier m_animPoseModifier;             // Inferred role: pose modifier; original member name unknown.
+  fw::AnimVolumeFadeModifier m_animVolumeFadeModifier; // Inferred role: volume fade modifier; original member name unknown.
   mm::mtl::Vector<BoneFrameInfo> unknown1140;          // Inferred role: bone frames; original member name unknown.
   mm::mtl::Vector<BoneFrameInfo> unknown1168;          // Inferred role: mount frames; original member name unknown.
   f32 m_modelScale;
-  ViewerListener unknown1198; // Inferred role: viewer listener; original member name unknown.
-  void *unknown11a8;          // Inferred role: viewer; original member name unknown.
+  ViewerListener m_viewerListener; // Inferred role: viewer listener; original member name unknown.
+  void *unknown11a8;               // Inferred role: viewer; original member name unknown.
 };
 
 static_assert(offsetof(GfComModel, unknown18) == 0x18, "");
@@ -119,12 +119,12 @@ static_assert(offsetof(GfComModel, unknown20) == 0x20, "");
 static_assert(offsetof(GfComModel, unknown28) == 0x28, "");
 static_assert(offsetof(GfComModel, unknown30) == 0x30, "");
 static_assert(offsetof(GfComModel, unknown38) == 0x38, "");
-static_assert(offsetof(GfComModel, unknown40) == 0x40, "");
-static_assert(offsetof(GfComModel, unknown10c8) == 0x10c8, "");
+static_assert(offsetof(GfComModel, m_animPoseModifier) == 0x40, "");
+static_assert(offsetof(GfComModel, m_animVolumeFadeModifier) == 0x10c8, "");
 static_assert(offsetof(GfComModel, unknown1140) == 0x1140, "");
 static_assert(offsetof(GfComModel, unknown1168) == 0x1168, "");
 static_assert(offsetof(GfComModel, m_modelScale) == 0x1190, "");
-static_assert(offsetof(GfComModel, unknown1198) == 0x1198, "");
+static_assert(offsetof(GfComModel, m_viewerListener) == 0x1198, "");
 static_assert(offsetof(GfComModel, unknown11a8) == 0x11a8, "");
 static_assert(sizeof(GfComModel) == 0x11b0, "");
 

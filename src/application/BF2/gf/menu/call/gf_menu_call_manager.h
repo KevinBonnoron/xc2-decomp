@@ -27,8 +27,8 @@ public:
 
   // Inferred role: call info; original type name unknown.
   struct unknown001 {
-    GfMenuCallContext *unknown00; // Inferred role: context; original member name unknown.
-    u32 unknown08;                // Inferred role: handler; original member name unknown.
+    GfMenuCallContext *m_menuCallContext; // Inferred role: context; original member name unknown.
+    u32 unknown08;                        // Inferred role: handler; original member name unknown.
   };
 
   GfMenuCallManager(const GfSetupParam &param);
@@ -50,12 +50,12 @@ public:
   void setCallContextEventHandler(GfMenuCallContext *context, u32 handler);
 
   u32 unknown08[CALL_UNKNOWN_135];                                   // Inferred role: calls; original member name unknown.
-  GfMenuStrLinker unknown228;                                        // Inferred role: str linker; original member name unknown.
+  GfMenuStrLinker m_menuStrLinker;                                   // Inferred role: str linker; original member name unknown.
   mm::mtl::FixedVector<unknown001, CONTEXT_UNKNOWN_256> unknown1108; // Inferred role: contexts; original member name unknown.
 };
 
 static_assert(offsetof(GfMenuCallManager, unknown08) == 0x08, "");
-static_assert(offsetof(GfMenuCallManager, unknown228) == 0x228, "");
+static_assert(offsetof(GfMenuCallManager, m_menuStrLinker) == 0x228, "");
 static_assert(offsetof(GfMenuCallManager, unknown1108) == 0x1108, "");
 static_assert(sizeof(GfMenuCallManager) == 0x2110, "");
 

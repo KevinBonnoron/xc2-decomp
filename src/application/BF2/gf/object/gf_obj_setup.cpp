@@ -117,13 +117,13 @@ const mm::mtl::RTTI *GfObjSetupEnemy::getRTTI() const { return &m_rtti; }
 u32 GfObjSetupEnemy::getEnArrangeID() const { return m_enArrangeID; }
 
 GfObjSetupEnemy::~GfObjSetupEnemy() {
-  if (unknowna0 != nullptr) {
-    delete unknowna0;
-    unknowna0 = nullptr;
+  if (m_enemy != nullptr) {
+    delete m_enemy;
+    m_enemy = nullptr;
   }
-  if (unknownc0 != nullptr) {
-    delete unknownc0;
-    unknownc0 = nullptr;
+  if (m_blade != nullptr) {
+    delete m_blade;
+    m_blade = nullptr;
   }
 }
 
@@ -233,10 +233,10 @@ GfObjSetupEnemy *GfObjSetup::createSetupParam(GF_OBJ_HANDLE *handle, const GfIni
   }
   // __LINE__ must be 227 as in the original file: it is the line argument of the allocation.
 #line 227
-  setup->unknowna0 = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) SDataEnemy(setup->m_enArrangeID, param.unknownac);
+  setup->m_enemy = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) SDataEnemy(setup->m_enArrangeID, param.unknownac);
   GfObjSetupEnemy *owner = GfObjUtil::getObjSetup<GfObjSetupEnemy>(param.unknown38);
-  if (owner != nullptr && setup->unknowna0->unknown41 != 0) {
-    owner->unknowna0->unknown41 = setup->unknowna0->unknown41;
+  if (owner != nullptr && setup->m_enemy->unknown41 != 0) {
+    owner->m_enemy->unknown41 = setup->m_enemy->unknown41;
   }
   return setup;
 }
@@ -293,7 +293,7 @@ GfObjSetupFieldObj *GfObjSetup::createSetupParam(GF_OBJ_HANDLE *handle, const Gf
   info->unknown30 = setup;
   mm::mtl::FixStr<16> column;
   column.format("paramid%d", param.unknown94);
-  setup->unknown6c = static_cast<u16>(param.unknown18->getValCheck(column.c_str(), param.m_bladeID, 2));
+  setup->unknown6c = static_cast<u16>(param.m_cBdatWrapper->getValCheck(column.c_str(), param.m_bladeID, 2));
   setup->unknown10 = param.m_bladeID;
   return setup;
 }
@@ -303,8 +303,8 @@ GfObjSetupWeapon *GfObjSetup::createSetupParam(GF_OBJ_HANDLE *handle, const GfIn
   GfObjSetupWeapon *setup = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfObjSetupWeapon(param);
   info->unknown30 = setup;
   setup->unknown6c = param.unknown94;
-  setup->unknown74 = param.unknown98.getMountIndex();
-  setup->unknown78 = param.unknown98.unknown80;
+  setup->unknown74 = param.m_append.getMountIndex();
+  setup->unknown78 = param.m_append.unknown80;
   return setup;
 }
 
@@ -314,7 +314,7 @@ GfObjSetupEnWeapon *GfObjSetup::createSetupParam(GF_OBJ_HANDLE *handle, const Gf
 #line 360
   GfObjSetupEnWeapon *setup = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfObjSetupEnWeapon(param);
   info->unknown30 = setup;
-  setup->unknown6c = param.unknown98.getMountIndex();
+  setup->unknown6c = param.m_append.getMountIndex();
   return setup;
 }
 
@@ -324,7 +324,7 @@ GfObjSetupBelonging *GfObjSetup::createSetupParam(GF_OBJ_HANDLE *handle, const G
 #line 375
   GfObjSetupBelonging *setup = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfObjSetupBelonging(param);
   info->unknown30 = setup;
-  setup->unknown6c = param.unknown90.getMountIndex();
+  setup->unknown6c = param.m_append.getMountIndex();
   setup->unknown50 = param.unknown130 ? 1.0f : 0.0f;
   return setup;
 }
@@ -335,25 +335,30 @@ GfObjSetupExtra *GfObjSetup::createSetupParam(GF_OBJ_HANDLE *handle, const GfIni
 #line 391
   GfObjSetupExtra *setup = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfObjSetupExtra(param);
   info->unknown30 = setup;
-  setup->unknown6c = param.unknown90.getMountIndex();
+  setup->unknown6c = param.m_append.getMountIndex();
   return setup;
 }
 
 GfObjSetupEnemy::GfObjSetupEnemy(const GfInitParamEnemy &param)
-    : GfObjSetup(param, OBJECT_TYPE_ENEMY), unknown6c(param.m_enArrangeID), m_enArrangeID(param.unknown98), unknown98(false), unknowna0(nullptr), unknowna8(0), unknownac(0.0f), unknownb0(false),
-      unknownb1(false), unknownb2(false), unknownb4(0), unknownb8(param.m_bladeID), unknownc0(nullptr) {
+    : GfObjSetup(param, OBJECT_TYPE_ENEMY), unknown6c(param.m_enArrangeID), m_enArrangeID(param.unknown98), unknown98(false), m_enemy(nullptr), unknowna8(0), unknownac(0.0f), unknownb0(false),
+      unknownb1(false), unknownb2(false), unknownb4(0), unknownb8(param.m_bladeID), m_blade(nullptr) {
   unknown74 = "S_idle";
   if (unknownb8 != 0) {
     // __LINE__ must be 662 as in the original file: it is the line argument of the allocation.
 #line 662
-    unknownc0 = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) SDataBlade;
-    GfDataBlade::setupSDataBlade(*unknownc0, unknownb8, false);
+    m_blade = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) SDataBlade;
+    GfDataBlade::setupSDataBlade(*m_blade, unknownb8, false);
   }
 }
 
 GfObjSetupBlade::GfObjSetupBlade(const GfInitParamBlade &param) : GfObjSetup(param, OBJECT_TYPE_BLADE), unknown6c(-1), unknown70(false), unknown74(-1) {
   unknown71 = GfGameUtil::isCondBladeModel(param.m_bladeID);
-  unknown80 = param;
+  m_initParamBlade = param;
 }
 
 } // namespace gf
+
+// The game builds the init parameters in this unit: the functions of GfObjSetup and of GfInitParam alternate in one contiguous range with no other unit between
+// (GfObjSetup 0x71005ab66c to 0x71005ad1d4, GfInitParamWeapon::setupForEvent* 0x71005ad9f4 to 0x71005adce8, GfObjSetupEnemy 0x71005add44 to 0x71005ae09c,
+// GfInitParamEnemy and GfInitParamBlade::setup* 0x71005ae0ec to 0x71005ae64c, GfObjSetupBlade and the RTTI getters 0x71005ae690 to 0x71005aebcc).
+#include "gf_init_param.cpp"

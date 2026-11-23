@@ -81,7 +81,7 @@ void SeamlessManager::render() {
 void SeamlessManager::addFirstSeamPoint(const char *name, const PosAxis &axis) {
   for (FirstKey *it = unknown20.begin(); it != unknown20.end(); ++it) {
     if (__builtin_strcmp(it->unknown00.c_str(), name) == 0) {
-      it->unknown20 = axis;
+      it->m_posAxis = axis;
       it->unknown40 = axis.calcPos();
       return;
     }
@@ -93,7 +93,7 @@ void SeamlessManager::addFirstSeamPoint(const char *name, const PosAxis &axis) {
 void SeamlessManager::readFirstSeamPoint(const char *name) {
   for (size_t i = 0; i < unknown20.size(); i++) {
     if (__builtin_strcmp(unknown20[i].unknown00.c_str(), name) == 0) {
-      unknown20[i].unknown40 = unknown20[i].unknown20.calcPos();
+      unknown20[i].unknown40 = unknown20[i].m_posAxis.calcPos();
       unknown530 = unknown20[i].unknown40;
       unknown10 = (unknown10 & ~(FLAG_UNKNOWN_0 | FLAG_UNKNOWN_1)) | FLAG_UNKNOWN_0;
       setReadEnable(true, &unknown530);

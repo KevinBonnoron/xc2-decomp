@@ -28,7 +28,7 @@ public:
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x20 - 0x0c];
-    GfMenuObjCharSelect *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjCharSelect *m_menuObjCharSelect; // Inferred role: owner; original member name unknown.
   };
 
   class DetailListener : public ui::UIObjectListener {
@@ -43,7 +43,7 @@ public:
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x20 - 0x0c];
-    GfMenuObjCharSelect *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjCharSelect *m_menuObjCharSelect; // Inferred role: owner; original member name unknown.
   };
 
   class CharDrListener : public ui::UIObjectListener {
@@ -51,7 +51,7 @@ public:
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x20 - 0x0c];
-    GfMenuObjCharSelect *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjCharSelect *m_menuObjCharSelect; // Inferred role: owner; original member name unknown.
   };
 
   class CharDrSoloListener : public ui::UIObjectListener {
@@ -59,7 +59,7 @@ public:
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x20 - 0x0c];
-    GfMenuObjCharSelect *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjCharSelect *m_menuObjCharSelect; // Inferred role: owner; original member name unknown.
   };
 
   class SubMenuListener : public ui::UIObjectListener {
@@ -68,7 +68,7 @@ public:
 
     int unknown0c; // Inferred role: sub menu state, 1 while the sub menu is shown and 0 once it is left; original member name unknown.
     u8 _10[0x20 - 0x10];
-    GfMenuObjCharSelect *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjCharSelect *m_menuObjCharSelect; // Inferred role: owner; original member name unknown.
   };
 
   class CharBlMoveListener : public ui::UIObjectListener {
@@ -170,7 +170,7 @@ public:
   bool seqStreamWait();
 
   u8 _24[0x28 - 0x24];
-  GfMenuDriverList *unknown28;                         // Inferred role: party drivers; original member name unknown.
+  GfMenuDriverList *m_menuDriverList;                  // Inferred role: party drivers; original member name unknown.
   mm::mtl::FixedArray<GfMenuBladeList *, 3> unknown30; // Inferred role: blade lists of the party; original member name unknown.
   ui::UICtrlCursorSelect *unknown48;                   // Inferred role: character cursor; original member name unknown.
   mm::mtl::FixedVector<u16, 422> unknown50;            // Inferred role: reserve blades; original member name unknown.
@@ -188,8 +188,8 @@ public:
   mm::Pnt<s16> unknown6d4; // Inferred role: position of the status layer saved by StatusListener; original member name unknown.
   u32 unknown6d8;          // Role and original member name unknown, cleared by the constructor.
   u8 _6dc[0x6e0 - 0x6dc];
-  GfMenuCallContext *unknown6e0; // Inferred role: call context; original member name unknown.
-  int unknown6e8;                // Role and original member name unknown, -1 at start.
+  GfMenuCallContext *m_menuCallContext; // Inferred role: call context; original member name unknown.
+  int unknown6e8;                       // Role and original member name unknown, -1 at start.
   u8 _6ec[0x6f0 - 0x6ec];
   mm::mtl::FixedVector<u32, 5> unknown6f0; // Inferred role: sub menu characters; original member name unknown.
   mm::mtl::FixedVector<u32, 3> unknown710; // Inferred role: sub menu characters; original member name unknown.
@@ -209,15 +209,15 @@ public:
 static_assert(offsetof(GfMenuObjCharSelect::OpenCustomizeParam, unknown04) == 0x04, "");
 static_assert(sizeof(GfMenuObjCharSelect::OpenCustomizeParam) == 0x08, "");
 static_assert(offsetof(GfMenuObjCharSelect::unknown003, unknown04) == 0x04, "");
-static_assert(offsetof(GfMenuObjCharSelect::MainListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjCharSelect::MainListener, m_menuObjCharSelect) == 0x20, "");
 static_assert(offsetof(GfMenuObjCharSelect::DetailListener, unknown0c) == 0x0c, "");
-static_assert(offsetof(GfMenuObjCharSelect::StatusListener, unknown20) == 0x20, "");
-static_assert(offsetof(GfMenuObjCharSelect::CharDrListener, unknown20) == 0x20, "");
-static_assert(offsetof(GfMenuObjCharSelect::CharDrSoloListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjCharSelect::StatusListener, m_menuObjCharSelect) == 0x20, "");
+static_assert(offsetof(GfMenuObjCharSelect::CharDrListener, m_menuObjCharSelect) == 0x20, "");
+static_assert(offsetof(GfMenuObjCharSelect::CharDrSoloListener, m_menuObjCharSelect) == 0x20, "");
 static_assert(offsetof(GfMenuObjCharSelect::SubMenuListener, unknown0c) == 0x0c, "");
-static_assert(offsetof(GfMenuObjCharSelect::SubMenuListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjCharSelect::SubMenuListener, m_menuObjCharSelect) == 0x20, "");
 static_assert(sizeof(GfMenuObjCharSelect::unknown003) == 0x08, "");
-static_assert(offsetof(GfMenuObjCharSelect, unknown28) == 0x28, "");
+static_assert(offsetof(GfMenuObjCharSelect, m_menuDriverList) == 0x28, "");
 static_assert(offsetof(GfMenuObjCharSelect, unknown30) == 0x30, "");
 static_assert(offsetof(GfMenuObjCharSelect, unknown48) == 0x48, "");
 static_assert(offsetof(GfMenuObjCharSelect, unknown50) == 0x50, "");
@@ -229,7 +229,7 @@ static_assert(offsetof(GfMenuObjCharSelect, unknown430) == 0x430, "");
 static_assert(offsetof(GfMenuObjCharSelect, unknown6c0) == 0x6c0, "");
 static_assert(offsetof(GfMenuObjCharSelect, unknown6d4) == 0x6d4, "");
 static_assert(offsetof(GfMenuObjCharSelect, unknown6d8) == 0x6d8, "");
-static_assert(offsetof(GfMenuObjCharSelect, unknown6e0) == 0x6e0, "");
+static_assert(offsetof(GfMenuObjCharSelect, m_menuCallContext) == 0x6e0, "");
 static_assert(offsetof(GfMenuObjCharSelect, unknown6e8) == 0x6e8, "");
 static_assert(offsetof(GfMenuObjCharSelect, unknown6f0) == 0x6f0, "");
 static_assert(offsetof(GfMenuObjCharSelect, unknown710) == 0x710, "");

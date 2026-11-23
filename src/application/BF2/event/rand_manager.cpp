@@ -9,13 +9,13 @@ namespace event {
 RandManager::RandManager() : unknown10(0) {}
 
 void RandManager::clear() {
-  unknown18.clear();
+  m_randPlayer.clear();
   unknown10 = 0;
 }
 
 void RandManager::update() {
   if ((unknown10 & FLAG_UNKNOWN_0) != 0) {
-    unknown18.update();
+    m_randPlayer.update();
   }
 }
 
@@ -42,10 +42,10 @@ bool RandManager::play(int id) {
       if (talk < 1) {
         return true;
       }
-      unknown18.play(talk, (unknown10 & FLAG_UNKNOWN_1) != 0);
+      m_randPlayer.play(talk, (unknown10 & FLAG_UNKNOWN_1) != 0);
       unknown10 |= FLAG_UNKNOWN_0;
     }
-    bool isPlaying = unknown18.isPlaying();
+    bool isPlaying = m_randPlayer.isPlaying();
     FrameManager *frameManager = mm::mtl::Singleton<FrameManager>::getPtr();
     if (isPlaying) {
       frameManager->pause(FrameManager::PAUSE_TYPE_UNKNOWN_9, true);

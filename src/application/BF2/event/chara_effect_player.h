@@ -51,7 +51,7 @@ private:
   f32 unknown68[VF_TYPE_MAX];      // Inferred role: volume fade rates; original member name unknown.
   int unknown70[VF_TYPE_MAX];      // Inferred role: volume fade modes; original member name unknown.
   f32 unknown78[VF_TYPE_MAX];      // Inferred role: volume fade speeds; original member name unknown.
-  AnmF32 unknown80[VF_TYPE_MAX];   // Inferred role: volume fade anms; original member name unknown.
+  AnmF32 m_anmF32[VF_TYPE_MAX];    // Inferred role: volume fade anms; original member name unknown.
   int unknown2a0;                  // Inferred role: rim bloom id; original member name unknown.
   int unknown2a4;                  // Inferred role: after image id; original member name unknown.
   int unknown2a8;                  // Inferred role: after image count; original member name unknown.

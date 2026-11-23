@@ -39,14 +39,14 @@ public:
     if (unknown00[T::PLUGIN_INDEX] != nullptr) {
       unknown28[T::PLUGIN_INDEX] = unknown00[T::PLUGIN_INDEX]();
       if (unknown28[T::PLUGIN_INDEX] != nullptr) {
-        unknown28[T::PLUGIN_INDEX]->onSetup(*unknown78);
+        unknown28[T::PLUGIN_INDEX]->onSetup(*m_comBehavior);
       }
     }
   }
 
   template <typename T> void destroyPlugin() {
     if (unknown28[T::PLUGIN_INDEX] != nullptr) {
-      unknown28[T::PLUGIN_INDEX]->onCleanup(*unknown78);
+      unknown28[T::PLUGIN_INDEX]->onCleanup(*m_comBehavior);
       if (unknown28[T::PLUGIN_INDEX] != nullptr) {
         delete unknown28[T::PLUGIN_INDEX];
         unknown28[T::PLUGIN_INDEX] = nullptr;
@@ -57,13 +57,13 @@ public:
   mm::mtl::Vector<Plugin *(*)()> unknown00; // Inferred role: plugin creators; original member name unknown.
   mm::mtl::Vector<Plugin *> unknown28;      // Inferred role: plugins; original member name unknown.
   mm::mtl::Vector<bool> unknown50;          // Inferred role: plugin enables; original member name unknown.
-  GfComBehavior *unknown78;                 // Inferred role: behavior; original member name unknown.
+  GfComBehavior *m_comBehavior;             // Inferred role: behavior; original member name unknown.
   bool unknown80;                           // Inferred role: in setup; original member name unknown.
 };
 
 static_assert(offsetof(PluginManager, unknown28) == 0x28, "");
 static_assert(offsetof(PluginManager, unknown50) == 0x50, "");
-static_assert(offsetof(PluginManager, unknown78) == 0x78, "");
+static_assert(offsetof(PluginManager, m_comBehavior) == 0x78, "");
 static_assert(offsetof(PluginManager, unknown80) == 0x80, "");
 static_assert(sizeof(PluginManager) == 0x88, "");
 

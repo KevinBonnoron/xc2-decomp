@@ -15,8 +15,8 @@ public:
   void releaseCall();
   void update(DrResMdlInstMdlArg &arg);
 
-  DrMdlObj *unknown00; // Inferred role: model object; original member name unknown.
-  s32 unknown08;       // Inferred role: remaining display count; original member name unknown.
+  DrMdlObj *m_drMdlObj; // Inferred role: model object; original member name unknown.
+  s32 unknown08;        // Inferred role: remaining display count; original member name unknown.
 };
 
 static_assert(offsetof(DrResMdoInstMdlObj, unknown08) == 0x08, "");

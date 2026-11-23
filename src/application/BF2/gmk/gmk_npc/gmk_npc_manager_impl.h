@@ -16,8 +16,8 @@ namespace gmk {
 GmkNpcIdInfo::BdatInfo::BdatInfo() { dispose(); }
 
 void GmkNpcIdInfo::BdatInfo::create(CBdatWrapper bdat, int id) {
-  unknown00.unknown00 = bdat.getValCheck("QuestID", id, BDAT_TYPE_UNKNOWN_2);
-  unknown00.unknown02 = 0;
+  m_questID.unknown00 = bdat.getValCheck("QuestID", id, BDAT_TYPE_UNKNOWN_2);
+  m_questID.unknown02 = 0;
   unknown04 = bdat.getValCheck("ShopID", id, BDAT_TYPE_UNKNOWN_2);
   unknown06 = bdat.getValCheck("MountPoint", id, BDAT_TYPE_UNKNOWN_2);
   unknown08 = bdat.getValCheck("MountObject", id, BDAT_TYPE_UNKNOWN_2);
@@ -26,8 +26,8 @@ void GmkNpcIdInfo::BdatInfo::create(CBdatWrapper bdat, int id) {
 }
 
 void GmkNpcIdInfo::BdatInfo::dispose() {
-  unknown00.unknown00 = 0;
-  unknown00.unknown02 = 0;
+  m_questID.unknown00 = 0;
+  m_questID.unknown02 = 0;
   unknown04 = 0;
   unknown06 = 0;
   unknown08 = 0;
@@ -35,7 +35,7 @@ void GmkNpcIdInfo::BdatInfo::dispose() {
   unknown0c = 0;
 }
 
-GmkNpcIdInfo::GmkNpcIdInfo(const CreateInfo *info) : unknown10(nullptr), unknown18(nullptr), unknown30(gf::unknown020) {
+GmkNpcIdInfo::GmkNpcIdInfo(const CreateInfo *info) : unknown10(nullptr), m_aGmkNpc(nullptr), unknown30(gf::unknown020) {
   if (info != nullptr) {
     create(*info);
   }
@@ -46,7 +46,7 @@ GmkNpcIdInfo::GmkNpcIdInfo(const CreateInfo *info) : unknown10(nullptr), unknown
 #line 94
 void GmkNpcIdInfo::create(const CreateInfo &info) {
   dispose();
-  unknown00 = info;
+  m_createInfo = info;
   unknown10 = new (gf::getAllocator(gf::ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) mm::mtl::IntrusiveList<AGmkNpc>;
 }
 

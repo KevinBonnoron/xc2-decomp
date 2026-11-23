@@ -28,8 +28,8 @@ public:
     Stream(const char *name) : unknown00(name) {}
 
     mm::mtl::FixStr<128> unknown00; // Inferred role: name; original member name unknown.
-    StmPackHeader unknown88;        // Inferred role: header; original member name unknown.
-    StmPackData unknown98;          // Inferred role: data; original member name unknown.
+    StmPackHeader m_stmPackHeader;  // Inferred role: header; original member name unknown.
+    StmPackData m_stmPackData;      // Inferred role: data; original member name unknown.
   };
 
   StmPackMemory(mtl::ALLOC_HANDLE handle);
@@ -56,7 +56,7 @@ private:
   Stream *getCurrentStream() { return unknown5860[unknown58f0]; }
 
   u32 unknown08;                                                 // Inferred role: flags; original member name unknown.
-  mtl::ALLOC_HANDLE unknown0c;                                   // Inferred role: handle; original member name unknown.
+  mtl::ALLOC_HANDLE m_ALLOC_HANDLE;                              // Inferred role: handle; original member name unknown.
   void *unknown10;                                               // Inferred role: buffer; original member name unknown.
   size_t unknown18;                                              // Inferred role: page count; original member name unknown.
   size_t unknown20;                                              // Inferred role: free page; original member name unknown.

@@ -33,7 +33,7 @@ bool SphericalCoordinatesIkSolver::setupLimit(const ParamAdapter &param, const c
     u16 index = this->unknown18->unknown18->getBoneID(boneName);
     if (index != anm::Skeleton::INVALID_BONE) {
       unknown70 = index;
-      unknown78 = param;
+      m_paramAdapter = param;
       resetLimit();
       return true;
     }
@@ -56,7 +56,7 @@ void SphericalCoordinatesIkSolver::AngleLimit::createReflection(Reflection *refl
   reflection->setReflectionStruct(index, value);
 }
 
-SphericalCoordinatesIkSolver::SphericalCoordinatesIkSolver() : m_enable(false), unknown78() {}
+SphericalCoordinatesIkSolver::SphericalCoordinatesIkSolver() : m_enable(false), m_paramAdapter() {}
 
 SphericalCoordinatesIkSolver::~SphericalCoordinatesIkSolver() {}
 
@@ -70,7 +70,7 @@ void SphericalCoordinatesIkSolver::resetLimit() {
 }
 
 void SphericalCoordinatesIkSolver::resetLimitParam() {
-  const AngleLimit *limit = unknown78.get<AngleLimit>();
+  const AngleLimit *limit = m_paramAdapter.get<AngleLimit>();
   unknown40 = limit->limitAngleUp * mm::DEG_TO_RAD;
   unknown44 = limit->limitAngleDown * mm::DEG_TO_RAD;
   unknown48 = limit->limitAngleLeft * mm::DEG_TO_RAD;

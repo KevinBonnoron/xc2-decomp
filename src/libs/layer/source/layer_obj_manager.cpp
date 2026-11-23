@@ -122,17 +122,17 @@ LayerBase *LayerObjManager::createStaticFilterObj() { return new (LayerManager::
 
 void LayerObjManager::alphaRender(const ml::IDrDrawWorkInfo *info) {
   unknown00 = info;
-  unknown10->alphaRender();
+  m_layerSortMan->alphaRender();
 }
 
 void LayerObjManager::lastRender(const ml::IDrDrawWorkInfo *info) {
   unknown00 = info;
-  unknown10->lastRender();
+  m_layerSortMan->lastRender();
 }
 
 void LayerObjManager::finalRender(const ml::IDrDrawWorkInfo *info) {
   unknown00 = info;
-  unknown10->finalRender();
+  m_layerSortMan->finalRender();
 }
 
 void LayerObjManager::end() {}
@@ -166,16 +166,16 @@ void LayerObjManager::begin() {
 
 void LayerObjManager::apply(const ml::IDrDrawWorkInfo *info) {
   unknown00 = info;
-  unknown78.unknown10 = 0;
-  unknown78.unknown08 = nullptr;
-  unknown10->begin(info->unknownb0);
+  m_layerRenderView.unknown10 = 0;
+  m_layerRenderView.m_layerResViewPortInfo = nullptr;
+  m_layerSortMan->begin(info->unknownb0);
   LayerBase *node = unknown18.unknown00;
   while (node != nullptr) {
     LayerBase *next = node->unknown10;
-    static_cast<LayerObj *>(node)->apply(unknown10, &unknown78);
+    static_cast<LayerObj *>(node)->apply(m_layerSortMan, &m_layerRenderView);
     node = next;
   }
-  unknown10->end();
+  m_layerSortMan->end();
 }
 
 void LayerObjManager::allRelease() {
@@ -186,22 +186,22 @@ void LayerObjManager::allRelease() {
 }
 
 LayerObjManager::LayerObjManager(LayerManager *manager) {
-  unknown08 = manager;
-  unknown10 = nullptr;
+  m_layerManager = manager;
+  m_layerSortMan = nullptr;
   unknown18.unknown10 = 0;
   unknown60.unknown10 = 0;
   unknown18.unknown00 = nullptr;
   unknown18.unknown08 = nullptr;
   unknown60.unknown00 = nullptr;
   unknown60.unknown08 = nullptr;
-  unknown10 = new (manager->unknown28) LayerSortMan(unknown08, 0x200, 0x100);
+  m_layerSortMan = new (manager->unknown28) LayerSortMan(m_layerManager, 0x200, 0x100);
 }
 
 LayerObjManager::~LayerObjManager() {
   allRelease();
-  if (unknown10 != nullptr) {
-    delete unknown10;
-    unknown10 = nullptr;
+  if (m_layerSortMan != nullptr) {
+    delete m_layerSortMan;
+    m_layerSortMan = nullptr;
   }
 }
 

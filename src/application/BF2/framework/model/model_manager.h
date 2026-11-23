@@ -2,6 +2,7 @@
 #include <stddef.h>
 
 #include "framework/manager_object.h"
+#include "fw/fw_model_object.h" // IWYU pragma: keep
 #include "mm_mtl/fixed_array.h"
 #include "mm_mtl/intrusive_list.h"
 #include "mm_mtl/singleton.h"
@@ -10,14 +11,13 @@
 namespace fw {
 
 struct UpdateInfo;
-class ModelObject;
 
 class ModelManager : public ManagerObject, public mm::mtl::PtrSingleton<ModelManager> {
 public:
   static const u32 LAYER_UNKNOWN_32 = 32; // Inferred role: maximum number of layers; original name unknown.
 
   struct Group {
-    mm::mtl::IntrusiveList<ModelObject> unknown00; // Inferred role: models; original member name unknown.
+    mm::mtl::IntrusiveList<unknown083> unknown00; // Inferred role: models and visible objects; original member name unknown.
   };
 
   virtual void update(const UpdateInfo &info, u32 layer);

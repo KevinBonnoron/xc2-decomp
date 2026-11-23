@@ -28,10 +28,10 @@ public:
   // Name from the game symbol of mm::mtl::FixedList<ml::ErrViewer::ERRINFO*, 32>::erase.
   struct ERRINFO {
     u8 _00[0x04];
-    ERR_CALL unknown04;     // Inferred role: callback call type; original member name unknown.
-    ICBError *unknown08;    // Inferred role: callback; original member name unknown.
-    CERR_STRUCT *unknown10; // Inferred role: error; original member name unknown.
-    void *unknown18;        // Inferred role: memory; original member name unknown.
+    ERR_CALL unknown04;         // Inferred role: callback call type; original member name unknown.
+    ICBError *m_iCBError;       // Inferred role: callback; original member name unknown.
+    CERR_STRUCT *m_CERR_STRUCT; // Inferred role: error; original member name unknown.
+    void *unknown18;            // Inferred role: memory; original member name unknown.
     u8 _20[0xac - 0x20];
     s32 unknownac; // Inferred role: remaining wait; original member name unknown.
     s32 unknownb0; // Inferred role: wait reset value; original member name unknown.
@@ -63,7 +63,7 @@ public:
 
   static s32 s_nHandle;
 
-  CriticalSection *unknown10;                  // Inferred role: critical section; original member name unknown.
+  CriticalSection *m_criticalSection;          // Inferred role: critical section; original member name unknown.
   mm::mtl::FixedList<ERRINFO *, 32> unknown18; // Inferred role: errors; original member name unknown.
   s32 unknown258;                              // Inferred role: state; original member name unknown.
   u8 _25c[0x260 - 0x25c];
@@ -79,7 +79,7 @@ public:
   void *unknown278; // Inferred role: memory; original member name unknown.
 };
 
-static_assert(offsetof(ErrViewer, unknown10) == 0x10, "");
+static_assert(offsetof(ErrViewer, m_criticalSection) == 0x10, "");
 static_assert(offsetof(ErrViewer, unknown18) == 0x18, "");
 static_assert(offsetof(ErrViewer, unknown258) == 0x258, "");
 static_assert(offsetof(ErrViewer, unknown260) == 0x260, "");

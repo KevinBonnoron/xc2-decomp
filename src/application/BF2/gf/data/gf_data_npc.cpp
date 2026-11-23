@@ -73,7 +73,7 @@ u32 GfDataNpc::getRace(u32 npc) {
   }
 
   if (npc < NPC_UNKNOWN_2001) {
-    return GfDataBlade::getSDataBlade(npc).unknown708;
+    return GfDataBlade::getSDataBlade(npc).m_race;
   }
 
   return GfBdatRsc::get()->getRscNpcListRace(npc);
@@ -85,7 +85,7 @@ u32 GfDataNpc::getGender(u32 npc) {
   }
 
   if (npc < NPC_UNKNOWN_2001) {
-    return GfDataBlade::getSDataBlade(npc).unknown709;
+    return GfDataBlade::getSDataBlade(npc).m_gender;
   }
 
   return GfBdatRsc::get()->getRscNpcListGender(npc);
@@ -222,7 +222,7 @@ u32 GfDataNpc::getFootStep(u32 npc) {
   }
 
   if (npc < NPC_UNKNOWN_2001) {
-    return GfDataBlade::getSDataBlade(npc).unknown848;
+    return GfDataBlade::getSDataBlade(npc).m_footStep;
   }
 
   return GfBdatRsc::get()->getRscNpcListFootStep(npc);
@@ -234,7 +234,7 @@ u32 GfDataNpc::getFootStepEffect(u32 npc) {
   }
 
   if (npc < NPC_UNKNOWN_2001) {
-    return GfDataBlade::getSDataBlade(npc).unknown849;
+    return GfDataBlade::getSDataBlade(npc).m_footStepEffect;
   }
 
   return GfBdatRsc::get()->getRscNpcListFootStepEffect(npc);
@@ -250,7 +250,7 @@ u32 GfDataNpc::getEyeRotControl(u32 npc) {
   }
 
   if (npc < NPC_UNKNOWN_2001) {
-    return GfDataBlade::getSDataBlade(npc).unknown826;
+    return GfDataBlade::getSDataBlade(npc).m_eyeRotControl;
   }
 
   return GfBdatRsc::get()->getRscNpcListEyeRot(npc);

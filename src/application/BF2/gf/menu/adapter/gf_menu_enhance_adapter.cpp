@@ -18,12 +18,12 @@ static GfMenuEnhanceAdapter::TypeInfo TYPE_INFOS[] = {
     {&GfMenuEnhanceAdapter::update_Caption, {GfMenuAdapter::unknown004_2, 0, 0}},
 };
 
-GfMenuEnhanceAdapter::GfMenuEnhanceAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways) : GfMenuAdapter(plugin, false, isUpdateAlways), unknown50(nullptr), unknown58(0), _5c() {}
+GfMenuEnhanceAdapter::GfMenuEnhanceAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways) : GfMenuAdapter(plugin, false, isUpdateAlways), m_iConverter(nullptr), unknown58(0), _5c() {}
 
 GfMenuEnhanceAdapter::~GfMenuEnhanceAdapter() {
-  if (unknown50 != nullptr) {
-    delete unknown50;
-    unknown50 = nullptr;
+  if (m_iConverter != nullptr) {
+    delete m_iConverter;
+    m_iConverter = nullptr;
   }
 }
 
@@ -63,7 +63,7 @@ GfMenuEnhanceAdapter *GfMenuEnhanceAdapter::createFromItem(u32 handle, u32 type,
   if (adapter == nullptr) {
     return nullptr;
   }
-  adapter->unknown50 = converter;
+  adapter->m_iConverter = converter;
   return adapter;
 }
 
@@ -75,14 +75,14 @@ GfMenuEnhanceAdapter *GfMenuEnhanceAdapter::createFromItemList(u32 handle, u32 t
   if (adapter == nullptr) {
     return nullptr;
   }
-  adapter->unknown50 = converter;
+  adapter->m_iConverter = converter;
   return adapter;
 }
 
 GfMenuEnhanceAdapter *GfMenuEnhanceAdapter::createFromCoverter(u32 handle, u32 type, IConverter *converter, bool isUpdateAlways) {
   GfMenuEnhanceAdapter *adapter = create(handle, type, converter->getEnhanceID(), isUpdateAlways);
   if (adapter != nullptr) {
-    adapter->unknown50 = converter;
+    adapter->m_iConverter = converter;
   }
   return adapter;
 }
@@ -93,7 +93,7 @@ GfMenuEnhanceAdapter *GfMenuEnhanceAdapter::createFromReferenceItem(u32 handle, 
   ReferenceItemConverter *converter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) ReferenceItemConverter(item);
   GfMenuEnhanceAdapter *adapter = create(handle, type, converter->getEnhanceID(), isUpdateAlways);
   if (adapter != nullptr) {
-    adapter->unknown50 = converter;
+    adapter->m_iConverter = converter;
   }
   return adapter;
 }
@@ -104,7 +104,7 @@ GfMenuEnhanceAdapter *GfMenuEnhanceAdapter::createFromArts(u32 handle, u32 type,
   ArtsConverter *converter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) ArtsConverter(arts, level);
   GfMenuEnhanceAdapter *adapter = create(handle, type, GfDataDriverArts::getEnhance(arts, level), isUpdateAlways);
   if (adapter != nullptr) {
-    adapter->unknown50 = converter;
+    adapter->m_iConverter = converter;
   }
   return adapter;
 }
@@ -124,8 +124,8 @@ bool GfMenuEnhanceAdapter::getEnhanceCaption(u32 enhance, ui::UIStr &caption) {
 }
 
 void GfMenuEnhanceAdapter::update(const fw::UpdateInfo &info) {
-  if (unknown50 != nullptr) {
-    u32 newEnhance = unknown50->getEnhanceID();
+  if (m_iConverter != nullptr) {
+    u32 newEnhance = m_iConverter->getEnhanceID();
     if (unknown58 != newEnhance) {
       unknown58 = newEnhance;
       setChange();

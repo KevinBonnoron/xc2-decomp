@@ -18,23 +18,23 @@ public:
       int unknown04; // Inferred role: arts info display flag; original member name unknown.
     };
 
-    MainListener(GfMenuObjArtsPalette *owner) : unknown0c(0), unknown10(), _18(), unknown20(owner) {}
+    MainListener(GfMenuObjArtsPalette *owner) : unknown0c(0), unknown10(), _18(), m_menuObjArtsPalette(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     int unknown0c; // Inferred role: control of the range effect, -1 when none; original member name unknown.
     unknown006 unknown10;
     u8 _18[0x1c - 0x18];
-    GfMenuObjArtsPalette *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjArtsPalette *m_menuObjArtsPalette; // Inferred role: owner; original member name unknown.
   };
 
   class ReverseListener : public ui::UIObjectListener {
   public:
-    ReverseListener(GfMenuObjArtsPalette *owner) : unknown0c(0), _10(), unknown20(owner) {}
+    ReverseListener(GfMenuObjArtsPalette *owner) : unknown0c(0), _10(), m_menuObjArtsPalette(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     int unknown0c; // Inferred role: number of reverse icons; original member name unknown.
     u8 _10[0x1c - 0x10];
-    GfMenuObjArtsPalette *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjArtsPalette *m_menuObjArtsPalette; // Inferred role: owner; original member name unknown.
   };
 
   GfMenuObjArtsPalette(u32 handle);
@@ -71,10 +71,10 @@ static_assert(offsetof(GfMenuObjArtsPalette, unknown560) == 0x560, "");
 static_assert(offsetof(GfMenuObjArtsPalette, unknown7f0) == 0x7f0, "");
 static_assert(offsetof(GfMenuObjArtsPalette, unknown808) == 0x808, "");
 static_assert(sizeof(GfMenuObjArtsPalette) == 0x968, "");
-static_assert(offsetof(GfMenuObjArtsPalette::MainListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjArtsPalette::MainListener, m_menuObjArtsPalette) == 0x20, "");
 static_assert(sizeof(GfMenuObjArtsPalette::MainListener) == 0x28, "");
 static_assert(offsetof(GfMenuObjArtsPalette::ReverseListener, unknown0c) == 0x0c, "");
-static_assert(offsetof(GfMenuObjArtsPalette::ReverseListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjArtsPalette::ReverseListener, m_menuObjArtsPalette) == 0x20, "");
 static_assert(sizeof(GfMenuObjArtsPalette::ReverseListener) == 0x28, "");
 
 } // namespace gf

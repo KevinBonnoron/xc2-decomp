@@ -9,7 +9,7 @@
 
 namespace event {
 
-LipsyncRes::LipsyncRes(const char *name) : unknown08(0), m_name(name), unknown50(nullptr), unknown60(0) {
+LipsyncRes::LipsyncRes(const char *name) : unknown08(0), m_name(name), m_cArcData(nullptr), unknown60(0) {
   size_t length = __builtin_strlen(name);
   if (length > 3 && (__builtin_memcmp(name, "bf", 2) == 0 || __builtin_memcmp(name, "qst", 3) == 0 || __builtin_memcmp(name, "fev", 3) == 0 || __builtin_memcmp(name, "deb", 3) == 0)) {
     mm::mtl::FixStr<256> path;
@@ -25,7 +25,7 @@ bool LipsyncRes::isLoading() const { return (unknown08 & FLAG_UNKNOWN_0) != 0; }
 
 void LipsyncRes::OnResEvent(const PARAM &param) {
   if (param.result == RES_RESULT_TYPE_UNKNOWN_3) {
-    unknown50.setData(param.adr);
+    m_cArcData.setData(param.adr);
     unknown08 |= FLAG_UNKNOWN_1;
   } else {
     unknown08 &= ~FLAG_UNKNOWN_1;
@@ -37,13 +37,13 @@ void *LipsyncRes::searchCsv(const char *name, int &size) {
   if ((unknown08 & FLAG_UNKNOWN_1) != 0) {
     mm::mtl::FixStr<64> baseName(Extend::get().filename(name));
     mm::mtl::FixStr<64> fileName(Extend::get().xxlip(baseName.c_str()));
-    u32 count = unknown50.getFiles();
+    u32 count = m_cArcData.getFiles();
     u32 start = unknown60;
     u32 index = start;
     do {
-      if (__builtin_strcmp(unknown50.getFileName(index), fileName.c_str()) == 0) {
-        size = unknown50.getFileSize(unknown60);
-        return unknown50.getFileAdr(unknown60);
+      if (__builtin_strcmp(m_cArcData.getFileName(index), fileName.c_str()) == 0) {
+        size = m_cArcData.getFileSize(unknown60);
+        return m_cArcData.getFileAdr(unknown60);
       }
       index = unknown60 + 1 < count ? unknown60 + 1 : 0;
       unknown60 = index;

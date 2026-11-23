@@ -38,7 +38,7 @@ bool GfComDynamics::recieveMessage(fw::MessageObject *sender, fw::Message &messa
 
 void GfComDynamics::procMsgActivateComponentDebugWindow(fw::MessageObject *sender, MsgDebugActivateComponentWindow &message) {}
 
-GfComDynamics::GfComDynamics() : unknowne8(ITERATION_UNKNOWN_6), unknownec(false), unknown100(nullptr) { unknownf0.unknown08 = this; }
+GfComDynamics::GfComDynamics() : unknowne8(ITERATION_UNKNOWN_6), unknownec(false), unknown100(nullptr) { m_viewerListener.m_comDynamics = this; }
 
 GfComDynamics::~GfComDynamics() {}
 
@@ -90,8 +90,8 @@ void GfComDynamics::setup(const SetupInfo &info) {
     }
 
     if (isCreateCollision) {
-      unknownc0.bind(collisionObject);
-      manager->addColUpdater(layer, unknownc0);
+      m_dynamicsColObjUpdater.bind(collisionObject);
+      manager->addColUpdater(layer, m_dynamicsColObjUpdater);
       if (collisionObject != nullptr) {
         collisionObject->release();
       }
@@ -140,9 +140,9 @@ void GfComDynamics::cleanup() {
     unknown10.unknown78.clear();
     unknown10.unbind();
   }
-  if (unknownc0.unknown18 != nullptr) {
-    manager->removeColUpdater(layer, unknownc0);
-    unknownc0.unbind();
+  if (m_dynamicsColObjUpdater.unknown18 != nullptr) {
+    manager->removeColUpdater(layer, m_dynamicsColObjUpdater);
+    m_dynamicsColObjUpdater.unbind();
   }
 }
 
@@ -156,9 +156,9 @@ void GfComDynamics::changeLayer(u32 oldLayer, u32 newLayer) {
     manager->removeUpdater(oldLayer, unknown10);
     manager->addUpdater(newLayer, unknown10);
   }
-  if (unknownc0.unknown18 != nullptr) {
-    manager->removeColUpdater(oldLayer, unknownc0);
-    manager->addColUpdater(newLayer, unknownc0);
+  if (m_dynamicsColObjUpdater.unknown18 != nullptr) {
+    manager->removeColUpdater(oldLayer, m_dynamicsColObjUpdater);
+    manager->addColUpdater(newLayer, m_dynamicsColObjUpdater);
   }
 }
 

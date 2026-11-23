@@ -302,11 +302,11 @@ void GfMenuObjTutorial::MainListener::reciveEvent(const ui::EventData &event, u3
     break;
   }
   case 0x104:
-    unknown20->unknown2b8 = false;
-    unknown20->unknown28.unknown002(&GfMenuObjTutorial::seqTelopStart);
-    unknown20->unknown28.unknown004(30);
-    unknown20->unknown28.unknown002(&GfMenuObjTutorial::seqTelopEnd);
-    unknown20->unknown28.unknown002(&GfMenuObjTutorial::seqEnd);
+    m_menuObjTutorial->unknown2b8 = false;
+    m_menuObjTutorial->unknown28.unknown002(&GfMenuObjTutorial::seqTelopStart);
+    m_menuObjTutorial->unknown28.unknown004(30);
+    m_menuObjTutorial->unknown28.unknown002(&GfMenuObjTutorial::seqTelopEnd);
+    m_menuObjTutorial->unknown28.unknown002(&GfMenuObjTutorial::seqEnd);
     break;
   case 0x105:
     break;

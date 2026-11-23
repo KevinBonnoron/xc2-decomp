@@ -37,19 +37,19 @@ void MapEff::create(GF_ASSET_HANDLE *handle, fw::ModelObject *model) {
   }
 
   GfAssetResource *resource = GfAssetManager::getResource(handle, MAP_FILE_IDX_UNKNOWN_6, ASSET_TYPE_UNKNOWN_0);
-  if (resource != nullptr && unknown08 == nullptr) {
-    unknown08 = fw::EffectPack::createFromMemory(resource->getAssetData(), resource->getAssetSize(), resource->getAssetName(), false);
+  if (resource != nullptr && m_effectPack == nullptr) {
+    m_effectPack = fw::EffectPack::createFromMemory(resource->getAssetData(), resource->getAssetSize(), resource->getAssetName(), false);
   }
 
   if (!unknown00) {
-    fw::EffectLodManager::get()->init(model, unknown08);
+    fw::EffectLodManager::get()->init(model, m_effectPack);
     unknown00 = true;
   }
 }
 
 void MapEff::destroy() {
   destroyEffefct();
-  mm::mtl::safeRelease(unknown08);
+  mm::mtl::safeRelease(m_effectPack);
 }
 
 void MapEff::destroyEffefct() {
@@ -104,10 +104,10 @@ namespace {
 
 // Original name unknown: common body of MapMdl::createLod and MapMdl::createMpf.
 void unknown001(MapMdl &map, GF_ASSET_HANDLE *handle, GfFileIdx index) {
-  if (map.unknown00 == nullptr) {
+  if (map.m_model == nullptr) {
     GfAssetResource *resource = GfAssetManager::getResource(handle, index, ASSET_TYPE_UNKNOWN_0);
     if (resource != nullptr) {
-      map.unknown00 = GfManager::getSetupParam().unknown00->createMdl(resource->getAssetData(), resource->getAssetName(), 0);
+      map.m_model = GfManager::getSetupParam().unknown00->createMdl(resource->getAssetData(), resource->getAssetName(), 0);
     }
   }
 }
@@ -128,13 +128,13 @@ void MapMdl::createLod(GF_ASSET_HANDLE *handle) { unknown001(*this, handle, MAP_
 
 void MapMdl::createMpf(GF_ASSET_HANDLE *handle) { unknown001(*this, handle, MAP_FILE_IDX_UNKNOWN_5); }
 
-void MapMdl::destroy() { unknown002(unknown00); }
+void MapMdl::destroy() { unknown002(m_model); }
 
-ml::ScnObjModel *MapMdl::getModel() const { return unknown00; }
+ml::ScnObjModel *MapMdl::getModel() const { return m_model; }
 
 ml::DrMdlObj *MapMdl::getDrModel() const {
-  if (unknown00 != nullptr) {
-    return static_cast<ml::ScnObjModelDrSys *>(unknown00)->unknown3d8;
+  if (m_model != nullptr) {
+    return static_cast<ml::ScnObjModelDrSys *>(m_model)->unknown3d8;
   }
   return nullptr;
 }
@@ -213,3 +213,7 @@ void MapSe::create(GF_ASSET_HANDLE *handle) { GfAssetManager::getResource(handle
 void MapSe::destroy() {}
 
 } // namespace gf
+
+// The game builds the seam map part in this unit: MapSeam sits between the other map parts in one contiguous range with no other unit between
+// (MapEff and MapMdl 0x71003929b4 to 0x7100393034, MapSeam 0x710039306c to 0x7100393208, MapLgt to MapSe 0x7100393214 to 0x710039337c).
+#include "gf_map_seam.cpp"

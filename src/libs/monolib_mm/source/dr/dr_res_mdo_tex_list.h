@@ -47,13 +47,13 @@ public:
   void changeMemTexList(const u8 *texData);
   static int calcTextureMax(const u8 *texHeader);
 
-  DrResMdoTexList *unknown00;           // Inferred role: prev; original member name unknown.
-  DrResMdoTexList *unknown08;           // Inferred role: next; original member name unknown.
-  const void *unknown10;                // Inferred role: resource key; original member name unknown.
-  s32 unknown18;                        // Inferred role: ref count; original member name unknown.
-  grlib::CGLibTextureBuffer *unknown20; // Inferred role: textures; original member name unknown.
-  grlib::CGLibVtlMemPool unknown28;     // Inferred role: mem pool; original member name unknown.
-  DrCalcStmListObj *unknown58;          // Inferred role: stm list; original member name unknown.
+  DrResMdoTexList *unknown00;               // Inferred role: prev; original member name unknown.
+  DrResMdoTexList *unknown08;               // Inferred role: next; original member name unknown.
+  const void *unknown10;                    // Inferred role: resource key; original member name unknown.
+  s32 unknown18;                            // Inferred role: ref count; original member name unknown.
+  grlib::CGLibTextureBuffer *m_texObj;      // Inferred role: textures; named after the game accessor ml::DrResMdoTexList::getTexObj.
+  grlib::CGLibVtlMemPool m_cGLibVtlMemPool; // Inferred role: mem pool; original member name unknown.
+  DrCalcStmListObj *m_drCalcStmListObj;     // Inferred role: stm list; original member name unknown.
   void *m_buffer;
   s32 unknown68; // Inferred role: tex max; original member name unknown.
   u32 unknown6c; // Inferred role: flags; original member name unknown.
@@ -66,8 +66,8 @@ public:
   u8 _98[0xa0 - 0x98];
 };
 
-static_assert(offsetof(DrResMdoTexList, unknown28) == 0x28, "");
-static_assert(offsetof(DrResMdoTexList, unknown58) == 0x58, "");
+static_assert(offsetof(DrResMdoTexList, m_cGLibVtlMemPool) == 0x28, "");
+static_assert(offsetof(DrResMdoTexList, m_drCalcStmListObj) == 0x58, "");
 static_assert(offsetof(DrResMdoTexList, unknown68) == 0x68, "");
 static_assert(offsetof(DrResMdoTexList, unknown78) == 0x78, "");
 static_assert(sizeof(DrResMdoTexList) == 0xa0, "");
@@ -80,10 +80,10 @@ public:
   void release();
   void createTex();
 
-  DrResMdoTexSimple *unknown00;        // Inferred role: prev; original member name unknown.
-  DrResMdoTexSimple *unknown08;        // Inferred role: next; original member name unknown.
-  grlib::CGLibTextureBuffer unknown10; // Inferred role: texture; original member name unknown.
-  const void *unknown80;               // Inferred role: tex data; original member name unknown.
+  DrResMdoTexSimple *unknown00;                   // Inferred role: prev; original member name unknown.
+  DrResMdoTexSimple *unknown08;                   // Inferred role: next; original member name unknown.
+  grlib::CGLibTextureBuffer m_cGLibTextureBuffer; // Inferred role: texture; original member name unknown.
+  const void *unknown80;                          // Inferred role: tex data; original member name unknown.
   int m_size;
   u32 unknown8c; // Inferred role: flags; original member name unknown.
 };
