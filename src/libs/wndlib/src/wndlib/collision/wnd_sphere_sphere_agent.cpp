@@ -22,7 +22,7 @@ bool SphereSphereAgent::processCollision(const WindObject &wind0, const WindObje
   const SphereShape *pShape1 = wind1.m_pShape != nullptr && wind1.m_pShape->unknown0c == SHAPE_TYPE_UNKNOWN_0 ? static_cast<const SphereShape *>(wind1.m_pShape) : nullptr;
   MM_ASSERT(pShape1);
   if (distance < pShape0->unknown10 + pShape1->unknown10 + radius) {
-    cache->unknown00 = &wind1;
+    cache->m_windObject = &wind1;
     cache->unknown08 = distance;
     if (!direction.unknown003()) {
       direction.unknown001();

@@ -16,7 +16,7 @@
 
 namespace wnd {
 
-Dispatcher::Dispatcher(const CollisionInfo &info) : unknown30(info) {
+Dispatcher::Dispatcher(const CollisionInfo &info) : m_collisionInfo(info) {
   unknown10[0][0] = nullptr;
   unknown10[0][1] = nullptr;
   unknown10[1][0] = nullptr;
@@ -48,7 +48,7 @@ void Dispatcher::dispatchAll(mm::mtl::IntrusiveList<WindProbe> &probes, const Up
       MM_ASSERT(pShape);
       bool (*agent)(const WindObject &, const WindObject &, f32, HitCache *) = unknown10[pProbeShape->unknown0c][pShape->unknown0c];
       if (agent != nullptr) {
-        count += agent(*probe, *pWind, unknown30.unknown00, &hits[count]);
+        count += agent(*probe, *pWind, m_collisionInfo.unknown00, &hits[count]);
       }
     }
     probe->unknown190.clear();
@@ -56,11 +56,11 @@ void Dispatcher::dispatchAll(mm::mtl::IntrusiveList<WindProbe> &probes, const Up
     if (count != 0) {
       f32 nearestDistance = FLT_MAX;
       for (u32 i = 0; i < count; i++) {
-        const WindObject *wind = hits[i].unknown00;
+        const WindObject *wind = hits[i].m_windObject;
         if (wind->unknown20 == OBJECT_TYPE_UNKNOWN_0) {
           if (probe->unknown190.size() != probe->unknown190.capacity()) {
             LocalWindHitCache local;
-            local.unknown00 = static_cast<const LocalWind *>(wind);
+            local.m_localWind = static_cast<const LocalWind *>(wind);
             // Stores wind, vector, distance at 0x7100988508-0x710098853c; first differs from declaration order at
             // 0x710098851c. Aggregate initialization in declaration order would put distance before vector.
             local.unknown10 = hits[i].unknown10;

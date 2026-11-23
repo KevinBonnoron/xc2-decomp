@@ -19,9 +19,9 @@ class OverlappingCache;
 
 // Hit of a wind on a probe, filled by the collision agents.
 struct HitCache {
-  const WindObject *unknown00; // Inferred role: wind; original member name unknown.
-  f32 unknown08;               // Inferred role: distance; original member name unknown.
-  mm::Vec3 unknown10;          // Inferred role: wind; original member name unknown.
+  const WindObject *m_windObject; // Inferred role: wind; original member name unknown.
+  f32 unknown08;                  // Inferred role: distance; original member name unknown.
+  mm::Vec3 unknown10;             // Inferred role: wind; original member name unknown.
 };
 
 static_assert(offsetof(HitCache, unknown08) == 0x08, "");
@@ -69,9 +69,9 @@ static_assert(sizeof(AreaWind) == 0x280, "");
 // Vector<LocalWindHitCache>::push_back (0x71009885c4), whose copy moves the first 12 bytes raw and the Vec3 member by
 // member; WindProbe keeps the vector at 0x190.
 struct LocalWindHitCache {
-  const LocalWind *unknown00; // Inferred role: wind; dispatchAll stores only ObjectType 0 (LocalWind) hits; original member name unknown.
-  f32 unknown08;              // Inferred role: distance; original member name unknown.
-  mm::Vec3 unknown10;         // Inferred role: hit vector; original member name unknown.
+  const LocalWind *m_localWind; // Inferred role: wind; dispatchAll stores only ObjectType 0 (LocalWind) hits; original member name unknown.
+  f32 unknown08;                // Inferred role: distance; original member name unknown.
+  mm::Vec3 unknown10;           // Inferred role: hit vector; original member name unknown.
 };
 
 static_assert(offsetof(LocalWindHitCache, unknown08) == 0x08, "");
