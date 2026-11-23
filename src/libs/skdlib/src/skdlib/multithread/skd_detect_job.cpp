@@ -93,35 +93,6 @@ void addDetectSphereJob(const ShpereCollObj *object, const ResNodeCollision *nod
   queue->unknown001(job);
 }
 
-// Inferred role: shared body of the three detect functions, which are identical
-// apart from the shape container; original name unknown.
-template <typename ShapeArray> static void unknown004(const ResNodeCollision &nodeCollision, const ShapeArray &shapes, u32 mask, NodeArray *nodes) {
-  for (const auto &shape : shapes) {
-    if ((nodeCollision.unknown0c & (1u << shape.unknown00->unknown18)) == 0) {
-      continue;
-    }
-    Node &node0 = nodes->unknown10[nodeCollision.unknown00];
-    Node &node1 = nodes->unknown10[nodeCollision.unknown02];
-    mm::Vec3 position = node0.unknown50 * (1.0f - nodeCollision.unknown04) + node1.unknown50 * nodeCollision.unknown04;
-    mm::Vec3 normal;
-    if (!shape.detect(nodeCollision.unknown08, position, &normal)) {
-      continue;
-    }
-    if ((mask & 1) == 0) {
-      node0.unknown50 += normal * (1.0f - nodeCollision.unknown04);
-    }
-    if ((mask & 2) == 0) {
-      node1.unknown50 += normal * nodeCollision.unknown04;
-    }
-  }
-}
-
-void detectCollisionSpheres(const ResNodeCollision &nodeCollision, const CollionArray &collisions, u32 mask, NodeArray *nodes) { unknown004(nodeCollision, collisions.unknown08, mask, nodes); }
-
-void detectCollisionCapsules(const ResNodeCollision &nodeCollision, const CollionArray &collisions, u32 mask, NodeArray *nodes) { unknown004(nodeCollision, collisions.unknown30, mask, nodes); }
-
-void detectCollisionPlanes(const ResNodeCollision &nodeCollision, const CollionArray &collisions, u32 mask, NodeArray *nodes) { unknown004(nodeCollision, collisions.unknown58, mask, nodes); }
-
 void executeApplyDetectJob(anm::Job &job) {
   ApplyDetectJob &applyJob = static_cast<ApplyDetectJob &>(job);
   mm::Vec3 offset = mm::Vec3::zero;
