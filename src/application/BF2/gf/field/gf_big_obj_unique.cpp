@@ -10,7 +10,7 @@ namespace gf {
 
 constexpr f32 unknown039 = 120.0f; // Inferred role: unique motion interval; original name unknown.
 
-GfBigObjUnique::GfBigObjUnique(const CreateInfo *info) : unknown00(unknown020), unknown08(0.0f), unknown0c(0.0f) {
+GfBigObjUnique::GfBigObjUnique(const CreateInfo *info) : m_GF_OBJ_HANDLE(unknown020), unknown08(0.0f), unknown0c(0.0f) {
   if (info != nullptr) {
     create(*info);
   }
@@ -18,16 +18,16 @@ GfBigObjUnique::GfBigObjUnique(const CreateInfo *info) : unknown00(unknown020), 
 
 void GfBigObjUnique::create(const CreateInfo &info) {
   dispose();
-  unknown00 = info.unknown00;
+  m_GF_OBJ_HANDLE = info.m_GF_OBJ_HANDLE;
   unknown08 = 0.0f;
   unknown0c = 0.0f;
 }
 
-void GfBigObjUnique::dispose() { unknown00 = unknown020; }
+void GfBigObjUnique::dispose() { m_GF_OBJ_HANDLE = unknown020; }
 
 void GfBigObjUnique::update(f32 deltaTime) {
-  if (unknown00 != unknown020) {
-    GfObjAcc acc(unknown00);
+  if (m_GF_OBJ_HANDLE != unknown020) {
+    GfObjAcc acc(m_GF_OBJ_HANDLE);
     GfObj *obj = acc.getObj();
     if (obj != nullptr) {
       GfComAsm *comAsm = obj->getComponent<GfComAsm>();

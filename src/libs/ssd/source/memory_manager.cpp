@@ -13,17 +13,17 @@ namespace ssd {
 MemoryManager MemoryManager::memoryManager_;
 
 void MemoryManager::FreeBlock(Allocator::Block *block) {
-  unknown08.Lock();
+  m_mutex.Lock();
   BlockNode *node = static_cast<BlockNode *>(block);
   unknown38.unknown001(node);
   node->unknown08 = nullptr;
   node->unknown10 = nullptr;
-  node->unknown00 = nullptr;
+  node->m_allocator = nullptr;
   unknown60.PushBack(node);
-  unknown08.Unlock();
+  m_mutex.Unlock();
 }
 
-MemoryManager::MemoryManager() : unknown30(false), unknown88(nullptr), unknown90(0) {}
+MemoryManager::MemoryManager() : unknown30(false), m_blockNode(nullptr), unknown90(0) {}
 
 void MemoryManager::Quit() {
   if (memoryManager_.unknown30) {
@@ -39,46 +39,46 @@ void MemoryManager::Quit() {
       memoryManager_.unknown60.unknown001(it);
       it = next;
     }
-    if (memoryManager_.unknown88 != nullptr) {
-      delete[] memoryManager_.unknown88;
+    if (memoryManager_.m_blockNode != nullptr) {
+      delete[] memoryManager_.m_blockNode;
     }
-    memoryManager_.unknown88 = nullptr;
+    memoryManager_.m_blockNode = nullptr;
     memoryManager_.unknown90 = 0;
-    if (memoryManager_.unknown94 != 0 || memoryManager_.unknown98 != 0 || memoryManager_.unknown9c != 0) {
-      SSD_ASSERT(memoryManager_.unknown94 == 0,
+    if (memoryManager_.m_instanceAllocCount != 0 || memoryManager_.m_bufferAllocCount != 0 || memoryManager_.m_streamAllocCount != 0) {
+      SSD_ASSERT(memoryManager_.m_instanceAllocCount == 0,
                  u"Assert : \"%s\", %s:%d, %s",
                  u"memoryManager_.numInstance_ == 0",
                  u"D:/ssd/ssd51/ssd/sources/memory/memory_manager.cpp",
                  0x7d,
                  u"インスタンスが残っている可能性があります。");
-      SSD_ASSERT(memoryManager_.unknown98 == 0,
+      SSD_ASSERT(memoryManager_.m_bufferAllocCount == 0,
                  u"Assert : \"%s\", %s:%d, %s",
                  u"memoryManager_.numBuffer_ == 0",
                  u"D:/ssd/ssd51/ssd/sources/memory/memory_manager.cpp",
                  0x7e,
                  u"汎用バッファが残っている可能性があります。");
-      SSD_ASSERT(memoryManager_.unknown9c == 0,
+      SSD_ASSERT(memoryManager_.m_streamAllocCount == 0,
                  u"Assert : \"%s\", %s:%d, %s",
                  u"memoryManager_.numStream_ == 0",
                  u"D:/ssd/ssd51/ssd/sources/memory/memory_manager.cpp",
                  0x7f,
                  u"ストリームバッファが残っている可能性があります。");
     }
-    memoryManager_.unknown94 = 0;
-    memoryManager_.unknown98 = 0;
-    memoryManager_.unknown9c = 0;
-    memoryManager_.unknown08.unknown002();
+    memoryManager_.m_instanceAllocCount = 0;
+    memoryManager_.m_bufferAllocCount = 0;
+    memoryManager_.m_streamAllocCount = 0;
+    memoryManager_.m_mutex.unknown002();
   }
 }
 
 Allocator::Block *MemoryManager::AcquireBlock(Allocator *allocator, size_t size, size_t count, size_t alignment) {
-  if (memoryManager_.unknown88 == nullptr) {
+  if (memoryManager_.m_blockNode == nullptr) {
     return nullptr;
   }
-  unknown08.Lock();
+  m_mutex.Lock();
   unknowna0 = unknown60.count == 0;
   if (unknowna0) {
-    unknown08.Unlock();
+    m_mutex.Unlock();
     log_message(u"管理領域が枯渇しました。", 0);
     abort();
     return nullptr;
@@ -86,8 +86,8 @@ Allocator::Block *MemoryManager::AcquireBlock(Allocator *allocator, size_t size,
   BlockNode *node = unknown60.unknown002();
   unknown60.unknown001(node);
   unknown38.PushBack(node);
-  unknown08.Unlock();
-  node->unknown00 = allocator;
+  m_mutex.Unlock();
+  node->m_allocator = allocator;
   u32 total = static_cast<u32>(count) * static_cast<u32>(size);
   u32 align = static_cast<u32>(alignment);
   node->unknown18 = total;
@@ -107,7 +107,7 @@ Allocator::Block *MemoryManager::AllocInstance(Allocator *allocator, size_t size
       return nullptr;
     }
     block->unknown08 = reinterpret_cast<void *>((alignment + reinterpret_cast<size_t>(block->unknown10) - 1) & -alignment);
-    unknown94++;
+    m_instanceAllocCount++;
   }
   return block;
 }
@@ -122,7 +122,7 @@ Allocator::Block *MemoryManager::AllocBuffer(Allocator *allocator, size_t size, 
       return nullptr;
     }
     block->unknown08 = reinterpret_cast<void *>((alignment + reinterpret_cast<size_t>(block->unknown10) - 1) & -alignment);
-    unknown98++;
+    m_bufferAllocCount++;
   }
   return block;
 }
@@ -137,13 +137,13 @@ Allocator::Block *MemoryManager::AllocStream(Allocator *allocator, size_t size, 
       return nullptr;
     }
     block->unknown08 = reinterpret_cast<void *>((alignment + reinterpret_cast<size_t>(block->unknown10) - 1) & -alignment);
-    unknown9c++;
+    m_streamAllocCount++;
   }
   return block;
 }
 
 Allocator::Block *MemoryManager::GetAllocatorBlock(void *address) {
-  unknown08.Lock();
+  m_mutex.Lock();
   Allocator::Block *found = nullptr;
   if (address != nullptr) {
     for (BlockNode *it = unknown38.unknown002(); it != unknown38.unknown003(); it = List<BlockNode>::unknown004(it)) {
@@ -153,7 +153,7 @@ Allocator::Block *MemoryManager::GetAllocatorBlock(void *address) {
       }
     }
   }
-  unknown08.Unlock();
+  m_mutex.Unlock();
   SSD_ASSERT(found != nullptr, u"Assert : \"%s\", %s:%d, %s", u"freeBlock != nullptr", u"D:/ssd/ssd51/ssd/sources/memory/memory_manager.cpp", 0x143, u"検索したメモリアドレスは管理外でした。");
   return found;
 }
@@ -161,19 +161,19 @@ Allocator::Block *MemoryManager::GetAllocatorBlock(void *address) {
 void MemoryManager::FreeInstance(Allocator *allocator, Allocator::Block *block) {
   allocator->FreeInstance(block->unknown10);
   FreeBlock(block);
-  unknown94--;
+  m_instanceAllocCount--;
 }
 
 void MemoryManager::FreeBuffer(Allocator *allocator, Allocator::Block *block) {
   allocator->FreeBuffer(block->unknown10);
   FreeBlock(block);
-  unknown98--;
+  m_bufferAllocCount--;
 }
 
 void MemoryManager::FreeStream(Allocator *allocator, Allocator::Block *block) {
   allocator->FreeStream(block->unknown10);
   FreeBlock(block);
-  unknown9c--;
+  m_streamAllocCount--;
 }
 
 Allocator::Block *Allocator::NewInstanceImpl(size_t size, size_t count, size_t alignment) { return MemoryManager::memoryManager_.AllocInstance(this, size, count, alignment); }

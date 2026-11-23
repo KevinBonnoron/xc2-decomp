@@ -14,7 +14,7 @@ struct AchievQuest;
 struct GF_OBJ_HANDLE;
 struct QuestTaskParam;
 
-// Index of GfQuestReward::unknown00.
+// Index of GfQuestReward::m_param.
 enum QUEST_REWARD {
   QUEST_REWARD_UNKNOWN_0 = 0,   // Inferred role: gold.
   QUEST_REWARD_UNKNOWN_1 = 1,   // Role unknown.
@@ -49,8 +49,8 @@ struct GfQuestReward {
     };
   };
 
-  Param unknown00[12]; // Inferred role: params; original member name unknown.
-  u16 unknown360;      // Inferred role: blade; original member name unknown.
+  Param m_param[12]; // Inferred role: params; original member name unknown.
+  u16 unknown360;    // Inferred role: blade; original member name unknown.
   u8 _362[0x364 - 0x362];
 };
 
@@ -69,7 +69,7 @@ static_assert(offsetof(GfQuestScinario, unknown08) == 0x08, "");
 static_assert(sizeof(GfQuestScinario) == 0x10, "");
 
 struct GfQuestTaskLogResult {
-  GfQuestTaskLogResult() : unknown00(0), unknown08(nullptr), unknown10(0), unknown14(0), unknown18(0), unknown1c(0), unknown20(0), unknown24(false), unknown26() {}
+  GfQuestTaskLogResult() : unknown00(0), unknown08(nullptr), unknown10(0), unknown14(0), unknown18(0), unknown1c(0), unknown20(0), unknown24(false), m_questID() {}
 
   u32 unknown00; // Inferred role: task log text id; original member name unknown.
   u8 _04[0x08 - 0x04];
@@ -80,7 +80,7 @@ struct GfQuestTaskLogResult {
   u32 unknown1c;     // Inferred role: item; original member name unknown.
   u32 unknown20;     // Inferred role: item category; original member name unknown.
   bool unknown24;    // Inferred role: task completed or npc target; original member name unknown.
-  QuestID unknown26; // Inferred role: quest of the task; original member name unknown.
+  QuestID m_questID; // Inferred role: quest of the task; original member name unknown.
 };
 
 static_assert(offsetof(GfQuestTaskLogResult, unknown08) == 0x08, "");
@@ -90,7 +90,7 @@ static_assert(offsetof(GfQuestTaskLogResult, unknown18) == 0x18, "");
 static_assert(offsetof(GfQuestTaskLogResult, unknown1c) == 0x1c, "");
 static_assert(offsetof(GfQuestTaskLogResult, unknown20) == 0x20, "");
 static_assert(offsetof(GfQuestTaskLogResult, unknown24) == 0x24, "");
-static_assert(offsetof(GfQuestTaskLogResult, unknown26) == 0x26, "");
+static_assert(offsetof(GfQuestTaskLogResult, m_questID) == 0x26, "");
 static_assert(sizeof(GfQuestTaskLogResult) == 0x30, "");
 
 class GfQuestUtil {

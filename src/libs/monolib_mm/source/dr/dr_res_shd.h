@@ -14,11 +14,11 @@ public:
   void setShaderParam();
   void setupShader(u32 mode);
 
-  DrShdDataObj *unknown00; // Inferred role: data object; original member name unknown.
-  s32 unknown08[8];        // Inferred role: locations; original member name unknown.
-  u16 unknown28;           // Inferred role: flags; original member name unknown.
-  u16 unknown2a;           // Inferred role: type; original member name unknown.
-  u32 unknown2c[2];        // Inferred role: decl ofs; original member name unknown.
+  DrShdDataObj *m_drShdDataObj; // Inferred role: data object; original member name unknown.
+  s32 unknown08[8];             // Inferred role: locations; original member name unknown.
+  u16 unknown28;                // Inferred role: flags; original member name unknown.
+  u16 unknown2a;                // Inferred role: type; original member name unknown.
+  u32 unknown2c[2];             // Inferred role: decl ofs; original member name unknown.
 };
 
 static_assert(offsetof(DrResShdMpf, unknown28) == 0x28, "");
@@ -54,11 +54,11 @@ public:
 
   static void (DrResShdPrePass::*s_callShdSet[])();
 
-  DrShdDataObj *unknown00; // Inferred role: data object; original member name unknown.
-  s32 unknown08[11];       // Inferred role: locations; original member name unknown.
-  u32 unknown34;           // Inferred role: pass type ofs; original member name unknown.
-  u16 unknown38;           // Inferred role: flags; original member name unknown.
-  u16 unknown3a;           // Inferred role: type; original member name unknown.
+  DrShdDataObj *m_drShdDataObj; // Inferred role: data object; original member name unknown.
+  s32 unknown08[11];            // Inferred role: locations; original member name unknown.
+  u32 unknown34;                // Inferred role: pass type ofs; original member name unknown.
+  u16 unknown38;                // Inferred role: flags; original member name unknown.
+  u16 unknown3a;                // Inferred role: type; original member name unknown.
 };
 
 static_assert(offsetof(DrResShdPrePass, unknown34) == 0x34, "");
@@ -80,12 +80,12 @@ public:
 
   static void (DrResShdShw::*s_callShwSet[])();
 
-  DrShdDataObj *unknown00; // Inferred role: data object; original member name unknown.
-  s32 unknown08[7];        // Inferred role: locations; original member name unknown.
-  u16 unknown24;           // Inferred role: tex type ofs; original member name unknown.
-  u16 unknown26;           // Inferred role: spt type ofs; original member name unknown.
-  u16 unknown28;           // Inferred role: flags; original member name unknown.
-  u16 unknown2a;           // Inferred role: type; original member name unknown.
+  DrShdDataObj *m_drShdDataObj; // Inferred role: data object; original member name unknown.
+  s32 unknown08[7];             // Inferred role: locations; original member name unknown.
+  u16 unknown24;                // Inferred role: tex type ofs; original member name unknown.
+  u16 unknown26;                // Inferred role: spt type ofs; original member name unknown.
+  u16 unknown28;                // Inferred role: flags; original member name unknown.
+  u16 unknown2a;                // Inferred role: type; original member name unknown.
 };
 
 static_assert(offsetof(DrResShdShw, unknown24) == 0x24, "");
@@ -105,10 +105,10 @@ public:
 
   static void (DrResShdStreamOut::*s_callStmOuSet[])();
 
-  DrShdDataObj *unknown00; // Inferred role: data object; original member name unknown.
-  s32 unknown08[3];        // Inferred role: locations; original member name unknown.
-  u16 unknown14;           // Inferred role: type; original member name unknown.
-  u16 unknown16;           // Inferred role: wet num ofs; original member name unknown.
+  DrShdDataObj *m_drShdDataObj; // Inferred role: data object; original member name unknown.
+  s32 unknown08[3];             // Inferred role: locations; original member name unknown.
+  u16 unknown14;                // Inferred role: type; original member name unknown.
+  u16 unknown16;                // Inferred role: wet num ofs; original member name unknown.
 };
 
 static_assert(offsetof(DrResShdStreamOut, unknown14) == 0x14, "");
@@ -126,10 +126,10 @@ public:
 
   static void (DrResShdObjMot::*s_callMotObjSet[])();
 
-  DrShdDataObj *unknown00; // Inferred role: data object; original member name unknown.
-  s32 unknown08[5];        // Inferred role: locations; original member name unknown.
-  u16 unknown1c;           // Inferred role: flags; original member name unknown.
-  u16 unknown1e;           // Inferred role: type; original member name unknown.
+  DrShdDataObj *m_drShdDataObj; // Inferred role: data object; original member name unknown.
+  s32 unknown08[5];             // Inferred role: locations; original member name unknown.
+  u16 unknown1c;                // Inferred role: flags; original member name unknown.
+  u16 unknown1e;                // Inferred role: type; original member name unknown.
 };
 
 static_assert(offsetof(DrResShdObjMot, unknown1c) == 0x1c, "");

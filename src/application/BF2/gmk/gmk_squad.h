@@ -48,7 +48,7 @@ public:
   void debugUpdateMmf() override;
   virtual const IGmkList *getBindedSquadMemberList() const;
 
-  const Data *getData() const { return static_cast<const Data *>(unknown20.unknown08); }
+  const Data *getData() const { return static_cast<const Data *>(m_createInfo.unknown08); }
 
   void *unknown48; // Inferred role: cleared by the constructor; original member name unknown.
 };
@@ -108,10 +108,10 @@ public:
   void debugDraw() const;
 
   // Inferred helper: the gimmick of the accessor as the squad leader it was created for; original name unknown.
-  const GmkSquadLeader *unknown003() const { return static_cast<const GmkSquadLeader *>(m_bindedGmkSquadLeader.unknown38); }
+  const GmkSquadLeader *unknown003() const { return static_cast<const GmkSquadLeader *>(m_bindedGmkSquadLeader.m_aGmkBase); }
 
-  CreateInfo unknown20; // Inferred role: create info; original member name unknown.
-  f32 unknown2c;        // Inferred role: member distance scale; original member name unknown.
+  CreateInfo m_createInfo; // Inferred role: create info; original member name unknown.
+  f32 unknown2c;           // Inferred role: member distance scale; original member name unknown.
   // Named from getBindedGmkSquadLeader, which returns its gimmick. Layout evidence: the constructor (0x7100614d08) builds a GmkAcc
   // here, create calls GmkAcc::create on it and dispose inlines GmkAcc::dispose (GmkAccManager::removeGmkAcc at 0x710061518c).
   GmkAcc m_bindedGmkSquadLeader;
@@ -125,7 +125,7 @@ public:
 };
 
 static_assert(sizeof(GmkSquad::CreateInfo) == 0xc, "");
-static_assert(offsetof(GmkSquad, unknown20) == 0x20, "");
+static_assert(offsetof(GmkSquad, m_createInfo) == 0x20, "");
 static_assert(offsetof(GmkSquad, unknown2c) == 0x2c, "");
 static_assert(offsetof(GmkSquad, m_bindedGmkSquadLeader) == 0x30, "");
 static_assert(offsetof(GmkSquad, unknown70) == 0x70, "");
@@ -143,12 +143,12 @@ static_assert(sizeof(GmkSquad) == 0x118, "");
 class GmkSquadNavi : public mm::mtl::IntrusiveListNode<GmkSquadNavi> {
 public:
   struct CreateInfo {
-    CreateInfo() : unknown00(nullptr), unknown08(gf::unknown020) {
+    CreateInfo() : m_gmkSquad(nullptr), unknown08(gf::unknown020) {
       unknown10 = 0.1f;
       unknown14 = 1.0f;
     }
 
-    GmkSquad *unknown00;          // Inferred role: squad; original member name unknown.
+    GmkSquad *m_gmkSquad;         // Inferred role: squad; original member name unknown.
     gf::GF_OBJ_HANDLE *unknown08; // Inferred role: object handle; original member name unknown.
     f32 unknown10;                // Inferred role: arrival radius; original member name unknown.
     f32 unknown14;                // Inferred role: arrival height; original member name unknown.
@@ -175,8 +175,8 @@ public:
 
   // Inferred helper: whether the navi is bound to a member of its squad; original name unknown.
   bool unknown001() const {
-    if (unknown10.unknown00 != nullptr && unknown10.unknown08 != gf::unknown020 && unknown28 >= 0) {
-      if (static_cast<u32>(unknown28) < unknown10.unknown00->unknown70) {
+    if (m_createInfo.m_gmkSquad != nullptr && m_createInfo.unknown08 != gf::unknown020 && unknown28 >= 0) {
+      if (static_cast<u32>(unknown28) < m_createInfo.m_gmkSquad->unknown70) {
         return true;
       }
     }
@@ -186,14 +186,14 @@ public:
 
   // Inferred helper: unbinds the navi from its squad; original name unknown.
   void unknown002() {
-    unknown10.unknown00 = nullptr;
-    unknown10.unknown08 = gf::unknown020;
-    unknown10.unknown10 = 0.1f;
-    unknown10.unknown14 = 1.0f;
+    m_createInfo.m_gmkSquad = nullptr;
+    m_createInfo.unknown08 = gf::unknown020;
+    m_createInfo.unknown10 = 0.1f;
+    m_createInfo.unknown14 = 1.0f;
   }
 
-  CreateInfo unknown10; // Inferred role: create info; original member name unknown.
-  int unknown28;        // Inferred role: member index; original member name unknown.
+  CreateInfo m_createInfo; // Inferred role: create info; original member name unknown.
+  int unknown28;           // Inferred role: member index; original member name unknown.
   u8 _2c[0x30 - 0x2c];
   mm::Vec3 unknown30; // Inferred role: position offset; original member name unknown.
 };
@@ -202,7 +202,7 @@ static_assert(offsetof(GmkSquadNavi::CreateInfo, unknown08) == 0x08, "");
 static_assert(offsetof(GmkSquadNavi::CreateInfo, unknown10) == 0x10, "");
 static_assert(offsetof(GmkSquadNavi::CreateInfo, unknown14) == 0x14, "");
 static_assert(sizeof(GmkSquadNavi::CreateInfo) == 0x18, "");
-static_assert(offsetof(GmkSquadNavi, unknown10) == 0x10, "");
+static_assert(offsetof(GmkSquadNavi, m_createInfo) == 0x10, "");
 static_assert(offsetof(GmkSquadNavi, unknown28) == 0x28, "");
 static_assert(offsetof(GmkSquadNavi, unknown30) == 0x30, "");
 static_assert(sizeof(GmkSquadNavi) == 0x40, "");

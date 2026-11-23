@@ -19,9 +19,9 @@ void GfComBehaviorUI::setup(const SetupInfo &info) {
     unknown014(comAsm);
   }
 
-  unknown10.beginSetup(*this, 4);
-  unknown10.unknown001<EyeBlinkPlugin>(1, info.unknown00);
-  unknown10.endSetup();
+  m_pluginManager.beginSetup(*this, 4);
+  m_pluginManager.unknown001<EyeBlinkPlugin>(1, info.unknown00);
+  m_pluginManager.endSetup();
 
   EyeBlinkPlugin *plugin = unknown001<EyeBlinkPlugin>(1);
   if (plugin != nullptr) {
@@ -29,7 +29,7 @@ void GfComBehaviorUI::setup(const SetupInfo &info) {
   }
 }
 
-void GfComBehaviorUI::cleanup() { unknown10.cleanup(); }
+void GfComBehaviorUI::cleanup() { m_pluginManager.cleanup(); }
 
 void GfComBehaviorUI::update(const fw::UpdateInfo &info) {
   GfComAsm *comAsm = unknown08->getComponent<GfComAsm>();
@@ -45,7 +45,7 @@ void GfComBehaviorUI::update(const fw::UpdateInfo &info) {
     plugin->setActivate(isActive);
   }
 
-  unknown10.update(info);
+  m_pluginManager.update(info);
 }
 
 const mm::mtl::RTTI *GfComBehaviorUI::getRTTI() const { return &m_rtti; }

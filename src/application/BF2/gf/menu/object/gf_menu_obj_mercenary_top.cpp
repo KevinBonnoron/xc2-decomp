@@ -292,7 +292,7 @@ void GfMenuObjMercenaryTop::initialize() {
     }
     unknown80->unknown162(unknown28->getContents(unknown28->getIndex(false)).unknown00);
     unknown88->unknown162(unknown30->getContents(unknown30->getIndex(false)).unknown00);
-    unknown90->unknown0c = GfDataMercenaries::getMissionQuestID(mission);
+    unknown90->m_questID = GfDataMercenaries::getMissionQuestID(mission);
     GfMenuReference::setReferenceZoneID(unknown28->getContents(unknown28->getIndex(false)).unknown00);
     GfMenuReference::setReferenceMissionID(unknown30->getContents(unknown30->getIndex(false)).unknown00);
     sendOpenEvent(main.searchChild("LAY_mis_sel"), 0);
@@ -346,7 +346,7 @@ bool GfMenuObjMercenaryTop::seqExit() {
 void GfMenuObjMercenaryTop::updateBladeList() {
   GfMenuBladeList::TeamSetup setup;
   setup.unknown14 = 3;
-  setup.unknown00.unknown08 = 3;
+  setup.m_setupParam.unknown08 = 3;
   setup.unknown1c = false;
   unknown38->clear();
   unknown38->setupFromTeam(setup);
@@ -573,7 +573,7 @@ void GfMenuObjMercenaryTop::MainListener::reciveEvent(const ui::EventData &event
   }
   case 2:
   case GfMenuTypes::unknown003_34:
-    if (!unknown20->unknown340) {
+    if (!m_menuObjMercenaryTop->unknown340) {
       acc.setTerm();
     } else {
       GfMenuObjUtil::PresetCtrlParam param;
@@ -591,7 +591,7 @@ void GfMenuObjMercenaryTop::MainListener::reciveEvent(const ui::EventData &event
     param.unknown04 = 1;
     param.unknown10 = 2;
     GfMenuObjUtil::startPresetCtrl(acc.unknown10, param);
-    unknown20->unknown340 = false;
+    m_menuObjMercenaryTop->unknown340 = false;
     break;
   }
   default:

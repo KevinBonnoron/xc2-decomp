@@ -21,7 +21,7 @@ constexpr f32 unknown041 = 0.6f; // Inferred role: battle start end ride wait ti
 
 } // namespace
 
-GfSequentialPlay::GfSequentialPlay(const GfSetupParam &) : unknown1228(false), unknown20f0(TYPE_UNKNOWN_0), unknown20f4(true) {}
+GfSequentialPlay::GfSequentialPlay(const GfSetupParam &) : m_cancel(false), unknown20f0(TYPE_UNKNOWN_0), unknown20f4(true) {}
 
 void GfSequentialPlay::initialize(const GfSetupParam &) { unknown20f4 = true; }
 
@@ -108,7 +108,7 @@ bool GfSequentialPlay::play() {
   return true;
 }
 
-bool GfSequentialPlay::isCancel() { return get()->unknown1228; }
+bool GfSequentialPlay::isCancel() { return get()->m_cancel; }
 
 void GfSequentialPlay::beginCommand(TYPE type) { get()->unknown20f0 = type; }
 

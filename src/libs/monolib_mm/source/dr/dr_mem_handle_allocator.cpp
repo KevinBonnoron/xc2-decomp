@@ -4,7 +4,7 @@
 
 namespace ml {
 
-void *DrMemHandleAllocator::allocate(size_t size, size_t alignment) { return mtl::MemManager::allocate(unknown08, size, alignment, false, "no name", 0); }
+void *DrMemHandleAllocator::allocate(size_t size, size_t alignment) { return mtl::MemManager::allocate(m_ALLOC_HANDLE, size, alignment, false, "no name", 0); }
 
 void DrMemHandleAllocator::deallocate(void *pointer) {
   if (pointer != nullptr) {

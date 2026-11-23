@@ -96,7 +96,7 @@ void GfMenuObjQuestReward::RewardListener::reciveEvent(const ui::EventData &even
   case GfMenuTypes::unknown003_257: {
     OpenParam *param = reinterpret_cast<OpenParam *>(event.unknown08_u64);
     if (param != nullptr) {
-      unknown28 = GfMenuItemList::create();
+      m_menuItemList = GfMenuItemList::create();
       unknown30 = param->unknown00;
       unknown38 = param->unknown10;
       unknown40 = param->unknown0c;
@@ -116,22 +116,22 @@ void GfMenuObjQuestReward::RewardListener::reciveEvent(const ui::EventData &even
       mm::mtl::FixStr<32> name;
       for (u32 i = 0; i < 4; i++) {
         name.format("TXT_reward_item_name@%02d", i + 1);
-        GfMenuItemAdapter *adapter = GfMenuItemAdapter::createFromList(acc.searchChild(name.c_str()), 0, unknown28, i, false);
+        GfMenuItemAdapter *adapter = GfMenuItemAdapter::createFromList(acc.searchChild(name.c_str()), 0, m_menuItemList, i, false);
         if (adapter != nullptr) {
           name.format("LAY_reward_item@%02d", i + 1);
           adapter->unknown24 = acc.searchChild(name.c_str());
         }
         name.format("TXT_reward_item_num@%02d", i + 1);
-        GfMenuItemAdapter::createFromList(acc.searchChild(name.c_str()), 3, unknown28, i, false);
+        GfMenuItemAdapter::createFromList(acc.searchChild(name.c_str()), 3, m_menuItemList, i, false);
         name.format("IMG_reward_item_icon@%02d", i + 1);
-        GfMenuItemAdapter::createFromList(acc.searchChild(name.c_str()), 2, unknown28, i, false);
+        GfMenuItemAdapter::createFromList(acc.searchChild(name.c_str()), 2, m_menuItemList, i, false);
       }
       delete param;
     }
     break;
   }
   case 2:
-    mm::mtl::safeRelease(unknown28);
+    mm::mtl::safeRelease(m_menuItemList);
     acc.setTerm();
     break;
   case 3:
@@ -151,7 +151,7 @@ void GfMenuObjQuestReward::RewardListener::reciveEvent(const ui::EventData &even
       if (!parent.empty()) {
         quest = parent;
       }
-      setup.unknown00.unknown08 = 4;
+      setup.m_setupParam.unknown08 = 4;
       setup.unknown14 = GfDataQuest::getListRewardSetA(quest);
       if (GfQuestInfo::isQuestFin(quest)) {
         if (GfQuestInfo::getState(quest) == QSTATE_UNKNOWN_2) {
@@ -160,16 +160,16 @@ void GfMenuObjQuestReward::RewardListener::reciveEvent(const ui::EventData &even
           setup.unknown14 = GfDataQuest::getListRewardSetB(quest);
         }
       }
-      unknown28->clear();
-      unknown28->setupFromQuestReward(setup);
+      m_menuItemList->clear();
+      m_menuItemList->setupFromQuestReward(setup);
       break;
     }
     case 1: {
       GfMenuItemList::MissionRewardSetup setup;
       setup.unknown14 = unknown38->unknown0c;
-      setup.unknown00.unknown08 = 4;
-      unknown28->clear();
-      unknown28->setupFromMissionReward(setup);
+      setup.m_setupParam.unknown08 = 4;
+      m_menuItemList->clear();
+      m_menuItemList->setupFromMissionReward(setup);
       break;
     }
     }

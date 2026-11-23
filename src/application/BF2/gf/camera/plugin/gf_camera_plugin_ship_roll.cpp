@@ -48,7 +48,7 @@ void ShipRollPlugin::update(fw::Camera *camera) {
     return;
   }
 
-  const unknown002 *param = player->unknownb0.get<unknown002>();
+  const unknown002 *param = player->m_paramAdapter.get<unknown002>();
   if ((param->unknown65 & 1) != 0) {
     if (m_rollEnable) {
       unknown28 = param->unknown74 + unknown28;

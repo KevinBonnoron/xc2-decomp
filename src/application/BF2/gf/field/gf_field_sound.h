@@ -50,8 +50,8 @@ public:
 
   bool unknown08; // Inferred role: initialized; original member name unknown.
   u8 _09[0x10 - 0x09];
-  GfFieldBgm *unknown10;        // Inferred role: field bgm; original member name unknown.
-  GfFieldMapSe *unknown18;      // Inferred role: field map se; original member name unknown.
+  GfFieldBgm *m_fieldBgm;       // Inferred role: field bgm; original member name unknown.
+  GfFieldMapSe *m_fieldMapSe;   // Inferred role: field map se; original member name unknown.
   fw::SoundResource *unknown20; // Inferred role: common sound resource; original member name unknown.
   fw::SoundPack *m_commonPack;
   fw::SoundResource *unknown30; // Inferred role: map sound resource; original member name unknown.
@@ -63,11 +63,11 @@ public:
   GF_SE_CATEGORY_HANDLE *unknown118; // Inferred role: se category handle for events; original member name unknown.
 };
 
-static_assert(offsetof(GfFieldSound, unknown10) == 0x10, "");
+static_assert(offsetof(GfFieldSound, m_fieldBgm) == 0x10, "");
 static_assert(offsetof(GfFieldSound, unknown20) == 0x20, "");
 static_assert(offsetof(GfFieldSound, unknown30) == 0x30, "");
 static_assert(offsetof(GfFieldSound, unknown40) == 0x40, "");
-static_assert(offsetof(GfFieldSound, unknown18) == 0x18, "");
+static_assert(offsetof(GfFieldSound, m_fieldMapSe) == 0x18, "");
 static_assert(offsetof(GfFieldSound, m_commonPack) == 0x28, "");
 static_assert(offsetof(GfFieldSound, m_mapPack) == 0x38, "");
 static_assert(offsetof(GfFieldSound, unknownc4) == 0xc4, "");

@@ -21,21 +21,21 @@ bool RchaCamEff::hasAnm(const void *data) {
 
 int RchaCamEff::getValueInt(int slot, f32 frame, int defaultValue) const {
   if (unknown19a4[slot] >= 0) {
-    return unknown10[unknown19a4[slot]].getValueInt(frame);
+    return m_rchaAnm[unknown19a4[slot]].getValueInt(frame);
   }
   return defaultValue;
 }
 
 f32 RchaCamEff::getValue(int slot, f32 frame, f32 defaultValue) const {
   if (unknown19a4[slot] >= 0) {
-    return unknown10[unknown19a4[slot]].getValue(frame);
+    return m_rchaAnm[unknown19a4[slot]].getValue(frame);
   }
   return defaultValue;
 }
 
 bool RchaCamEff::isEnableColFilter(f32 frame) const {
   if (unknown19a4[CAMATR_COL_FILTER_UNKNOWN_0] >= 0) {
-    return unknown10[unknown19a4[CAMATR_COL_FILTER_UNKNOWN_0]].getValue(frame) > 0.9f;
+    return m_rchaAnm[unknown19a4[CAMATR_COL_FILTER_UNKNOWN_0]].getValue(frame) > 0.9f;
   }
   return false;
 }
@@ -43,7 +43,7 @@ bool RchaCamEff::isEnableColFilter(f32 frame) const {
 bool RchaCamEff::getColFilter(int &filter, f32 frame) const {
   int index = unknown19a4[CAMATR_COL_FILTER_UNKNOWN_0];
   if (index >= 0) {
-    filter = unknown10[index].getValueInt(frame);
+    filter = m_rchaAnm[index].getValueInt(frame);
     return true;
   }
   return false;

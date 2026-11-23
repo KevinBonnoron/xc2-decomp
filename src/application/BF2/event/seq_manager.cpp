@@ -94,7 +94,7 @@ ICmd::RESULT SeqManager::exec_fadeout::update(const Param &param) {
   if (param.getFrame() <= 0) {
     SeqManager *seq = static_cast<SeqManager *>(param.val(0).getUserdata());
     mm::mtl::Singleton<FadeManager>::getPtr()->request(FadePlanner::TYPE_UNKNOWN_2);
-    mm::mtl::Singleton<VolumeManager>::get().startSeamlessVolume(seq->unknown2710.unknown9c);
+    mm::mtl::Singleton<VolumeManager>::get().startSeamlessVolume(seq->m_seqInfo.unknown9c);
     seq->unknown178 = "exec fadeout";
   }
   bool isFading = mm::mtl::Singleton<FadeManager>::getPtr()->isFading();
@@ -111,7 +111,7 @@ ICmd::RESULT SeqManager::start_fadeout::update(const Param &param) {
   if (param.getFrame() <= 0) {
     SeqManager *seq = static_cast<SeqManager *>(param.val(0).getUserdata());
     mm::mtl::Singleton<FadeManager>::getPtr()->request(FadePlanner::TYPE_UNKNOWN_0);
-    mm::mtl::Singleton<VolumeManager>::get().startSeamlessVolume(seq->unknown2710.unknown7c);
+    mm::mtl::Singleton<VolumeManager>::get().startSeamlessVolume(seq->m_seqInfo.unknown7c);
     if (!param.val(1).getBool()) {
       mm::mtl::Singleton<BgmManager>::getPtr()->playDefaultBgm(param.val(2).getS32());
     }
@@ -192,7 +192,7 @@ ICmd::RESULT SeqManager::end_stream::update(const Param &param) {
 ICmd::RESULT SeqManager::start_loading::update(const Param &param) {
   if (param.getFrame() <= 0) {
     SeqManager *seq = static_cast<SeqManager *>(param.val(0).getUserdata());
-    mm::mtl::Singleton<UIManager>::getPtr()->setDispNowLoading(static_cast<int>(seq->unknown2710.unknown54) >= 2);
+    mm::mtl::Singleton<UIManager>::getPtr()->setDispNowLoading(static_cast<int>(seq->m_seqInfo.unknown54) >= 2);
     seq->unknown178 = "start loading";
   }
   if (!unknown08) {
@@ -296,7 +296,7 @@ ICmd::RESULT SeqManager::start_streaming0::update(const Param &param) {
     }
     static_cast<SeqManager *>(param.val(0).getUserdata())->unknown178 = "start stream0";
   }
-  if (static_cast<int>(seq->unknown2710.unknown54) >= 2) {
+  if (static_cast<int>(seq->m_seqInfo.unknown54) >= 2) {
     mm::mtl::Singleton<SeamlessManager>::getPtr()->readFirstSeamPoint(Manager::get()->getSceneName());
   }
   if (!mm::mtl::Singleton<SkipManager>::getPtr()->isSkipFast()) {
@@ -442,7 +442,7 @@ void SeqManager::play(const char *name) {
   CmdParam param;
   param.val(0).setUserdata(this);
   param.val(1).setStr(mm::mtl::Singleton<MemoryManager>::getPtr()->createTxtbuf(name));
-  unknown200.push_back(&unknown10, param);
+  unknown200.push_back(&m_play_start, param);
 }
 
 void SeqManager::login() {
@@ -481,10 +481,10 @@ void SeqManager::update() { unknown200.update(); }
 void SeqManager::nextEvent(int next) { unknown2840 = next; }
 
 bool SeqManager::isSetupSceneEnd() const {
-  if (unknown200.isExist(&unknown48)) {
+  if (unknown200.isExist(&m_start_loading)) {
     return false;
   }
-  if (unknown200.isExist(&unknown58)) {
+  if (unknown200.isExist(&m_start_other)) {
     return false;
   }
   return !mm::mtl::Singleton<MstxtManager>::getPtr()->isLoading();
@@ -508,7 +508,7 @@ void SeqManager::render() {
   fw::debug::drawSquare2D(mm::Rect<s32>(25, height - 90, 200, 25), mm::Col4(0.0f, 0.0f, 0.0f, 0.25f));
   fw::debug::drawLineSquare2D(mm::Rect<s32>(25, height - 90, 200, 25), mm::Col4(1.0f, 1.0f, 1.0f, 1.0f));
   fw::debug::drawFontColor(mm::Col4(1.0f, 1.0f, 1.0f, 1.0f));
-  fw::debug::drawFont(30, height - 85, unknown002[static_cast<int>(unknown2710.unknown54)]);
+  fw::debug::drawFont(30, height - 85, unknown002[static_cast<int>(m_seqInfo.unknown54)]);
   fw::debug::drawFont(75, height - 85, mm::mtl::Singleton<FrameManager>::getPtr()->getPageName());
 }
 
@@ -538,19 +538,19 @@ void SeqManager::OnEventProc(MSG_TYPE type) {
     setupScene();
     break;
   case MSG_TYPE_UNKNOWN_6:
-    unknown48.unknown08 = true;
+    m_start_loading.unknown08 = true;
     break;
   case MSG_TYPE_UNKNOWN_7:
     startScene();
     break;
   case MSG_TYPE_UNKNOWN_9:
-    unknowne0.unknown08 = true;
+    m_exec.unknown08 = true;
     break;
   case MSG_TYPE_UNKNOWN_11:
     end();
     break;
   case MSG_TYPE_UNKNOWN_12:
-    unknown128.unknown08 = true;
+    m_end_wait.unknown08 = true;
     break;
   case MSG_TYPE_UNKNOWN_15:
     update();

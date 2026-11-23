@@ -32,8 +32,8 @@ void DrMdlObj::setClipBoxMode(bool isEnable) {
 DrMdlObj::DrMdlObj(int viewNum) : DrMdoCtl(viewNum) {}
 
 void DrMdlObj::chageShadowObject(DrMdoSmlShadowMan *shadowMan) {
-  if (unknown58 != nullptr) {
-    shadowMan->changeViewNum(unknown58, unknown1a);
+  if (m_drMdoSmlShadowObj != nullptr) {
+    shadowMan->changeViewNum(m_drMdoSmlShadowObj, unknown1a);
   }
 }
 
@@ -51,7 +51,7 @@ bool DrMdlObj::getModelInfoHeader(int index, const MdsMdlInfoHeader **header) {
   int infoIndex = 0;
   u32 i = 0;
   do {
-    const MdsMdlTopHeader &entry = res->unknown168[i];
+    const MdsMdlTopHeader &entry = res->m_mdsMdlTopHeader[i];
     int j = 0;
     s64 offset = 0;
     while (j < entry.unknown04) {
@@ -109,11 +109,11 @@ void DrMdlObj::getMaterialHeader(int *count, const MdsMatInfoHeader **header) {
 
 void DrMdlObj::getCharMkTextureList(int *count, const MdsMatCharMkTexTbl **table) {
   *count = unknown16a;
-  *table = unknown48;
+  *table = m_mdsMatCharMkTexTbl;
 }
 
 int DrMdlObj::getTextureResMax() const {
-  DrResMdoTexList *textureList = unknown30->unknownd0;
+  DrResMdoTexList *textureList = unknown30->m_drResMdoTexList;
   if (textureList == nullptr) {
     return 0;
   }
@@ -121,9 +121,9 @@ int DrMdlObj::getTextureResMax() const {
 }
 
 int DrMdlObj::getTextureResIdx(const char *name) {
-  if (unknown30->unknownd0 != nullptr) {
-    for (int i = 0; i < unknown30->unknownd0->unknown68; i++) {
-      if (strcmp(unknown30->unknownd0->getTexName(i), name) == 0) {
+  if (unknown30->m_drResMdoTexList != nullptr) {
+    for (int i = 0; i < unknown30->m_drResMdoTexList->unknown68; i++) {
+      if (strcmp(unknown30->m_drResMdoTexList->getTexName(i), name) == 0) {
         return i;
       }
     }
@@ -132,10 +132,10 @@ int DrMdlObj::getTextureResIdx(const char *name) {
 }
 
 grlib::CGLibTextureBuffer *DrMdlObj::getTextureRes(const char *name) {
-  if (unknown30->unknownd0 != nullptr) {
-    for (int i = 0; i < unknown30->unknownd0->unknown68; i++) {
-      if (strcmp(unknown30->unknownd0->getTexName(i), name) == 0) {
-        return unknown30->unknownd0->getTexObj(i);
+  if (unknown30->m_drResMdoTexList != nullptr) {
+    for (int i = 0; i < unknown30->m_drResMdoTexList->unknown68; i++) {
+      if (strcmp(unknown30->m_drResMdoTexList->getTexName(i), name) == 0) {
+        return unknown30->m_drResMdoTexList->getTexObj(i);
       }
     }
   }
@@ -143,7 +143,7 @@ grlib::CGLibTextureBuffer *DrMdlObj::getTextureRes(const char *name) {
 }
 
 grlib::CGLibTextureBuffer *DrMdlObj::getTextureRes(int index) {
-  DrResMdoTexList *textureList = unknown30->unknownd0;
+  DrResMdoTexList *textureList = unknown30->m_drResMdoTexList;
   if (textureList == nullptr || index >= textureList->unknown68) {
     return nullptr;
   }
@@ -157,7 +157,7 @@ void DrMdlObj::getNowTextureRes(grlib::CGLibTextureBuffer **&textures, int &coun
 
 void DrMdlObj::setTextureRes(const char *name, grlib::CGLibTextureBuffer *texture) {
   for (int i = 0; i < unknown30->unknownf0; i++) {
-    if (strcmp(unknown30->unknownd0->getTexName(i), name) == 0) {
+    if (strcmp(unknown30->m_drResMdoTexList->getTexName(i), name) == 0) {
       unknown30->unknowne8[i] = texture;
       return;
     }
@@ -172,7 +172,7 @@ void DrMdlObj::setTextureRes(int index, grlib::CGLibTextureBuffer *texture) {
 
 int DrMdlObj::getMaterialResIdx(const char *name) const {
   for (int i = 0; i < unknown30->unknown30; i++) {
-    if (strcmp(unknown30->unknownc0[i].m_name, name) == 0) {
+    if (strcmp(unknown30->m_materialRes[i].m_name, name) == 0) {
       return i;
     }
   }
@@ -183,21 +183,21 @@ const char *DrMdlObj::getMaterialIdxName(int index) const {
   if (index > unknown30->unknown30) {
     return nullptr;
   }
-  return unknown30->unknownc0[index].m_name;
+  return unknown30->m_materialRes[index].m_name;
 }
 
 DrResMdoMat *DrMdlObj::getMaterialRes(const char *name) {
   for (int i = 0; i < unknown30->unknown30; i++) {
-    if (strcmp(unknown30->unknownc0[i].m_name, name) == 0) {
-      return &unknown30->unknownc0[i];
+    if (strcmp(unknown30->m_materialRes[i].m_name, name) == 0) {
+      return &unknown30->m_materialRes[i];
     }
   }
   return nullptr;
 }
 
-DrResMdoMat *DrMdlObj::getMaterialRes(int index) { return &unknown30->unknownc0[index]; }
+DrResMdoMat *DrMdlObj::getMaterialRes(int index) { return &unknown30->m_materialRes[index]; }
 
-bool DrMdlObj::getVertexInfo(int index, const MdsMdlVertexFmt **format, int *count) { return unknown30->unknownc8->getVertexInfo(index, format, count); }
+bool DrMdlObj::getVertexInfo(int index, const MdsMdlVertexFmt **format, int *count) { return unknown30->m_drResMdoVertex->getVertexInfo(index, format, count); }
 
 void DrMdlObj::setAlpha(f32 alpha) {
   if (unknown100 & unknown029_18) {
@@ -239,7 +239,7 @@ bool DrMdlObj::isMemTexStm() const { return (unknownfc & (0x2000 | 0x2)) != 0x2;
 
 bool DrMdlObj::isMemMiddleTexStm() const { return (unknownfc & (0x20 | 0x2)) != 0x2; }
 
-void DrMdlObj::setCreateDisplayList() { unknown20 &= ~0x60; }
+void DrMdlObj::setCreateDisplayList() { m_disp &= ~0x60; }
 
 void DrMdlObj::setExpressDrawMode(bool isEnable) { unknownfc = !isEnable ? unknownfc & ~unknown027_20 : unknownfc | unknown027_20; }
 
@@ -248,7 +248,7 @@ const mm::Vec3 &DrMdlObj::getAABBMax() const { return m_AABBMax; }
 const mm::Vec3 &DrMdlObj::getAABBMin() const { return m_AABBMin; }
 
 void DrMdlObj::getInitialVertexAABBMax(mm::Vec3 &max, bool isScaled) const {
-  const f32 *aabbMax = unknown30->unknown168->unknown0c;
+  const f32 *aabbMax = unknown30->m_mdsMdlTopHeader->unknown0c;
   max = mm::Vec3(aabbMax[0], aabbMax[1], aabbMax[2]);
   if (isScaled) {
     f32 scale = unknowne8;
@@ -259,7 +259,7 @@ void DrMdlObj::getInitialVertexAABBMax(mm::Vec3 &max, bool isScaled) const {
 }
 
 void DrMdlObj::getInitialVertexAABBMin(mm::Vec3 &min, bool isScaled) const {
-  const f32 *aabbMin = unknown30->unknown168->unknown18;
+  const f32 *aabbMin = unknown30->m_mdsMdlTopHeader->unknown18;
   min = mm::Vec3(aabbMin[0], aabbMin[1], aabbMin[2]);
   if (isScaled) {
     f32 scale = unknowne8;

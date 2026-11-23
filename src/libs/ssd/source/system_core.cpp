@@ -17,7 +17,7 @@
 
 namespace ssd {
 
-SystemCore::SystemCore() : unknown4a0(nullptr) {}
+SystemCore::SystemCore() : m_soundActor(nullptr) {}
 
 SystemCore::~SystemCore() {}
 
@@ -88,10 +88,10 @@ Result SystemCore::Quit() {
   if (unknown3a0.count == 0) {
     StopSound(0.0f);
     if (unknown418.count == 0) {
-      if (unknown4a0 != nullptr) {
-        unknown4a0->Quit();
-        SoundMemory::unknown001(unknown4a0);
-        unknown4a0 = nullptr;
+      if (m_soundActor != nullptr) {
+        m_soundActor->Quit();
+        SoundMemory::unknown001(m_soundActor);
+        m_soundActor = nullptr;
       }
       unknown4e8.CloseThread();
       unknown730.CloseThread();
@@ -99,7 +99,7 @@ Result SystemCore::Quit() {
       while (VoiceHandle *it = unknown3a0.unknown005()) {
         it->ForceStop();
         it->FreeVoice();
-        if (it->unknown70 != nullptr) {
+        if (it->m_streamController != nullptr) {
           it->DeleteStream();
         }
       }
@@ -126,7 +126,7 @@ Result SystemCore::Quit() {
       unknown408 = nullptr;
       unknown468.unknown001();
       QuitAudioDevice();
-      unknown2c8.Quit();
+      m_commandManager.Quit();
       FileStream::Finalize();
       unknown708.unknown002();
       return set_result(static_cast<Result>(0));
@@ -141,8 +141,8 @@ void SystemCore::StopSound(f32 fadeTime) {
   unknown708.Lock();
   const VoiceHandle *end = unknown3a0.unknown003();
   for (VoiceHandle *it = unknown3a0.unknown002(); it != end; it = List<VoiceHandle>::unknown004(it)) {
-    if (it->unknown58 != nullptr) {
-      it->unknown58->Stop(fadeTime);
+    if (it->m_soundHandle != nullptr) {
+      it->m_soundHandle->Stop(fadeTime);
     }
   }
   unknown708.Unlock();
@@ -160,8 +160,8 @@ void SystemCore::PauseSound(bool isPause, f32 fadeTime) {
   unknown708.Lock();
   const VoiceHandle *end = unknown3a0.unknown003();
   for (VoiceHandle *it = unknown3a0.unknown002(); it != end; it = List<VoiceHandle>::unknown004(it)) {
-    if (it->unknown58 != nullptr) {
-      it->unknown58->Pause(isPause, fadeTime);
+    if (it->m_soundHandle != nullptr) {
+      it->m_soundHandle->Pause(isPause, fadeTime);
     }
   }
   unknown708.Unlock();
@@ -171,8 +171,8 @@ void SystemCore::StopBank(SoundBank *bank, f32 fadeTime) {
   unknown708.Lock();
   VoiceHandle *it = unknown3a0.unknown002();
   while (it != unknown3a0.unknown003()) {
-    if (it->unknown60->unknownd0 == bank) {
-      it->unknown58->Stop(fadeTime);
+    if (it->m_soundEntry->m_soundBank == bank) {
+      it->m_soundHandle->Stop(fadeTime);
     }
     it = List<VoiceHandle>::unknown004(it);
   }
@@ -186,7 +186,7 @@ bool SystemCore::IsPlayActor(const SoundActor *actor) const {
   bool isPlay = false;
   VoiceHandle *it = unknown3a0.unknown002();
   while (it != unknown3a0.unknown003()) {
-    if (it->unknown58 != nullptr && it->unknown58->unknown38 == actor) {
+    if (it->m_soundHandle != nullptr && it->m_soundHandle->m_soundActor == actor) {
       isPlay = true;
       break;
     }
@@ -201,8 +201,8 @@ void SystemCore::StopActor(SoundActor *actor, f32 fadeTime) {
   unknown708.Lock();
   const VoiceHandle *end = unknown3a0.unknown003();
   for (VoiceHandle *it = unknown3a0.unknown002(); it != end; it = List<VoiceHandle>::unknown004(it)) {
-    SoundHandle *handle = it->unknown58;
-    if (handle != nullptr && handle->unknown38 == actor) {
+    SoundHandle *handle = it->m_soundHandle;
+    if (handle != nullptr && handle->m_soundActor == actor) {
       handle->Stop(fadeTime);
     }
   }
@@ -214,8 +214,8 @@ void SystemCore::PauseActor(SoundActor *actor, bool isPause, f32 fadeTime) {
   unknown708.Lock();
   const VoiceHandle *end = unknown3a0.unknown003();
   for (VoiceHandle *it = unknown3a0.unknown002(); it != end; it = List<VoiceHandle>::unknown004(it)) {
-    SoundHandle *handle = it->unknown58;
-    if (handle != nullptr && handle->unknown38 == actor) {
+    SoundHandle *handle = it->m_soundHandle;
+    if (handle != nullptr && handle->m_soundActor == actor) {
       handle->Pause(isPause, fadeTime);
     }
   }
@@ -228,7 +228,7 @@ int SystemCore::CountPlaySoundHandleActor(const SoundActor *actor) const {
   int count = 0;
   VoiceHandle *it = unknown3a0.unknown002();
   while (it != unknown3a0.unknown003()) {
-    if (it->unknown58 != nullptr && it->unknown58->unknown38 == actor) {
+    if (it->m_soundHandle != nullptr && it->m_soundHandle->m_soundActor == actor) {
       count++;
     }
     it = List<VoiceHandle>::unknown004(it);
@@ -244,8 +244,8 @@ SoundHandle *SystemCore::GetPlaySoundHandle(const SoundActor *actor, int index) 
   VoiceHandle *it = unknown3a0.unknown002();
   while (it != unknown3a0.unknown003()) {
     if (index == 0) {
-      handle = it->unknown58;
-      if (handle != nullptr && handle->unknown38 == actor) {
+      handle = it->m_soundHandle;
+      if (handle != nullptr && handle->m_soundActor == actor) {
         break;
       }
     }
@@ -261,8 +261,8 @@ int SystemCore::GetPlaySoundHandleFromActor(const SoundActor *actor, Array<Sound
   unknown708.Lock();
   VoiceHandle *it = unknown3a0.unknown002();
   while (it != unknown3a0.unknown003()) {
-    SoundHandle *handle = it->unknown58;
-    if (handle != nullptr && handle->unknown38 == actor) {
+    SoundHandle *handle = it->m_soundHandle;
+    if (handle != nullptr && handle->m_soundActor == actor) {
       int count = handles->unknown08;
       if (handles->unknown0c <= count) {
         handles->SetArraySize(handles->unknown0c + 16);
@@ -282,14 +282,14 @@ Result SystemCore::GetSoundActorListByCategoty(int category, Array<SoundActor *>
   unknown708.Lock();
   VoiceHandle *it = unknown3a0.unknown002();
   while (it != unknown3a0.unknown003()) {
-    SoundHandle *handle = it->unknown58;
-    if (handle != nullptr && handle->unknown38 != nullptr) {
+    SoundHandle *handle = it->m_soundHandle;
+    if (handle != nullptr && handle->m_soundActor != nullptr) {
       int count = actors->unknown08;
       if (actors->unknown0c <= count) {
         actors->SetArraySize(actors->unknown0c + 16);
         count = actors->unknown08;
       }
-      actors->unknown10[count] = handle->unknown38;
+      actors->unknown10[count] = handle->m_soundActor;
       actors->unknown08++;
     }
     it = List<VoiceHandle>::unknown004(it);
@@ -304,7 +304,7 @@ Result SystemCore::GetSoundHandleListByCategoty(int category, Array<SoundHandle 
   VoiceHandle *it = unknown3a0.unknown002();
   if (category < 0) {
     while (it != unknown3a0.unknown003()) {
-      SoundHandle *handle = it->unknown58;
+      SoundHandle *handle = it->m_soundHandle;
       if (handle != nullptr) {
         int count = handles->unknown08;
         if (handles->unknown0c <= count) {
@@ -318,8 +318,8 @@ Result SystemCore::GetSoundHandleListByCategoty(int category, Array<SoundHandle 
     }
   } else {
     while (it != unknown3a0.unknown003()) {
-      SoundHandle *handle = it->unknown58;
-      if (handle != nullptr && handle->unknown48.unknown08.unknown00 == category) {
+      SoundHandle *handle = it->m_soundHandle;
+      if (handle != nullptr && handle->m_soundCategory.unknown08.unknown00 == category) {
         int count = handles->unknown08;
         if (handles->unknown0c <= count) {
           handles->SetArraySize(handles->unknown0c + 16);
@@ -351,7 +351,7 @@ Result SystemCore::AllocVoiceHandle(int, VoiceHandle **voice) {
     } else {
       unknown39c++;
     }
-    allocated->unknown68 = nullptr;
+    allocated->m_waveSource = nullptr;
     result = allocated;
   }
   *voice = result;
@@ -362,7 +362,7 @@ void SystemCore::FreeVoiceHandle(VoiceHandle *voice) {
   unknown3a0.unknown001(voice);
   unknown3c8.PushBack(voice);
   voice->unknown44 = 0;
-  voice->unknown58 = nullptr;
+  voice->m_soundHandle = nullptr;
   voice->unknown54 = 0;
   set_result(static_cast<Result>(0));
 }
@@ -378,9 +378,9 @@ void SystemCore::DisconnectActor(SoundActor *actor) {
   unknown708.Lock();
   VoiceHandle *it = unknown3a0.unknown002();
   while (it != unknown3a0.unknown003()) {
-    SoundHandle *handle = it->unknown58;
-    if (handle != nullptr && handle->unknown38 == actor) {
-      handle->unknown38 = nullptr;
+    SoundHandle *handle = it->m_soundHandle;
+    if (handle != nullptr && handle->m_soundActor == actor) {
+      handle->m_soundActor = nullptr;
     }
     it = List<VoiceHandle>::unknown004(it);
   }
@@ -424,8 +424,8 @@ Result SystemCore::GetSoundEffectList(int bus, SoundEffecter **effecters, int *n
   unknown708.Lock();
   int count = 0;
   for (int i = 0; i < 2; i++) {
-    if (unknown1f0[i].unknown10 != nullptr && count < bus) {
-      effecters[i] = unknown1f0[i].unknown10;
+    if (m_effectBusInfo[i].m_soundEffecter != nullptr && count < bus) {
+      effecters[i] = m_effectBusInfo[i].m_soundEffecter;
       count++;
     }
   }
@@ -437,13 +437,13 @@ bool SystemCore::IsActiveEffect(u8 bus) {
   if (bus > 1) {
     return false;
   }
-  if (unknown1f0[bus].unknown10 != nullptr) {
+  if (m_effectBusInfo[bus].m_soundEffecter != nullptr) {
     return true;
   }
-  if (unknown1f0[bus].unknown00) {
+  if (m_effectBusInfo[bus].unknown00) {
     return true;
   }
-  return unknown1f0[bus].unknown01;
+  return m_effectBusInfo[bus].unknown01;
 }
 
 Result SystemCore::SetCategory(const SoundCategory &category) {
@@ -485,9 +485,9 @@ void SystemCore::ChangeCategoryEvent(const SoundCategory &category) {
   unknown708.Lock();
   VoiceHandle *it = unknown3a0.unknown002();
   while (it != unknown3a0.unknown003()) {
-    SoundHandle *handle = it->unknown58;
-    if (handle != nullptr && handle->unknown48.unknown08.unknown00 == category.unknown08.unknown00) {
-      handle->unknown48.unknown08 = category.unknown08;
+    SoundHandle *handle = it->m_soundHandle;
+    if (handle != nullptr && handle->m_soundCategory.unknown08.unknown00 == category.unknown08.unknown00) {
+      handle->m_soundCategory.unknown08 = category.unknown08;
     }
     it = List<VoiceHandle>::unknown004(it);
   }
@@ -519,8 +519,8 @@ void SystemCore::UpdateGameFrame(f32 deltaTime) {
   f32 frameTime = unknown2b8;
   f64 startTime = GetSystemTime();
   unknown708.Lock();
-  unknown2c8.SwitchBuffer();
-  unknown2c8.ExecuteCommands();
+  m_commandManager.SwitchBuffer();
+  m_commandManager.ExecuteCommands();
   SoundListener **listenerEnd = unknown4b0.unknown10 + unknown4b0.unknown08;
   for (SoundListener **listener = unknown4b0.unknown10; listener != listenerEnd; listener++) {
     (*listener)->UpdateGameFrame(frameTime);
@@ -544,7 +544,7 @@ void SystemCore::UpdateGameFrame(f32 deltaTime) {
     unknown400[unknown3f8] = voice;
     unknown3f8++;
   }
-  unknown270++;
+  m_gameFrameCounter++;
   unknowna20 = 1 - unknowna20;
   unknown9f8[unknowna20].unknown08 = 0;
   unknown9f8[unknowna20].unknown00 = 0;
@@ -563,7 +563,7 @@ void SystemCore::AudioThreadImpl() {
   unknowna18 = time;
   while (!unknown4e8.unknown02) {
     nn::os::WaitSystemEvent(&unknown138.m_SystemEventType);
-    unknown280 = unknown278 / unknown290;
+    m_audioTimerCounter = unknown278 / unknown290;
     unknown2a0 = unknown290;
     AudioFrameProcess();
     unknown278++;
@@ -598,8 +598,8 @@ void SystemCore::AudioFrameProcess() {
   }
   UpdateDevice();
   for (int i = 0; i < 2; i++) {
-    if (unknown1f0[i].unknown01) {
-      DeleteEffect(unknown1f0[i]);
+    if (m_effectBusInfo[i].unknown01) {
+      DeleteEffect(m_effectBusInfo[i]);
     }
   }
   unknown708.Unlock();

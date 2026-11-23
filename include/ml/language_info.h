@@ -23,19 +23,19 @@ public:
   static void initialize(mtl::ALLOC_HANDLE handle);
   static const char *getText(MLLANG_STRUCT *text);
 
-  u32 unknown08;                // Inferred role: entry generation; original member name unknown.
-  u32 unknown0c;                // Inferred role: language index; original member name unknown.
-  LanguageInfoParam *unknown10; // Inferred role: entries; original member name unknown.
-  u32 unknown18;                // Inferred role: entry count; original member name unknown.
-  u32 unknown1c;                // Inferred role: entry max; original member name unknown.
-  mtl::ALLOC_HANDLE unknown20;  // Inferred role: memory; original member name unknown.
-  void *unknown28;              // Inferred role: unused buffer; original member name unknown.
-  u32 unknown30;                // Inferred role: unused value; original member name unknown.
+  u32 unknown08;                          // Inferred role: entry generation; original member name unknown.
+  u32 unknown0c;                          // Inferred role: language index; original member name unknown.
+  LanguageInfoParam *m_languageInfoParam; // Inferred role: entries; original member name unknown.
+  u32 unknown18;                          // Inferred role: entry count; original member name unknown.
+  u32 unknown1c;                          // Inferred role: entry max; original member name unknown.
+  mtl::ALLOC_HANDLE m_ALLOC_HANDLE;       // Inferred role: memory; original member name unknown.
+  void *unknown28;                        // Inferred role: unused buffer; original member name unknown.
+  u32 unknown30;                          // Inferred role: unused value; original member name unknown.
 };
 
 static_assert(offsetof(LanguageInfo, unknown08) == 0x08, "");
-static_assert(offsetof(LanguageInfo, unknown10) == 0x10, "");
-static_assert(offsetof(LanguageInfo, unknown20) == 0x20, "");
+static_assert(offsetof(LanguageInfo, m_languageInfoParam) == 0x10, "");
+static_assert(offsetof(LanguageInfo, m_ALLOC_HANDLE) == 0x20, "");
 static_assert(offsetof(LanguageInfo, unknown28) == 0x28, "");
 static_assert(offsetof(LanguageInfo, unknown30) == 0x30, "");
 

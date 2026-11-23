@@ -50,14 +50,14 @@ bool SpineIkSolver::setupLimit(const ParamAdapter &param, const char *boneName, 
   if (endBoneName != nullptr) {
     unknown36 = skeleton->getBoneID(endBoneName);
   }
-  unknown80 = param;
+  m_paramAdapter = param;
   resetLimit();
   return unknown34 != anm::Skeleton::INVALID_BONE || unknown36 != anm::Skeleton::INVALID_BONE;
 }
 
 SpineIkSolver::SpineIkSolver()
     : unknown34(0xffff), unknown36(0xffff), unknown38(0.0f), unknown3c(0.0f), unknown40(0.1f), unknown44(0.1f), unknown48(1.5f), unknown4c(1.5f), unknown50(mm::Vec3::zero), unknown60(mm::Vec3::zero),
-      unknown70(mm::Vec3::unitZ), unknown80(), unknown88(false), unknown90(mm::Quat::identity), unknowna0(mm::Quat::identity), unknownb8() {
+      unknown70(mm::Vec3::unitZ), m_paramAdapter(), unknown88(false), unknown90(mm::Quat::identity), unknowna0(mm::Quat::identity), unknownb8() {
   unknownb0 = 0.0f;
   unknownb4 = 0.0f;
 }
@@ -65,7 +65,7 @@ SpineIkSolver::SpineIkSolver()
 SpineIkSolver::~SpineIkSolver() {}
 
 void SpineIkSolver::resetLimit() {
-  const f32 *limit = unknown80.get<f32>();
+  const f32 *limit = m_paramAdapter.get<f32>();
   unknown38 = limit[0] * mm::DEG_TO_RAD;
   unknown3c = limit[1] * mm::DEG_TO_RAD;
   unknown40 = limit[2];

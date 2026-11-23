@@ -11,8 +11,8 @@ namespace ml {
 
 FileResTh::FileResTh() {
   unknownd0 = -1;
-  unknownc0 = nullptr;
-  unknownc8 = nullptr;
+  m_fileHandleTh = nullptr;
+  m_glassBreakage = nullptr;
   unknownf0 = true;
   unknownf4 = 0;
   unknownf8 = nullptr;
@@ -21,7 +21,7 @@ FileResTh::FileResTh() {
 
 FileResTh::~FileResTh() { release(); }
 
-bool FileResTh::isExist() const { return unknownc8 != nullptr; }
+bool FileResTh::isExist() const { return m_glassBreakage != nullptr; }
 
 bool FileResTh::load(mtl::ALLOC_HANDLE handle, const char *path, u32 option, FILE_PRIO priority) {
   release();
@@ -33,14 +33,14 @@ bool FileResTh::load(mtl::ALLOC_HANDLE handle, const char *path, u32 option, FIL
   param.unknown68 = priority;
   param._6d = true;
   SetName(PathUtil::getFilePtrFromPath(path));
-  unknownc0 = DevFileTh::readFile(param);
-  if (unknownc0 != nullptr) {
+  m_fileHandleTh = DevFileTh::readFile(param);
+  if (m_fileHandleTh != nullptr) {
     unknownf4 = 1;
   } else {
     unknownd0 = -2;
     unknownf4 = 3;
   }
-  return unknownc0 != nullptr;
+  return m_fileHandleTh != nullptr;
 }
 
 bool FileResTh::load(mm::mtl::IAllocator *allocator, const char *path, u32 option, FILE_PRIO priority) {
@@ -53,32 +53,32 @@ bool FileResTh::load(mm::mtl::IAllocator *allocator, const char *path, u32 optio
   param.unknown68 = priority;
   param._6d = true;
   SetName(PathUtil::getFilePtrFromPath(path));
-  unknownc0 = DevFileTh::readFile(param);
-  if (unknownc0 != nullptr) {
+  m_fileHandleTh = DevFileTh::readFile(param);
+  if (m_fileHandleTh != nullptr) {
     unknownf4 = 1;
   } else {
     unknownd0 = -2;
     unknownf4 = 3;
   }
-  return unknownc0 != nullptr;
+  return m_fileHandleTh != nullptr;
 }
 
 void FileResTh::release() {
-  if (unknownc0 != nullptr) {
-    unknownc0->unknown60 = nullptr;
-    if (unknownc0 != nullptr) {
-      DevFileTh::cancel(unknownc0, false);
-      unknownc0 = nullptr;
+  if (m_fileHandleTh != nullptr) {
+    m_fileHandleTh->m_iWorkEvent = nullptr;
+    if (m_fileHandleTh != nullptr) {
+      DevFileTh::cancel(m_fileHandleTh, false);
+      m_fileHandleTh = nullptr;
     }
   }
-  if (unknownf0 && unknownc8 != nullptr) {
+  if (unknownf0 && m_glassBreakage != nullptr) {
     if (unknownf8 != nullptr) {
-      unknownf8->deallocate(unknownc8);
-      unknownc8 = nullptr;
+      unknownf8->deallocate(m_glassBreakage);
+      m_glassBreakage = nullptr;
       unknownf8 = nullptr;
     } else {
-      mtl::MemManager::deallocate(unknownc8, 0, false);
-      unknownc8 = nullptr;
+      mtl::MemManager::deallocate(m_glassBreakage, 0, false);
+      m_glassBreakage = nullptr;
     }
   }
   unknownd0 = -1;
@@ -88,26 +88,26 @@ void FileResTh::release() {
 
 void FileResTh::setMem(void *buffer, int size, const char *name, bool isBufferOwner) {
   unknownf0 = isBufferOwner;
-  unknownc8 = buffer;
+  m_glassBreakage = buffer;
   unknownd0 = size;
   SetName(PathUtil::getFilePtrFromPath(name));
 }
 
 bool FileResTh::OnFileEvent(EventFileTh *event) {
   if (event->type == EventFileTh::TYPE_UNKNOWN_2) {
-    void *buffer = unknownc0->unknown08;
-    unknownc0->unknown08 = nullptr;
-    unknownc8 = buffer;
-    unknownd0 = unknownc0->unknown18;
-    unknowne8 = unknownc0->unknown1c8;
-    unknowne0 = unknownc0->m_time;
-    unknownf8 = static_cast<mm::mtl::IAllocator *>(unknownc0->unknown30);
+    void *buffer = m_fileHandleTh->unknown08;
+    m_fileHandleTh->unknown08 = nullptr;
+    m_glassBreakage = buffer;
+    unknownd0 = m_fileHandleTh->unknown18;
+    unknowne8 = m_fileHandleTh->unknown1c8;
+    unknowne0 = m_fileHandleTh->m_time;
+    unknownf8 = static_cast<mm::mtl::IAllocator *>(m_fileHandleTh->unknown30);
     unknownf4 = 2;
   } else {
     unknownd0 = -2;
     unknownf4 = 3;
   }
-  unknownc0 = nullptr;
+  m_fileHandleTh = nullptr;
   return true;
 }
 

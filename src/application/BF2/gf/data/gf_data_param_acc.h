@@ -18,9 +18,9 @@ enum GimmickType {
 };
 
 struct ParamObj {
-  GF_OBJ_HANDLE *unknown00; // Inferred role: handle; original member name unknown.
-  u32 unknown08;            // Inferred role: object type; original member name unknown.
-  u32 unknown0c;            // Inferred role: id; original member name unknown.
+  GF_OBJ_HANDLE *m_GF_OBJ_HANDLE; // Inferred role: handle; original member name unknown.
+  u32 unknown08;                  // Inferred role: object type; original member name unknown.
+  u32 unknown0c;                  // Inferred role: id; original member name unknown.
 };
 
 static_assert(offsetof(ParamObj, unknown08) == 0x08, "");
@@ -166,12 +166,12 @@ public:
   u32 getValidBdatId() const { return isValid() ? getBdatId() : 0; }
   u32 getValidDriverId() const { return isValid() && getObjType() == OBJECT_TYPE_PC ? getBdatId() : 0; }
 
-  IDataObj *unknown08;      // Inferred role: obj; original member name unknown.
-  GF_OBJ_HANDLE *unknown10; // Inferred role: handle; original member name unknown.
+  IDataObj *m_iDataObj;           // Inferred role: obj; original member name unknown.
+  GF_OBJ_HANDLE *m_GF_OBJ_HANDLE; // Inferred role: handle; original member name unknown.
 };
 
-static_assert(offsetof(DataParamAcc, unknown08) == 0x08, "");
-static_assert(offsetof(DataParamAcc, unknown10) == 0x10, "");
+static_assert(offsetof(DataParamAcc, m_iDataObj) == 0x08, "");
+static_assert(offsetof(DataParamAcc, m_GF_OBJ_HANDLE) == 0x10, "");
 static_assert(sizeof(DataParamAcc) == 0x18, "");
 
 struct SDataIdea;
@@ -197,8 +197,8 @@ public:
   unknown079 getRatio(u32 level0, u32 level1, u32 level2, u32 level3, int offset0, int offset1, int offset2, int offset3) const;
   f32 getSubRatio(u32 level, int offset, u32 idea) const;
 
-  SDataIdea *unknown00; // Inferred role: idea; original member name unknown.
-  bool unknown08;       // Inferred role: is blade; original member name unknown.
+  SDataIdea *m_idea; // Inferred role: idea; original member name unknown.
+  bool unknown08;    // Inferred role: is blade; original member name unknown.
 };
 
 static_assert(offsetof(DataIdeaAcc, unknown08) == 0x08, "");

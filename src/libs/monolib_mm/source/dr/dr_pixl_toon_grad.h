@@ -22,8 +22,8 @@ public:
   const grlib::CGLibTextureBuffer &getGradTex() const;
   const grlib::CGLibTextureBuffer &getDarkGradTex() const;
 
-  DrMan *unknown00; // Inferred role: driver manager; original member name unknown.
-  bool unknown08;   // Inferred role: gradient clear flag; original member name unknown.
+  DrMan *m_drMan; // Inferred role: driver manager; original member name unknown.
+  bool unknown08; // Inferred role: gradient clear flag; original member name unknown.
   u8 _09[0x10 - 0x09];
   DrPixlRenderTarget *m_gradTex[2];
   DrPixlRenderTarget *m_darkGradTex[2];

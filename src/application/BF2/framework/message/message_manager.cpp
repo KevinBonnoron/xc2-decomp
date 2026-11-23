@@ -9,7 +9,7 @@ namespace fw {
 
 void MessageManager::Impl::destroy() {
   unknown50.clear();
-  unknown08.destroy();
+  m_pointerMap.destroy();
 }
 
 void MessageManager::Impl::update(const UpdateInfo &info) {
@@ -20,7 +20,7 @@ void MessageManager::Impl::update(const UpdateInfo &info) {
       MessageObject *receiver = message.unknown20.get();
       MessageObject *sender = message.unknown10.get();
       if (receiver != nullptr) {
-        receiver->recieveMessage(sender, *message.unknown00->unknown10);
+        receiver->recieveMessage(sender, *message.unknown00->m_message);
       }
 
       it = unknown50.erase(it);
@@ -42,8 +42,8 @@ void MessageManager::Impl::remove(u32 id) {
 }
 
 void MessageManager::Impl::registObject(MessageObject *object) {
-  object->unknown08.id = unknown08.regist(object);
-  object->unknown08.map = &unknown08;
+  object->unknown08.id = m_pointerMap.regist(object);
+  object->unknown08.map = &m_pointerMap;
 }
 
 void MessageManager::Impl::removeObject(MessageObject *object) {

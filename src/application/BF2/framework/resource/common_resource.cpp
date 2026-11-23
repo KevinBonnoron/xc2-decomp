@@ -88,23 +88,23 @@ CommonResource *CommonResource::blockRequest(mtl::ALLOC_HANDLE handle, const cha
 CommonResource *CommonResource::blockRequest(mm::mtl::IAllocator *allocator, const char *path, bool isSafe) { return request_detail(allocator, path, 10, isSafe, true); }
 
 CommonResource::CommonResource(mtl::ALLOC_HANDLE handle, LOAD_PRIO priority, u32 type, int option)
-    : ResourceObject(type, handle, priority, option), unknownb0(STATE_UNKNOWN_0), unknownb4(false), unknownb8(nullptr), unknownc0(nullptr) {}
+    : ResourceObject(type, handle, priority, option), unknownb0(STATE_UNKNOWN_0), unknownb4(false), m_assetLoader(nullptr), m_assetData(nullptr) {}
 
 CommonResource::CommonResource(mm::mtl::IAllocator *allocator, LOAD_PRIO priority, u32 type, int option)
-    : ResourceObject(type, allocator, priority, option), unknownb0(STATE_UNKNOWN_0), unknownb4(false), unknownb8(nullptr), unknownc0(nullptr) {}
+    : ResourceObject(type, allocator, priority, option), unknownb0(STATE_UNKNOWN_0), unknownb4(false), m_assetLoader(nullptr), m_assetData(nullptr) {}
 
 CommonResource::~CommonResource() {
-  if (unknownb8 != nullptr) {
-    unknownb8->Release();
-    unknownb8 = nullptr;
+  if (m_assetLoader != nullptr) {
+    m_assetLoader->Release();
+    m_assetLoader = nullptr;
   }
 
-  if (unknownc0 != nullptr) {
+  if (m_assetData != nullptr) {
     if (unknownb4) {
-      ResourceManager::get()->removeSafeObject(unknownc0);
+      ResourceManager::get()->removeSafeObject(m_assetData);
     }
 
-    mm::mtl::safeRelease(unknownc0);
+    mm::mtl::safeRelease(m_assetData);
   }
 }
 
@@ -113,14 +113,14 @@ void CommonResource::update() {
     switch (unknownb0) {
     case STATE_UNKNOWN_0:
       if (unknown10.isValid()) {
-        unknownc0 = AssetData::CreateFromCache(unknown10, unknown2c.c_str());
+        m_assetData = AssetData::CreateFromCache(unknown10, unknown2c.c_str());
       } else if (unknown18 != nullptr) {
-        unknownc0 = AssetData::CreateFromCache(unknown18, unknown2c.c_str());
+        m_assetData = AssetData::CreateFromCache(unknown18, unknown2c.c_str());
       }
 
-      if (unknownc0 != nullptr) {
+      if (m_assetData != nullptr) {
         if (unknownb4) {
-          ResourceManager::get()->addSafeObject(unknownc0, static_cast<eResourceType>(0));
+          ResourceManager::get()->addSafeObject(m_assetData, static_cast<eResourceType>(0));
         }
 
         unknownb0 = STATE_UNKNOWN_2;
@@ -128,46 +128,46 @@ void CommonResource::update() {
         mm::mtl::FixStr<256> fileName;
         ml::DevFileTh::normalizeDvdFileName(fileName, unknown2c.c_str());
         if (unknown10.isValid()) {
-          unknownb8 = AssetLoader::Create(unknown10, fileName.c_str(), unknown28, unknown24);
+          m_assetLoader = AssetLoader::Create(unknown10, fileName.c_str(), unknown28, unknown24);
         } else if (unknown18 != nullptr) {
-          unknownb8 = AssetLoader::Create(unknown18, fileName.c_str(), unknown28, unknown24);
+          m_assetLoader = AssetLoader::Create(unknown18, fileName.c_str(), unknown28, unknown24);
         }
 
         unknownb0 = static_cast<State>(unknownb0 + 1);
       }
       break;
     case STATE_UNKNOWN_1:
-      if (unknownb8 == nullptr) {
+      if (m_assetLoader == nullptr) {
         unknownb0 = STATE_UNKNOWN_2;
         break;
       }
 
-      if (unknownb8->unknownc0 != nullptr) {
+      if (m_assetLoader->m_fileHandleTh != nullptr) {
         return;
       }
 
-      if (unknownb8->unknownd0 == -2) {
-        unknownb8->Release();
-        unknownb8 = nullptr;
+      if (m_assetLoader->unknownd0 == -2) {
+        m_assetLoader->Release();
+        m_assetLoader = nullptr;
         break;
       }
 
-      if (unknownb8->isExist()) {
-        unknownb8->unknownf0 = false;
+      if (m_assetLoader->isExist()) {
+        m_assetLoader->unknownf0 = false;
         if (unknown10.isValid()) {
-          unknownc0 = AssetData::AssignFromMemory(unknown10, unknownb8->unknownc8, unknownb8->unknownd0, unknownb8->unknown0c.c_str(), unknownb8->unknowne0);
+          m_assetData = AssetData::AssignFromMemory(unknown10, m_assetLoader->m_glassBreakage, m_assetLoader->unknownd0, m_assetLoader->unknown0c.c_str(), m_assetLoader->unknowne0);
         } else if (unknown18 != nullptr) {
-          unknownc0 = AssetData::AssignFromMemory(unknown18, unknownb8->unknownc8, unknownb8->unknownd0, unknownb8->unknown0c.c_str(), unknownb8->unknowne0);
+          m_assetData = AssetData::AssignFromMemory(unknown18, m_assetLoader->m_glassBreakage, m_assetLoader->unknownd0, m_assetLoader->unknown0c.c_str(), m_assetLoader->unknowne0);
         }
 
         if (unknownb4) {
-          ResourceManager::get()->addSafeObject(unknownc0, static_cast<eResourceType>(0));
+          ResourceManager::get()->addSafeObject(m_assetData, static_cast<eResourceType>(0));
         }
       }
 
-      if (unknownb8 != nullptr) {
-        unknownb8->Release();
-        unknownb8 = nullptr;
+      if (m_assetLoader != nullptr) {
+        m_assetLoader->Release();
+        m_assetLoader = nullptr;
       }
       break;
     default:
@@ -180,14 +180,14 @@ void CommonResource::updateBlock() {
   const char *path = unknown2c.c_str(); // Places the add of this + 44 before the first branch (0x7100199598); used by three calls.
   unknownb0 = STATE_UNKNOWN_2;
   if (unknown10.isValid()) {
-    unknownc0 = AssetData::CreateFromCache(unknown10, path);
+    m_assetData = AssetData::CreateFromCache(unknown10, path);
   } else if (unknown18 != nullptr) {
-    unknownc0 = AssetData::CreateFromCache(unknown18, path);
+    m_assetData = AssetData::CreateFromCache(unknown18, path);
   }
 
-  if (unknownc0 != nullptr) {
+  if (m_assetData != nullptr) {
     if (unknownb4) {
-      ResourceManager::get()->addSafeObject(unknownc0, static_cast<eResourceType>(0));
+      ResourceManager::get()->addSafeObject(m_assetData, static_cast<eResourceType>(0));
     }
     return;
   }
@@ -207,13 +207,13 @@ void CommonResource::updateBlock() {
   }
 
   if (unknown10.isValid()) {
-    unknownc0 = AssetData::AssignFromMemory(unknown10, data, size, fileName.c_str(), fileTime.unknown00);
+    m_assetData = AssetData::AssignFromMemory(unknown10, data, size, fileName.c_str(), fileTime.unknown00);
   } else if (unknown18 != nullptr) {
-    unknownc0 = AssetData::AssignFromMemory(unknown18, data, size, fileName.c_str(), fileTime.unknown00);
+    m_assetData = AssetData::AssignFromMemory(unknown18, data, size, fileName.c_str(), fileTime.unknown00);
   }
 
   if (unknownb4) {
-    ResourceManager::get()->addSafeObject(unknownc0, static_cast<eResourceType>(0));
+    ResourceManager::get()->addSafeObject(m_assetData, static_cast<eResourceType>(0));
   }
 }
 
@@ -232,26 +232,26 @@ const char *CommonResource::getMemName() {
 bool CommonResource::valid() const { return unknownb0 == STATE_UNKNOWN_2; }
 
 void *CommonResource::getAssetData() {
-  if (unknownc0 != nullptr) {
-    return unknownc0->unknown20;
+  if (m_assetData != nullptr) {
+    return m_assetData->unknown20;
   }
 
   return nullptr;
 }
 
 int CommonResource::getAssetSize() const {
-  if (unknownc0 != nullptr) {
-    return unknownc0->unknown1c;
+  if (m_assetData != nullptr) {
+    return m_assetData->unknown1c;
   }
 
   return 0;
 }
 
-const char *CommonResource::getAssetName() const { return unknownc0 != nullptr ? unknownc0->unknown30.c_str() : nullptr; }
+const char *CommonResource::getAssetName() const { return m_assetData != nullptr ? m_assetData->unknown30.c_str() : nullptr; }
 
 u64 CommonResource::getAssetTimeStamp() const {
-  if (unknownc0 != nullptr) {
-    return unknownc0->unknown28;
+  if (m_assetData != nullptr) {
+    return m_assetData->unknown28;
   }
 
   return 0;

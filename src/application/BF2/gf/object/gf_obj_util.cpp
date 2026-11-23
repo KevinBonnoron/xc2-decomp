@@ -51,6 +51,7 @@
 #include "gf/object/gf_obj_setup.h"
 #include "gf/object/gf_volume_fade.h"
 #include "gf/sound/gf_sound.h"
+#include "mm_math/mm_aabb.h"
 #include "mm_math/mm_math.h"
 #include "mm_math/mm_quat.h"
 #include "mm_math/mm_vec3.h"
@@ -150,7 +151,7 @@ bool GfObjUtil::unmountFromBone(GF_OBJ_HANDLE *handle) {
   GfComModel *model = parentObj->getComponent<GfComModel>();
   if (model != nullptr) {
     GfComTransform *transform = obj->getComponent<GfComTransform>();
-    if (transform->unknown10->unknowna8 != nullptr) {
+    if (transform->unknown10->m_referenceFrame != nullptr) {
       model->removeBoneReferenceFrame(mountInfo->unknown3e0.c_str(), transform->unknown10);
     }
   }
@@ -181,7 +182,7 @@ bool GfObjUtil::attachGfObj(GF_OBJ_HANDLE *parent, GF_OBJ_HANDLE *child) {
   }
   GfComTransform *childTransform = mm::mtl::dynamicCast<GfComTransform>(childObj->unknown38[GfComTransform::COMPONENT_INDEX]);
   mm::mtl::IntrusivePtr<fw::ReferenceFrame> &childFrame = childTransform->unknown10;
-  if (childFrame->unknowna8 != nullptr) {
+  if (childFrame->m_referenceFrame != nullptr) {
     return false;
   }
 
@@ -206,7 +207,7 @@ bool GfObjUtil::dettachGfObject(GF_OBJ_HANDLE *parent, GF_OBJ_HANDLE *child) {
   mm::mtl::IntrusivePtr<fw::ReferenceFrame> &parentFrame = parentTransform->unknown18.get() == nullptr ? parentTransform->unknown10 : parentTransform->unknown18;
   GfComTransform *childTransform = mm::mtl::dynamicCast<GfComTransform>(childObj->unknown38[GfComTransform::COMPONENT_INDEX]);
   mm::mtl::IntrusivePtr<fw::ReferenceFrame> &childFrame = childTransform->unknown10;
-  if (childFrame->unknowna8 != parentFrame.get()) {
+  if (childFrame->m_referenceFrame != parentFrame.get()) {
     return false;
   }
 
@@ -231,7 +232,7 @@ u32 GfObjUtil::getObjType(GF_OBJ_HANDLE *handle) {
 void GfObjUtil::setEnableBlowRotateIK(GF_OBJ_HANDLE *handle, bool isEnable, f32 time) {
   GfComIK *ik = unknown001(handle);
   if (ik != nullptr) {
-    fw::BlowRotateIkSolver *solver = castSolver<fw::BlowRotateIkSolver>(ik->unknown10.unknown10[unknown002_1]);
+    fw::BlowRotateIkSolver *solver = castSolver<fw::BlowRotateIkSolver>(ik->m_ikResolver.unknown10[unknown002_1]);
     if (solver != nullptr) {
       if (isEnable) {
         solver->fadeIn(time);
@@ -245,7 +246,7 @@ void GfObjUtil::setEnableBlowRotateIK(GF_OBJ_HANDLE *handle, bool isEnable, f32 
 void GfObjUtil::setEnableBodyIK(GF_OBJ_HANDLE *handle, bool isEnable, f32 time) {
   GfComIK *ik = unknown001(handle);
   if (ik != nullptr) {
-    fw::RotateIkSolver *rotate = castSolver<fw::RotateIkSolver>(ik->unknown10.unknown10[unknown002_0]);
+    fw::RotateIkSolver *rotate = castSolver<fw::RotateIkSolver>(ik->m_ikResolver.unknown10[unknown002_0]);
     if (rotate != nullptr) {
       if (isEnable) {
         rotate->fadeIn(time);
@@ -253,7 +254,7 @@ void GfObjUtil::setEnableBodyIK(GF_OBJ_HANDLE *handle, bool isEnable, f32 time) 
         rotate->fadeOut(time);
       }
     }
-    fw::SpineRotateIKSolver *spine = castSolver<fw::SpineRotateIKSolver>(ik->unknown10.unknown10[unknown002_4]);
+    fw::SpineRotateIKSolver *spine = castSolver<fw::SpineRotateIKSolver>(ik->m_ikResolver.unknown10[unknown002_4]);
     if (spine != nullptr) {
       if (isEnable) {
         spine->fadeIn(time);
@@ -267,7 +268,7 @@ void GfObjUtil::setEnableBodyIK(GF_OBJ_HANDLE *handle, bool isEnable, f32 time) 
 void GfObjUtil::setEnableLookIK(GF_OBJ_HANDLE *handle, bool isEnable, f32 time) {
   GfComIK *ik = unknown001(handle);
   if (ik != nullptr) {
-    fw::LookIkSolver *look = castSolver<fw::LookIkSolver>(ik->unknown10.unknown10[unknown002_3]);
+    fw::LookIkSolver *look = castSolver<fw::LookIkSolver>(ik->m_ikResolver.unknown10[unknown002_3]);
     if (look != nullptr) {
       if (isEnable) {
         look->fadeIn(time);
@@ -275,7 +276,7 @@ void GfObjUtil::setEnableLookIK(GF_OBJ_HANDLE *handle, bool isEnable, f32 time) 
         look->fadeOut(time);
       }
     }
-    fw::SpineIkSolver *spine = castSolver<fw::SpineIkSolver>(ik->unknown10.unknown10[unknown002_3]);
+    fw::SpineIkSolver *spine = castSolver<fw::SpineIkSolver>(ik->m_ikResolver.unknown10[unknown002_3]);
     if (spine != nullptr) {
       if (isEnable) {
         spine->fadeIn(time);
@@ -283,7 +284,7 @@ void GfObjUtil::setEnableLookIK(GF_OBJ_HANDLE *handle, bool isEnable, f32 time) 
         spine->fadeOut(time);
       }
     }
-    fw::LookAtIkSolver *lookAt = castSolver<fw::LookAtIkSolver>(ik->unknown10.unknown10[unknown002_5]);
+    fw::LookAtIkSolver *lookAt = castSolver<fw::LookAtIkSolver>(ik->m_ikResolver.unknown10[unknown002_5]);
     if (lookAt != nullptr) {
       if (isEnable) {
         lookAt->fadeIn(time);
@@ -297,17 +298,17 @@ void GfObjUtil::setEnableLookIK(GF_OBJ_HANDLE *handle, bool isEnable, f32 time) 
 void GfObjUtil::setEnableFootIK(GF_OBJ_HANDLE *handle, bool isEnable) {
   GfComIK *ik = unknown001(handle);
   if (ik != nullptr) {
-    fw::PlacementGroundSolver *placement = castSolver<fw::PlacementGroundSolver>(ik->unknown10.unknown10[unknown002_2]);
+    fw::PlacementGroundSolver *placement = castSolver<fw::PlacementGroundSolver>(ik->m_ikResolver.unknown10[unknown002_2]);
     if (placement != nullptr) {
       placement->unknown65 = isEnable;
       placement->setEnablePlacement(isEnable);
     }
-    fw::SlopeGroundSolver *slope = castSolver<fw::SlopeGroundSolver>(ik->unknown10.unknown10[unknown002_0]);
+    fw::SlopeGroundSolver *slope = castSolver<fw::SlopeGroundSolver>(ik->m_ikResolver.unknown10[unknown002_0]);
     if (slope != nullptr) {
       slope->setEnablePlacement(isEnable);
       slope->unknown88 = isEnable;
     }
-    fw::TwoCharaGroundSolver *twoChara = castSolver<fw::TwoCharaGroundSolver>(ik->unknown10.unknown10[unknown002_2]);
+    fw::TwoCharaGroundSolver *twoChara = castSolver<fw::TwoCharaGroundSolver>(ik->m_ikResolver.unknown10[unknown002_2]);
     if (twoChara != nullptr) {
       twoChara->unknownb9 = isEnable;
       twoChara->setEnablePlacement(isEnable);
@@ -318,7 +319,7 @@ void GfObjUtil::setEnableFootIK(GF_OBJ_HANDLE *handle, bool isEnable) {
 void GfObjUtil::setEnableSPCIK(GF_OBJ_HANDLE *handle, bool isEnable) {
   GfComIK *ik = unknown001(handle);
   if (ik != nullptr) {
-    fw::SphericalCoordinatesIkSolver *solver = castSolver<fw::SphericalCoordinatesIkSolver>(ik->unknown10.unknown10[unknown002_8]);
+    fw::SphericalCoordinatesIkSolver *solver = castSolver<fw::SphericalCoordinatesIkSolver>(ik->m_ikResolver.unknown10[unknown002_8]);
     if (solver != nullptr) {
       solver->m_enable = true;
     }
@@ -328,7 +329,7 @@ void GfObjUtil::setEnableSPCIK(GF_OBJ_HANDLE *handle, bool isEnable) {
 void GfObjUtil::setBlowRotate(GF_OBJ_HANDLE *handle, const mm::Quat &rotation) {
   GfComIK *ik = unknown001(handle);
   if (ik != nullptr) {
-    fw::BlowRotateIkSolver *solver = castSolver<fw::BlowRotateIkSolver>(ik->unknown10.unknown10[unknown002_1]);
+    fw::BlowRotateIkSolver *solver = castSolver<fw::BlowRotateIkSolver>(ik->m_ikResolver.unknown10[unknown002_1]);
     if (solver != nullptr) {
       solver->unknown40 = rotation;
     }
@@ -339,8 +340,8 @@ void GfObjUtil::setEnableEyeBlink(GF_OBJ_HANDLE *handle, bool isEnable) {
   GfObj *obj = getObj(handle);
   if (obj != nullptr) {
     GfComBehavior *behavior = obj->getComponent<GfComBehavior>();
-    if (behavior != nullptr && behavior->unknown10.unknown28.size() > 1) {
-      Plugin *plugin = behavior->unknown10.unknown28[1];
+    if (behavior != nullptr && behavior->m_pluginManager.unknown28.size() > 1) {
+      Plugin *plugin = behavior->m_pluginManager.unknown28[1];
       if (plugin != nullptr && mm::mtl::dynamicCast<EyeBlinkPlugin>(plugin) != nullptr) {
         plugin->setActivate(isEnable);
       }
@@ -352,8 +353,8 @@ void GfObjUtil::setEnableLipSync(GF_OBJ_HANDLE *handle, bool isEnable) {
   GfObj *obj = getObj(handle);
   if (obj != nullptr) {
     GfComBehavior *behavior = obj->getComponent<GfComBehavior>();
-    if (behavior != nullptr && behavior->unknown10.unknown28.size() > 2) {
-      Plugin *plugin = behavior->unknown10.unknown28[2];
+    if (behavior != nullptr && behavior->m_pluginManager.unknown28.size() > 2) {
+      Plugin *plugin = behavior->m_pluginManager.unknown28[2];
       if (plugin != nullptr && mm::mtl::dynamicCast<LipSyncPlugin>(plugin) != nullptr) {
         plugin->setActivate(isEnable);
       }
@@ -369,13 +370,13 @@ u32 GfObjUtil::getEyeIKType(GF_OBJ_HANDLE *handle) {
   GfComIK *ik = obj->getComponent<GfComIK>();
   if (ik != nullptr) {
     u32 index = unknown002_6;
-    if (ik->unknown10.unknown10[unknown002_6].get() == nullptr) {
+    if (ik->m_ikResolver.unknown10[unknown002_6].get() == nullptr) {
       index = unknown002_7;
     }
-    if (castSolver<fw::TransLocalIkSolver>(ik->unknown10.unknown10[index]) != nullptr) {
+    if (castSolver<fw::TransLocalIkSolver>(ik->m_ikResolver.unknown10[index]) != nullptr) {
       return 1;
     }
-    if (castSolver<fw::RotateLocalIkSolver>(ik->unknown10.unknown10[index]) != nullptr) {
+    if (castSolver<fw::RotateLocalIkSolver>(ik->m_ikResolver.unknown10[index]) != nullptr) {
       return 2;
     }
   }
@@ -388,7 +389,7 @@ const mm::Quat &GfObjUtil::getBlowRotate(GF_OBJ_HANDLE *handle) {
   if (obj != nullptr) {
     GfComIK *ik = obj->getComponent<GfComIK>();
     if (ik != nullptr) {
-      fw::BlowRotateIkSolver *solver = castSolver<fw::BlowRotateIkSolver>(ik->unknown10.unknown10[unknown002_1]);
+      fw::BlowRotateIkSolver *solver = castSolver<fw::BlowRotateIkSolver>(ik->m_ikResolver.unknown10[unknown002_1]);
       if (solver != nullptr) {
         const mm::Quat &blowRotate = solver->unknown40;
         if (solver->isEnable()) {
@@ -407,14 +408,14 @@ void GfObjUtil::setEnableEyeIK(GF_OBJ_HANDLE *handle, bool isEnable, f32 time) {
     if (isEnable) {
       if (type == 1) {
         for (u32 i = unknown002_6; i <= unknown002_7; i++) {
-          fw::TransLocalIkSolver *solver = castSolver<fw::TransLocalIkSolver>(ik->unknown10.unknown10[i]);
+          fw::TransLocalIkSolver *solver = castSolver<fw::TransLocalIkSolver>(ik->m_ikResolver.unknown10[i]);
           if (solver != nullptr) {
             solver->fadeIn(time);
           }
         }
       } else if (type == 2) {
         for (u32 i = unknown002_6; i <= unknown002_7; i++) {
-          fw::RotateLocalIkSolver *solver = castSolver<fw::RotateLocalIkSolver>(ik->unknown10.unknown10[i]);
+          fw::RotateLocalIkSolver *solver = castSolver<fw::RotateLocalIkSolver>(ik->m_ikResolver.unknown10[i]);
           if (solver != nullptr) {
             solver->fadeIn(time);
           }
@@ -423,14 +424,14 @@ void GfObjUtil::setEnableEyeIK(GF_OBJ_HANDLE *handle, bool isEnable, f32 time) {
     } else {
       if (type == 1) {
         for (u32 i = unknown002_6; i <= unknown002_7; i++) {
-          fw::TransLocalIkSolver *solver = castSolver<fw::TransLocalIkSolver>(ik->unknown10.unknown10[i]);
+          fw::TransLocalIkSolver *solver = castSolver<fw::TransLocalIkSolver>(ik->m_ikResolver.unknown10[i]);
           if (solver != nullptr) {
             solver->fadeOut(time);
           }
         }
       } else if (type == 2) {
         for (u32 i = unknown002_6; i <= unknown002_7; i++) {
-          fw::RotateLocalIkSolver *solver = castSolver<fw::RotateLocalIkSolver>(ik->unknown10.unknown10[i]);
+          fw::RotateLocalIkSolver *solver = castSolver<fw::RotateLocalIkSolver>(ik->m_ikResolver.unknown10[i]);
           if (solver != nullptr) {
             solver->fadeOut(time);
           }
@@ -450,16 +451,16 @@ void GfObjUtil::setMoveEyeIK(GF_OBJ_HANDLE *handle, f32 moveX, f32 moveY) {
       control = paramAcc.getEyeRotControl();
     }
     if (type == 1) {
-      fw::TransLocalIkSolver *first = castSolver<fw::TransLocalIkSolver>(ik->unknown10.unknown10[unknown002_6]);
+      fw::TransLocalIkSolver *first = castSolver<fw::TransLocalIkSolver>(ik->m_ikResolver.unknown10[unknown002_6]);
       if (first != nullptr) {
         first->unknown40 = mm::Vec3(moveX, 0.0f, moveY);
       }
-      fw::TransLocalIkSolver *second = castSolver<fw::TransLocalIkSolver>(ik->unknown10.unknown10[unknown002_7]);
+      fw::TransLocalIkSolver *second = castSolver<fw::TransLocalIkSolver>(ik->m_ikResolver.unknown10[unknown002_7]);
       if (second != nullptr) {
         second->unknown40 = mm::Vec3(moveX, 0.0f, moveY);
       }
     } else if (type == 2) {
-      fw::RotateLocalIkSolver *first = castSolver<fw::RotateLocalIkSolver>(ik->unknown10.unknown10[unknown002_6]);
+      fw::RotateLocalIkSolver *first = castSolver<fw::RotateLocalIkSolver>(ik->m_ikResolver.unknown10[unknown002_6]);
       if (first != nullptr) {
         switch (control) {
         case 1:
@@ -477,7 +478,7 @@ void GfObjUtil::setMoveEyeIK(GF_OBJ_HANDLE *handle, f32 moveX, f32 moveY) {
           break;
         }
       }
-      fw::RotateLocalIkSolver *second = castSolver<fw::RotateLocalIkSolver>(ik->unknown10.unknown10[unknown002_7]);
+      fw::RotateLocalIkSolver *second = castSolver<fw::RotateLocalIkSolver>(ik->m_ikResolver.unknown10[unknown002_7]);
       if (second != nullptr) {
         switch (control) {
         case 1:
@@ -510,7 +511,7 @@ GfObj *GfObjUtil::getObj(GF_OBJ_HANDLE *handle) {
 
 u32 GfObjUtil::getObjLayer(GF_OBJ_HANDLE *handle) {
   GfObj *obj = getObj(handle);
-  return obj != nullptr ? obj->unknown2c : 4;
+  return obj != nullptr ? obj->m_layer : 4;
 }
 
 f32 GfObjUtil::getSetupScale(GF_OBJ_HANDLE *handle) {
@@ -541,7 +542,7 @@ fw::SoundCategory GfObjUtil::getSoundCategoryWithoutSlow(GF_OBJ_HANDLE *handle) 
 
 GF_ASSET_HANDLE *GfObjUtil::getAssetHandle(GF_OBJ_HANDLE *handle) {
   GFOBJ_INFO *info = GfObjManager::getObjInfo(handle);
-  return info != nullptr ? info->unknown10 : reinterpret_cast<GF_ASSET_HANDLE *>(-1);
+  return info != nullptr ? info->m_GF_ASSET_HANDLE : reinterpret_cast<GF_ASSET_HANDLE *>(-1);
 }
 
 void GfObjUtil::destroy(GF_OBJ_HANDLE *handle) {
@@ -616,7 +617,7 @@ u32 GfObjUtil::getLayerSection(u32 layer) {
 }
 
 void GfObjUtil::changeLayer(GfObj *obj, u32 layer) {
-  u32 oldLayer = obj->unknown2c;
+  u32 oldLayer = obj->m_layer;
   for (u32 i = 0; i < fw::UpdatableObject::COMPONENT_UNKNOWN_12; i++) {
     fw::ComponentObject *component = obj->unknown38[i];
     if (component != nullptr) {
@@ -627,7 +628,7 @@ void GfObjUtil::changeLayer(GfObj *obj, u32 layer) {
     }
   }
 
-  obj->unknown2c = layer;
+  obj->m_layer = layer;
 }
 
 void GfObjUtil::changeLayer(GF_OBJ_HANDLE *handle, u32 layer) {
@@ -678,7 +679,7 @@ void GfObjUtil::resetWeaponMotion(GF_OBJ_HANDLE *handle, OPTMNT type) {
       for (u32 i = 0; i < 10; i++) {
         GfObj *obj = getObj(handle);
         if (obj != nullptr) {
-          GfObj *weapon = getObj(mount->unknown18->getCurrentHandles()[i]);
+          GfObj *weapon = getObj(mount->m_weapon->getCurrentHandles()[i]);
           if (weapon != nullptr) {
             MsgObjectForceWeaponMount message(type, owner);
             obj->sendMessage(weapon, message);
@@ -691,7 +692,7 @@ void GfObjUtil::resetWeaponMotion(GF_OBJ_HANDLE *handle, OPTMNT type) {
 
 GF_MOUNT_HANDLE *GfObjUtil::getMountHandle(GF_OBJ_HANDLE *handle, GFATTACH attach) {
   GFOBJ_INFO *info = GfObjManager::getObjInfo(handle);
-  return info != nullptr ? info->unknownb8[attach].unknown00 : reinterpret_cast<GF_MOUNT_HANDLE *>(-1);
+  return info != nullptr ? info->unknownb8[attach].m_GF_MOUNT_HANDLE : reinterpret_cast<GF_MOUNT_HANDLE *>(-1);
 }
 
 u32 GfObjUtil::getGameObjectID(GF_OBJ_HANDLE *handle) {
@@ -829,7 +830,7 @@ bool GfObjUtil::testDisableAutoHeal(GF_OBJ_HANDLE *handle) {
 
 GfObjProperty *GfObjUtil::getProperty(GF_OBJ_HANDLE *handle) {
   GFOBJ_INFO *info = GfObjManager::getObjInfo(handle);
-  return info != nullptr ? info->unknown98 : nullptr;
+  return info != nullptr ? info->m_objProperty : nullptr;
 }
 
 u32 GfObjUtil::getHp(GF_OBJ_HANDLE *handle) {
@@ -1020,15 +1021,15 @@ GfComModel *GfObjUtil::getComModel(GF_OBJ_HANDLE *handle) {
 
 GfVolumeFade *GfObjUtil::getVolumeFade(GF_OBJ_HANDLE *handle) {
   GFOBJ_INFO *info = GfObjManager::getObjInfo(handle);
-  return info != nullptr ? info->unknown3d8 : nullptr;
+  return info != nullptr ? info->m_volumeFade : nullptr;
 }
 
 bool GfObjUtil::isBattle(GF_OBJ_HANDLE *handle) {
   GFOBJ_INFO *info = GfObjManager::getObjInfo(handle);
   bool isFound = false;
   bool isBattle;
-  if (info != nullptr && info->unknown98 != nullptr && info->unknown98->unknown10 != nullptr) {
-    isBattle = info->unknown98->unknown10->unknown30;
+  if (info != nullptr && info->m_objProperty != nullptr && info->m_objProperty->unknown10 != nullptr) {
+    isBattle = info->m_objProperty->unknown10->unknown30;
     isFound = true;
   }
 
@@ -1042,7 +1043,7 @@ void GfObjUtil::createVolumeFade(GF_OBJ_HANDLE *handle) {
     GfObjSetup *setup = getObjSetup(handle);
     GFOBJ_INFO *info = GfObjManager::getObjInfo(obj->unknownf8);
     info->createVolumeFade(model);
-    if (info->unknown3d8 != nullptr) {
+    if (info->m_volumeFade != nullptr) {
       if (setup->unknown64 == VFACC_UNKNOWN_FFFFFFFF) {
         if (setup->isEvent()) {
           return;
@@ -1052,15 +1053,15 @@ void GfObjUtil::createVolumeFade(GF_OBJ_HANDLE *handle) {
         if (paramAcc.getObjType() == OBJECT_TYPE_BLADE) {
           u32 attribute = paramAcc.getAttribute(-1, false);
           if (attribute != 0) {
-            info->unknown3d8->setEffectType(static_cast<VFEFF>(attribute));
-            info->unknown3d8->applyFadeRatio();
+            info->m_volumeFade->setEffectType(static_cast<VFEFF>(attribute));
+            info->m_volumeFade->applyFadeRatio();
           }
         }
       } else {
         setVolumeFadeUserFlag(handle, true);
         DataParamAcc paramAcc(handle);
-        info->unknown3d8->setEffectType(static_cast<VFEFF>(paramAcc.getAttribute(-1, false)));
-        info->unknown3d8->setFadeRatio(setup->unknown64, VFPARTS_UNKNOWN_FFFFFFFF, 0.0f);
+        info->m_volumeFade->setEffectType(static_cast<VFEFF>(paramAcc.getAttribute(-1, false)));
+        info->m_volumeFade->setFadeRatio(setup->unknown64, VFPARTS_UNKNOWN_FFFFFFFF, 0.0f);
         setup->unknown64 = VFACC_UNKNOWN_FFFFFFFF;
         ml::ScnObjAccEtcParams etcParams(model->unknown18->getInterface());
         if (etcParams.getMax() != 0) {
@@ -1076,6 +1077,21 @@ void GfObjUtil::createVolumeFade(GF_OBJ_HANDLE *handle) {
 bool GfObjUtil::isVolumeFadeForUser(GF_OBJ_HANDLE *handle) {
   GFOBJ_INFO *info = GfObjManager::getObjInfo(handle);
   return info != nullptr && info->unknown38.test(OBJ_FLAG_UNKNOWN_20);
+}
+
+void GfObjUtil::getCullingAabb(mm::Aabb &aabb, GF_OBJ_HANDLE *handle) {
+  GfObjAcc acc(handle);
+  if (!acc.getModelAabb(aabb)) {
+    aabb.set(mm::Vec3(0.5f, 1.0f, 0.5f), mm::Vec3(-0.5f, -1.0f, -0.5f));
+  } else {
+    // The game initialises this guarded static (guard 0x71014a3de0, value at 0x71014a3dd0) and never reads it: the factors below are the constant 0.75
+    // (fmov s1, #0.75), not 1 - unknown009.x (that form loads the static and gives 71 instructions, not 61). Inferred role: scale; original name unknown.
+    static const mm::Vec3 unknown009(0.25f, 1.0f, 0.25f);
+    aabb.min.x *= 0.75f;
+    aabb.min.z *= 0.75f;
+    aabb.max.x *= 0.75f;
+    aabb.max.z *= 0.75f;
+  }
 }
 
 void GfObjUtil::setVolumeFadeUserFlag(GF_OBJ_HANDLE *handle, bool isForUser) {
@@ -1486,7 +1502,7 @@ static GFOBJ_MOUNT *unknown004(GFOBJ_INFO *info, GFATTACH attach) { return info 
 GfAppendInfo *GfObjUtil::getAppendInfo(GF_OBJ_HANDLE *handle, GFATTACH attach) {
   GFOBJ_INFO *info = GfObjManager::getObjInfo(handle);
   GFOBJ_MOUNT *mount = unknown004(info, attach);
-  return info == nullptr ? nullptr : &mount->unknown10;
+  return info == nullptr ? nullptr : &mount->m_appendInfo;
 }
 
 GfAppend *GfObjUtil::getAppend(GF_OBJ_HANDLE *handle, GFATTACH attach) {
@@ -1501,10 +1517,10 @@ GfAppend *GfObjUtil::getAppend(GF_OBJ_HANDLE *handle, GFATTACH attach) {
     return nullptr;
   }
   u32 index = mount->unknown08;
-  if (static_cast<s32>(index) < 0 || mount->unknown10.unknown00[isAlternate].size() <= index) {
+  if (static_cast<s32>(index) < 0 || mount->m_appendInfo.unknown00[isAlternate].size() <= index) {
     return nullptr;
   }
-  return *mount->unknown10.unknown00[isAlternate].at(index);
+  return *mount->m_appendInfo.unknown00[isAlternate].at(index);
 }
 
 bool GfObjUtil::isTrinityBlade(GF_OBJ_HANDLE *handle) {
@@ -1543,7 +1559,7 @@ bool GfObjUtil::isFollowObjNotReady(GF_OBJ_HANDLE *handle) {
   if (followId == PLAYER_ID_UNKNOWN_4294967295) {
     return false;
   }
-  GfObjAcc acc(formation->unknown1a0[followId].unknown08);
+  GfObjAcc acc(formation->unknown1a0[followId].m_playerHandle);
   return !acc.isValid() || acc.isRebuild() || acc.isReload();
 }
 

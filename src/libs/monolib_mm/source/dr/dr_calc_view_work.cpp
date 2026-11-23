@@ -45,6 +45,8 @@ int DrCalcViewWork::unistatic_preProjMat(f32 *work, bool isJitter) {
   return DrResMdoUniformBlock::s_nVarSizeTbl[DrResMdoUniformBlock::VAR_TYPE_UNKNOWN_68];
 }
 
+DrCalcViewWork::~DrCalcViewWork() {}
+
 void DrCalcViewWork::shadowBegin(const mm::Mat44 &matrix) {
   unknownc0 = matrix;
   unknownc0.rows[3][0] = unknownc0.rows[3][1] = 0.0f;
@@ -130,12 +132,12 @@ int DrCalcViewWork::unistatic_depth_change(f32 *work, bool isJitter) {
   work[0] = unknown430.x;
   work[1] = unknown430.y;
   work[2] = unknown430.z;
-  work[3] = unknown700->unknown78->unknown00;
+  work[3] = m_drMan->m_drPixlMan->unknown00;
   return DrResMdoUniformBlock::s_nVarSizeTbl[DrResMdoUniformBlock::VAR_TYPE_UNKNOWN_25];
 }
 
 int DrCalcViewWork::unistatic_lightAmb(f32 *work) {
-  DrLightMan *lightMan = unknown700->unknown588;
+  DrLightMan *lightMan = m_drMan->unknown588;
   work[0] = lightMan->unknown12c.r;
   work[1] = lightMan->unknown12c.g;
   work[2] = lightMan->unknown12c.b;
@@ -151,9 +153,9 @@ int DrCalcViewWork::unistatic_diffuseIBL(f32 *work) {
 }
 
 int DrCalcViewWork::unistatic_specularIBL(f32 *work) {
-  DrPixlPostObjCubeMapMultiIBL *ibl = unknown700->unknown78->unknown7f0->unknown180->unknown40;
+  DrPixlPostObjCubeMapMultiIBL *ibl = m_drMan->m_drPixlMan->unknown7f0->m_drPixlPostMan->m_drPixlPostObjCubeMapMultiIBL;
   if (ibl != nullptr) {
-    bool isSkip = unknown700->isIBLSkip();
+    bool isSkip = m_drMan->isIBLSkip();
     mm::Vec4 value = mm::Vec4::zero;
     if (!isSkip) {
       value.x = ibl->getPremMipCount();
@@ -161,6 +163,21 @@ int DrCalcViewWork::unistatic_specularIBL(f32 *work) {
     grlib::ShdF32SetVec4(work, &value.x);
   }
   return DrResMdoUniformBlock::s_nVarSizeTbl[DrResMdoUniformBlock::VAR_TYPE_UNKNOWN_59];
+}
+
+// 0x71008b1d60. The game keeps the inner loop of 8 rolled (cmp x12, #8 at 0x71008b1dec). The named `value` does that: with -g its dbg.value is one more instruction in the loop body for LoopUnroll,
+// whose full unroll bound for 8 iterations is 300 (`-Rpass=loop-unroll` reports "completely unrolled loop with 8 iterations" and the function has 79 instructions without the local; a dbg.value for an
+// i64 counter has the same effect, which is why s64 counters and casts matched before).
+int DrCalcViewWork::unistatic_dither_matrix(f32 *work) {
+  mm::Mat44 matrices[4];
+  for (int i = 0; i < 8; i++) {
+    for (int j = 0; j < 8; j++) {
+      f32 value = (static_cast<f32>(unknownb20[i][j]) + 1.0f) / 65.0f;
+      matrices[i / 4 * 2 + j / 4].rows[i % 4][j % 4] = value;
+    }
+  }
+  grlib::ShdMat44SetMat44Array(work, matrices, 4);
+  return 0x40;
 }
 
 int DrCalcViewWork::unistatic_dither_param(f32 *work) {
@@ -171,6 +188,19 @@ int DrCalcViewWork::unistatic_dither_param(f32 *work) {
   value.w = unknownb10[1];
   grlib::ShdVec4SetVec4(work, value);
   return 4;
+}
+
+// 0x71008b1e70, the same loops on the inverted pattern value (0x3f - v). The named `value` is needed as in unistatic_dither_matrix.
+int DrCalcViewWork::unistatic_inv_dither_matrix(f32 *work) {
+  mm::Mat44 matrices[4];
+  for (int i = 0; i < 8; i++) {
+    for (int j = 0; j < 8; j++) {
+      f32 value = (static_cast<f32>(0x3f - unknownb20[i][j]) + 1.0f) / 65.0f;
+      matrices[i / 4 * 2 + j / 4].rows[i % 4][j % 4] = value;
+    }
+  }
+  grlib::ShdMat44SetMat44Array(work, matrices, 4);
+  return 0x40;
 }
 
 int DrCalcViewWork::unistatic_inv_dither_param(f32 *work) {
@@ -249,11 +279,11 @@ int DrCalcViewWork::unistatic_mpf_OldViewPos(f32 *work) {
 }
 
 int DrCalcViewWork::unistatic_digher_val(f32 *work, bool isJitter) {
-  grlib::CGLibTextureBuffer &texture = unknown700->unknown70->unknown98[1];
+  grlib::CGLibTextureBuffer &texture = m_drMan->m_drIniSys->unknown98[1];
   f32 width = texture.getWidth();
   f32 height = texture.getHeight();
-  work[0] = unknown700->unknown5b8->unknown18 * 0.25f;
-  work[1] = (1.0f / height) * unknown700->unknown5b8->unknown1c;
+  work[0] = m_drMan->unknown5b8->unknown18 * 0.25f;
+  work[1] = (1.0f / height) * m_drMan->unknown5b8->unknown1c;
   work[2] = 4.0f / width;
   work[3] = width * 0.25f;
   return DrResMdoUniformBlock::s_nVarSizeTbl[DrResMdoUniformBlock::VAR_TYPE_UNKNOWN_26];
@@ -261,7 +291,7 @@ int DrCalcViewWork::unistatic_digher_val(f32 *work, bool isJitter) {
 
 int DrCalcViewWork::unistatic_screenSize(f32 *work, bool isJitter) {
   mm::Vec4 value = mm::Vec4::unit;
-  DrPixlRenderTarget *target = unknown700->unknown78->getPixlObj(5);
+  DrPixlRenderTarget *target = m_drMan->m_drPixlMan->getPixlObj(5);
   if (target != nullptr) {
     value.x = target->unknownbc;
     value.y = target->unknownc0;
@@ -275,7 +305,7 @@ int DrCalcViewWork::unistatic_screenSize(f32 *work, bool isJitter) {
 }
 
 int DrCalcViewWork::unistatic_lightCol(f32 *work) {
-  DrLightMan *lightMan = unknown700->unknown588;
+  DrLightMan *lightMan = m_drMan->unknown588;
   s32 count = lightMan->unknown168;
   s32 used = count < 3 ? count : 2;
   const mm::Col3 *color = lightMan->unknown16c;

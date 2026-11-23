@@ -17,7 +17,7 @@ namespace pc {
 
 void StateFieldFall::enter(GfComBehaviorPc *behavior, ai::State *previous) {
   for (ai::State *state = previous; state != nullptr; state = state->unknown10) {
-    if (state->unknown08 == STATE_ID_UNKNOWN_38) {
+    if (state->m_state == STATE_ID_UNKNOWN_38) {
       StateUtil::setActivateTimer(*behavior, TimerPlugin::TYPE_UNKNOWN_0, true);
       return;
     }
@@ -26,7 +26,7 @@ void StateFieldFall::enter(GfComBehaviorPc *behavior, ai::State *previous) {
 
 void StateFieldFall::leave(GfComBehaviorPc *behavior, ai::State *next) {
   StateUtil::setActivateTimer(*behavior, TimerPlugin::TYPE_UNKNOWN_0, false);
-  if (next == nullptr || next->unknown08 == STATE_ID_UNKNOWN_13) {
+  if (next == nullptr || next->m_state == STATE_ID_UNKNOWN_13) {
     return;
   }
   StateUtilField::notifyJumpEnd(*behavior);

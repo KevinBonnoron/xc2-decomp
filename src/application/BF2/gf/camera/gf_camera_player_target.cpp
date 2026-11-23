@@ -24,8 +24,8 @@ namespace gf {
 PlayerCameraTarget *PlayerCameraTarget::create() { return new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) PlayerCameraTarget; }
 
 PlayerCameraTarget::PlayerCameraTarget()
-    : unknown20{mm::Vec3::zero, mm::Quat::identity}, unknown40(false), unknown41(false), unknown42(false), unknown43(false), unknown44(false), unknown45(false), unknown46(false), unknown48(0.0f),
-      unknown4c(0.0f), unknown50(mm::Vec3::unitY), unknown60(mm::Vec3::unitZ), unknown70(unknown020), unknown78(true), unknown79(false) {
+    : m_transform{mm::Vec3::zero, mm::Quat::identity}, unknown40(false), unknown41(false), unknown42(false), unknown43(false), unknown44(false), unknown45(false), unknown46(false), unknown48(0.0f),
+      unknown4c(0.0f), unknown50(mm::Vec3::unitY), unknown60(mm::Vec3::unitZ), m_GF_OBJ_HANDLE(unknown020), unknown78(true), unknown79(false) {
   writeTargetInfo();
   GfEvent::addEventCallback(this);
 }
@@ -48,11 +48,11 @@ void PlayerCameraTarget::gevPartyMemberOK(bool isOK) { unknown78 = isOK; }
 
 void PlayerCameraTarget::writeTargetInfo() {
   if (!unknown78) {
-    unknown70 = unknown020;
+    m_GF_OBJ_HANDLE = unknown020;
     return;
   }
 
-  GF_OBJ_HANDLE *handle = unknown70;
+  GF_OBJ_HANDLE *handle = m_GF_OBJ_HANDLE;
   if (handle == unknown020) {
     handle = GfGameManager::getControlMover();
   }
@@ -60,12 +60,12 @@ void PlayerCameraTarget::writeTargetInfo() {
   GfObjProperty *property = GfObjUtil::getProperty(handle);
   if (property != nullptr && property->unknown18 != nullptr) {
     unknown070 *move = property->unknown18;
-    unknown20.unknown00 = move->unknown10;
-    unknown20.unknown10 = move->unknown20;
+    m_transform.unknown00 = move->unknown10;
+    m_transform.unknown10 = move->unknown20;
     unknown40 = move->unknown00 == PROPERTY_MOVE_UNKNOWN_3;
     unknown41 = move->unknown00 == PROPERTY_MOVE_UNKNOWN_4 && !move->unknown7d;
     unknown42 = move->unknown00 == PROPERTY_MOVE_UNKNOWN_1;
-    unknown43 = move->unknownc0 != unknown020;
+    unknown43 = move->m_GF_OBJ_HANDLE != unknown020;
     unknown60 = move->unknown90.normal;
   }
 
@@ -81,8 +81,8 @@ void PlayerCameraTarget::writeTargetInfo() {
     unknown44 = false;
     unknown46 = false;
     if (env->unknown2d0 & 1) {
-      unknown48 = env->unknown280.unknown00.x - 1.0f;
-      unknown4c = env->unknown280.unknown00.x;
+      unknown48 = env->unknown280.unknown00 - 1.0f;
+      unknown4c = env->unknown280.unknown00;
       unknown50 = env->unknown280.unknown10.normal;
       unknown44 = true;
       unknown46 = true;

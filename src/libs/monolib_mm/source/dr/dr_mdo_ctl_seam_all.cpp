@@ -41,7 +41,7 @@ DrMdoCtlSeamAll::~DrMdoCtlSeamAll() { releaseSeamAll(); }
 
 void DrMdoCtlSeamAll::releaseSeamAll() {
   if (unknown1a == 0) {
-    m_drMan->unknown78->unknown800->delShadowCacheUpdate();
+    m_drMan->m_drPixlMan->m_drPixlShadowCacheMan->delShadowCacheUpdate();
   }
   releaseBaseMap();
   releaseLowMap();
@@ -55,9 +55,9 @@ void DrMdoCtlSeamAll::releaseSeamAll() {
 void DrMdoCtlSeamAll::resourceInit() {
   unknownc7c |= 0x2000;
   if (unknown1a == 0) {
-    m_drMan->unknown78->unknown800->addShadowCacheUpdate(false);
+    m_drMan->m_drPixlMan->m_drPixlShadowCacheMan->addShadowCacheUpdate(false);
   }
-  m_drMan->unknown88->addMpfObj();
+  m_drMan->m_drMdlMan->addMpfObj();
   const u8 *data = reinterpret_cast<const u8 *>(unknown1a8);
   if (unknown1a8->unknown84 != 0) {
     DrLightMan *lightMan = DrMan::getIns()->unknownc0[unknown1a];
@@ -65,10 +65,10 @@ void DrMdoCtlSeamAll::resourceInit() {
     lightMan->releaseAllDirLight();
     DrMan::getIns()->unknowne0[unknown1a]->releaseAll();
     const void *envData = data + unknown1a8->unknown84;
-    unknown3f8 = m_drMan->unknown100[unknown1a]->createObj(envData);
+    m_drEnvironmentObj = m_drMan->unknown100[unknown1a]->createObj(envData);
   }
   if (unknown1a8->unknowna8 != 0) {
-    unknown408 = m_drMan->unknowna0[unknown1a]->unknown18->createClipObj(data + unknown1a8->unknowna8);
+    m_drCalcClipObj = m_drMan->unknowna0[unknown1a]->m_drCalcClipMan->createClipObj(data + unknown1a8->unknowna8);
   }
   if (unknown1a8->unknowne8 != 0) {
     const void *cloudData = reinterpret_cast<const u8 *>(unknown1a8) + unknown1a8->unknowne8;
@@ -101,18 +101,18 @@ void DrMdoCtlSeamAll::update() {
   calcFastUpdate();
   if (callDeleteUpdate()) {
     MdoArgSeamUpdate arg;
-    arg.unknown00 = m_drMan->unknown580->unknown10;
-    arg.unknown48 = m_drMan->unknown88->unknown008->unknown10;
+    arg.m_drCalcViewWork = m_drMan->m_drCalcMan->m_drCalcViewWork;
+    arg.unknown48 = m_drMan->m_drMdlMan->m_drMdoVertexMan->unknown10;
     arg.unknown08 = unknownbd0;
-    arg.unknown10 = unknown220.unknown20;
+    arg.m_drResMdoSeamVertex = unknown220.unknown20;
     arg.unknown18 = unknownbe0;
-    arg.unknown20 = unknown1b0.unknown20;
+    arg.m_drResMdoSeamTexture = unknown1b0.unknown20;
     arg.unknown28 = unknownbf0;
-    arg.unknown30 = unknown1e8.unknown20;
-    arg.unknown38 = reinterpret_cast<const MdsSeamOfsTexTblData *>(reinterpret_cast<const u8 *>(unknown1a8) + unknown1a8->unknown5c);
+    arg.m_drResMdoSeamTexList = unknown1e8.unknown20;
+    arg.m_mdsSeamOfsTexTblData = reinterpret_cast<const MdsSeamOfsTexTblData *>(reinterpret_cast<const u8 *>(unknown1a8) + unknown1a8->unknown5c);
     arg.unknown40 = unknownc7c;
-    arg.unknown50 = &unknown698;
-    arg.unknown58 = unknown410;
+    arg.m_drResMdoInstAnmObj = &m_drResMdoInstAnmObj;
+    arg.m_drCalcClipMan = m_drCalcClipMan;
     updateReadList();
     updateTexutreSeam();
     updateVertexSeam();
@@ -127,19 +127,19 @@ void DrMdoCtlSeamAll::update() {
     }
     updateReadCall();
     unknown14d0 = m_matrix;
-    unknown14d0.unknown002(unknown14d0, m_drMan->unknown580->unknown10->unknown200);
+    unknown14d0.unknown002(unknown14d0, m_drMan->m_drCalcMan->m_drCalcViewWork->unknown200);
     unknown1510 = m_matrix;
-    unknown1510.unknown002(unknown1510, m_drMan->unknown580->unknown10->unknown40);
-    m_drMan->unknown88->unknown230->unknown0c = true;
+    unknown1510.unknown002(unknown1510, m_drMan->m_drCalcMan->m_drCalcViewWork->unknown40);
+    m_drMan->m_drMdlMan->unknown230->unknown0c = true;
   } else {
     updateTexutreSeam();
     updateVertexSeam();
   }
   if (((unknownc7c >> 12) & 1) == 0) {
     unknownf8 |= unknown028_0;
-    DrMdlMan *mdlMan = m_drMan->unknown88;
-    mdlMan->unknown218->setViewSeamLast(unknown3f0);
-    mdlMan->unknown218->setViewLast(unknown3e8);
+    DrMdlMan *mdlMan = m_drMan->m_drMdlMan;
+    mdlMan->unknown218->setViewSeamLast(m_drResMdoSortSeamEnvMap);
+    mdlMan->unknown218->setViewLast(m_drResMdoSortSeamAll);
     if (unknownf8 & unknown028_15) {
       mdlMan->unknown230->unknown00 = true;
     }
@@ -242,23 +242,23 @@ void DrMdoCtlSeamAll::dispOffUpdate() {
 
 void DrMdoCtlSeamAll::noOffScreenUpdate() {
   unknownc16++;
-  if (!unknowncd0.isRead()) {
-    unknowncd0.release();
+  if (!m_drResMdoSeamRead.isRead()) {
+    m_drResMdoSeamRead.release();
     if (unknownc16 > 3) {
-      unknown20 |= unknown038_3 | unknown038_3 << 1;
+      m_disp |= unknown038_3 | unknown038_3 << 1;
     }
   }
   if (((unknownc7c >> 12) & 1) == 0) {
     unknownc7c |= 0x1000;
     if (unknown1a == 0) {
-      m_drMan->unknown78->unknown800->delShadowCacheUpdate();
+      m_drMan->m_drPixlMan->m_drPixlShadowCacheMan->delShadowCacheUpdate();
     }
   }
 }
 
 void DrMdoCtlSeamAll::setDeleteCall(int deleteCall) {
   unknownc7c |= 0x40000000 << deleteCall;
-  unknowncd0.readCancel();
+  m_drResMdoSeamRead.readCancel();
   resourceRelease();
 }
 
@@ -428,11 +428,11 @@ void DrMdoCtlSeamAll::shadowRender() {
   unknownf4 = 6;
   unknownf2 = 0;
   unknown001();
-  DrPixlShadowObj *shadow = m_drMan->unknown78->unknown848;
-  if (shadow->unknown198->isInstMapShadow()) {
+  DrPixlShadowObj *shadow = m_drMan->m_drPixlMan->m_drPixlShadowObj;
+  if (shadow->m_drLightObj->isInstMapShadow()) {
     callShadowMapRenderSeamInstMap(shadow);
   }
-  if (shadow->unknown198->isBaseMapShadow()) {
+  if (shadow->m_drLightObj->isBaseMapShadow()) {
     callShadowMapRenderSeamBaseMap(shadow);
   }
 }
@@ -463,15 +463,15 @@ bool DrMdoCtlSeamAll::shadowCacheRender(DrPixlShadowCacheObj &cache) {
 }
 
 void DrMdoCtlSeamAll::shadowCacheAddRender(int index) {
-  if ((unknown20 & unknown038_0) == 0 || ((unknownc7c >> 28) & 1) != 0) {
+  if ((m_disp & unknown038_0) == 0 || ((unknownc7c >> 28) & 1) != 0) {
     return;
   }
-  m_drMan->unknown78->setupShadowUnifrom(index);
+  m_drMan->m_drPixlMan->setupShadowUnifrom(index);
   callInstShadowCacheAddRender(index);
 }
 
 void DrMdoCtlSeamAll::occRender() {
-  if ((unknown20 & unknown038_0) == 0 || ((unknownc7c >> 28) & 1) != 0) {
+  if ((m_disp & unknown038_0) == 0 || ((unknownc7c >> 28) & 1) != 0) {
     return;
   }
   occInstRender();

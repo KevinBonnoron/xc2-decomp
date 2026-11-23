@@ -32,19 +32,19 @@ public:
     bool isPopCondMatched() const;
     fw::SoundPack *getSoundPack() const;
 
-    bool unknown00;             // Inferred role: map pack; original member name unknown.
-    bool unknown01;             // Inferred role: play once; original member name unknown.
-    u16 unknown02;              // Inferred role: se name; original member name unknown.
-    u8 unknown04;               // Inferred role: volume max; original member name unknown.
-    u8 unknown05;               // Inferred role: volume min; original member name unknown.
-    u16 unknown06;              // Inferred role: condition; original member name unknown.
-    u8 unknown08;               // Inferred role: in room volume; original member name unknown.
-    ScenarioFlagCond unknown0a; // Inferred role: scenario flag; original member name unknown.
-    QuestFlagCond unknown0e;    // Inferred role: quest flag; original member name unknown.
-    TimeCond unknown18;         // Inferred role: time cond; original member name unknown.
-    WeatherCond unknown28;      // Inferred role: weather cond; original member name unknown.
-    BootedGmkCond unknown38;    // Inferred role: booted gmk; original member name unknown.
-    BootedGmkCond unknown3c;    // Inferred role: op booted gmk; original member name unknown.
+    bool unknown00;                      // Inferred role: map pack; original member name unknown.
+    bool unknown01;                      // Inferred role: play once; original member name unknown.
+    u16 unknown02;                       // Inferred role: se name; original member name unknown.
+    u8 unknown04;                        // Inferred role: volume max; original member name unknown.
+    u8 unknown05;                        // Inferred role: volume min; original member name unknown.
+    u16 unknown06;                       // Inferred role: condition; original member name unknown.
+    u8 unknown08;                        // Inferred role: in room volume; original member name unknown.
+    ScenarioFlagCond m_scenarioFlagCond; // Inferred role: scenario flag; original member name unknown.
+    QuestFlagCond m_questFlagCond;       // Inferred role: quest flag; original member name unknown.
+    TimeCond m_timeCond;                 // Inferred role: time cond; original member name unknown.
+    WeatherCond m_weatherCond;           // Inferred role: weather cond; original member name unknown.
+    BootedGmkCond unknown38;             // Inferred role: booted gmk; original member name unknown.
+    BootedGmkCond unknown3c;             // Inferred role: op booted gmk; original member name unknown.
   };
 
   struct Data {
@@ -68,12 +68,12 @@ public:
   bool canDepopInst() const;
   void validateMute() const;
 
-  const BdatInfo *getBdatInfo() const { return reinterpret_cast<const BdatInfo *>(unknown20.unknown10); }
-  const Data *getData() const { return static_cast<const Data *>(unknown20.unknown08); }
+  const BdatInfo *getBdatInfo() const { return reinterpret_cast<const BdatInfo *>(m_createInfo.unknown10); }
+  const Data *getData() const { return static_cast<const Data *>(m_createInfo.unknown08); }
 
-  GmkPhantom unknown60; // Inferred role: phantom; original member name unknown.
-  bool unknownf0;       // Role and original member name unknown.
-  bool unknownf1;       // Role and original member name unknown.
+  GmkPhantom m_gmkPhantom; // Inferred role: phantom; original member name unknown.
+  bool unknownf0;          // Role and original member name unknown.
+  bool unknownf1;          // Role and original member name unknown.
   u8 _f2[0xf4 - 0xf2];
   int unknownf4;           // Role and original member name unknown.
   f32 unknownf8;           // Role and original member name unknown.
@@ -82,7 +82,7 @@ public:
 };
 
 static_assert(sizeof(GmkSe::BdatInfo) == 0x40, "");
-static_assert(offsetof(GmkSe, unknown60) == 0x60, "");
+static_assert(offsetof(GmkSe, m_gmkPhantom) == 0x60, "");
 static_assert(offsetof(GmkSe, unknownf0) == 0xf0, "");
 static_assert(offsetof(GmkSe, unknownf1) == 0xf1, "");
 static_assert(offsetof(GmkSe, unknownf4) == 0xf4, "");
@@ -127,8 +127,8 @@ public:
   bool isPlayerInsideAabb() const;
   void validateMute() const;
 
-  const Data *getData() const { return static_cast<const Data *>(unknown20.unknown08); }
-  const GmkSe::BdatInfo *getBdatInfo() const { return reinterpret_cast<const GmkSe::BdatInfo *>(unknown20.unknown10); }
+  const Data *getData() const { return static_cast<const Data *>(m_createInfo.unknown08); }
+  const GmkSe::BdatInfo *getBdatInfo() const { return reinterpret_cast<const GmkSe::BdatInfo *>(m_createInfo.unknown10); }
 
   bool unknown58; // Role and original member name unknown.
   bool unknown59; // Role and original member name unknown.

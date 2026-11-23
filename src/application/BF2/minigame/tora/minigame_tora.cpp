@@ -16,13 +16,13 @@ namespace minigame {
 namespace tora {
 
 void minigame::get_pc_pos(int &x, int &y) {
-  x = unknown3528->unknown2c;
-  y = unknown3528->unknown30 + unknown3560 / 256;
+  x = m_sTask->unknown2c;
+  y = m_sTask->unknown30 + unknown3560 / 256;
 }
 
 void minigame::get_pc_dxdy(int x, int y, int &dx, int &dy) {
-  dx = x - unknown3528->unknown2c;
-  dy = y - unknown3528->unknown30 - unknown3560 / 256;
+  dx = x - m_sTask->unknown2c;
+  dy = y - m_sTask->unknown30 - unknown3560 / 256;
 }
 
 void minigame::get_coli_xy(int &x, int &y, _sTask *task) {
@@ -69,7 +69,7 @@ u8 minigame::check_map(int x, int y) {
   return 0x80;
 }
 
-u8 minigame::get_tbox_type(int index) { return unknown1688[index].unknown00; }
+u8 minigame::get_tbox_type(int index) { return unknown1688[index].m__tbox_type; }
 
 bool minigame::check_rank() {
   if (unknown33e0 < 0 || unknown33e0 > 4) {
@@ -91,7 +91,7 @@ unknown003 *minigame::sprite_get() {
 }
 
 u8 *minigame::get_res_pal(int index) {
-  unknown002 *res = static_cast<unknown002 *>(unknown20.get_res(index));
+  unknown002 *res = static_cast<unknown002 *>(m_archive.get_res(index));
   if (res->unknown02 == 0) {
     return nullptr;
   }
@@ -275,7 +275,7 @@ void *minigame::get_dropitem() {
 }
 
 int minigame::add_item(int item, void *param) {
-  if (unknown1688[item].unknown00 == 2) {
+  if (unknown1688[item].m__tbox_type == 2) {
     if (unknown3520 != nullptr) {
       u16 score = unknown1688[item].unknown02[0].unknown00;
       unknown3410 += score;
@@ -294,7 +294,7 @@ int minigame::add_item(int item, void *param) {
       unknown3fe0.unknown48++;
       return count;
     }
-    if (unknown1688[unknown3420[i].unknown00].unknown00 == 0) {
+    if (unknown1688[unknown3420[i].unknown00].m__tbox_type == 0) {
       count++;
     }
   }

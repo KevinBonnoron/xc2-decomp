@@ -360,5 +360,6 @@ public:
 void efAstMsg(const char *cond, const char *format, ...);
 void efMsg(const char *format, ...);
 void efWng(const char *format, ...);
+void CusAssert();
 
 } // namespace ptlib

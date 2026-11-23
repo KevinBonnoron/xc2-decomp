@@ -19,7 +19,7 @@
 namespace ml {
 
 DrFogMan::DrFogMan(DrMan *man)
-    : unknown00(man), unknown08(nullptr), unknown10(nullptr), unknown18(0.5f, 0.5f, 0.5f), unknown24(0.0f, 0.0f, 0.0f), unknown30(0.0f, 0.0f, 0.0f), unknown3c(0.1f), unknown40(10000.0f),
+    : m_drMan(man), unknown08(nullptr), unknown10(nullptr), unknown18(0.5f, 0.5f, 0.5f), unknown24(0.0f, 0.0f, 0.0f), unknown30(0.0f, 0.0f, 0.0f), unknown3c(0.1f), unknown40(10000.0f),
       unknown44(1.0f), unknown48(1.0f), unknown4c(1.0f), unknown50(1.0f), unknown54(1.0f), unknown58(0.0f), unknown5c(1.0f), m_fogOn(false), unknownd1(true) {}
 
 DrFogMan::~DrFogMan() { releaseAll(); }
@@ -84,15 +84,15 @@ void DrFogMan::update() {
 void DrFogMan::updateGbl() { update(); }
 
 void DrFogMan::calcTbl() {
-  const mm::Mat44 &view = unknown00->unknown580->unknown10->unknown40;
-  DrLightMan *lightMan = unknown00->unknown588;
-  f32 gamma = unknown00->unknown78->unknown00;
+  const mm::Mat44 &view = m_drMan->m_drCalcMan->m_drCalcViewWork->unknown40;
+  DrLightMan *lightMan = m_drMan->unknown588;
+  f32 gamma = m_drMan->m_drPixlMan->unknown00;
   f32 power = DrMan::isFogSRGB() ? 1.0f : gamma;
   mm::Vec3 up(view.rows[0][0] * 0.0f + view.rows[1][0] + view.rows[2][0] * 0.0f,
               view.rows[0][1] * 0.0f + view.rows[1][1] + view.rows[2][1] * 0.0f,
               view.rows[0][2] * 0.0f + view.rows[1][2] + view.rows[2][2] * 0.0f);
   up.unknown001();
-  if (unknown00->unknown1d71) {
+  if (m_drMan->m_fogSkip) {
     unknown18.r = 0.0f;
     unknown18.g = 0.0f;
     unknown18.b = 0.0f;
@@ -141,11 +141,11 @@ void DrFogMan::calcTbl() {
   unknown60[25] = unknown58 * unknown30.g;
   unknown60[26] = unknown30.b * unknown58;
   unknown60[27] = unknown5c;
-  memcpy(unknown00->unknown660[unknown00->unknown1c98].m_fogTbl, unknown60, sizeof(f32) * 27);
+  memcpy(m_drMan->m_iDrDrawWorkInfo[m_drMan->unknown1c98].m_fogTbl, unknown60, sizeof(f32) * 27);
 }
 
 void DrFogMan::createGblFog() {
-  DrFogObj *fog = new (unknown00->unknown10) DrFogObjGbl(unknown00);
+  DrFogObj *fog = new (m_drMan->unknown10) DrFogObjGbl(m_drMan);
   unknown100(unknown08, unknown10, fog);
 }
 
@@ -157,7 +157,7 @@ void DrFogMan::releaseGblFog(DrFogObj *fog) {
 bool DrFogMan::isFogOn() const { return m_fogOn; }
 
 DrFogObj::DrFogObj(DrMan *man)
-    : unknown08(nullptr), unknown10(nullptr), unknown18(man), unknown20(0.5f, 0.5f, 0.5f), unknown2c(0.0f, 0.0f, 0.0f), unknown38(0.0f, 0.0f, 0.0f), unknown44(0.1f), unknown48(10000.0f),
+    : unknown08(nullptr), unknown10(nullptr), m_drMan(man), unknown20(0.5f, 0.5f, 0.5f), unknown2c(0.0f, 0.0f, 0.0f), unknown38(0.0f, 0.0f, 0.0f), unknown44(0.1f), unknown48(10000.0f),
       unknown4c(1.0f), unknown50(1.0f), unknown54(1.0f), unknown58(1.0f), unknown5c(1.0f), unknown60(0.0f), unknown64(1.0f) {}
 
 DrFogObjGbl::DrFogObjGbl(DrMan *man) : DrFogObj(man) {}

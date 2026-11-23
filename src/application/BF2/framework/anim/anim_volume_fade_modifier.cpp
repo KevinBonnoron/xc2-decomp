@@ -9,16 +9,16 @@
 
 namespace fw {
 
-AnimVolumeFadeModifier::AnimVolumeFadeModifier() : unknown18(nullptr), unknown70(true) {}
+AnimVolumeFadeModifier::AnimVolumeFadeModifier() : m_modelObject(nullptr), unknown70(true) {}
 
 AnimVolumeFadeModifier::~AnimVolumeFadeModifier() {}
 
-void AnimVolumeFadeModifier::unbind() { mm::mtl::safeRelease(unknown18); }
+void AnimVolumeFadeModifier::unbind() { mm::mtl::safeRelease(m_modelObject); }
 
 void AnimVolumeFadeModifier::bind(ModelObject *modelObject) {
   unbind();
   if (modelObject != nullptr) {
-    unknown18 = modelObject;
+    m_modelObject = modelObject;
     modelObject->addRef();
     for (u32 i = 0; i < RATIO_UNKNOWN_6; i++) {
       unknown20[i] = 1.0f;
@@ -26,7 +26,7 @@ void AnimVolumeFadeModifier::bind(ModelObject *modelObject) {
     for (u32 i = 0; i < RATIO_UNKNOWN_6; i++) {
       unknown38[i] = -1;
     }
-    ml::ScnObjAccEtcParams params(unknown18->getInterface());
+    ml::ScnObjAccEtcParams params(m_modelObject->getInterface());
     u32 count = params.getMax();
     unknown70 = true;
     for (u32 i = 0; i < count; i++) {
@@ -42,14 +42,14 @@ void AnimVolumeFadeModifier::bind(ModelObject *modelObject) {
 void AnimVolumeFadeModifier::apply() {
   if (!unknown50.isValid() || unknown50()) {
     if (!unknown70) {
-      ml::ScnObjAccEtcParams params(unknown18->getInterface());
+      ml::ScnObjAccEtcParams params(m_modelObject->getInterface());
       for (u32 i = 0; i < RATIO_UNKNOWN_6; i++) {
         if (unknown38[i] >= 0) {
           params.setParams(unknown38[i], unknown20[i]);
         }
       }
     } else {
-      ml::ScnObjAccVolumeFade fade(unknown18->getInterface());
+      ml::ScnObjAccVolumeFade fade(m_modelObject->getInterface());
       for (u32 i = 0; i < fade.getMax(); i++) {
         fade.setRatio(unknown20[i], i);
       }

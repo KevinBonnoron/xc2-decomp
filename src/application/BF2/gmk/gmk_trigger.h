@@ -52,13 +52,13 @@ public:
   AGmkBase *getBindedEnemy(u32 index) const;
   AGmkBase *getBindedRoutedEnemy(u32 index) const;
 
-  const Data *getData() const { return static_cast<const Data *>(unknown20.unknown08); }
+  const Data *getData() const { return static_cast<const Data *>(m_createInfo.unknown08); }
 
-  GmkPhantom unknown50;               // Inferred role: phantom; original member name unknown.
+  GmkPhantom m_gmkPhantom;            // Inferred role: phantom; original member name unknown.
   void (GmkTrigger::*unknowne0)(f32); // Inferred role: sequence; original member name unknown.
 };
 
-static_assert(offsetof(GmkTrigger, unknown50) == 0x50, "");
+static_assert(offsetof(GmkTrigger, m_gmkPhantom) == 0x50, "");
 static_assert(offsetof(GmkTrigger, unknowne0) == 0xe0, "");
 static_assert(sizeof(GmkTrigger) == 0xf0, "");
 
@@ -66,7 +66,7 @@ typedef TGmkList<GmkTrigger, GmkTrigger::BdatInfo, 0x52475254, 2, GmkTriggerGob>
 
 // Inferred helper: creates the trigger list of a gmk list from the create info of that list without its bdat; original name unknown.
 inline void unknown001(GmkTriggerList &triggers, IGmkList::CreateInfo info) {
-  if (info.unknown00.isValid() && info.unknown10.length() != 0) {
+  if (info.m_ALLOC_HANDLE.isValid() && info.unknown10.length() != 0) {
     info.unknown114.clear();
     triggers.GmkTriggerList::create(info);
   }

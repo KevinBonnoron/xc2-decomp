@@ -160,6 +160,37 @@ ResourceObject *ResourceManager::searchResource(u32 type, mm::mtl::IAllocator *a
   return nullptr;
 }
 
+// Inferred name; kept as an exception to the unknown-name rule (AGENTS.md): single-user helper whose existence only the match proves; rename if a sibling build gives a
+// symbol. The game (0x710019be98, 116 instructions) keeps the begin() assert of each arm of the `after` test: with the find written in the arm the first SimplifyCFG
+// hoists the identical `begin()` call of both arms above the test and the function has 103 instructions. Tried without the helper (103 each): if/else in both orders,
+// `it = begin(); if (after) { find; ++it }`, a hand `while` search (101), `end()` evaluated first (117, other block layout), a find written on `unknown18[type]`.
+static ResourceObject **findNext(mm::mtl::Vector<ResourceObject *> &resources, ResourceObject *after) {
+  ResourceObject **it = mm::mtl::find(resources.begin(), resources.end(), after);
+  if (it != resources.end()) {
+    it++;
+  }
+  return it;
+}
+
+ResourceObject *ResourceManager::searchResource(u32 type, const char *path, ResourceObject *after) {
+  u32 hash = mm::mtl::hashStrCrc(path);
+  mm::mtl::Vector<ResourceObject *> &resources = unknown18[type];
+  ResourceObject **it;
+  if (after != nullptr) {
+    it = findNext(resources, after);
+  } else {
+    it = resources.begin();
+  }
+  while (it != resources.end()) {
+    ResourceObject *resource = *it;
+    if (resource->unknown20 == hash && strcmp(resource->unknown2c.c_str(), path) == 0) {
+      return resource;
+    }
+    it++;
+  }
+  return nullptr;
+}
+
 void ResourceManager::addSafeObject(mm::mtl::ReferenceObject *object, eResourceType type) {
   unknown001 *it = unknown538.begin();
   while (it != unknown538.end()) {

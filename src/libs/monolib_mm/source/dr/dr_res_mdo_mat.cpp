@@ -53,7 +53,7 @@ DrResMdoMeshParts &DrResMdoMeshParts::operator=(const DrResMdoMeshParts &other) 
   unknown2c[1] = other.unknown2c[1];
   unknown34 = other.unknown34;
   unknown28 = other.unknown28;
-  unknown3a = other.unknown3a;
+  m_extVolumeFadeEffect = other.m_extVolumeFadeEffect;
   return *this;
 }
 
@@ -64,7 +64,7 @@ void DrResMdoMeshParts::setBoneName(const char *name) { m_boneName = name; }
 void DrResMdoMeshParts::setMatAdd(mm::Mat44 *matrix, const mm::Mat44 *baseMat, const mm::Mat44 *ofsMat, int index) {
   unknown10 = matrix;
   unknown18 = baseMat;
-  unknown20 = const_cast<mm::Mat44 *>(ofsMat);
+  m_extOfsMat = const_cast<mm::Mat44 *>(ofsMat);
   memcpy(matrix, baseMat, sizeof(mm::Mat44));
   unknown38 = index;
 }
@@ -117,7 +117,7 @@ void DrResMdoMeshParts::updateAlpha() {
   }
 }
 
-DrResMdoMeshObj::DrResMdoMeshObj() : unknown00(nullptr), unknown08(0) {}
+DrResMdoMeshObj::DrResMdoMeshObj() : m_drResMdoMeshParts(nullptr), unknown08(0) {}
 
 DrResMdoMeshObj::~DrResMdoMeshObj() {}
 
@@ -125,9 +125,9 @@ void DrResMdoMeshObj::updateUniforom(grlib::CGLibTriUniformArray *uniforms, bool
   mm::Mat44 viewMat;
   mm::Mat44 viewProj;
   f32 params[4] = {0.0f, 0.0f, 0.0f, 0.0f};
-  DrCalcViewWork *view = DrMan::get()->unknown580->unknown10;
+  DrCalcViewWork *view = DrMan::get()->m_drCalcMan->m_drCalcViewWork;
   for (u32 i = 0; i < unknown08; i++) {
-    DrResMdoMeshParts *parts = &unknown00[i];
+    DrResMdoMeshParts *parts = &m_drResMdoMeshParts[i];
     if ((parts->unknown28 & (DrResMdoMeshParts::FLAG_UNKNOWN_0 | 8)) == DrResMdoMeshParts::FLAG_UNKNOWN_0 && 0.0f < parts->unknown34) {
       grlib::CGLibTriUniformBlock *block = &(*uniforms)[parts->unknown38];
       f32 *buff = static_cast<f32 *>(block->getBuff());
@@ -157,7 +157,7 @@ void DrResMdoMeshObj::updateUniforom(grlib::CGLibTriUniformArray *uniforms, bool
 bool DrResMdoMeshObj::updateDisplayCheck(bool isDisp) {
   bool isChange = false;
   for (u32 i = 0; i < unknown08; i++) {
-    DrResMdoMeshParts *parts = &unknown00[i];
+    DrResMdoMeshParts *parts = &m_drResMdoMeshParts[i];
     if (parts->unknown28 & 0x100) {
       parts->unknown28 &= ~0x100;
       parts->unknown28 |= 1;
@@ -203,7 +203,7 @@ int DrResMdoMeshObj::getIdx(const char *name) const {
   int index = -1;
   u32 num = unknown08;
   if (num != 0) {
-    const DrResMdoMeshParts *parts = unknown00;
+    const DrResMdoMeshParts *parts = m_drResMdoMeshParts;
     for (u32 i = 0; i < num; i++, parts++) {
       if (strcmp(parts->m_name, name) == 0) {
         index = i;
@@ -234,7 +234,7 @@ void DrResMdoMeshObj::release(DrResMdoMeshObj *&meshObj) {
 
 DrResMdoMeshObj &DrResMdoMeshObj::operator=(const DrResMdoMeshObj &other) {
   for (u32 i = 0; i < unknown08; i++) {
-    unknown00[i] = other.unknown00[i];
+    m_drResMdoMeshParts[i] = other.m_drResMdoMeshParts[i];
   }
   return *this;
 }

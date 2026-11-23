@@ -36,7 +36,7 @@ public:
 
   CriticalSection unknown10;    // Inferred role: update lock; original member name unknown.
   CriticalSection unknown38;    // Inferred role: list lock; original member name unknown.
-  Scn *unknown60;               // Inferred role: scn; original member name unknown.
+  Scn *m_scn;                   // Inferred role: scn; original member name unknown.
   reslist<ScnObj *> unknown68;  // Inferred role: camera list; original member name unknown.
   reslist<ScnObj *> unknowna8;  // Inferred role: model list; original member name unknown.
   reslist<ScnObj *> unknowne8;  // Inferred role: list of type 3 objects; original member name unknown.
@@ -49,7 +49,7 @@ public:
 
 static_assert(offsetof(ScnPoolObj, unknown10) == 0x10, "");
 static_assert(offsetof(ScnPoolObj, unknown38) == 0x38, "");
-static_assert(offsetof(ScnPoolObj, unknown60) == 0x60, "");
+static_assert(offsetof(ScnPoolObj, m_scn) == 0x60, "");
 static_assert(offsetof(ScnPoolObj, unknown68) == 0x68, "");
 static_assert(offsetof(ScnPoolObj, unknowna8) == 0xa8, "");
 static_assert(offsetof(ScnPoolObj, unknowne8) == 0xe8, "");

@@ -43,7 +43,7 @@ public:
   s32 unknown68;                          // Inferred role: group count; original member name unknown.
   s32 unknown6c;                          // Inferred role: count of the groups that have models; original member name unknown.
   void *unknown70;                        // Inferred role: allocated work; original member name unknown.
-  DrResMdoSortGrp unknown78;              // Inferred role: z sort object; original member name unknown.
+  DrResMdoSortGrp m_drResMdoSortGrp;      // Inferred role: z sort object; original member name unknown.
 };
 
 static_assert(offsetof(DrMdoGrpObj, unknown28) == 0x28, "");
@@ -53,7 +53,7 @@ static_assert(offsetof(DrMdoGrpObj, unknown58) == 0x58, "");
 static_assert(offsetof(DrMdoGrpObj, unknown68) == 0x68, "");
 static_assert(offsetof(DrMdoGrpObj, unknown6c) == 0x6c, "");
 static_assert(offsetof(DrMdoGrpObj, unknown70) == 0x70, "");
-static_assert(offsetof(DrMdoGrpObj, unknown78) == 0x78, "");
+static_assert(offsetof(DrMdoGrpObj, m_drResMdoSortGrp) == 0x78, "");
 static_assert(sizeof(DrMdoGrpObj) == 0x98, "");
 
 } // namespace ml

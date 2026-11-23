@@ -31,7 +31,7 @@ namespace gf {
 
 GfMenuObjEnBook::GfMenuObjEnBook(u32 handle)
     : GfMenuObject(handle), unknown24(0), unknown28(0), unknown2c(0), unknown30(nullptr), unknown38(nullptr), unknown40(nullptr), unknown48(nullptr), unknown50(nullptr), unknown58(nullptr),
-      unknown60(nullptr), unknown68(nullptr), unknown70(nullptr), unknown78(nullptr), unknown80(nullptr), unknown88(0), unknown90(this), unknown320(false) {
+      unknown60(nullptr), unknown68(nullptr), unknown70(nullptr), unknown78(nullptr), m_menuModelView(nullptr), unknown88(0), unknown90(this), unknown320(false) {
   unknown40 = GfMenuMsgList::create();
   unknown50 = GfMenuMsgList::create();
   unknown60 = GfMenuIDList::create();
@@ -52,17 +52,17 @@ GfMenuObjEnBook::~GfMenuObjEnBook() {
 }
 
 void GfMenuObjEnBook::finalize() {
-  if (unknown80 != nullptr) {
-    delete unknown80;
-    unknown80 = nullptr;
+  if (m_menuModelView != nullptr) {
+    delete m_menuModelView;
+    m_menuModelView = nullptr;
   }
   GfMenuObject::finalize();
 }
 
 void GfMenuObjEnBook::update() {
   unknown90.unknown003();
-  if (unknown80 != nullptr) {
-    unknown80->update();
+  if (m_menuModelView != nullptr) {
+    m_menuModelView->update();
   }
   GfMenuObject::update();
 }
@@ -157,12 +157,12 @@ bool GfMenuObjEnBook::isDefeated(u32 id) {
 
 void GfMenuObjEnBook::deleteCurEnemyModel() {
   if (unknown88 != 0) {
-    unknown80->delGfObj(OBJECT_TYPE_ENEMY, unknown88);
+    m_menuModelView->delGfObj(OBJECT_TYPE_ENEMY, unknown88);
     unknown88 = 0;
   }
 }
 
-bool GfMenuObjEnBook::seqWaitLoading() { return !unknown80->isLoading(); }
+bool GfMenuObjEnBook::seqWaitLoading() { return !m_menuModelView->isLoading(); }
 
 bool GfMenuObjEnBook::seqStartTop() {
   ui::UIObjectAcc acc(unknown18, "LAY_top");
@@ -280,7 +280,7 @@ bool GfMenuObjEnBook::seqDeleteEnmey() {
     }
   }
   deleteCurEnemyModel();
-  return !unknown80->isLoading();
+  return !m_menuModelView->isLoading();
 }
 
 bool GfMenuObjEnBook::seqCreateEnmey() {
@@ -294,10 +294,10 @@ bool GfMenuObjEnBook::seqCreateEnmey() {
     transform.unknown00 = mm::Vec3::zero;
     transform.unknown10 = mm::Quat::identity;
     transform.unknown00.x = 1.5f;
-    unknown80->addEnemyObject(enemy, transform);
+    m_menuModelView->addEnemyObject(enemy, transform);
     unknown88 = enemy;
     unknown320 = true;
-  } else if (!unknown80->isLoading()) {
+  } else if (!m_menuModelView->isLoading()) {
     unknown320 = false;
     return true;
   }
@@ -309,12 +309,12 @@ bool GfMenuObjEnBook::seqFadeOutEnmey() {
     if (unknown88 == 0) {
       return true;
     }
-    GfMenuModelView::CtrlParam param(unknown80->findGfObj(OBJECT_TYPE_ENEMY, unknown88), 0.25f, false);
+    GfMenuModelView::CtrlParam param(m_menuModelView->findGfObj(OBJECT_TYPE_ENEMY, unknown88), 0.25f, false);
     param.setMoveAlpha(0.0f);
-    unknown80->startObjectCtrl(param);
+    m_menuModelView->startObjectCtrl(param);
     unknown320 = true;
   }
-  if (!unknown80->isObjectCtrlBusy(unknown80->findGfObj(OBJECT_TYPE_ENEMY, unknown88))) {
+  if (!m_menuModelView->isObjectCtrlBusy(m_menuModelView->findGfObj(OBJECT_TYPE_ENEMY, unknown88))) {
     unknown320 = false;
     return true;
   }
@@ -357,7 +357,7 @@ void GfMenuObjEnBook::TopListener::reciveEvent(const ui::EventData &event, u32 h
     if (event.unknown08 == 1) {
       GfMenuObject::enableFSInput(0);
       GfMenuObjOperationInfo::add(acc.unknown10, 0, 0, 0);
-      GfMenuObject::setupInputSelectionFromList(acc.unknown10, *unknown20->unknown30);
+      GfMenuObject::setupInputSelectionFromList(acc.unknown10, *m_menuObjEnBook->unknown30);
     }
     break;
   case 6: {
@@ -368,7 +368,7 @@ void GfMenuObjEnBook::TopListener::reciveEvent(const ui::EventData &event, u32 h
         name.format("IMG_top_item_base@%02d", event.unknown0c + 1);
         ui::UIObjectAcc(acc.unknown10, name.c_str()).startAnimation("idol", false);
       }
-      unknown20->unknown30->setIndex(index);
+      m_menuObjEnBook->unknown30->setIndex(index);
       name.format("IMG_top_item_base@%02d", index + 1);
       ui::UIObjectAcc(acc.unknown10, name.c_str()).startAnimation("sellect", false);
     }
@@ -377,7 +377,7 @@ void GfMenuObjEnBook::TopListener::reciveEvent(const ui::EventData &event, u32 h
   case 8:
     if (event.unknown0c == 1) {
       u32 index = event.unknown08;
-      unknown20->unknown24 = index;
+      m_menuObjEnBook->unknown24 = index;
       switch (index) {
       case 0:
         GfMenuObject::sendOpenEvent(GfMenuObject::getFSInputObject(4), 0, 0.0f);
@@ -394,7 +394,7 @@ void GfMenuObjEnBook::TopListener::reciveEvent(const ui::EventData &event, u32 h
       GfMenuObject::sendCloseEvent(acc.unknown10, 0, 0.0f);
       GfMenuObject::disableFSInput();
     } else if (event.unknown0c == 2) {
-      GfMenuObject::returnFSSubLayer(unknown20);
+      GfMenuObject::returnFSSubLayer(m_menuObjEnBook);
     } else {
       break;
     }
@@ -458,18 +458,18 @@ void GfMenuObjEnBook::FamilySelListener::reciveEvent(const ui::EventData &event,
     if (event.unknown08 == 1) {
       GfMenuObject::enableFSInput(1);
       GfMenuObjOperationInfo::add(acc.unknown10, 0, 0, 0);
-      GfMenuObject::setupInputSelectionFromList(acc.unknown10, *unknown20->unknown40);
+      GfMenuObject::setupInputSelectionFromList(acc.unknown10, *m_menuObjEnBook->unknown40);
     }
     break;
   case 6:
     if (event.unknown08 != -1) {
-      unknown20->unknown40->setIndex(event.unknown08);
-      unknown20->refreshFamilyList();
+      m_menuObjEnBook->unknown40->setIndex(event.unknown08);
+      m_menuObjEnBook->refreshFamilyList();
     }
     break;
   case 8:
     if (event.unknown0c == 1) {
-      unknown20->unknown28 = unknown20->unknown40->getContents(unknown20->unknown40->getIndex(false)).unknown00 - 1;
+      m_menuObjEnBook->unknown28 = m_menuObjEnBook->unknown40->getContents(m_menuObjEnBook->unknown40->getIndex(false)).unknown00 - 1;
       GfMenuObject::sendOpenEvent(GfMenuObject::getFSInputObject(2), 0, 0.0f);
     } else if (event.unknown0c == 2) {
       GfMenuObject::sendOpenEvent(GfMenuObject::getFSInputObject(0), 0, 0.0f);
@@ -483,8 +483,8 @@ void GfMenuObjEnBook::FamilySelListener::reciveEvent(const ui::EventData &event,
     if (type != 2) {
       u32 open = 0;
       if (type != 4) {
-        unknown20->unknown40->setIndex(0);
-        unknown20->refreshFamilyList();
+        m_menuObjEnBook->unknown40->setIndex(0);
+        m_menuObjEnBook->refreshFamilyList();
         open = 1;
       }
       GfMenuObjUtil::PresetCtrlParam param;
@@ -521,18 +521,18 @@ void GfMenuObjEnBook::GenusSelListener::reciveEvent(const ui::EventData &event, 
     if (event.unknown08 == 1) {
       GfMenuObject::enableFSInput(2);
       GfMenuObjOperationInfo::add(acc.unknown10, 0, 0, 0);
-      GfMenuObject::setupInputSelectionFromList(acc.unknown10, *unknown20->unknown50);
+      GfMenuObject::setupInputSelectionFromList(acc.unknown10, *m_menuObjEnBook->unknown50);
     }
     break;
   case 6:
     if (event.unknown08 != -1) {
-      unknown20->unknown50->setIndex(event.unknown08);
-      unknown20->refreshGenusMsgList();
+      m_menuObjEnBook->unknown50->setIndex(event.unknown08);
+      m_menuObjEnBook->refreshGenusMsgList();
     }
     break;
   case 8:
     if (event.unknown0c == 1) {
-      unknown20->unknown2c = unknown20->unknown50->getContents(unknown20->unknown50->getIndex(false)).unknown00;
+      m_menuObjEnBook->unknown2c = m_menuObjEnBook->unknown50->getContents(m_menuObjEnBook->unknown50->getIndex(false)).unknown00;
       GfMenuObject::sendOpenEvent(GfMenuObject::getFSInputObject(4), 2, 0.0f);
       GfMenuObject::sendCloseEvent(GfMenuObject::getFSInputObject(1), 0, 0.0f);
     } else if (event.unknown0c == 2) {
@@ -552,8 +552,8 @@ void GfMenuObjEnBook::GenusSelListener::reciveEvent(const ui::EventData &event, 
     param.unknown10 = 1;
     GfMenuObjUtil::startPresetCtrl(acc.unknown10, param);
     if (type != 4) {
-      unknown20->setupGenusMsgList();
-      unknown20->refreshGenusMsgList();
+      m_menuObjEnBook->setupGenusMsgList();
+      m_menuObjEnBook->refreshGenusMsgList();
     }
     break;
   }
@@ -608,25 +608,25 @@ void GfMenuObjEnBook::EnListListener::reciveEvent(const ui::EventData &event, u3
     if (event.unknown08 == 1) {
       GfMenuObject::enableFSInput(4);
       GfMenuObjOperationInfo::add(acc.unknown10, 0, 0, 0);
-      GfMenuObject::setupInputSelectionFromList(acc.unknown10, *unknown20->unknown68);
+      GfMenuObject::setupInputSelectionFromList(acc.unknown10, *m_menuObjEnBook->unknown68);
     }
     break;
   case 6:
     if (event.unknown08 != 0xffffffff) {
-      unknown20->unknown68->setIndex(event.unknown08);
-      unknown20->refreshEnBookList();
-      u32 id = unknown20->unknown68->getContents(unknown20->unknown68->getIndex(false)).unknown00;
-      unknown20->unknown90.unknown005();
-      unknown20->unknown90.unknown002(&GfMenuObjEnBook::seqDeleteEnmey);
-      if (unknown20->isBattled(id)) {
-        unknown20->unknown90.unknown004(10);
-        unknown20->unknown90.unknown002(&GfMenuObjEnBook::seqCreateEnmey);
+      m_menuObjEnBook->unknown68->setIndex(event.unknown08);
+      m_menuObjEnBook->refreshEnBookList();
+      u32 id = m_menuObjEnBook->unknown68->getContents(m_menuObjEnBook->unknown68->getIndex(false)).unknown00;
+      m_menuObjEnBook->unknown90.unknown005();
+      m_menuObjEnBook->unknown90.unknown002(&GfMenuObjEnBook::seqDeleteEnmey);
+      if (m_menuObjEnBook->isBattled(id)) {
+        m_menuObjEnBook->unknown90.unknown004(10);
+        m_menuObjEnBook->unknown90.unknown002(&GfMenuObjEnBook::seqCreateEnmey);
       }
     }
     break;
   case 8:
     if (event.unknown0c == 1) {
-      if (!unknown20->isBattled(unknown20->unknown68->getContents(unknown20->unknown68->getIndex(false)).unknown00)) {
+      if (!m_menuObjEnBook->isBattled(m_menuObjEnBook->unknown68->getContents(m_menuObjEnBook->unknown68->getIndex(false)).unknown00)) {
         break;
       }
       GfMenuObject::sendOpenEvent(GfMenuObject::getFSInputObject(5), 0, 0.0f);
@@ -635,8 +635,8 @@ void GfMenuObjEnBook::EnListListener::reciveEvent(const ui::EventData &event, u3
       if (unknown0c == 2) {
         GfMenuObject::sendOpenEvent(GfMenuObject::getFSInputObject(1), 4, 0.0f);
       }
-      unknown20->unknown90.unknown002(&GfMenuObjEnBook::seqFadeOutEnmey);
-      unknown20->unknown90.unknown002(&GfMenuObjEnBook::seqDeleteEnmey);
+      m_menuObjEnBook->unknown90.unknown002(&GfMenuObjEnBook::seqFadeOutEnmey);
+      m_menuObjEnBook->unknown90.unknown002(&GfMenuObjEnBook::seqDeleteEnmey);
       GfMenuObjOperationInfo::setGuideText(0x3a, 0);
     } else {
       break;
@@ -652,8 +652,8 @@ void GfMenuObjEnBook::EnListListener::reciveEvent(const ui::EventData &event, u3
     param.unknown04 = 0;
     param.unknown10 = 1;
     GfMenuObjUtil::startPresetCtrl(acc.unknown10, param);
-    unknown20->setupEnBookIDList();
-    unknown20->refreshEnBookList();
+    m_menuObjEnBook->setupEnBookIDList();
+    m_menuObjEnBook->refreshEnBookList();
     unknown0c = mode;
     GfMenuObjOperationInfo::setGuideText(0x3b, 0);
     break;
@@ -689,10 +689,10 @@ void GfMenuObjEnBook::DetailListener::reciveEvent(const ui::EventData &event, u3
     if (event.unknown08 == 1) {
       GfMenuObject::enableFSInput(5);
       GfMenuObjOperationInfo::add(acc.unknown10, 0, 0, 0);
-      if (unknown20->isDefeated(unknown20->unknown68->getContents(unknown20->unknown68->getIndex(false)).unknown00)) {
-        GfMenuObject::setupInputSelection(acc.unknown10, 0, unknown20->unknown78->getSize());
+      if (m_menuObjEnBook->isDefeated(m_menuObjEnBook->unknown68->getContents(m_menuObjEnBook->unknown68->getIndex(false)).unknown00)) {
+        GfMenuObject::setupInputSelection(acc.unknown10, 0, m_menuObjEnBook->unknown78->getSize());
       } else {
-        GfMenuObject::setupInputSelection(acc.unknown10, 0, unknown20->unknown78->getSize() - 1);
+        GfMenuObject::setupInputSelection(acc.unknown10, 0, m_menuObjEnBook->unknown78->getSize() - 1);
       }
     }
     break;
@@ -700,11 +700,11 @@ void GfMenuObjEnBook::DetailListener::reciveEvent(const ui::EventData &event, u3
     u32 index = event.unknown08;
     if (index != 0xffffffff) {
       if (event.unknown0c != 0xffffffff) {
-        ui::UIObjectAcc old(unknown20->unknown78->getObject(event.unknown0c));
+        ui::UIObjectAcc old(m_menuObjEnBook->unknown78->getObject(event.unknown0c));
         old.setDisp(false);
       }
-      unknown20->unknown78->setIndex(index);
-      ui::UIObjectAcc current(unknown20->unknown78->getSelectObject());
+      m_menuObjEnBook->unknown78->setIndex(index);
+      ui::UIObjectAcc current(m_menuObjEnBook->unknown78->getSelectObject());
       current.setDisp(true);
     }
     break;
@@ -725,8 +725,8 @@ void GfMenuObjEnBook::DetailListener::reciveEvent(const ui::EventData &event, u3
     param.unknown04 = 0;
     param.unknown10 = 1;
     GfMenuObjUtil::startPresetCtrl(acc.unknown10, param);
-    unknown20->unknown78->setIndex(0);
-    ui::UIObjectAcc current(unknown20->unknown78->getSelectObject());
+    m_menuObjEnBook->unknown78->setIndex(0);
+    ui::UIObjectAcc current(m_menuObjEnBook->unknown78->getSelectObject());
     current.setDisp(true);
     break;
   }

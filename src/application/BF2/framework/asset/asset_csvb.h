@@ -39,11 +39,11 @@ public:
     addRef();
   }
 
-  mtl::ALLOC_HANDLE unknown0c;    // Inferred role: handle; original member name unknown.
-  mm::mtl::IAllocator *unknown10; // Inferred role: allocator; original member name unknown.
-  u32 unknown18;                  // Inferred role: hash; original member name unknown.
-  csvb::CCsvbData *unknown20;     // Inferred role: data; original member name unknown.
-  mm::mtl::FixStr<128> unknown28; // Inferred role: name; original member name unknown.
+  mtl::ALLOC_HANDLE m_ALLOC_HANDLE; // Inferred role: handle; original member name unknown.
+  mm::mtl::IAllocator *unknown10;   // Inferred role: allocator; original member name unknown.
+  u32 unknown18;                    // Inferred role: hash; original member name unknown.
+  csvb::CCsvbData *unknown20;       // Inferred role: data; original member name unknown.
+  mm::mtl::FixStr<128> unknown28;   // Inferred role: name; original member name unknown.
 };
 
 static_assert(offsetof(AssetCsvb, unknown18) == 0x18, "");

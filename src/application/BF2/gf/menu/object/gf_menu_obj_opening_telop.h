@@ -15,11 +15,11 @@ class GfMenuObjOpeningTelop : public GfMenuObject {
 public:
   class MainListener : public ui::UIObjectListener {
   public:
-    MainListener(GfMenuObjOpeningTelop *owner) : _0c(), unknown20(owner) {}
+    MainListener(GfMenuObjOpeningTelop *owner) : _0c(), m_menuObjOpeningTelop(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
-    GfMenuObjOpeningTelop *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjOpeningTelop *m_menuObjOpeningTelop; // Inferred role: owner; original member name unknown.
   };
 
   GfMenuObjOpeningTelop(u32 handle);
@@ -44,7 +44,7 @@ static_assert(offsetof(GfMenuObjOpeningTelop, unknown24) == 0x24, "");
 static_assert(offsetof(GfMenuObjOpeningTelop, unknown30) == 0x30, "");
 static_assert(sizeof(GfMenuObjOpeningTelop) == 0x38, "");
 
-static_assert(offsetof(GfMenuObjOpeningTelop::MainListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjOpeningTelop::MainListener, m_menuObjOpeningTelop) == 0x20, "");
 static_assert(sizeof(GfMenuObjOpeningTelop::MainListener) == 0x28, "");
 
 } // namespace gf

@@ -15,7 +15,7 @@ void DrPixlPostParm::calcReductionTransBuffer(int &width, int &height) const {
   height = height * unknownfe0;
 }
 
-void DrPixlPostParm::setDOF(bool dof) { unknown514[DrMan::s_nDblIdx].unknown221 = dof; }
+void DrPixlPostParm::setDOF(bool dof) { unknown514[DrMan::s_nDblIdx].m_dOF = dof; }
 
 bool DrPixlPostParm::getTMAAOn() const { return m_TMAAOn; }
 
@@ -44,7 +44,7 @@ bool DrPixlPostParm::getToneMapOn() const { return m_toneMapOn; }
 bool DrPixlPostParm::isMotBlur() const { return unknown1ca || unknown1cb; }
 
 void DrPixlPostParm::setGlassBrk(bool isGlassBreak, u32 type) {
-  unknown4d0 = isGlassBreak;
+  m_glassBr = isGlassBreak;
   if (isGlassBreak && type != 0xffffffff) {
     unknown4d8 = 1.0f;
     unknown4dc = 0.0f;
@@ -111,7 +111,7 @@ void DrPixlPostParm::setOverrideToneMap(f32 overrideToneMap) {
 }
 
 f32 DrPixlPostParm::getToonDirLightScale() const {
-  if (DrMan::getIns()->unknown1e08) {
+  if (DrMan::getIns()->m_toonDirLightScale) {
     return unknown2a0;
   }
   return 1.0f;
@@ -141,63 +141,63 @@ void DrPixlPostParm::readParameter(const char *path, bool isCreate, const char *
 
 void DrPixlPostParm::updateParameter(const char *name) {}
 
-void DrPixlPostParm::setOverrideMotBlur(bool overrideMotBlur) { unknown514[DrMan::s_nDblIdx].unknown204 = overrideMotBlur; }
+void DrPixlPostParm::setOverrideMotBlur(bool overrideMotBlur) { unknown514[DrMan::s_nDblIdx].m_overrideMotBlur = overrideMotBlur; }
 
-void DrPixlPostParm::setMotBlur2(bool motBlur2) { unknown514[DrMan::s_nDblIdx].unknown205 = motBlur2; }
+void DrPixlPostParm::setMotBlur2(bool motBlur2) { unknown514[DrMan::s_nDblIdx].m_motBlur2 = motBlur2; }
 
-void DrPixlPostParm::setOverrideDOF(bool overrideDOF) { unknown514[DrMan::s_nDblIdx].unknown220 = overrideDOF; }
+void DrPixlPostParm::setOverrideDOF(bool overrideDOF) { unknown514[DrMan::s_nDblIdx].m_overrideDOF = overrideDOF; }
 
-void DrPixlPostParm::setDOFHlv(bool dofHlv) { unknown514[DrMan::s_nDblIdx].unknown223 = dofHlv; }
+void DrPixlPostParm::setDOFHlv(bool dofHlv) { unknown514[DrMan::s_nDblIdx].m_dOFHlv = dofHlv; }
 
-void DrPixlPostParm::setDOFDownSec(bool dofDownSec) { unknown514[DrMan::s_nDblIdx].unknown224 = dofDownSec; }
+void DrPixlPostParm::setDOFDownSec(bool dofDownSec) { unknown514[DrMan::s_nDblIdx].m_dOFDownSec = dofDownSec; }
 
-void DrPixlPostParm::setDOFAutoFocus(bool dofAutoFocus) { unknown514[DrMan::s_nDblIdx].unknown225 = dofAutoFocus; }
+void DrPixlPostParm::setDOFAutoFocus(bool dofAutoFocus) { unknown514[DrMan::s_nDblIdx].m_dOFAutoFocus = dofAutoFocus; }
 
 void DrPixlPostParm::setDOFAutoFocusDebug(bool dofAutoFocusDebug) { m_DOFAutoFocusDebug = dofAutoFocusDebug; }
 
-void DrPixlPostParm::setDoFPixlRatio(f32 dofPixlRatio) { unknown514[DrMan::s_nDblIdx].unknown228 = dofPixlRatio; }
+void DrPixlPostParm::setDoFPixlRatio(f32 dofPixlRatio) { unknown514[DrMan::s_nDblIdx].m_doFPixlRatio = dofPixlRatio; }
 
-void DrPixlPostParm::setDoFDistance(f32 dofDistance) { unknown514[DrMan::s_nDblIdx].unknown22c = dofDistance; }
+void DrPixlPostParm::setDoFDistance(f32 dofDistance) { unknown514[DrMan::s_nDblIdx].m_doFDistance = dofDistance; }
 
-void DrPixlPostParm::setDoFRange(f32 dofRange) { unknown514[DrMan::s_nDblIdx].unknown230 = dofRange; }
+void DrPixlPostParm::setDoFRange(f32 dofRange) { unknown514[DrMan::s_nDblIdx].m_doFRange = dofRange; }
 
-void DrPixlPostParm::setDoFStrength(f32 dofStrength) { unknown514[DrMan::s_nDblIdx].unknown234 = dofStrength; }
+void DrPixlPostParm::setDoFStrength(f32 dofStrength) { unknown514[DrMan::s_nDblIdx].m_doFStrength = dofStrength; }
 
-void DrPixlPostParm::setDoFLens(f32 dofLens) { unknown514[DrMan::s_nDblIdx].unknown238 = dofLens; }
+void DrPixlPostParm::setDoFLens(f32 dofLens) { unknown514[DrMan::s_nDblIdx].m_doFLens = dofLens; }
 
-void DrPixlPostParm::setDoFBlend(f32 dofBlend) { unknown514[DrMan::s_nDblIdx].unknown23c = dofBlend; }
+void DrPixlPostParm::setDoFBlend(f32 dofBlend) { unknown514[DrMan::s_nDblIdx].m_doFBlend = dofBlend; }
 
-void DrPixlPostParm::setDoFPixlLv(s32 dofPixlLv) { unknown514[DrMan::s_nDblIdx].unknown240 = dofPixlLv; }
+void DrPixlPostParm::setDoFPixlLv(s32 dofPixlLv) { unknown514[DrMan::s_nDblIdx].m_doFPixlLv = dofPixlLv; }
 
-void DrPixlPostParm::setDoFocusNum(s32 dofFocusNum) { unknown514[DrMan::s_nDblIdx].unknown244 = dofFocusNum; }
+void DrPixlPostParm::setDoFocusNum(s32 dofFocusNum) { unknown514[DrMan::s_nDblIdx].m_doFocusNum = dofFocusNum; }
 
-void DrPixlPostParm::setDoFDofFocusRat(f32 dofFocusRatio) { unknown514[DrMan::s_nDblIdx].unknown248 = dofFocusRatio; }
+void DrPixlPostParm::setDoFDofFocusRat(f32 dofFocusRatio) { unknown514[DrMan::s_nDblIdx].m_doFDofFocusRat = dofFocusRatio; }
 
-void DrPixlPostParm::setDofFocusMin(f32 dofFocusMin) { unknown514[DrMan::s_nDblIdx].unknown24c = dofFocusMin; }
+void DrPixlPostParm::setDofFocusMin(f32 dofFocusMin) { unknown514[DrMan::s_nDblIdx].m_dofFocusMin = dofFocusMin; }
 
-bool DrPixlPostParm::isOverrideDOF() const { return unknown514[DrMan::s_nDblIdx].unknown220; }
+bool DrPixlPostParm::isOverrideDOF() const { return unknown514[DrMan::s_nDblIdx].m_overrideDOF; }
 
-bool DrPixlPostParm::isOverrideColorFilter() const { return unknown514[DrMan::s_nDblIdx].unknown272; }
+bool DrPixlPostParm::isOverrideColorFilter() const { return unknown514[DrMan::s_nDblIdx].m_overrideColorFilter; }
 
-void DrPixlPostParm::setOverrideColorFilter(bool overrideColorFilter) { unknown514[DrMan::s_nDblIdx].unknown272 = overrideColorFilter; }
+void DrPixlPostParm::setOverrideColorFilter(bool overrideColorFilter) { unknown514[DrMan::s_nDblIdx].m_overrideColorFilter = overrideColorFilter; }
 
-void DrPixlPostParm::setColorFilterNum(s32 colorFilterNum) { unknown514[DrMan::s_nDblIdx].unknown274 = colorFilterNum; }
+void DrPixlPostParm::setColorFilterNum(s32 colorFilterNum) { unknown514[DrMan::s_nDblIdx].m_colorFilterNum = colorFilterNum; }
 
-void DrPixlPostParm::setColorFilterFrm(f32 colorFilterFrm) { unknown514[DrMan::s_nDblIdx].unknown278 = colorFilterFrm; }
+void DrPixlPostParm::setColorFilterFrm(f32 colorFilterFrm) { unknown514[DrMan::s_nDblIdx].m_colorFilterFrm = colorFilterFrm; }
 
 void DrPixlPostParm::setColorFilterTransZ(bool colorFilterTransZ) { this->m_colorFilterTransZ = colorFilterTransZ; }
 
-void DrPixlPostParm::setColorFilterFarNum(s32 colorFilterFarNum) { unknown514[DrMan::s_nDblIdx].unknown280 = colorFilterFarNum; }
+void DrPixlPostParm::setColorFilterFarNum(s32 colorFilterFarNum) { unknown514[DrMan::s_nDblIdx].m_colorFilterFarNum = colorFilterFarNum; }
 
 bool DrPixlPostParm::getRainDropOn() const { return m_rainDropOn; }
 
-bool DrPixlPostParm::getSSRWithTrans() const { return !DrMan::getIns()->unknown1cc1; }
+bool DrPixlPostParm::getSSRWithTrans() const { return !DrMan::getIns()->m_autoResetScene; }
 
 bool DrPixlPostParm::getSSROn() const {
-  if (DrMan::getIns()->unknown78->unknown7f0->unknown180->unknown108 < 0.01f) {
+  if (DrMan::getIns()->m_drPixlMan->unknown7f0->m_drPixlPostMan->unknown108 < 0.01f) {
     return false;
   }
-  if (DrMan::getIns()->unknown580->unknown10->unknown9aa && unknown1104) {
+  if (DrMan::getIns()->m_drCalcMan->m_drCalcViewWork->unknown9aa && unknown1104) {
     return false;
   }
   return unknown48a != 0;

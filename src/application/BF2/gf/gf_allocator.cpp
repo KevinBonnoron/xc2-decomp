@@ -10,11 +10,11 @@ constexpr size_t SLOT_UNKNOWN_131072 = 0x20000; // Inferred role: slot allocate 
 
 GfAllocator::GfAllocator() {}
 
-GfAllocator::GfAllocator(mtl::ALLOC_HANDLE handle) : unknown08(handle) {}
+GfAllocator::GfAllocator(mtl::ALLOC_HANDLE handle) : m_memHandle(handle) {}
 
-void GfAllocator::setMemHandle(mtl::ALLOC_HANDLE handle) { unknown08 = handle; }
+void GfAllocator::setMemHandle(mtl::ALLOC_HANDLE handle) { m_memHandle = handle; }
 
-mtl::ALLOC_HANDLE GfAllocator::getMemHandle() const { return unknown08; }
+mtl::ALLOC_HANDLE GfAllocator::getMemHandle() const { return m_memHandle; }
 
 void *GfAllocator::allocate(size_t size, size_t alignment) {
   if (getAllocator(ALLOCATOR_UNKNOWN_11) == this) {
@@ -30,7 +30,7 @@ void *GfAllocator::allocate(size_t size, size_t alignment) {
       return pointer;
     }
   }
-  return mtl::MemManager::allocate(unknown08, size, alignment, false, "no name", 0);
+  return mtl::MemManager::allocate(m_memHandle, size, alignment, false, "no name", 0);
 }
 
 void *GfAllocator::allocateProgLarge(size_t size, size_t alignment) {
@@ -82,10 +82,10 @@ void GfAllocatorManager::initialize(const GfSetupParam &) { unknown08 = true; }
 
 void GfAllocatorManager::finalize() { unknown08 = false; }
 
-GfAllocator *GfAllocatorManager::getAllocator(ALLOCATOR allocator) { return &get()->unknown10[allocator]; }
+GfAllocator *GfAllocatorManager::getAllocator(ALLOCATOR allocator) { return &get()->m_allocator[allocator]; }
 
-void GfAllocatorManager::buildAllocator(ALLOCATOR allocator, mtl::ALLOC_HANDLE handle) { unknown10[allocator].setMemHandle(handle); }
+void GfAllocatorManager::buildAllocator(ALLOCATOR allocator, mtl::ALLOC_HANDLE handle) { m_allocator[allocator].setMemHandle(handle); }
 
-void GfAllocatorManager::destroyAllocator(ALLOCATOR allocator, mtl::ALLOC_HANDLE) { unknown10[allocator].setMemHandle(mtl::ALLOC_HANDLE()); }
+void GfAllocatorManager::destroyAllocator(ALLOCATOR allocator, mtl::ALLOC_HANDLE) { m_allocator[allocator].setMemHandle(mtl::ALLOC_HANDLE()); }
 
 } // namespace gf

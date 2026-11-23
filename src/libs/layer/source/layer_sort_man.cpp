@@ -15,7 +15,7 @@ LayerSortMan::LayerSortMan(LayerManager *manager, u32 num2D, u32 num3D) {
   unknown64 = 300.0f;
   unknown68 = 0.8f;
   unknown6c = num2D;
-  unknown00 = manager;
+  m_layerManager = manager;
   unknown08 = nullptr;
   unknown70 = num3D;
 
@@ -64,9 +64,9 @@ void LayerSortMan::stock2DObj(LayerSortObj *object, s32 index) {
     unknown30[index >> 5] = flags | mask;
     unknown10[index] = object;
   } else {
-    unknown18[index]->unknown08 = object;
+    unknown18[index]->m_layerSortObj = object;
   }
-  object->unknown08 = nullptr;
+  object->m_layerSortObj = nullptr;
   unknown18[index] = object;
 }
 
@@ -95,9 +95,9 @@ void LayerSortMan::stock3DObj(LayerSortObj *object, s32 index) {
     unknown38[index >> 5] = flags | mask;
     unknown20[index] = object;
   } else {
-    unknown28[index]->unknown08 = object;
+    unknown28[index]->m_layerSortObj = object;
   }
-  object->unknown08 = nullptr;
+  object->m_layerSortObj = nullptr;
   unknown28[index] = object;
 }
 
@@ -117,7 +117,7 @@ void LayerSortMan::end() {
         unknown40 = unknown20[i];
       } else {
         LayerSortObj *last = unknown48;
-        last->unknown08 = unknown20[i];
+        last->m_layerSortObj = unknown20[i];
       }
       unknown48 = unknown28[i];
     }
@@ -128,7 +128,7 @@ void LayerSortMan::end() {
         unknown40 = unknown10[i];
       } else {
         LayerSortObj *last = unknown48;
-        last->unknown08 = unknown10[i];
+        last->m_layerSortObj = unknown10[i];
       }
       unknown48 = unknown18[i];
     }
@@ -136,19 +136,19 @@ void LayerSortMan::end() {
 }
 
 void LayerSortMan::alphaRender() {
-  for (LayerSortObj *object = unknown40; object != nullptr; object = object->unknown08) {
+  for (LayerSortObj *object = unknown40; object != nullptr; object = object->m_layerSortObj) {
     object->alphaRender();
   }
 }
 
 void LayerSortMan::lastRender() {
-  for (LayerSortObj *object = unknown40; object != nullptr; object = object->unknown08) {
+  for (LayerSortObj *object = unknown40; object != nullptr; object = object->m_layerSortObj) {
     object->lastRender();
   }
 }
 
 void LayerSortMan::finalRender() {
-  for (LayerSortObj *object = unknown40; object != nullptr; object = object->unknown08) {
+  for (LayerSortObj *object = unknown40; object != nullptr; object = object->m_layerSortObj) {
     object->finalRender();
   }
 }

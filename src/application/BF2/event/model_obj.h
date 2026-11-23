@@ -87,8 +87,8 @@ private:
   u32 unknown14;                 // Inferred role: model id; original member name unknown.
   mm::mtl::FixStr<64> unknown18; // Inferred role: path; original member name unknown.
   u32 unknown5c;                 // Inferred role: id; original member name unknown.
-  DESC unknown60;                // Inferred role: resources; original member name unknown.
-  OPTION unknown110;             // Inferred role: option; original member name unknown.
+  DESC m_DESC;                   // Inferred role: resources; original member name unknown.
+  OPTION m_OPTION;               // Inferred role: option; original member name unknown.
   ml::DrStmReadObj *unknown118;  // Inferred role: stream read object; original member name unknown.
   gf::GF_OBJ_HANDLE *unknown120; // Inferred role: handle; original member name unknown.
   gf::GfEvtModel *unknown128;    // Inferred role: evt model; original member name unknown.
@@ -105,8 +105,8 @@ struct ModelObjLayout {
   static_assert(offsetof(ModelObj, unknown14) == 0x14, "");
   static_assert(offsetof(ModelObj, unknown18) == 0x18, "");
   static_assert(offsetof(ModelObj, unknown5c) == 0x5c, "");
-  static_assert(offsetof(ModelObj, unknown60) == 0x60, "");
-  static_assert(offsetof(ModelObj, unknown110) == 0x110, "");
+  static_assert(offsetof(ModelObj, m_DESC) == 0x60, "");
+  static_assert(offsetof(ModelObj, m_OPTION) == 0x110, "");
   static_assert(offsetof(ModelObj, unknown118) == 0x118, "");
   static_assert(offsetof(ModelObj, unknown120) == 0x120, "");
   static_assert(offsetof(ModelObj, unknown128) == 0x128, "");

@@ -68,11 +68,11 @@ void DrPixlPostObjCubeMapIBL::updateUB_IBLPos_WS(u8 *work) {
 }
 
 void DrPixlPostObjCubeMapIBL::debugRender() {
-  DrPixlPostParm *parm = unknown00->unknown120[unknown00->unknown1c98];
+  DrPixlPostParm *parm = m_drMan->unknown120[m_drMan->unknown1c98];
   u32 level = parm->unknown24c < m_premMipCount ? parm->unknown24c : m_premMipCount;
-  f32 scale = parm->getToneMapOn() ? unknown00->unknown78->unknown7f0->unknown188 : 1.0f;
+  f32 scale = parm->getToneMapOn() ? m_drMan->m_drPixlMan->unknown7f0->unknown188 : 1.0f;
   for (int face = 0; face < 6; face++) {
-    unknown00->unknown78->debugRenderCube(*m_premTexture[unknown214]->unknown70, face, level, false, 800 + face * 129, 0, 128, 128, true, scale);
+    m_drMan->m_drPixlMan->debugRenderCube(*m_premTexture[unknown214]->unknown70, face, level, false, 800 + face * 129, 0, 128, 128, true, scale);
   }
 }
 

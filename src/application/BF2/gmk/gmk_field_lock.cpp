@@ -13,13 +13,13 @@ template bool TGmkList<GmkFieldLock, GmkFieldLock::BdatInfo, 1129071686u, 2u, Gm
 void GmkFieldLock::debugDraw() const { isValid(); }
 
 void GmkFieldLock::dispose() {
-  unknown50.dispose();
+  m_gmkCollision.dispose();
   AGmkBase::dispose();
 }
 
 void GmkFieldLock::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gmk) {
-  unknown06 = ScenarioFlagCond(bdat.getValCheck("ScenarioFlagMin", id, BDAT_TYPE_UNKNOWN_2), bdat.getValCheck("ScenarioFlagMax", id, BDAT_TYPE_UNKNOWN_2));
-  unknown0a =
+  m_scenarioFlagCond = ScenarioFlagCond(bdat.getValCheck("ScenarioFlagMin", id, BDAT_TYPE_UNKNOWN_2), bdat.getValCheck("ScenarioFlagMax", id, BDAT_TYPE_UNKNOWN_2));
+  m_questFlagCond =
       QuestFlagCond(bdat.getValCheck("QuestFlag", id, BDAT_TYPE_UNKNOWN_2), bdat.getValCheck("QuestFlagMin", id, BDAT_TYPE_UNKNOWN_1), bdat.getValCheck("QuestFlagMax", id, BDAT_TYPE_UNKNOWN_1));
   unknown00 = bdat.getValCheck("Condition", id, BDAT_TYPE_UNKNOWN_2);
   unknown02 = bdat.getValCheck("rockTYPE", id, BDAT_TYPE_UNKNOWN_1);
@@ -27,10 +27,10 @@ void GmkFieldLock::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &g
 }
 
 bool GmkFieldLock::BdatInfo::isCondMatched() const {
-  if (unknown06.isEnable() && !unknown06.isMatch()) {
+  if (m_scenarioFlagCond.isEnable() && !m_scenarioFlagCond.isMatch()) {
     return false;
   }
-  if (unknown0a.isEnable() && !unknown0a.isMatch()) {
+  if (m_questFlagCond.isEnable() && !m_questFlagCond.isMatch()) {
     return false;
   }
   if (unknown00 != 0 && !gf::GfGameCond::isGameCond(unknown00)) {
@@ -48,21 +48,21 @@ void GmkFieldLock::update(f32 deltaTime) {
   if (!isValid()) {
     return;
   }
-  if (unknown50.unknown60 && unknownc0 > 2.0f && gf::GfGameManager::isFieldLockMsgOK()) {
+  if (m_gmkCollision.unknown60 && unknownc0 > 2.0f && gf::GfGameManager::isFieldLockMsgOK()) {
     reqDrawCmnMsg(getBdatInfo()->unknown04);
   }
-  unknown50.update(deltaTime);
-  if (unknown50.unknown62) {
+  m_gmkCollision.update(deltaTime);
+  if (m_gmkCollision.unknown62) {
     unknownc0 = 0.0f;
   } else {
     unknownc0 += deltaTime;
   }
   if (getBdatInfo()->isCondMatched()) {
-    if (unknown50.unknown58 == nullptr) {
+    if (m_gmkCollision.unknown58 == nullptr) {
       createGmkCollision();
     }
-  } else if (unknown50.unknown58 != nullptr) {
-    unknown50.dispose();
+  } else if (m_gmkCollision.unknown58 != nullptr) {
+    m_gmkCollision.dispose();
   }
 }
 
@@ -70,7 +70,7 @@ void GmkFieldLock::createGmkCollision() {
   if (!canCreateGameEntity()) {
     return;
   }
-  unknown50.create(*this, getBdatInfo()->unknown02 == 0);
+  m_gmkCollision.create(*this, getBdatInfo()->unknown02 == 0);
 }
 
 GmkType GmkFieldLock::getGmkType() const { return GMK_TYPE; }

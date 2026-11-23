@@ -10,9 +10,9 @@ void TodoItem::createString(mm::mtl::FixStr<256> &string) {
   work.format("%d", static_cast<int>(unknown08));
   string += work.c_str();
   string += " ";
-  string += unknown110->cmdName();
+  string += m_iTodo->cmdName();
   string += " ";
-  unknown18.createString(work);
+  m_param.createString(work);
   string += work.c_str();
 }
 

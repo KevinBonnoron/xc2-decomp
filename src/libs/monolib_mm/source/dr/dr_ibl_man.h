@@ -26,18 +26,18 @@ public:
 
   grlib::CGLibTextureBuffer *getAlbedoTexture() const;
   grlib::CGLibTextureBuffer *getNormalTexture() const;
-  DrMan *unknown00; // Inferred role: owner; original member name unknown.
-  int unknown08;    // Inferred role: constructor argument; original member name unknown.
+  DrMan *m_drMan; // Inferred role: owner; original member name unknown.
+  int unknown08;  // Inferred role: constructor argument; original member name unknown.
   u8 _0c[0x10 - 0x0c];
   mm::mtl::FixedList<DrIBLObj *, 32> unknown10;     // Inferred role: IBL objects; original member name unknown.
   mm::mtl::FixedList<DrIBLObj *, 32> unknown250[2]; // Inferred role: IBL objects stocked per double buffer; original member name unknown.
   mm::mtl::FixedList<DrIBLObj *, 32> unknown6d0;    // Inferred role: IBL objects; original member name unknown.
   u8 _910[0x910 - 0x910];
-  DrIBLObj *unknown910; // Inferred role: current IBL object; original member name unknown.
+  DrIBLObj *m_drIBLObj; // Inferred role: current IBL object; original member name unknown.
 };
 static_assert(offsetof(DrIBLMan, unknown10) == 0x10, "");
 static_assert(offsetof(DrIBLMan, unknown250) == 0x250, "");
 static_assert(offsetof(DrIBLMan, unknown6d0) == 0x6d0, "");
-static_assert(offsetof(DrIBLMan, unknown910) == 0x910, "");
+static_assert(offsetof(DrIBLMan, m_drIBLObj) == 0x910, "");
 
 } // namespace ml

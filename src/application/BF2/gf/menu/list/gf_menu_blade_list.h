@@ -17,23 +17,27 @@ static_assert(sizeof(MenuBladeInfo) == 0x8, "");
 class GfMenuBladeList : public ui::UIListInfo<MenuBladeInfo> {
 public:
   struct BladeListSetup {
-    SetupParam unknown00;                            // Inferred role: param; original member name unknown.
+    SetupParam m_setupParam;                         // Inferred role: param; original member name unknown.
     const mm::mtl::FixedVector<u16, 422> *unknown18; // Inferred role: blades; original member name unknown.
   };
 
   struct BladeBookSetup {
-    SetupParam unknown00; // Inferred role: param; original member name unknown.
+    SetupParam m_setupParam; // Inferred role: param; original member name unknown.
+  };
+
+  struct ReleasbleSetup {
+    SetupParam m_setupParam; // Inferred role: param; original member name unknown.
   };
 
   struct DriverSetup {
     DriverSetup() : unknown14(0), unknown18(0), unknown1c(true), unknown1d(false), unknown1e(false) {}
 
-    SetupParam unknown00; // Inferred role: param; original member name unknown.
-    int unknown14;        // Inferred role: blade source; original member name unknown.
-    u32 unknown18;        // Inferred role: driver; original member name unknown.
-    bool unknown1c;       // Inferred role: option of getBladeFromDriver; original member name unknown.
-    bool unknown1d;       // Role and original member name unknown.
-    bool unknown1e;       // Inferred role: exclude hana blades; original member name unknown.
+    SetupParam m_setupParam; // Inferred role: param; original member name unknown.
+    int unknown14;           // Inferred role: blade source; original member name unknown.
+    u32 unknown18;           // Inferred role: driver; original member name unknown.
+    bool unknown1c;          // Inferred role: option of getBladeFromDriver; original member name unknown.
+    bool unknown1d;          // Role and original member name unknown.
+    bool unknown1e;          // Inferred role: exclude hana blades; original member name unknown.
   };
 
   struct TeamSetup {
@@ -43,10 +47,10 @@ public:
       unknown18 = 0;
     }
 
-    SetupParam unknown00; // Inferred role: param; original member name unknown.
-    u32 unknown14;        // Inferred role: source; original member name unknown.
-    u32 unknown18;        // Inferred role: team; original member name unknown.
-    bool unknown1c;       // Inferred role: unknown; original member name unknown.
+    SetupParam m_setupParam; // Inferred role: param; original member name unknown.
+    u32 unknown14;           // Inferred role: source; original member name unknown.
+    u32 unknown18;           // Inferred role: team; original member name unknown.
+    bool unknown1c;          // Inferred role: unknown; original member name unknown.
   };
 
   GfMenuBladeList();
@@ -74,11 +78,13 @@ public:
   void setupFromBook(const BladeBookSetup &setup);
   void setupFromDriver(const DriverSetup &setup);
   void setupFromTeam(const TeamSetup &setup);
+  void setupFromReleasble(const ReleasbleSetup &setup);
 };
 
 static_assert(offsetof(GfMenuBladeList::BladeListSetup, unknown18) == 0x18, "");
 static_assert(offsetof(GfMenuBladeList::DriverSetup, unknown14) == 0x14, "");
 static_assert(sizeof(GfMenuBladeList::BladeBookSetup) == 0x14, "");
+static_assert(sizeof(GfMenuBladeList::ReleasbleSetup) == 0x14, "");
 static_assert(offsetof(GfMenuBladeList::DriverSetup, unknown1e) == 0x1e, "");
 static_assert(sizeof(GfMenuBladeList) == 0x70, "");
 

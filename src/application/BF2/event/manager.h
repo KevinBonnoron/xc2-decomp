@@ -113,7 +113,7 @@ private:
   int unknown278;                                                 // Inferred role: start page id; original member name unknown.
   gf::GF_OBJ_HANDLE *unknown280;                                  // Inferred role: object handle; original member name unknown.
   u32 unknown288[4];                                              // Inferred role: play params; original member name unknown.
-  LANGUAGE_MODE unknown298;                                       // Inferred role: language mode; original member name unknown.
+  LANGUAGE_MODE m_languageMode;                                   // Inferred role: language mode; named after the game accessor event::Manager::setLanguageMode.
 };
 
 static_assert(sizeof(Manager) == 0x2a0, "");

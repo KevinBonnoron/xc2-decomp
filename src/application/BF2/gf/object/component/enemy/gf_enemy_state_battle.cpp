@@ -69,7 +69,7 @@ void StateBattleBase::update(GfComBehaviorEnemy *behavior, const fw::UpdateInfo 
 }
 
 btl::BattleCharacter *StateBattleBase::GetBattleCharacter() {
-  int id = mm::mtl::dynamicCast<GfComPropertyEnemy>(static_cast<GfComBehaviorEnemy *>(mOwner)->unknown08->unknown38[GfComPropertyEnemy::COMPONENT_INDEX])->unknown40._10;
+  int id = mm::mtl::dynamicCast<GfComPropertyEnemy>(static_cast<GfComBehaviorEnemy *>(mOwner)->unknown08->unknown38[GfComPropertyEnemy::COMPONENT_INDEX])->m_battleProperty._10;
   return btl::CharacterManager::get()->GetCharacterConst(id);
 }
 
@@ -77,13 +77,13 @@ GfComPropertyEnemy *StateBattleBase::GetProperty() { return static_cast<GfComBeh
 
 const GfComPropertyEnemy *StateBattleBase::GetPropertyConst() const { return static_cast<GfComBehaviorEnemy *>(mOwner)->unknown08->getComponent<GfComPropertyEnemy>(); }
 
-GfEnemyBattleProperty *StateBattleBase::GetBattleProperty() { return &GetProperty()->unknown40; }
+GfEnemyBattleProperty *StateBattleBase::GetBattleProperty() { return &GetProperty()->m_battleProperty; }
 
-const GfEnemyBattleProperty *StateBattleBase::GetBattlePropertyConst() const { return &GetPropertyConst()->unknown40; }
+const GfEnemyBattleProperty *StateBattleBase::GetBattlePropertyConst() const { return &GetPropertyConst()->m_battleProperty; }
 
-const btl::EnemyParameter *StateBattleBase::GetEnemyParameter() { return GetProperty()->unknown40.GetEnemyParameterConst(); }
+const btl::EnemyParameter *StateBattleBase::GetEnemyParameter() { return GetProperty()->m_battleProperty.GetEnemyParameterConst(); }
 
-const btl::EnemyParameter *StateBattleBase::GetEnemyParameterConst() const { return GetPropertyConst()->unknown40.GetEnemyParameterConst(); }
+const btl::EnemyParameter *StateBattleBase::GetEnemyParameterConst() const { return GetPropertyConst()->m_battleProperty.GetEnemyParameterConst(); }
 
 bool StateBattleBase::IsDriver() const {
   const btl::EnemyParameter *parameter = GetEnemyParameterConst();

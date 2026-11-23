@@ -1,7 +1,9 @@
 #include "gf/object/component/effect/gf_com_effect_caster.h"
 
+#include <stdlib.h>
 #include <string.h>
 
+#include "anm/anm_asm_listener.h"
 #include "eflib/effect_send_param.h"
 #include "framework/effect/effect_caster.h"
 #include "framework/effect/effect_clip.h"
@@ -15,11 +17,13 @@
 #include "gf/game/gf_game_util.h"
 #include "gf/object/component/animation/gf_com_asm.h"      // IWYU pragma: keep
 #include "gf/object/component/animation/gf_com_evt_anim.h" // IWYU pragma: keep
-#include "gf/object/component/model/gf_com_model.h"        // IWYU pragma: keep
+#include "gf/object/component/effect/gf_effect_caster.h"
+#include "gf/object/component/model/gf_com_model.h" // IWYU pragma: keep
 #include "gf/object/gf_obj.h"
 #include "gf/object/gf_obj_handle.h"
 #include "gf/object/gf_obj_util.h"
 #include "mm_mtl/delegate.h"
+#include "mm_mtl/vector.h"
 
 // Named as the game's global symbol ASM_CB_NAME_EFFECT.
 const char *ASM_CB_NAME_EFFECT = "asm_effect";
@@ -37,6 +41,49 @@ static mm::Mat44 unknown002(const mm::Mat44 &a, const mm::Mat44 &b) {
   return result;
 }
 
+// The game assigns the result of each erase back to the string: after the erase it computes the length again, stores it, compares it with 0x80 and asserts at
+// fixstr.h line 221 (0x7100503644-0x710050366c and 0x71005036d4-0x71005036fc), without a copy (clang folds the copy of a string onto itself). The loop reads the
+// annotation table again at each iteration because effectStart is an opaque call (it is declared only: it does not match yet, the blocker is recorded).
+void GfComEffectCaster::procMessageAsmCallback(fw::MessageObject *object, MsgObjectNotifyAsmCallback &message) {
+  const anm::AsmAnnotetion *annotation = message.unknown10;
+  if (strcmp(annotation->unknown00, "weaponChange") == 0 && unknown30 != nullptr) {
+    mm::mtl::FixStr<128> parameter;
+    parameter = annotation->unknown10;
+    f32 fade = 1.0f;
+    const char *found = strstr(parameter.c_str(), "fadein_");
+    if (found != nullptr) {
+      parameter = parameter.erase(found - parameter.c_str(), 7);
+      fade = atof(parameter.c_str());
+    }
+    found = strstr(parameter.c_str(), "fadeout_");
+    if (found != nullptr) {
+      parameter = parameter.erase(found - parameter.c_str(), 8);
+      fade = atof(parameter.c_str());
+    }
+    for (fw::EffectAnnotationData *it = unknown30->unknown10.begin(); it != unknown30->unknown10.end(); it++) {
+      if (it->unknownf0.unknown14 != 3) {
+        continue;
+      }
+      EffectSetUp setup;
+      setup.unknown28 = it->unknown54.c_str();
+      setup.unknown44 = it->unknownf0.unknown18;
+      setup.unknown38 = unknown114a8 * it->unknownc0.unknown04;
+      setup.unknown48 = it->unknownf0.unknown05;
+      setup.unknown49 = it->unknownf0.unknown04;
+      setup.unknown3c = fade;
+      setup.unknown00 = it->unknownd0;
+      setup.unknown10 = it->unknowne0;
+      setup.unknown4b = it->unknownf0.unknown09;
+      setup.unknown4c = it->unknownf0.unknown0a;
+      setup.unknown4d = it->unknownf0.unknown0a >> 8;
+      if (setup.unknown4d != 0) {
+        setup.unknown38 = it->unknownc0.unknown04;
+      }
+      it->unknownf0.unknown1c = effectStart(setup, it->unknown78.c_str());
+    }
+  }
+}
+
 void GfComEffectCaster::registerAsmCallbackEffect(GF_OBJ_HANDLE *handle, anm::ResASM *resAsm, fw::EffectResData *effectData) {
   if (resAsm != nullptr && effectData != nullptr) {
     effectData->registerAsmAnnotation(resAsm, 3, ASM_CB_NAME_EFFECT);
@@ -46,6 +93,20 @@ void GfComEffectCaster::registerAsmCallbackEffect(GF_OBJ_HANDLE *handle, anm::Re
 void GfComEffectCaster::procMsgObjectNotifyDamage(fw::MessageObject *object, MsgObjectNotifyDamage &message) {}
 
 void GfComEffectCaster::procMsgObjectNotifyDead(fw::MessageObject *object, MsgObjectNotifyDead &message) {}
+
+bool GfComEffectCaster::getEfpMatrix(const char *name, mm::Mat44 &matrix) {
+  if (m_effectCaster != nullptr) {
+    if (m_effectCaster->unknown10 == nullptr) {
+      return false;
+    }
+    int index = m_effectCaster->unknown10->getPointIndex(name);
+    if (index != -1) {
+      matrix.unknown009(m_effectCaster->unknown10->getPointTransform(index), m_effectCaster->unknown60);
+      return true;
+    }
+  }
+  return false;
+}
 
 void GfComEffectCaster::procMsgFxRimBloomEnd(fw::MessageObject *object, MsgFxRimBloomEnd &message) {
   unknown14 = false;
@@ -85,8 +146,8 @@ void GfComEffectCaster::cleanup() {
     if (param->unknown58 != 0) {
       fw::EffectManager::get()->remove(param->unknown58);
     }
-    if (param->unknown6e && unknown390 != nullptr) {
-      unknown390->unknown88(param->unknown34.c_str());
+    if (param->unknown6e && m_effectPoint != nullptr) {
+      m_effectPoint->unknown88(param->unknown34.c_str());
     }
   }
   unknown3a0.clear();
@@ -101,18 +162,18 @@ void GfComEffectCaster::cleanup() {
     }
   }
   unknown40.clear();
-  fw::EffectCasterBase *caster = unknown388;
+  fw::EffectCasterBase *caster = m_effectCaster;
   if (caster != nullptr) {
     if (caster->unknown10 != nullptr) {
       caster->unknown10->unknown002();
       caster->unknown10 = nullptr;
     }
     caster->_40 = true;
-    unknown388 = nullptr;
+    m_effectCaster = nullptr;
   }
-  if (unknown390 != nullptr) {
-    unknown390->unknown002();
-    unknown390 = nullptr;
+  if (m_effectPoint != nullptr) {
+    m_effectPoint->unknown002();
+    m_effectPoint = nullptr;
   }
 }
 
@@ -125,11 +186,11 @@ fw::EffectPack *GfComEffectCaster::getEffectPack(GF_ASSET_HANDLE *handle) {
 }
 
 const char *GfComEffectCaster::getEfpData(const char *name, mm::Mat44 &matrix) {
-  if (unknown388 == nullptr || unknown388->unknown10 == nullptr) {
+  if (m_effectCaster == nullptr || m_effectCaster->unknown10 == nullptr) {
     return nullptr;
   }
-  const char *parentName = unknown388->unknown10->getParentName(name);
-  matrix = unknown388->unknown10->getOffset(name);
+  const char *parentName = m_effectCaster->unknown10->getParentName(name);
+  matrix = m_effectCaster->unknown10->getOffset(name);
   return parentName;
 }
 
@@ -187,7 +248,7 @@ void GfComEffectCaster::updateParam(GfComEffectCaster *caster, Param *param, f32
 
 void GfComEffectCaster::getWpnMat(mm::Mat44 &matrix) { matrix = unknown002(unknown113d0, unknown11410); }
 
-fw::EffectPoint *GfComEffectCaster::getEffectPoint() { return unknown390; }
+fw::EffectPoint *GfComEffectCaster::getEffectPoint() { return m_effectPoint; }
 
 bool GfComEffectCaster::getValidEffectName(const char *name) const { return true; }
 
@@ -216,7 +277,7 @@ u32 GfComEffectCaster::calcWeaponID() const {
   return GfDataWeapon::getEffWeaponType(paramAcc.getWeaponType(-1, false));
 }
 
-void GfComEffectCaster::setCaster(u32 effect) { fw::EffectManager::get()->setParam(effect, unknown388, 1.0f); }
+void GfComEffectCaster::setCaster(u32 effect) { fw::EffectManager::get()->setParam(effect, m_effectCaster, 1.0f); }
 
 bool GfComEffectCaster::setSpeed(u32 effect, f32 speed) {
   Param *param = findEffectCasterParam(effect);
@@ -294,8 +355,8 @@ void GfComEffectCaster::addMountEffectEv(const EffectMountSetupEv &setup) {
   tbl.unknown40 = setup.unknown40;
   tbl.unknown42 = setup.unknown42;
   if (tbl.unknown41) {
-    if (unknown390 != nullptr) {
-      tbl.unknown28 = unknown390->unknown68(tbl.unknown00.c_str());
+    if (m_effectPoint != nullptr) {
+      tbl.unknown28 = m_effectPoint->unknown68(tbl.unknown00.c_str());
     } else {
       GfComModel *model = unknown08->getComponent<GfComModel>();
       if (model != nullptr) {
@@ -310,13 +371,13 @@ bool GfComEffectCaster::removeMountEffectEv(u32 effect) {
   for (EventEfHandleTbl *tbl = unknownc3b0.begin(); tbl != unknownc3b0.end(); tbl++) {
     if (tbl->unknown24 == effect) {
       if (tbl->unknown41) {
-        if (unknown390 == nullptr) {
+        if (m_effectPoint == nullptr) {
           GfComModel *model = unknown08->getComponent<GfComModel>();
           if (model != nullptr) {
             model->destroyBoneReferenceFrame(tbl->unknown00.c_str());
           }
         } else {
-          unknown390->unknown88(tbl->unknown00.c_str());
+          m_effectPoint->unknown88(tbl->unknown00.c_str());
         }
       }
       unknownc3b0.erase(tbl);

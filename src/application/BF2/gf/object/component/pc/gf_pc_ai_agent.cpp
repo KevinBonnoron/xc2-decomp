@@ -12,24 +12,24 @@ AIAgent::~AIAgent() {}
 
 void AIAgent::setup(GfComPropertyPc &property) {
   if (property.unknown38 != PLAYER_ID_UNKNOWN_4294967295) {
-    unknown10.setup(property);
+    m_aIAgentField.setup(property);
   }
-  unknowna0.setup(property);
+  m_aIAgentBattle.setup(property);
 }
 
 void AIAgent::cleanup(GfComPropertyPc &property) {
-  unknowna0.cleanup(property);
+  m_aIAgentBattle.cleanup(property);
   if (property.unknown38 != PLAYER_ID_UNKNOWN_4294967295) {
-    unknown10.cleanup(property);
+    m_aIAgentField.cleanup(property);
   }
 }
 
 void AIAgent::update(const fw::UpdateInfo &info, GfComPropertyPc &property) {
   if (property.unknown38 != PLAYER_ID_UNKNOWN_4294967295 && testFiledAI()) {
-    unknown10.update(info, property);
+    m_aIAgentField.update(info, property);
   }
   if (testBattleAI()) {
-    unknowna0.update(info, property);
+    m_aIAgentBattle.update(info, property);
   }
 }
 
@@ -39,10 +39,10 @@ void AIAgent::setFieldAI(GfComPropertyPc &property, bool isEnable) {
   }
   if (isEnable) {
     unknown08 |= 1;
-    unknown10.onActivate(property);
+    m_aIAgentField.onActivate(property);
   } else {
     unknown08 &= ~1;
-    unknown10.onDeactivate(property);
+    m_aIAgentField.onDeactivate(property);
   }
 }
 
@@ -52,10 +52,10 @@ void AIAgent::setBattleAI(GfComPropertyPc &property, bool isEnable) {
   }
   if (isEnable) {
     unknown08 |= 2;
-    unknown10.onActivate(property);
+    m_aIAgentField.onActivate(property);
   } else {
     unknown08 &= ~2;
-    unknown10.onDeactivate(property);
+    m_aIAgentField.onDeactivate(property);
   }
 }
 
@@ -67,7 +67,7 @@ bool AIAgent::testBattleAI() const { return (unknown08 & 2) != 0; }
 
 bool AIAgent::recieveMessage(GfComPropertyPc &property, fw::MessageObject *sender, fw::Message &message) {
   if (testFiledAI()) {
-    return unknown10.recieveMessage(property, sender, message);
+    return m_aIAgentField.recieveMessage(property, sender, message);
   }
   return false;
 }

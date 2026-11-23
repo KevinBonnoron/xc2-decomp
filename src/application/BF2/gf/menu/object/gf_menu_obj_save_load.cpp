@@ -97,7 +97,7 @@ void GfMenuObjSaveLoad::ListListener::reciveEvent(const ui::EventData &event, u3
     }
   }
   case 0xb:
-    returnFSSubLayer(unknown20);
+    returnFSSubLayer(m_menuObjSaveLoad);
     break;
   case 6: {
     u32 index = event.unknown08;

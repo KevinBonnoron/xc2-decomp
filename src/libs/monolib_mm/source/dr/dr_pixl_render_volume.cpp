@@ -2,7 +2,7 @@
 
 namespace ml {
 
-DrPixlRenderVolume::DrPixlRenderVolume(DrMan *man) { unknown90 = man; }
+DrPixlRenderVolume::DrPixlRenderVolume(DrMan *man) { m_drMan = man; }
 
 DrPixlRenderVolume::~DrPixlRenderVolume() { releaseWork(); }
 

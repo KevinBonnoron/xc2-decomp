@@ -33,11 +33,11 @@ public:
   struct CreateInfo {
     CreateInfo() : unknown04(-1), unknown10(0.0f, 0.0f, 0.0f), unknown20(0.0f), unknown24(false) {}
 
-    mtl::ALLOC_HANDLE unknown00; // Inferred role: memory; original member name unknown.
-    int unknown04;               // Inferred role: gmk set id; original member name unknown.
-    mm::Vec3 unknown10;          // Inferred role: position; original member name unknown.
-    f32 unknown20;               // Inferred role: rotation; original member name unknown.
-    bool unknown24;              // Inferred role: game entity disabled; original member name unknown.
+    mtl::ALLOC_HANDLE m_ALLOC_HANDLE; // Inferred role: memory; original member name unknown.
+    int unknown04;                    // Inferred role: gmk set id; original member name unknown.
+    mm::Vec3 unknown10;               // Inferred role: position; original member name unknown.
+    f32 unknown20;                    // Inferred role: rotation; original member name unknown.
+    bool unknown24;                   // Inferred role: game entity disabled; original member name unknown.
   };
 
   virtual ~GmkSet();
@@ -66,17 +66,17 @@ public:
   void seqCreateMapBdat(f32 deltaTime);
   void seqCreateMapGmk(f32 deltaTime);
 
-  CreateInfo unknown10;               // Inferred role: create info; original member name unknown.
-  GmkBdat unknown40;                  // Inferred role: map bdat; original member name unknown.
-  GmkNpcManager unknown178;           // Inferred role: npc manager; original member name unknown.
+  CreateInfo m_createInfo;            // Inferred role: create info; original member name unknown.
+  GmkBdat m_gmkBdat;                  // Inferred role: map bdat; original member name unknown.
+  GmkNpcManager m_gmkNpcManager;      // Inferred role: npc manager; original member name unknown.
   IGmkList *unknown1b8[GMK_TYPE_NUM]; // Inferred role: lists; original member name unknown.
   void (GmkSet::*unknown388)(f32);    // Inferred role: seq; original member name unknown.
 };
 
 static_assert(sizeof(GmkSet::CreateInfo) == 0x30, "");
-static_assert(offsetof(GmkSet, unknown10) == 0x10, "");
-static_assert(offsetof(GmkSet, unknown40) == 0x40, "");
-static_assert(offsetof(GmkSet, unknown178) == 0x178, "");
+static_assert(offsetof(GmkSet, m_createInfo) == 0x10, "");
+static_assert(offsetof(GmkSet, m_gmkBdat) == 0x40, "");
+static_assert(offsetof(GmkSet, m_gmkNpcManager) == 0x178, "");
 static_assert(offsetof(GmkSet, unknown1b8) == 0x1b8, "");
 static_assert(offsetof(GmkSet, unknown388) == 0x388, "");
 static_assert(sizeof(GmkSet) == 0x3a0, "");
@@ -116,16 +116,16 @@ inline gf::GF_OBJ_HANDLE *unknown010(const GmkMapObj &gmk) { return gmk.unknown4
 
 inline gf::GF_OBJ_HANDLE *unknown010(const GmkRoutedMapObj &gmk) { return gmk.unknown50; }
 
-inline const GmkEnemyInsts &unknown011(const GmkEnemy &gmk) { return gmk.unknown48; }
+inline const GmkEnemyInsts &unknown011(const GmkEnemy &gmk) { return gmk.m_gmkEnemyInsts; }
 
-inline const GmkEnemyInsts &unknown011(const GmkRoutedEnemy &gmk) { return gmk.unknown50; }
+inline const GmkEnemyInsts &unknown011(const GmkRoutedEnemy &gmk) { return gmk.m_gmkEnemyInsts; }
 
-inline const GmkMobInsts &unknown011(const GmkMob &gmk) { return gmk.unknown48; }
+inline const GmkMobInsts &unknown011(const GmkMob &gmk) { return gmk.m_gmkMobInsts; }
 
-inline const GmkMobInsts &unknown011(const GmkRoutedMob &gmk) { return gmk.unknown50; }
+inline const GmkMobInsts &unknown011(const GmkRoutedMob &gmk) { return gmk.m_gmkMobInsts; }
 
 // Inferred helpers: the number of game objects of the instances and one of them; original names unknown.
-inline u32 unknown012(const GmkEnemyInsts &insts) { return insts.unknown98.getGobInstNum(); }
+inline u32 unknown012(const GmkEnemyInsts &insts) { return insts.m_popInfo.getGobInstNum(); }
 
 inline u32 unknown012(const GmkMobInsts &insts) { return insts.unknowna8->size(); }
 

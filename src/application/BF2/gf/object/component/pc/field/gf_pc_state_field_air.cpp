@@ -27,7 +27,7 @@ void StateFieldAir::leave(GfComBehaviorPc *behavior, ai::State *next) {
   StateUtilField::setEnableFallIntoColi(*behavior, false);
   StateUtilField::setAirStatus(*behavior, false);
   StateUtil::setEnableFallDistChecker(*behavior, false);
-  if (next != nullptr && next->unknown08 == STATE_ID_UNKNOWN_54) {
+  if (next != nullptr && next->m_state == STATE_ID_UNKNOWN_54) {
     StateUtilField::setSlideDirForce(*behavior->unknown08->getComponent<GfComPropertyPc>());
   }
 }

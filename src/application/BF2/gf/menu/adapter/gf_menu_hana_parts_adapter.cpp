@@ -17,12 +17,12 @@ static GfMenuHanaPartsAdapter::TypeInfo TYPE_INFOS[] = {
     {&GfMenuHanaPartsAdapter::update_needEther, {GfMenuAdapter::unknown004_0, 0, 999999999}},
 };
 
-GfMenuHanaPartsAdapter::GfMenuHanaPartsAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways) : GfMenuAdapter(plugin, false, isUpdateAlways), unknown50(nullptr), unknown58(0) {}
+GfMenuHanaPartsAdapter::GfMenuHanaPartsAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways) : GfMenuAdapter(plugin, false, isUpdateAlways), m_iConverter(nullptr), unknown58(0) {}
 
 GfMenuHanaPartsAdapter::~GfMenuHanaPartsAdapter() {
-  if (unknown50 != nullptr) {
-    delete unknown50;
-    unknown50 = nullptr;
+  if (m_iConverter != nullptr) {
+    delete m_iConverter;
+    m_iConverter = nullptr;
   }
 }
 
@@ -135,7 +135,7 @@ GfMenuHanaPartsAdapter *GfMenuHanaPartsAdapter::createFromList(u32 handle, u32 t
 GfMenuHanaPartsAdapter *GfMenuHanaPartsAdapter::createFromCoverter(u32 handle, u32 type, IConverter *converter, bool isUpdateAlways) {
   GfMenuHanaPartsAdapter *adapter = create(handle, type, converter->getPartsId(), isUpdateAlways);
   if (adapter != nullptr) {
-    adapter->unknown50 = converter;
+    adapter->m_iConverter = converter;
   }
   return adapter;
 }
@@ -162,8 +162,8 @@ u32 GfMenuHanaPartsAdapter::ListConverter::getPartsId() {
 u32 GfMenuHanaPartsAdapter::ReferenceNumberConverter::getPartsId() { return number->unknown0c; }
 
 void GfMenuHanaPartsAdapter::update(const fw::UpdateInfo &info) {
-  if (unknown50 != nullptr) {
-    u32 newPartsId = unknown50->getPartsId();
+  if (m_iConverter != nullptr) {
+    u32 newPartsId = m_iConverter->getPartsId();
     if (unknown5c != newPartsId) {
       unknown5c = newPartsId;
       setChange();

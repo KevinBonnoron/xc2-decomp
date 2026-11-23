@@ -101,6 +101,19 @@ struct alignas(16) Vec3 {
   // Evidence: gmk::GmkRoutedNpc::findPopPosRot (1.0.0: 0x71005fa980) and gmk::getYSnapPosRot (0x71005e472c).
   bool unknown003() const { return fabsf(x) <= 0.000001f && fabsf(y) <= 0.000001f && fabsf(z) <= 0.000001f; }
 
+  // Inferred role: sets this to the cross product of first and second; original name unknown. It may alias an operand, so the three components are computed
+  // before the first store, which goes z, y, x.
+  // Evidence: the same shape is inlined in gf::EnviromentSensor::check (1.0.0: 0x710051dc98), gf::CameraUtilities::getRotateAxis (0x71001e0d24) and
+  // ml::DrShdLgtClustered::createPlaneEquation (0x71008925cc).
+  void unknown004(const Vec3 &first, const Vec3 &second) {
+    f32 cx = first.y * second.z - first.z * second.y;
+    f32 cy = first.z * second.x - second.z * first.x;
+    f32 cz = second.y * first.x - first.y * second.x;
+    z = cz;
+    y = cy;
+    x = cx;
+  }
+
   f32 x;
   f32 y;
   f32 z;

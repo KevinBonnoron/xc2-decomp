@@ -14,8 +14,8 @@ public:
   void begin();
   DrResMdoPos *createAdd();
 
-  DrResMdoPos *unknown00; // Inferred role: positions; original member name unknown.
-  s32 unknown08;          // Inferred role: used count; original member name unknown.
+  DrResMdoPos *m_drResMdoPos; // Inferred role: positions; original member name unknown.
+  s32 unknown08;              // Inferred role: used count; original member name unknown.
 };
 
 static_assert(offsetof(DrResMdoPosAddList, unknown08) == 0x08, "");

@@ -66,13 +66,13 @@ public:
   mm::mtl::Delegate<bool()> unknown30; // Inferred role: updater; original member name unknown.
   u32 unknown50;                       // Inferred role: element combo; original member name unknown.
   int unknown54;                       // Inferred role: element combo route number; original member name unknown.
-  IConverter *unknown58;               // Inferred role: converter; original member name unknown.
+  IConverter *m_iConverter;            // Inferred role: converter; original member name unknown.
 };
 
 static_assert(offsetof(GfMenuElementComboAdapter, unknown30) == 0x30, "");
 static_assert(offsetof(GfMenuElementComboAdapter, unknown50) == 0x50, "");
 static_assert(offsetof(GfMenuElementComboAdapter, unknown54) == 0x54, "");
-static_assert(offsetof(GfMenuElementComboAdapter, unknown58) == 0x58, "");
+static_assert(offsetof(GfMenuElementComboAdapter, m_iConverter) == 0x58, "");
 static_assert(sizeof(GfMenuElementComboAdapter) == 0x60, "");
 
 } // namespace gf

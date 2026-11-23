@@ -6,10 +6,10 @@ namespace event {
 class PackHeader {
 public:
   struct File {
-    char unknown00[0x100]; // Inferred role: path; original member name unknown.
-    u32 unknown100;        // Inferred role: data ofs; original member name unknown.
-    u32 unknown104;        // Inferred role: data size; original member name unknown.
-    u32 unknown108;        // Inferred role: prio; original member name unknown.
+    char m_path[0x100]; // Inferred role: path; named after the game accessor event::PackHeader::getPath.
+    u32 m_dataOfs;      // Inferred role: data ofs; named after the game accessor event::PackHeader::getDataOfs.
+    u32 m_dataSize;     // Inferred role: data size; named after the game accessor event::PackHeader::getDataSize.
+    u32 m_prio;         // Inferred role: prio; named after the game accessor event::PackHeader::getPrio.
     u8 _10c[0x120 - 0x10c];
   };
 

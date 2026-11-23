@@ -36,7 +36,7 @@ public:
   static void cutOff(bool cut);
 
   reslist<u32> unknown1b0; // Inferred role: wids of the views that were current; original member name unknown.
-  WinView *unknown1f0;     // Inferred role: current view; original member name unknown.
+  WinView *m_winView;      // Inferred role: current view; original member name unknown.
   WinProc *unknown1f8;     // Inferred role: current proc; original member name unknown.
   WinProc *unknown200;     // Inferred role: render proc; original member name unknown.
   u32 unknown208;          // Inferred role: wid of the previous current view; original member name unknown.
@@ -44,7 +44,7 @@ public:
 };
 
 static_assert(offsetof(WinViewRoot, unknown1b0) == 0x1b0, "");
-static_assert(offsetof(WinViewRoot, unknown1f0) == 0x1f0, "");
+static_assert(offsetof(WinViewRoot, m_winView) == 0x1f0, "");
 static_assert(offsetof(WinViewRoot, unknown1f8) == 0x1f8, "");
 static_assert(offsetof(WinViewRoot, unknown200) == 0x200, "");
 static_assert(offsetof(WinViewRoot, unknown208) == 0x208, "");

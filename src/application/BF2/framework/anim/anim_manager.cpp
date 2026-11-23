@@ -3,6 +3,7 @@
 #include "anm/anm_thread_pool.h"
 #include "framework/memory/allocator.h"
 #include "framework/memory/framework_memory.h"
+#include "mm_mtl/algorithm.h"
 
 namespace mm {
 namespace mtl {
@@ -43,10 +44,19 @@ AnimationManager::~AnimationManager() {
   }
 }
 
+void AnimationManager::updateControls(const UpdateInfo &info, u32 layers) {
+  for (u32 layer = 0; layer < LAYER_UNKNOWN_32; layer++) {
+    if ((layers & 1 << layer) != 0) {
+      mm::mtl::IntrusiveList<AnimControlUpdaterInterface> &list = m_group[layer].unknown00;
+      mm::mtl::for_each(list.begin(), list.end(), [&info](AnimControlUpdaterInterface &updater) { updater.update(info); });
+    }
+  }
+}
+
 void AnimationManager::samplePose(u32 layers) {
   for (u32 layer = 0; layer < LAYER_UNKNOWN_32; layer++) {
     if ((layers & 1 << layer) != 0) {
-      unknown002<AnimSamplePoseJob, AnimPoseSamplerInterface>(unknown18[layer].unknown18);
+      unknown002<AnimSamplePoseJob, AnimPoseSamplerInterface>(m_group[layer].unknown18);
     }
   }
 
@@ -57,7 +67,7 @@ void AnimationManager::samplePose(u32 layers) {
 void AnimationManager::applyPose(u32 layers) {
   for (u32 layer = 0; layer < LAYER_UNKNOWN_32; layer++) {
     if ((layers & 1 << layer) != 0) {
-      unknown002<AnimModifyPoseJob, AnimPoseModifierInterface>(unknown18[layer].unknown30);
+      unknown002<AnimModifyPoseJob, AnimPoseModifierInterface>(m_group[layer].unknown30);
     }
   }
 
@@ -68,7 +78,7 @@ void AnimationManager::applyPose(u32 layers) {
 void AnimationManager::applyAfterModifyPose(u32 layers) {
   for (u32 layer = 0; layer < LAYER_UNKNOWN_32; layer++) {
     if ((layers & 1 << layer) != 0) {
-      unknown002<AnimAfterModifyJob, AnimAfterModifierInterface>(unknown18[layer].unknown48);
+      unknown002<AnimAfterModifyJob, AnimAfterModifierInterface>(m_group[layer].unknown48);
     }
   }
 
@@ -79,11 +89,11 @@ void AnimationManager::applyAfterModifyPose(u32 layers) {
 void AnimationManager::solveIK(const UpdateInfo &info, u32 layers) {
   for (u32 layer = 0; layer < LAYER_UNKNOWN_32; layer++) {
     if ((layers & 1 << layer) != 0) {
-      mm::mtl::IntrusiveList<IkResolver> &list = unknown18[layer].unknown60;
+      mm::mtl::IntrusiveList<IkResolver> &list = m_group[layer].unknown60;
       mm::mtl::IntrusiveList<IkResolver>::iterator it = list.begin();
       for (int count = list.size(); count != 0; count--) {
         AnimIkResolveJob job(1);
-        job.unknown20 = &info;
+        job.m_updateInfo = &info;
         job.unknown10[0] = &*it;
         ++it;
         unknownf20->unknown001(job);
@@ -99,25 +109,25 @@ const char *AnimationManager::getName() const { return "AnimObjectManager"; }
 
 void AnimationManager::update(const UpdateInfo &info) {}
 
-void AnimationManager::addControlUpdater(u32 layer, AnimControlUpdaterInterface &updater) { unknown18[layer].unknown00.push_back(&updater); }
+void AnimationManager::addControlUpdater(u32 layer, AnimControlUpdaterInterface &updater) { m_group[layer].unknown00.push_back(&updater); }
 
-void AnimationManager::removeControlUpdater(u32 layer, AnimControlUpdaterInterface &updater) { unknown18[layer].unknown00.erase(&updater); }
+void AnimationManager::removeControlUpdater(u32 layer, AnimControlUpdaterInterface &updater) { m_group[layer].unknown00.erase(&updater); }
 
-void AnimationManager::addPoseSampler(u32 layer, AnimPoseSamplerInterface &sampler) { unknown18[layer].unknown18.push_back(&sampler); }
+void AnimationManager::addPoseSampler(u32 layer, AnimPoseSamplerInterface &sampler) { m_group[layer].unknown18.push_back(&sampler); }
 
-void AnimationManager::removePoseSampler(u32 layer, AnimPoseSamplerInterface &sampler) { unknown18[layer].unknown18.erase(&sampler); }
+void AnimationManager::removePoseSampler(u32 layer, AnimPoseSamplerInterface &sampler) { m_group[layer].unknown18.erase(&sampler); }
 
-void AnimationManager::addPoseModifier(u32 layer, AnimPoseModifierInterface &modifier) { unknown18[layer].unknown30.push_back(&modifier); }
+void AnimationManager::addPoseModifier(u32 layer, AnimPoseModifierInterface &modifier) { m_group[layer].unknown30.push_back(&modifier); }
 
-void AnimationManager::removePoseModifier(u32 layer, AnimPoseModifierInterface &modifier) { unknown18[layer].unknown30.erase(&modifier); }
+void AnimationManager::removePoseModifier(u32 layer, AnimPoseModifierInterface &modifier) { m_group[layer].unknown30.erase(&modifier); }
 
-void AnimationManager::addAfterModifier(u32 layer, AnimAfterModifierInterface &modifier) { unknown18[layer].unknown48.push_back(&modifier); }
+void AnimationManager::addAfterModifier(u32 layer, AnimAfterModifierInterface &modifier) { m_group[layer].unknown48.push_back(&modifier); }
 
-void AnimationManager::removeAfterModifier(u32 layer, AnimAfterModifierInterface &modifier) { unknown18[layer].unknown48.erase(&modifier); }
+void AnimationManager::removeAfterModifier(u32 layer, AnimAfterModifierInterface &modifier) { m_group[layer].unknown48.erase(&modifier); }
 
-void AnimationManager::addIkResolver(u32 layer, IkResolver &resolver) { unknown18[layer].unknown60.push_back(&resolver); }
+void AnimationManager::addIkResolver(u32 layer, IkResolver &resolver) { m_group[layer].unknown60.push_back(&resolver); }
 
-void AnimationManager::removeIkResolver(u32 layer, IkResolver &resolver) { unknown18[layer].unknown60.erase(&resolver); }
+void AnimationManager::removeIkResolver(u32 layer, IkResolver &resolver) { m_group[layer].unknown60.erase(&resolver); }
 
 void IkResolver::resolve(const UpdateInfo &info) {
   for (u32 i = 0; i < unknown10.size(); i++) {

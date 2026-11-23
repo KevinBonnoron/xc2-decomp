@@ -11,7 +11,7 @@ class GfMenuObjSpecialGauge : public GfMenuObject {
 public:
   class MainListener : public ui::UIObjectListener {
   public:
-    MainListener(GfMenuObjSpecialGauge *owner) : unknown0c(0), unknown10(), unknown18(0), unknown20(owner) {}
+    MainListener(GfMenuObjSpecialGauge *owner) : unknown0c(0), unknown10(), unknown18(0), m_menuObjSpecialGauge(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     int unknown0c; // Inferred role: fade control; original member name unknown.
@@ -21,7 +21,7 @@ public:
     } unknown10;
     int unknown18; // Inferred role: battle gauge flag; original member name unknown.
     u8 _1c[0x20 - 0x1c];
-    GfMenuObjSpecialGauge *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjSpecialGauge *m_menuObjSpecialGauge; // Inferred role: owner; original member name unknown.
   };
 
   GfMenuObjSpecialGauge(u32 handle);
@@ -39,7 +39,7 @@ static_assert(offsetof(GfMenuObjSpecialGauge::MainListener, unknown0c) == 0x0c, 
 static_assert(offsetof(GfMenuObjSpecialGauge::MainListener, unknown10) == 0x10, "");
 static_assert(offsetof(GfMenuObjSpecialGauge::MainListener::unknown006, unknown04) == 0x04, "");
 static_assert(offsetof(GfMenuObjSpecialGauge::MainListener, unknown18) == 0x18, "");
-static_assert(offsetof(GfMenuObjSpecialGauge::MainListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjSpecialGauge::MainListener, m_menuObjSpecialGauge) == 0x20, "");
 static_assert(sizeof(GfMenuObjSpecialGauge::MainListener) == 0x28, "");
 
 } // namespace gf

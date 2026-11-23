@@ -27,7 +27,7 @@ WinView::~WinView() {}
 
 bool WinView::evtFocusOn() { return true; }
 
-bool WinView::evtFocusOff() { return unknown1b8.m_back->unknown48.evtFocusOff(); }
+bool WinView::evtFocusOff() { return unknown1b8.m_back->m_winViewFrame.evtFocusOff(); }
 
 void WinView::setRect(const mm::Rect<int> &rect) {
   updateViewPort(rect);
@@ -42,12 +42,12 @@ void WinView::setTitle(const char *title) {
 }
 
 void WinView::setSplitLine(int line) {
-  unknown1b8.m_back->unknown28.setSplitLine(line);
+  unknown1b8.m_back->m_winSplitFrame.setSplitLine(line);
   applyRect();
 }
 
 void WinView::createSplitView(bool isHorizontal, WinView *view1, WinView *view2) {
-  unknown1b8.m_back->unknown28.setup(this, isHorizontal, view1, view2);
+  unknown1b8.m_back->m_winSplitFrame.setup(this, isHorizontal, view1, view2);
   unknown3bc |= isHorizontal ? 0x18 : 0x28;
   memcpy(unknown1b8.m_front, unknown1b8.m_back, sizeof(RENDER_INFO));
 }
@@ -55,18 +55,18 @@ void WinView::createSplitView(bool isHorizontal, WinView *view1, WinView *view2)
 mm::Rect<int> WinView::getSplitRect(const WinView *view, bool isBack) const {
   const RENDER_INFO *info = isBack ? unknown1b8.m_back : unknown1b8.m_front;
   if (getSplitView1() != view) {
-    return info->unknown28.getScissorRect2();
+    return info->m_winSplitFrame.getScissorRect2();
   }
-  return info->unknown28.getScissorRect1();
+  return info->m_winSplitFrame.getScissorRect1();
 }
 
 // The game body is identical to getSplitRect: it calls WinSplitFrame::getScissorRect1/2 here too, not the client variants.
 mm::Rect<int> WinView::getClientSplitRect(const WinView *view, bool isBack) const {
   const RENDER_INFO *info = isBack ? unknown1b8.m_back : unknown1b8.m_front;
   if (getSplitView1() != view) {
-    return info->unknown28.getScissorRect2();
+    return info->m_winSplitFrame.getScissorRect2();
   }
-  return info->unknown28.getScissorRect1();
+  return info->m_winSplitFrame.getScissorRect1();
 }
 
 mm::Rect<int> WinView::getScissorRect(bool isBack) const {
@@ -79,13 +79,13 @@ mm::Rect<int> WinView::getScissorRect(bool isBack) const {
 
 mm::Rect<int> WinView::getFrameRect(bool isBack) const {
   const RENDER_INFO *info = isBack ? unknown1b8.m_back : unknown1b8.m_front;
-  return info->unknown48.unknown001(isBack);
+  return info->m_winViewFrame.unknown001(isBack);
 }
 
 mm::Rect<int> WinView::getFrameAbsRect(bool isBack) const {
   const RENDER_INFO *info = isBack ? unknown1b8.m_back : unknown1b8.m_front;
   mm::Pnt<int> pos = getFrameAbsPos(isBack);
-  mm::Rect<int> rect = info->unknown48.unknown001(isBack);
+  mm::Rect<int> rect = info->m_winViewFrame.unknown001(isBack);
   return mm::Rect<int>(pos.x, pos.y, rect.width, rect.height);
 }
 
@@ -119,7 +119,7 @@ void WinView::setPos(const mm::Pnt<int> &pos) {
   mm::Pnt<int> offset = getFrame2ViewOffset(true);
   framePos.x = pos.x - offset.x;
   framePos.y = pos.y - offset.y;
-  unknown1b8.m_back->unknown48.unknown58 = framePos;
+  unknown1b8.m_back->m_winViewFrame.unknown58 = framePos;
 }
 
 void WinView::updateViewPort(const mm::Rect<int> &rect) {
@@ -155,25 +155,25 @@ WinView *WinView::getView(bool isResetShadow) {
 
 const mm::Pnt<int> &WinView::getFramePos(bool isBack) const {
   const RENDER_INFO *info = isBack ? unknown1b8.m_back : unknown1b8.m_front;
-  return info->unknown48.unknown58;
+  return info->m_winViewFrame.unknown58;
 }
 
 void WinView::addFramePos(const mm::Pnt<int> &pos) {
   RENDER_INFO *info = unknown1b8.m_back;
-  info->unknown48.unknown58.x += pos.x;
-  info->unknown48.unknown58.y += pos.y;
+  info->m_winViewFrame.unknown58.x += pos.x;
+  info->m_winViewFrame.unknown58.y += pos.y;
 }
 
 void WinView::addScroll(const mm::Pnt<int> &scroll) { unknown1b8.m_back->addScroll(scroll); }
 
-bool WinView::isSplitHolizon() const { return unknown1b8.m_back->unknown28.unknown08; }
+bool WinView::isSplitHolizon() const { return unknown1b8.m_back->m_winSplitFrame.m_splitHolizon; }
 
 s32 WinView::getSplitLine(bool isBack) const {
   const RENDER_INFO *info = isBack ? unknown1b8.m_back : unknown1b8.m_front;
-  return info->unknown28.getSplitLine();
+  return info->m_winSplitFrame.getSplitLine();
 }
 
-mm::Pnt<int> WinView::getFrame2ViewOffset(bool isBack) const { return (isBack ? unknown1b8.m_back : unknown1b8.m_front)->unknown48.getFrame2ViewOffset(); }
+mm::Pnt<int> WinView::getFrame2ViewOffset(bool isBack) const { return (isBack ? unknown1b8.m_back : unknown1b8.m_front)->m_winViewFrame.getFrame2ViewOffset(); }
 
 mm::Pnt<int> WinView::getPos(bool isBack) const {
   if (unknown3b8 & 1) {
@@ -181,7 +181,7 @@ mm::Pnt<int> WinView::getPos(bool isBack) const {
   }
   const RENDER_INFO *info = isBack ? unknown1b8.m_back : unknown1b8.m_front;
   mm::Pnt<int> offset = getFrame2ViewOffset(isBack);
-  return mm::Pnt<int>(info->unknown48.unknown58.x + offset.x, info->unknown48.unknown58.y + offset.y);
+  return mm::Pnt<int>(info->m_winViewFrame.unknown58.x + offset.x, info->m_winViewFrame.unknown58.y + offset.y);
 }
 
 mm::Pnt<int> WinView::getSize(bool isBack) const {
@@ -207,8 +207,8 @@ mm::Pnt<int> WinView::getClientPos(bool isBack) const {
   int y = 0;
   if (!(unknown3b8 & 1)) {
     mm::Pnt<int> offset = getFrame2ViewOffset(isBack);
-    x = info->unknown48.unknown58.x + offset.x;
-    y = info->unknown48.unknown58.y + offset.y;
+    x = info->m_winViewFrame.unknown58.x + offset.x;
+    y = info->m_winViewFrame.unknown58.y + offset.y;
   }
   return mm::Pnt<int>(info->unknown18.x + x, info->unknown18.y + y);
 }
@@ -222,15 +222,15 @@ mm::Pnt<int> WinView::getClientSize(bool isBack) const {
 }
 
 WinView *WinView::getParentView() {
-  if (WinViewRoot::get() != unknown58) {
-    return static_cast<WinView *>(unknown58);
+  if (WinViewRoot::get() != m_workObj) {
+    return static_cast<WinView *>(m_workObj);
   }
   return nullptr;
 }
 
 const WinView *WinView::getParentView() const {
-  if (WinViewRoot::get() != unknown58) {
-    return static_cast<const WinView *>(unknown58);
+  if (WinViewRoot::get() != m_workObj) {
+    return static_cast<const WinView *>(m_workObj);
   }
   return nullptr;
 }
@@ -249,7 +249,7 @@ void WinView::destroyCtrlMemory() {
 bool WinView::isCurrent() const {
   WinViewRoot *root = WinViewRoot::get();
   if (root != nullptr) {
-    WinView *current = root->unknown1f0;
+    WinView *current = root->m_winView;
     return current == this && current != nullptr;
   }
   return false;
@@ -257,7 +257,7 @@ bool WinView::isCurrent() const {
 
 bool WinView::isSplit(bool isBack) const {
   const RENDER_INFO *info = isBack ? unknown1b8.m_back : unknown1b8.m_front;
-  return WinViewRoot::getView(info->unknown28.unknown14) != nullptr && WinViewRoot::getView(info->unknown28.unknown18) != nullptr;
+  return WinViewRoot::getView(info->m_winSplitFrame.unknown14) != nullptr && WinViewRoot::getView(info->m_winSplitFrame.unknown18) != nullptr;
 }
 
 mm::Rect<int> WinView::getClientScissorAbsRect(bool isBack) const {
@@ -279,13 +279,13 @@ mm::Rect<int> WinView::getClientScissorAbsRect(bool isBack) const {
   return rect;
 }
 
-WinView *WinView::getSplitView1() { return WinViewRoot::getView(unknown1b8.m_back->unknown28.unknown14); }
+WinView *WinView::getSplitView1() { return WinViewRoot::getView(unknown1b8.m_back->m_winSplitFrame.unknown14); }
 
-WinView *WinView::getSplitView2() { return WinViewRoot::getView(unknown1b8.m_back->unknown28.unknown18); }
+WinView *WinView::getSplitView2() { return WinViewRoot::getView(unknown1b8.m_back->m_winSplitFrame.unknown18); }
 
-const WinView *WinView::getSplitView1() const { return WinViewRoot::getView(unknown1b8.m_back->unknown28.unknown14); }
+const WinView *WinView::getSplitView1() const { return WinViewRoot::getView(unknown1b8.m_back->m_winSplitFrame.unknown14); }
 
-const WinView *WinView::getSplitView2() const { return WinViewRoot::getView(unknown1b8.m_back->unknown28.unknown18); }
+const WinView *WinView::getSplitView2() const { return WinViewRoot::getView(unknown1b8.m_back->m_winSplitFrame.unknown18); }
 
 void WinView::setDisp(bool isDisp, bool isInvalidCurrent) {
   u32 flags = unknown3b8 & ~0x40u;
@@ -295,7 +295,7 @@ void WinView::setDisp(bool isDisp, bool isInvalidCurrent) {
   unknown3b8 = flags;
   if (!isDisp && isInvalidCurrent) {
     WinViewRoot *root = WinViewRoot::get();
-    WinView *current = root != nullptr ? root->unknown1f0 : nullptr;
+    WinView *current = root != nullptr ? root->m_winView : nullptr;
     if (current == this) {
       WinViewRoot::invalidCurrent(this);
     }
@@ -350,7 +350,7 @@ void WinView::initializeClientScreen(bool isSkipClear) {
 
 bool WinView::hasCurrent() const {
   WinViewRoot *root = WinViewRoot::get();
-  WinView *current = root != nullptr ? root->unknown1f0 : nullptr;
+  WinView *current = root != nullptr ? root->m_winView : nullptr;
   if (current == this && current != nullptr) {
     return false;
   }
@@ -373,7 +373,7 @@ mm::Pnt<int> WinView::getAbsPos(bool isBack) const {
   }
   const RENDER_INFO *info = isBack ? unknown1b8.m_back : unknown1b8.m_front;
   mm::Pnt<int> framePos = getFrameAbsPos(isBack);
-  mm::Pnt<int> offset = info->unknown48.getFrame2ViewOffset();
+  mm::Pnt<int> offset = info->m_winViewFrame.getFrame2ViewOffset();
   return mm::Pnt<int>(framePos.x + offset.x, framePos.y + offset.y);
 }
 
@@ -506,7 +506,7 @@ void WinView::renderView() {
   }
   unknown002 = this;
   if (!isSkip) {
-    unknown1b8.m_front->unknown48.render(getParentView());
+    unknown1b8.m_front->m_winViewFrame.render(getParentView());
   }
   unknown002 = nullptr;
 }

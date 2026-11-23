@@ -203,7 +203,7 @@ static_assert(offsetof(DevGraph, unknown350) == 0x350, "");
 
 class GraphQue {
 public:
-  GraphQue(DevGraphQue *owner) : unknown08(owner), unknown20(0), unknown28(nullptr), unknown30(nullptr), unknown38(0), unknown40(0), unknown48(0) {
+  GraphQue(DevGraphQue *owner) : m_devGraphQue(owner), unknown20(0), unknown28(nullptr), unknown30(nullptr), unknown38(0), unknown40(0), unknown48(0) {
     unknown10[0] = nullptr;
     unknown10[1] = nullptr;
   }
@@ -220,9 +220,9 @@ public:
   // Inferred role: allocates the double buffers of the given size; original name unknown.
   void unknown002(u32 size);
 
-  DevGraphQue *unknown08; // Inferred role: owner; original member name unknown.
-  u8 *unknown10[2];       // Inferred role: double buffers; original member name unknown.
-  u32 unknown20;          // Inferred role: buffer size; original member name unknown.
+  DevGraphQue *m_devGraphQue; // Inferred role: owner; original member name unknown.
+  u8 *unknown10[2];           // Inferred role: double buffers; original member name unknown.
+  u32 unknown20;              // Inferred role: buffer size; original member name unknown.
   u8 _24[0x28 - 0x24];
   u8 *unknown28; // Inferred role: write start; original member name unknown.
   u8 *unknown30; // Inferred role: write end; original member name unknown.
@@ -232,7 +232,7 @@ public:
   u32 unknown48; // Inferred role: write flags; original member name unknown.
 };
 
-static_assert(offsetof(GraphQue, unknown08) == 0x08, "");
+static_assert(offsetof(GraphQue, m_devGraphQue) == 0x08, "");
 static_assert(offsetof(GraphQue, unknown10) == 0x10, "");
 static_assert(offsetof(GraphQue, unknown20) == 0x20, "");
 static_assert(offsetof(GraphQue, unknown28) == 0x28, "");
@@ -258,7 +258,7 @@ public:
   bool removeQue(GraphQue *que);
   void swap();
 
-  u32 unknown00; // Inferred role: view; original member name unknown.
+  u32 m_even; // Inferred role: view; named after the game accessor ml::DevGraphQue::getEven.
   u8 _04[0x08 - 0x04];
   reslist<GraphQue *> unknown08;                     // Inferred role: que list; original member name unknown.
   bool unknown48;                                    // Inferred role: cleared by the constructor; original member name unknown.
@@ -290,7 +290,7 @@ static_assert(offsetof(DevGraphQue, unknown478) == 0x478, "");
 inline void DevGraphQue::pushWholeRect(const mm::Rect<int> &rect, bool isFlush) { pushRect(rect, rect, mm::Rect<int>(0, 0, rect.width, rect.height), isFlush); }
 
 inline void GraphQue::unknown001() {
-  unknown28 = unknown10[unknown08->unknown00];
+  unknown28 = unknown10[m_devGraphQue->m_even];
   unknown30 = unknown28 + unknown20;
   unknown38 = 0;
   unknown40 = 0;

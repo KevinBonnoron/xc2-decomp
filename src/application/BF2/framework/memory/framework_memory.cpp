@@ -27,7 +27,7 @@ mtl::ALLOC_HANDLE FrameworkMemory::createSection(const MemorySectionInfo &info) 
     static_cast<MemorySectionInfo &>(section) = info;
     section.unknown60 = handle;
     section.unknown64 = mm::mtl::hashStrCrc(info.unknown18.c_str());
-    section.unknown68.setMemHandle(handle);
+    section.m_memHandlebaseAllocator.setMemHandle(handle);
   }
   return handle;
 }
@@ -36,8 +36,8 @@ void FrameworkMemory::initialize(mtl::ALLOC_HANDLE handle, u32 sectionMax) {
   FrameworkMemory &memory = get();
   if (!memory.unknown20) {
     memory.unknown20 = true;
-    memory.unknown28.setMemHandle(handle);
-    memory.unknown08.setAllocator(&memory.unknown28);
+    memory.m_memHandlebaseAllocator.setMemHandle(handle);
+    memory.unknown08.setAllocator(&memory.m_memHandlebaseAllocator);
     memory.unknown08.reserve(sectionMax);
   }
 }
@@ -118,7 +118,7 @@ mm::mtl::IAllocator *FrameworkMemory::getAllocator(u32 section) {
   if (!memory.unknown20) {
     return nullptr;
   }
-  return &memory.unknown08[section].unknown68;
+  return &memory.unknown08[section].m_memHandlebaseAllocator;
 }
 
 } // namespace fw

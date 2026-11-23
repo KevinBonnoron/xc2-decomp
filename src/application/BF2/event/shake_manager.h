@@ -37,7 +37,7 @@ public:
 
 private:
   u32 unknown10;              // Inferred role: flags; original member name unknown.
-  Shaker unknown18;           // Inferred role: shaker; original member name unknown.
+  Shaker m_shaker;            // Inferred role: shaker; original member name unknown.
   u32 unknownca8[TYPE_COUNT]; // Inferred role: shake ids; original member name unknown.
   u32 unknowncb8;             // Inferred role: idle shake id; original member name unknown.
 };

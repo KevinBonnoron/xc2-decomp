@@ -28,7 +28,7 @@ void StateFieldWaterNormal::enter(GfComBehaviorPc *behavior, ai::State *previous
 }
 
 void StateFieldWaterNormal::leave(GfComBehaviorPc *behavior, ai::State *next) {
-  if (next != nullptr && next->unknown08 != STATE_ID_UNKNOWN_29) {
+  if (next != nullptr && next->m_state != STATE_ID_UNKNOWN_29) {
     StateUtilField::setAccessFlag(*behavior, false);
   }
   AccessPlugin *plugin = behavior->unknown001<AccessPlugin>(4);
@@ -109,3 +109,27 @@ void StateFieldWaterNormal::procMsgPcFieldRelaySurvive(GfComBehaviorPc *behavior
 
 } // namespace pc
 } // namespace gf
+
+// The other swimming and drowning states (0x7100561fc8 to 0x7100564068, 0x7100564194 to 0x71005642a4) sit between the normal water state functions
+// (0x71005617a0 to 0x7100561f0c) and the normal, dive, prepare warp and dead virtual wrappers (0x71005642a8 to 0x7100564504), which a unit emits after
+// everything it defines.
+// clang-format off
+#include "gf_pc_state_field_water_idle.cpp"
+#include "gf_pc_state_field_water_swim.cpp"
+#include "gf_pc_state_field_water_brake.cpp"
+#include "gf_pc_state_field_water_idle_turn.cpp"
+#include "gf_pc_state_field_water_dive.cpp"
+#include "gf_pc_state_field_water_sink.cpp"
+#include "gf_pc_state_field_water_rise.cpp"
+#include "gf_pc_state_field_water_swim_sink.cpp"
+#include "gf_pc_state_field_water_swim_rise.cpp"
+#include "gf_pc_state_field_water_prepare_warp.cpp"
+#include "gf_pc_state_field_water_warp_dive.cpp"
+#include "gf_pc_state_field_water_warp_rise.cpp"
+#include "gf_pc_state_field_water_warp_rise_buddy.cpp"
+#include "gf_pc_state_field_water_dead.cpp"
+#include "gf_pc_state_field_water_dead_dive.cpp"
+#include "gf_pc_state_field_water_dead_sink.cpp"
+#include "gf_pc_state_field_water_dead_rise.cpp"
+#include "gf_pc_state_field_water_dead_idle.cpp"
+// clang-format on

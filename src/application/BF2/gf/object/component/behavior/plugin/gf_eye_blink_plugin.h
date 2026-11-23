@@ -53,13 +53,13 @@ public:
   const unknown001 *getParameter() const;
   bool testDouble();
 
-  GfComBehavior *unknown10;                       // Inferred role: behavior; original member name unknown.
+  GfComBehavior *m_comBehavior;                   // Inferred role: behavior; original member name unknown.
   f32 unknown18;                                  // Inferred role: blink timer; original member name unknown.
   Mode unknown1c;                                 // Inferred role: mode; original member name unknown.
   mm::mtl::IntrusivePtr<fw::ParamList> unknown20; // Inferred role: param list; original member name unknown.
 };
 
-static_assert(offsetof(EyeBlinkPlugin, unknown10) == 0x10, "");
+static_assert(offsetof(EyeBlinkPlugin, m_comBehavior) == 0x10, "");
 static_assert(offsetof(EyeBlinkPlugin, unknown18) == 0x18, "");
 static_assert(offsetof(EyeBlinkPlugin, unknown1c) == 0x1c, "");
 static_assert(offsetof(EyeBlinkPlugin, unknown20) == 0x20, "");

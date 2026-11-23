@@ -54,7 +54,7 @@ public:
 
 private:
   gf::GF_OBJ_HANDLE *unknown08;                                       // Inferred role: handle; original member name unknown.
-  CharaObj *unknown10;                                                // Inferred role: chara; original member name unknown.
+  CharaObj *m_charaObj;                                               // Inferred role: chara; original member name unknown.
   mm::mtl::FixedVector<CharaWeightItem *, ITEM_UNKNOWN_12> unknown18; // Inferred role: items; original member name unknown.
 };
 

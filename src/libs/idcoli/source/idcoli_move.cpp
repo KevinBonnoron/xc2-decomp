@@ -52,7 +52,7 @@ bool IDColiMove::moveColi(const mm::Vec3 &position, const mm::Vec3 &move) {
   unknown10.unknownc0 = normals;
   unknown10.unknownd8 = bits;
   unknown10.unknown108 = nullptr;
-  unknown1e0 = nullptr;
+  m_iDColiObjChar = nullptr;
   setupParms(move);
   unknown170 = position;
   unknown1d4 = unknown170.y + unknown1b8 * 2.0f;
@@ -176,7 +176,7 @@ bool IDColiMove::testWallCheck() {
   input.unknowna0 = unknown04;
   unknown10.unknown030();
   unknown10.unknownf8 = nullptr;
-  unknown10.unknown100 = nullptr;
+  unknown10.m_iDColiCallBack = nullptr;
   bool isHit = false;
   if (unknown01) {
     for (IDColiObj *object = IDColiManager::get()->unknown08[0].m_head; object != nullptr; object = object->unknown10) {
@@ -309,7 +309,7 @@ bool IDColiMove::moveColi(IDColiObj *object, const mm::Vec3 &move) {
   mm::Vec3 positions[32];
   mm::Vec3 normals[32];
   u32 bits[3];
-  unknown1e0 = static_cast<IDColiObjChar *>(object);
+  m_iDColiObjChar = static_cast<IDColiObjChar *>(object);
   unknown10.unknown00 = 2;
   unknown10.unknowne4 = 32;
   unknown10.unknownb8 = positions;
@@ -317,8 +317,8 @@ bool IDColiMove::moveColi(IDColiObj *object, const mm::Vec3 &move) {
   unknown10.unknownd8 = bits;
   unknown10.unknown108 = object;
   setupParms(move);
-  unknown10.unknowne8 = static_cast<IDColiObjChar *>(object)->unknownc8;
-  m_down = static_cast<IDColiObjChar *>(object)->unknown220;
+  unknown10.unknowne8 = static_cast<IDColiObjChar *>(object)->m_offMaterialBit;
+  m_down = static_cast<IDColiObjChar *>(object)->m_adsorption;
   calcCheckParams(unknown140);
   unknown1f5 = false;
   if ((object->unknown18 & 8) && !(object->unknown20 & IDColiObj::FLAG_UNKNOWN_0)) {

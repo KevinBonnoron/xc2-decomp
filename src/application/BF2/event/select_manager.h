@@ -27,9 +27,9 @@ public:
   bool isActive() const;
 
 private:
-  u32 unknown10;          // Inferred role: flags; original member name unknown.
-  u32 unknown14;          // Inferred role: talker type; original member name unknown.
-  SelectWindow unknown18; // Inferred role: window; original member name unknown.
+  u32 unknown10;               // Inferred role: flags; original member name unknown.
+  u32 unknown14;               // Inferred role: talker type; original member name unknown.
+  SelectWindow m_selectWindow; // Inferred role: window; original member name unknown.
   u8 _30[0x38 - 0x30];
   int unknown38; // Inferred role: selected; original member name unknown.
   int m_result;

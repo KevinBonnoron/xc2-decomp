@@ -100,9 +100,9 @@ static f32 getBladeFieldSkillLevel(u32 blade, u32 fieldSkill) {
   return level;
 }
 
-u32 GfDataMercenaries::getReserverMax() { return getLevel() * RESERVER_UNKNOWN_24 + RESERVER_UNKNOWN_24 + (GfDataManager::getDataGame()->unknown109b2c != 0 ? RESERVER_UNKNOWN_48 : 0); }
+u32 GfDataMercenaries::getReserverMax() { return getLevel() * RESERVER_UNKNOWN_24 + RESERVER_UNKNOWN_24 + (GfDataManager::getDataGame()->m_gameClearCount != 0 ? RESERVER_UNKNOWN_48 : 0); }
 
-unknown122 *GfDataMercenaries::getSDataMercenaries() { return &GfDataManager::getDataGame()->unknown1098c8; }
+unknown122 *GfDataMercenaries::getSDataMercenaries() { return &GfDataManager::getDataGame()->m_sDataMercenaries; }
 
 u32 GfDataMercenaries::getLevel() { return GfGameFlag::getLocal(4, FLAG_MERCENARIES_UNKNOWN_2); }
 
@@ -140,7 +140,7 @@ u32 GfDataMercenaries::getTeamMax() {
   return teamMax;
 }
 
-u32 GfDataMercenaries::getTeamNum() { return GfDataManager::getDataGame()->unknown1098c8.unknown00.size(); }
+u32 GfDataMercenaries::getTeamNum() { return GfDataManager::getDataGame()->m_sDataMercenaries.unknown00.size(); }
 
 bool GfDataMercenaries::getReserver(mm::mtl::FixedVector<u16, 422> &reservers) {
   GfDataBlade::getListReserver(reservers);
@@ -150,7 +150,7 @@ bool GfDataMercenaries::getReserver(mm::mtl::FixedVector<u16, 422> &reservers) {
 bool GfDataMercenaries::isValidTeamID(u32 teamID) { return getTeamByTeamID(teamID) != nullptr; }
 
 unknown120 *GfDataMercenaries::getTeamByTeamID(u32 teamID) {
-  mm::mtl::FixedVector<unknown120, 3> &mercenariesTeams = GfDataManager::getDataGame()->unknown1098c8.unknown00;
+  mm::mtl::FixedVector<unknown120, 3> &mercenariesTeams = GfDataManager::getDataGame()->m_sDataMercenaries.unknown00;
   for (unknown120 *team = mercenariesTeams.begin(); team != mercenariesTeams.end(); team++) {
     if (team->unknown10 == teamID) {
       return team;
@@ -235,7 +235,7 @@ int GfDataMercenaries::getTeamFemaleNum(u32 teamID) {
 }
 
 u32 GfDataMercenaries::getTeamID(u32 blade) {
-  for (unknown120 &team : GfDataManager::getDataGame()->unknown1098c8.unknown00) {
+  for (unknown120 &team : GfDataManager::getDataGame()->m_sDataMercenaries.unknown00) {
     for (u16 member : team.unknown00) {
       if (member == blade) {
         return team.unknown10;
@@ -247,7 +247,7 @@ u32 GfDataMercenaries::getTeamID(u32 blade) {
 }
 
 u32 GfDataMercenaries::getMissionIdByBlade(u32 blade) {
-  for (unknown120 &team : GfDataManager::getDataGame()->unknown1098c8.unknown00) {
+  for (unknown120 &team : GfDataManager::getDataGame()->m_sDataMercenaries.unknown00) {
     for (u16 member : team.unknown00) {
       if (member == blade) {
         return team.unknown14;
@@ -258,14 +258,14 @@ u32 GfDataMercenaries::getMissionIdByBlade(u32 blade) {
   return 0;
 }
 
-unknown120 *GfDataMercenaries::getTeamByIndex(u32 index) { return &GfDataManager::getDataGame()->unknown1098c8.unknown00[index]; }
+unknown120 *GfDataMercenaries::getTeamByIndex(u32 index) { return &GfDataManager::getDataGame()->m_sDataMercenaries.unknown00[index]; }
 
 unknown120 *GfDataMercenaries::getTeamByMissionID(u32 mission) {
   if (mission == 0) {
     return nullptr;
   }
 
-  for (unknown120 &team : GfDataManager::getDataGame()->unknown1098c8.unknown00) {
+  for (unknown120 &team : GfDataManager::getDataGame()->m_sDataMercenaries.unknown00) {
     if (team.unknown14 == mission) {
       return &team;
     }
@@ -302,7 +302,7 @@ int GfDataMercenaries::getTeamAnimalNum(u32 teamID) {
 }
 
 bool GfDataMercenaries::getTeamByZoneMissionWorking(mm::mtl::FixedVector<u16, 3> &teams, u32 zone) {
-  mm::mtl::FixedVector<unknown120, 3> &mercenariesTeams = GfDataManager::getDataGame()->unknown1098c8.unknown00;
+  mm::mtl::FixedVector<unknown120, 3> &mercenariesTeams = GfDataManager::getDataGame()->m_sDataMercenaries.unknown00;
   for (unknown120 *team = mercenariesTeams.begin(); team != mercenariesTeams.end(); team++) {
     if (team->unknown14 != 0 && GfGameFlag::getLocal(4, FLAG_MERCENARIES_UNKNOWN_5 + team->unknown14) == MISSION_STATE_UNKNOWN_2) {
       u32 map = getMissionMapID(team->unknown14);
@@ -366,7 +366,7 @@ bool GfDataMercenaries::isTeamStateReward(u32 teamID) {
 }
 
 bool GfDataMercenaries::getTeamByZoneMissionComplete(mm::mtl::FixedVector<u16, 3> &teams, u32 zone) {
-  mm::mtl::FixedVector<unknown120, 3> &mercenariesTeams = GfDataManager::getDataGame()->unknown1098c8.unknown00;
+  mm::mtl::FixedVector<unknown120, 3> &mercenariesTeams = GfDataManager::getDataGame()->m_sDataMercenaries.unknown00;
   for (unknown120 *team = mercenariesTeams.begin(); team != mercenariesTeams.end(); team++) {
     if (isTeamStateReward(team->unknown10)) {
       u32 map = getMissionMapID(team->unknown14);
@@ -1019,6 +1019,6 @@ u32 GfDataMercenaries::getBladeWithLeader(u32 mission) {
   return 0;
 }
 
-unknown121 *GfDataMercenaries::getPreset(u32 index) { return &GfDataManager::getDataGame()->unknown1098c8.unknown80[index]; }
+unknown121 *GfDataMercenaries::getPreset(u32 index) { return &GfDataManager::getDataGame()->m_sDataMercenaries.m_preset[index]; }
 
 } // namespace gf

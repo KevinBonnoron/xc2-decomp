@@ -22,7 +22,7 @@ bool DrResClip::clipChkOccOff(DrCalcViewWork *viewWork, const mm::Vec3 &position
     unknown08 = (flags & 0xffffff00) | 0xe;
     return false;
   }
-  if (!viewWork->unknown4e0.clipTest(position, radius)) {
+  if (!viewWork->m_drCalcClipWorkViewPlane.clipTest(position, radius)) {
     unknown08 = 0;
     return true;
   }

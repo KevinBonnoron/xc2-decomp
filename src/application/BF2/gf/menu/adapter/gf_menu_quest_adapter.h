@@ -101,22 +101,22 @@ public:
   // reference and one count (a copy for the argument and a copy for the assignment).
   void unknown008(mm::mtl::IntrusivePtr<GfMenuReferenceNumber> number) { unknown90 = number; }
 
-  QuestID unknown30;                                      // Inferred role: quest; original member name unknown.
+  QuestID m_questID;                                      // Inferred role: quest; original member name unknown.
   u32 unknown34;                                          // Inferred role: parameter; original member name unknown.
   u32 unknown38;                                          // Inferred role: update kind; original member name unknown.
   bool unknown3c;                                         // Inferred role: update needed; original member name unknown.
   mm::mtl::FixStr<64> unknown40;                          // Inferred role: reward text; original member name unknown.
-  IConverter *unknown88;                                  // Inferred role: converter; original member name unknown.
+  IConverter *m_iConverter;                               // Inferred role: converter; original member name unknown.
   mm::mtl::IntrusivePtr<GfMenuReferenceNumber> unknown90; // Inferred role: task index reference; original member name unknown.
   int unknown98;                                          // Inferred role: task index; original member name unknown.
 };
 
-static_assert(offsetof(GfMenuQuestAdapter, unknown30) == 0x30, "");
+static_assert(offsetof(GfMenuQuestAdapter, m_questID) == 0x30, "");
 static_assert(offsetof(GfMenuQuestAdapter, unknown34) == 0x34, "");
 static_assert(offsetof(GfMenuQuestAdapter, unknown38) == 0x38, "");
 static_assert(offsetof(GfMenuQuestAdapter, unknown3c) == 0x3c, "");
 static_assert(offsetof(GfMenuQuestAdapter, unknown40) == 0x40, "");
-static_assert(offsetof(GfMenuQuestAdapter, unknown88) == 0x88, "");
+static_assert(offsetof(GfMenuQuestAdapter, m_iConverter) == 0x88, "");
 static_assert(offsetof(GfMenuQuestAdapter, unknown90) == 0x90, "");
 static_assert(offsetof(GfMenuQuestAdapter, unknown98) == 0x98, "");
 static_assert(sizeof(GfMenuQuestAdapter) == 0xa0, "");

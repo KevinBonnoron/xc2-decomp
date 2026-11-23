@@ -241,7 +241,7 @@ void MemManager::Region::initialize(IMemAllocator *allocator, void *buffer, size
   m_parent = ALLOC_HANDLE();
   unknown68 = ALLOC_HANDLE();
   m_topAdr = reinterpret_cast<u64>(buffer);
-  unknown00 = allocator;
+  m_iMemAllocator = allocator;
   unknown08 = buffer;
   unknownb0 |= UNKNOWN001_UNKNOWN_3 | UNKNOWN001_UNKNOWN_4 | UNKNOWN001_UNKNOWN_5;
   unknown10 = size;
@@ -262,24 +262,24 @@ void MemManager::Region::removeChild(ALLOC_HANDLE handle) {
 }
 
 void MemManager::Region::checkLeakMemory() {
-  if (m_name.c_str()[0] != '\0' && unknown00 != nullptr) {
-    unknown00->checkLeakMemory();
+  if (m_name.c_str()[0] != '\0' && m_iMemAllocator != nullptr) {
+    m_iMemAllocator->checkLeakMemory();
   }
 }
 
 bool MemManager::Region::hasMemory(const void *pointer) const {
-  if (unknown00 == nullptr) {
+  if (m_iMemAllocator == nullptr) {
     return false;
   }
-  return unknown00->hasMemory(pointer);
+  return m_iMemAllocator->hasMemory(pointer);
 }
 
 bool MemManager::Region::getMemInfo1(MemoryInfo1 *info, u32 num) const {
-  ml::CSNC lock(unknown80);
-  if (unknown00 == nullptr) {
+  ml::CSNC lock(m_criticalSectionNC);
+  if (m_iMemAllocator == nullptr) {
     return false;
   }
-  return unknown00->getMemInfo1(info, num);
+  return m_iMemAllocator->getMemInfo1(info, num);
 }
 
 void *MemManager::Region::allocate(size_t size, bool isBack) {
@@ -287,20 +287,20 @@ void *MemManager::Region::allocate(size_t size, bool isBack) {
     size = (size + m_blockSize - 1) / m_blockSize * m_blockSize;
   }
   if (!(unknownb0 & UNKNOWN001_UNKNOWN_1) || isBack) {
-    if (unknown00 == nullptr) {
+    if (m_iMemAllocator == nullptr) {
       return nullptr;
     }
-    void *pointer = unknown00->allocate(size, 16);
+    void *pointer = m_iMemAllocator->allocate(size, 16);
     if (pointer != nullptr) {
       m_allocs++;
     }
     return pointer;
   }
-  ml::CSNC lock(unknown80);
-  if (unknown00 == nullptr) {
+  ml::CSNC lock(m_criticalSectionNC);
+  if (m_iMemAllocator == nullptr) {
     return nullptr;
   }
-  void *pointer = unknown00->allocate(size, 16);
+  void *pointer = m_iMemAllocator->allocate(size, 16);
   if (pointer != nullptr) {
     m_allocs++;
   }
@@ -312,20 +312,20 @@ void *MemManager::Region::allocate(size_t size, size_t alignment, bool isBack, c
     size = (size + m_blockSize - 1) / m_blockSize * m_blockSize;
   }
   if (!(unknownb0 & UNKNOWN001_UNKNOWN_1) || isBack) {
-    if (unknown00 == nullptr) {
+    if (m_iMemAllocator == nullptr) {
       return nullptr;
     }
-    void *pointer = unknown00->allocate(size, alignment, file, line);
+    void *pointer = m_iMemAllocator->allocate(size, alignment, file, line);
     if (pointer != nullptr) {
       m_allocs++;
     }
     return pointer;
   }
-  ml::CSNC lock(unknown80);
-  if (unknown00 == nullptr) {
+  ml::CSNC lock(m_criticalSectionNC);
+  if (m_iMemAllocator == nullptr) {
     return nullptr;
   }
-  void *pointer = unknown00->allocate(size, alignment, file, line);
+  void *pointer = m_iMemAllocator->allocate(size, alignment, file, line);
   if (pointer != nullptr) {
     m_allocs++;
   }
@@ -337,20 +337,20 @@ void *MemManager::Region::allocate_tail(size_t size, size_t alignment, bool isBa
     size = (size + m_blockSize - 1) / m_blockSize * m_blockSize;
   }
   if (!(unknownb0 & UNKNOWN001_UNKNOWN_1) || isBack) {
-    if (unknown00 == nullptr) {
+    if (m_iMemAllocator == nullptr) {
       return nullptr;
     }
-    void *pointer = unknown00->allocate(size, alignment, file, line);
+    void *pointer = m_iMemAllocator->allocate(size, alignment, file, line);
     if (pointer != nullptr) {
       m_allocs++;
     }
     return pointer;
   }
-  ml::CSNC lock(unknown80);
-  if (unknown00 == nullptr) {
+  ml::CSNC lock(m_criticalSectionNC);
+  if (m_iMemAllocator == nullptr) {
     return nullptr;
   }
-  void *pointer = unknown00->allocate_tail(size, alignment, file, line);
+  void *pointer = m_iMemAllocator->allocate_tail(size, alignment, file, line);
   if (pointer != nullptr) {
     m_allocs++;
   }
@@ -358,33 +358,33 @@ void *MemManager::Region::allocate_tail(size_t size, size_t alignment, bool isBa
 }
 
 void MemManager::Region::alloc(size_t size) {
-  if (unknown00 != nullptr && unknown00->allocate(size, 16) != nullptr) {
+  if (m_iMemAllocator != nullptr && m_iMemAllocator->allocate(size, 16) != nullptr) {
     m_allocs++;
   }
 }
 
 void MemManager::Region::alloc(size_t size, size_t alignment, const char *file, int line) {
-  if (unknown00 != nullptr && unknown00->allocate(size, alignment, file, line) != nullptr) {
+  if (m_iMemAllocator != nullptr && m_iMemAllocator->allocate(size, alignment, file, line) != nullptr) {
     m_allocs++;
   }
 }
 
 void MemManager::Region::alloc_tail(size_t size, size_t alignment, const char *file, int line) {
-  if (unknown00 != nullptr && unknown00->allocate_tail(size, alignment, file, line) != nullptr) {
+  if (m_iMemAllocator != nullptr && m_iMemAllocator->allocate_tail(size, alignment, file, line) != nullptr) {
     m_allocs++;
   }
 }
 
 void MemManager::Region::deallocate(void *pointer, size_t size, bool isBack) {
   if (!(unknownb0 & UNKNOWN001_UNKNOWN_1) || isBack) {
-    if (pointer != nullptr && unknown00 != nullptr) {
-      unknown00->deallocate(pointer, 0);
+    if (pointer != nullptr && m_iMemAllocator != nullptr) {
+      m_iMemAllocator->deallocate(pointer, 0);
       m_allocs--;
     }
   } else {
-    ml::CSNC lock(unknown80);
-    if (pointer != nullptr && unknown00 != nullptr) {
-      unknown00->deallocate(pointer, 0);
+    ml::CSNC lock(m_criticalSectionNC);
+    if (pointer != nullptr && m_iMemAllocator != nullptr) {
+      m_iMemAllocator->deallocate(pointer, 0);
       m_allocs--;
     }
   }
@@ -392,20 +392,20 @@ void MemManager::Region::deallocate(void *pointer, size_t size, bool isBack) {
 
 void *MemManager::Region::reallocate(void *pointer, size_t size, bool isBack) {
   if (!(unknownb0 & UNKNOWN001_UNKNOWN_1) || isBack) {
-    if (unknown00 == nullptr) {
+    if (m_iMemAllocator == nullptr) {
       return nullptr;
     }
-    return unknown00->reallocate(pointer, size);
+    return m_iMemAllocator->reallocate(pointer, size);
   }
-  ml::CSNC lock(unknown80);
-  if (unknown00 == nullptr) {
+  ml::CSNC lock(m_criticalSectionNC);
+  if (m_iMemAllocator == nullptr) {
     return nullptr;
   }
-  return unknown00->reallocate(pointer, size);
+  return m_iMemAllocator->reallocate(pointer, size);
 }
 
 size_t MemManager::Region::maxAllocSize() {
-  ml::CSNC lock(unknown80);
+  ml::CSNC lock(m_criticalSectionNC);
   MemoryInfo info;
   memoryInfo(&info);
   size_t size = info.unknown18;
@@ -415,39 +415,39 @@ size_t MemManager::Region::maxAllocSize() {
   return size;
 }
 
-bool MemManager::Region::empty() const { return unknown00 == nullptr; }
+bool MemManager::Region::empty() const { return m_iMemAllocator == nullptr; }
 
 void MemManager::Region::memoryInfo(MemoryInfo *info) {
-  ml::CSNC lock(unknown80);
-  if (unknown00 != nullptr) {
-    unknown00->memoryInfo(info);
+  ml::CSNC lock(m_criticalSectionNC);
+  if (m_iMemAllocator != nullptr) {
+    m_iMemAllocator->memoryInfo(info);
   }
   info->unknown30 = m_topAdr;
 }
 
 size_t MemManager::Region::getAllocSize(void *pointer) {
-  if (unknown00 == nullptr) {
+  if (m_iMemAllocator == nullptr) {
     return 0;
   }
-  return unknown00->getAllocSize(pointer);
+  return m_iMemAllocator->getAllocSize(pointer);
 }
 
 void MemManager::Region::log_callSTack(void *callStack) {
-  if (m_name.c_str()[0] != '\0' && unknown00 != nullptr) {
-    unknown00->log_callSTack(callStack);
+  if (m_name.c_str()[0] != '\0' && m_iMemAllocator != nullptr) {
+    m_iMemAllocator->log_callSTack(callStack);
   }
 }
 
 void MemManager::Region::log(MemoryInfo *info, bool isDetail) {
-  if (m_name.c_str()[0] != '\0' && unknown00 != nullptr) {
-    unknown00->log(info, isDetail);
+  if (m_name.c_str()[0] != '\0' && m_iMemAllocator != nullptr) {
+    m_iMemAllocator->log(info, isDetail);
   }
 }
 
 void MemManager::Region::getMemImage(MEMIMAGE_HEAD *head) {
-  ml::CSNC lock(unknown80);
-  if (unknown00 != nullptr) {
-    unknown00->getMemImage(head);
+  ml::CSNC lock(m_criticalSectionNC);
+  if (m_iMemAllocator != nullptr) {
+    m_iMemAllocator->getMemImage(head);
   }
 }
 
@@ -530,7 +530,7 @@ void AllocatorWrapper::destroy() {
 
 MemManager::Region *MemManager::Region::getArea(const void *pointer) {
   Region *area = nullptr;
-  if (unknown00 != nullptr && unknown08 <= pointer) {
+  if (m_iMemAllocator != nullptr && unknown08 <= pointer) {
     area = this;
     if (unknown10 + reinterpret_cast<size_t>(unknown08) <= reinterpret_cast<size_t>(pointer)) {
       area = nullptr;
@@ -549,11 +549,11 @@ void MemManager::Region::destroy() {
     unknownb0 |= UNKNOWN001_UNKNOWN_2;
     MemManager::deallocate_section(reinterpret_cast<void *>(m_topAdr), 0, false);
   }
-  if (unknown00 != nullptr) {
-    MemManager::destroyAllocator(unknown00->getType(), unknown00);
+  if (m_iMemAllocator != nullptr) {
+    MemManager::destroyAllocator(m_iMemAllocator->getType(), m_iMemAllocator);
     unknown10 = 0;
     m_allocs = 0;
-    unknown00 = nullptr;
+    m_iMemAllocator = nullptr;
     unknown08 = nullptr;
   }
 }
@@ -621,7 +621,7 @@ void MemManager::log_section(ALLOC_HANDLE handle, bool isDetail, MemoryInfo *inf
 
 bool MemManager::valid_section(const ALLOC_HANDLE &handle, bool) {
   Region *region = s_ptrMap.unknown003(handle);
-  if (region != nullptr && region->unknown00 != nullptr && region->unknown00->valid()) {
+  if (region != nullptr && region->m_iMemAllocator != nullptr && region->m_iMemAllocator->valid()) {
     MemoryInfo info;
     region->memoryInfo(&info);
     return true;
@@ -690,9 +690,9 @@ size_t DlAllocator::getAllocSize(size_t size) const {
 
 void DlAllocator::finalizeFooter(void *footer) {
   unknown001 *info = static_cast<unknown001 *>(footer);
-  if (info != nullptr && info->unknown10 != nullptr) {
-    unknown48.remove(info->unknown10);
-    info->unknown10 = nullptr;
+  if (info != nullptr && info->m_callStackInfo != nullptr) {
+    m_callStackManager.remove(info->m_callStackInfo);
+    info->m_callStackInfo = nullptr;
   }
 }
 
@@ -709,9 +709,9 @@ void DlAllocator::initFooter(void *footer, const char *file, int line, int size)
     info->unknown00 = 0x44434241;
     info->unknown08 = size;
     if (MemManager::isCollectCallStack()) {
-      info->unknown10 = unknown48.regist(4, separator < 0 ? file : file + (separator + 1), line);
+      info->m_callStackInfo = m_callStackManager.regist(4, separator < 0 ? file : file + (separator + 1), line);
     } else {
-      info->unknown10 = nullptr;
+      info->m_callStackInfo = nullptr;
     }
   }
 }
@@ -793,7 +793,7 @@ void CallStackManager::remove(CallStackInfo *info) {
       erase(info);
     }
     if (info->release() == 0) {
-      ml::CS lock(unknown18);
+      ml::CS lock(m_criticalSection);
       m_allocator.deallocate(info);
     }
   }
@@ -843,9 +843,9 @@ void DlAllocator::deallocate(void *pointer, size_t size) {
     size_t address = reinterpret_cast<size_t>(pointer);
     size_t offset = unknown015(pointer);
     unknown001 *info = reinterpret_cast<unknown001 *>(offset + address);
-    if (info != nullptr && static_cast<int>(offset) > 0 && info->unknown10 != nullptr) {
-      unknown48.remove(info->unknown10);
-      info->unknown10 = nullptr;
+    if (info != nullptr && static_cast<int>(offset) > 0 && info->m_callStackInfo != nullptr) {
+      m_callStackManager.remove(info->m_callStackInfo);
+      info->m_callStackInfo = nullptr;
     }
     mspace_free(unknown30, pointer);
   }
@@ -855,7 +855,7 @@ void *DlAllocator::reallocate(void *pointer, size_t size) {
   if (pointer == nullptr || unknown30 == nullptr) {
     return nullptr;
   }
-  CallStackInfo *callStack = reinterpret_cast<unknown001 *>(static_cast<u8 *>(pointer) + unknown015(pointer))->unknown10;
+  CallStackInfo *callStack = reinterpret_cast<unknown001 *>(static_cast<u8 *>(pointer) + unknown015(pointer))->m_callStackInfo;
   const char *file = callStack != nullptr ? callStack->unknown98 : "noname";
   u32 line = callStack != nullptr ? callStack->unknowna0 : 0;
   void *memory = mspace_realloc(unknown30, pointer, getAllocSize(size));
@@ -872,8 +872,8 @@ void DlAllocator::log_callSTack(void *callStack) const {
     size_t address = reinterpret_cast<size_t>(callStack);
     size_t offset = unknown015(callStack);
     unknown001 *info = reinterpret_cast<unknown001 *>(offset + address);
-    if (static_cast<int>(offset) > 0 && info != nullptr && info->unknown10 != nullptr && info->unknown00 == 0x44434241) {
-      info->unknown10->log();
+    if (static_cast<int>(offset) > 0 && info != nullptr && info->m_callStackInfo != nullptr && info->unknown00 == 0x44434241) {
+      info->m_callStackInfo->log();
     }
   }
 }
@@ -910,7 +910,7 @@ void DlAllocator::checkLeakMemory() {
         mchunkptr q = align_as_chunk(s->base);
         while (segment_holds(s, q) && q != m->top && q->head != FENCEPOST_HEAD) {
           if (index > 0 && is_inuse(q)) {
-            CallStackInfo *info = unknown016(q)->unknown10;
+            CallStackInfo *info = unknown016(q)->m_callStackInfo;
             if (info != nullptr) {
               info->log();
             }
@@ -1107,9 +1107,51 @@ template <int N> void AssetAllocator<N>::addFreeList(const SMemChunk &chunk) {
   }
 }
 
+// Joins the freed chunk to the free chunk that ends where it starts and to the one that starts where it ends, or adds it to the list.
+// Form evidence (1.0.0: 0x7100786108): the search for the previous chunk is a loop of its own followed by a test of the iterator, so
+// that the loads of the merged chunk are first made in the merge block: the order of the operands of `start + count` follows the order
+// of their loads (it->unknown10, chunk.unknown10, then it->unknown0c). The merged flag is an int: a bool gives tbnz, an int cbnz/cbz.
+template <int N> void AssetAllocator<N>::merge(void *pointer, const SMemChunk &chunk) {
+  typedef typename mm::mtl::FixedList<SMemChunk, N>::iterator iterator;
+  int count = chunk.unknown10;
+  int start = chunk.unknown0c;
+  int end = start + count;
+  iterator next = unknown30.begin();
+  iterator prev = unknown30.end();
+  int merged = 0;
+  iterator it = next;
+  for (; it != unknown30.end(); ++it) {
+    if (chunk.unknown0c == it->unknown0c + it->unknown10) {
+      break;
+    }
+  }
+  if (it != unknown30.end()) {
+    count = it->unknown10 + chunk.unknown10;
+    merged = 1;
+    start = it->unknown0c;
+    end = start + count;
+    it->unknown10 = count;
+    prev = it;
+    next = ++it;
+  }
+  for (it = next; it != unknown30.end(); ++it) {
+    if (end == it->unknown0c) {
+      it->unknown0c = start;
+      it->unknown10 += count;
+      if (merged) {
+        unknown30.erase(prev);
+      }
+      return;
+    }
+  }
+  if (!merged) {
+    addFreeList(chunk);
+  }
+}
+
 // The line argument of the allocation is the line of the original file.
 #line 1906
-void *MemHandlebaseAllocator::allocate(size_t size, size_t alignment) { return MemManager::allocate(unknown08, size, alignment, false, __FILE__, __LINE__); }
+void *MemHandlebaseAllocator::allocate(size_t size, size_t alignment) { return MemManager::allocate(m_ALLOC_HANDLE, size, alignment, false, __FILE__, __LINE__); }
 
 void MemHandlebaseAllocator::deallocate(void *pointer) { MemManager::deallocate(pointer, 0, false); }
 
@@ -1120,6 +1162,23 @@ const char *MemHandlebaseAllocator::getName() const { return "MemHandlebaseAlloc
 template mm::mtl::Noncopyable<mtl::MemManager>::~Noncopyable();
 
 template mm::mtl::FixedVector<mtl::MemManager::HandleRegion, 512>::~FixedVector();
+
+// Inferred helper: allocates with the size, the alignment and the line as ints; original name unknown. Users: operator new (1.0.0: 0x7100783dfc) and operator new[] (0x7100783e40), whose
+// size parameter is a size_t that the game passes as an int sign extended to 64 bits (sxtw x1, w0 at 0x7100783e14 and 0x7100783e58, the alignment likewise: sxtw x2, w4). With the size passed
+// as it is, both have 18 instructions against the game's 17 (a mov instead of the sxtw, and the order of the handle copy).
+inline void *unknown102(mtl::ALLOC_HANDLE handle, int size, int alignment, bool isBack, const char *file, int line) { return mtl::MemManager::allocate(handle, size, alignment, isBack, file, line); }
+
+void *operator new(size_t size, mtl::ALLOC_HANDLE handle, const char *file, size_t line, int alignment, bool isBack) { return unknown102(handle, size, alignment, isBack, file, line); }
+
+void *operator new[](size_t size, mtl::ALLOC_HANDLE handle, const char *file, size_t line, int alignment, bool isBack) { return unknown102(handle, size, alignment, isBack, file, line); }
+
+void *operator new(size_t size) { return malloc(size); }
+
+void *operator new[](size_t size) { return malloc(size); }
+
+void *operator new(size_t size, const char *, size_t) { return malloc(size); }
+
+void *operator new[](size_t size, const char *, size_t) { return malloc(size); }
 
 void operator delete(void *pointer) noexcept { mtl::MemManager::deallocate(pointer, 0, false); }
 

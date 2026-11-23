@@ -15,11 +15,11 @@ namespace {
 template <typename SETUP, typename PARAM> GF_ASSET_HANDLE *unknown001(GF_ASSET_HANDLE *handle, const PARAM &param) {
   SETUP defaultSetup;
   SETUP *setup = &defaultSetup;
-  if (param.unknown88 != nullptr) {
-    setup = static_cast<SETUP *>(param.unknown88);
+  if (param.m_assetSetup != nullptr) {
+    setup = static_cast<SETUP *>(param.m_assetSetup);
   }
   setup->setup(handle, param);
-  return setup->unknown10;
+  return setup->m_GF_ASSET_HANDLE;
 }
 
 // Inferred role: creates the asset handle and sets it up as unknown001, checking the type of the setup of the init param; original name unknown.
@@ -27,14 +27,29 @@ template <typename SETUP, typename PARAM> GF_ASSET_HANDLE *unknown002(const PARA
   GF_ASSET_HANDLE *handle = GfAssetManager::createAssetHandle(param);
   SETUP defaultSetup;
   SETUP *setup = &defaultSetup;
-  if (param.unknown88 != nullptr) {
-    setup = mm::mtl::dynamicCast<SETUP>(param.unknown88);
+  if (param.m_assetSetup != nullptr) {
+    setup = mm::mtl::dynamicCast<SETUP>(param.m_assetSetup);
   }
   setup->setup(handle, param);
-  return setup->unknown10;
+  return setup->m_GF_ASSET_HANDLE;
 }
 
 } // namespace
+
+GF_ASSET_HANDLE *GfAssetFactory::createAssetPackDriver(const GfInitParamDriver &param) {
+  if (param.isEvent()) {
+    return createAssetPackDriverForEvent(param);
+  }
+  // The game tests the types 9 and 13 as one condition, (type | 4) == 13 (0x71001b0470, `orr w9, w8, #4; cmp w9, #13`), after the event test. Written `type == 9 || type == 13`, or as a switch,
+  // clang gives 112 instructions with the event block in another position (first difference at +0x38).
+  if ((param.unknown08 | 4) == unknown030_13) {
+    return createAssetPackDriverForSalvage(param);
+  }
+  if (param.unknown002() && param.unknown08 != unknown030_7) {
+    return createAssetPackDriverForUi(param);
+  }
+  return unknown001<GfAssetSetupDriver>(GfAssetManager::createAssetHandle(param), param);
+}
 
 GF_ASSET_HANDLE *GfAssetFactory::createAssetPackDriverForEvent(const GfInitParamDriver &param) { return unknown002<GfAssetSetupEventDriver>(param); }
 

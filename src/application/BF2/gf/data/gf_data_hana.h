@@ -10,14 +10,14 @@ struct SDataBlade;
 
 // Inferred role: equip hana arts; original type name unknown.
 struct unknown066 {
-  unknown066() : unknown00(0), unknown02(100), unknown04(0), unknown06(0), unknown07(0), unknown08(1), unknown0a(0) {}
+  unknown066() : m_artsEnhance(0), unknown02(100), unknown04(0), unknown06(0), unknown07(0), unknown08(1), unknown0a(0) {}
 
-  u16 unknown00; // Inferred role: enhance; original member name unknown.
-  u16 unknown02; // Inferred role: recast reverse of the n arts; original member name unknown.
-  u16 unknown04; // Inferred role: parts; original member name unknown.
-  u8 unknown06;  // Inferred role: cleared by the default constructor; original member name unknown.
-  u8 unknown07;  // Inferred role: cleared by the default constructor; original member name unknown.
-  u8 unknown08;  // Inferred role: set by the default constructor; original member name unknown.
+  u16 m_artsEnhance; // Inferred role: enhance; named after the game accessor gf::GfDataHana::getArtsEnhance.
+  u16 unknown02;     // Inferred role: recast reverse of the n arts; original member name unknown.
+  u16 unknown04;     // Inferred role: parts; original member name unknown.
+  u8 unknown06;      // Inferred role: cleared by the default constructor; original member name unknown.
+  u8 unknown07;      // Inferred role: cleared by the default constructor; original member name unknown.
+  u8 unknown08;      // Inferred role: set by the default constructor; original member name unknown.
   u8 _09;
   u16 unknown0a; // Inferred role: handle; original member name unknown.
 };

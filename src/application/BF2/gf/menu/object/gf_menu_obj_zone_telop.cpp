@@ -90,23 +90,23 @@ void GfMenuObjZoneTelop::MainListener::reciveEvent(const ui::EventData &event, u
   case EVENT_UNKNOWN_33: {
     ui::UIObjectAcc title(acc.unknown10, "TXT_title");
     title.setText(ui::UIStr(GfDataBdat::getFP(BDAT_MENU_ZONE_TELOP_MS), event.unknown08));
-    unknown20->unknown18c = 0.5f;
-    unknown20->unknown188 = false;
-    unknown20->unknown28.unknown005();
-    unknown20->unknown28.unknown002(&GfMenuObjZoneTelop::seqFadeIn);
-    unknown20->unknown28.unknown004(FRAME_UNKNOWN_120);
-    unknown20->unknown28.unknown002(&GfMenuObjZoneTelop::seqFadeOut);
+    m_menuObjZoneTelop->unknown18c = 0.5f;
+    m_menuObjZoneTelop->unknown188 = false;
+    m_menuObjZoneTelop->unknown28.unknown005();
+    m_menuObjZoneTelop->unknown28.unknown002(&GfMenuObjZoneTelop::seqFadeIn);
+    m_menuObjZoneTelop->unknown28.unknown004(FRAME_UNKNOWN_120);
+    m_menuObjZoneTelop->unknown28.unknown002(&GfMenuObjZoneTelop::seqFadeOut);
     break;
   }
   case EVENT_UNKNOWN_34:
     if (event.unknown08_f32 == 0.0f) {
-      unknown20->unknown188 = false;
-      unknown20->unknown28.unknown005();
+      m_menuObjZoneTelop->unknown188 = false;
+      m_menuObjZoneTelop->unknown28.unknown005();
     } else {
-      unknown20->unknown18c = event.unknown08_f32;
-      unknown20->unknown188 = false;
-      unknown20->unknown28.unknown005();
-      unknown20->unknown28.unknown002(&GfMenuObjZoneTelop::seqFadeOut);
+      m_menuObjZoneTelop->unknown18c = event.unknown08_f32;
+      m_menuObjZoneTelop->unknown188 = false;
+      m_menuObjZoneTelop->unknown28.unknown005();
+      m_menuObjZoneTelop->unknown28.unknown002(&GfMenuObjZoneTelop::seqFadeOut);
       break;
     }
   case 1:

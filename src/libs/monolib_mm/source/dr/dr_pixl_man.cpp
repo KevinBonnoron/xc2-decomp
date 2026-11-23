@@ -13,6 +13,7 @@
 #include "dr/dr_pixl_mem_man.h"
 #include "dr/dr_pixl_occ_query.h"
 #include "dr/dr_pixl_post_man.h"
+#include "dr/dr_pixl_post_obj_tssao.h"
 #include "dr/dr_pixl_post_parm.h"
 #include "dr/dr_pixl_render_target.h"
 #include "dr/dr_pixl_shadow_cache_man.h"
@@ -21,11 +22,15 @@
 #include "dr/dr_pixl_tile_parm.h"
 #include "dr/dr_shd_data_list.h"
 #include "dr/dr_shd_data_obj.h"
+#include "dr/dr_shd_lgt_global_ibl.h"
+#include "dr/dr_shd_lgt_man.h"
 #include "dr/dr_shd_man.h"
 #include "grlib/cglib_color_ctl.h"
+#include "grlib/cglib_ctl_texture.h"
 #include "grlib/cglib_dbl_uniform_block.h"
 #include "grlib/cglib_depth_ctl.h"
 #include "grlib/cglib_depth_target.h"
+#include "grlib/cglib_etc_uniform_block.h"
 #include "grlib/cglib_polygon.h"
 #include "grlib/cglib_render_array.h"
 #include "grlib/cglib_render_target.h"
@@ -54,7 +59,7 @@ void DrPixlMan::captureMainFrameBuffer(grlib::CGLibTextureBuffer *buffer, u32 wi
   grlib::CGLibRenderTarget renderTarget;
   renderTarget.setTextureInfo(*buffer);
   renderTarget.setRenderTarget();
-  DrShdDataList *shdList = unknown08->unknown80->unknown00;
+  DrShdDataList *shdList = m_drMan->m_drShdMan->m_drShdDataList;
   DrShdDataObj *shader = shdList->getSelectShdObj(1);
   grlib::CGLibRenderTarget *mainTarget = grlib::CGLibState::getMainRenderTarget();
   shader->setDeclarationIdx(shader->getDeclarationOfs("PIXL_TYPE"), 1);
@@ -64,7 +69,7 @@ void DrPixlMan::captureMainFrameBuffer(grlib::CGLibTextureBuffer *buffer, u32 wi
   uniform.setUseUniformBlock("U_POST");
   u32 offset = uniform.unknown001("gScal");
   int location = (shader->unknown38 + shader->unknown58)->getTextureLocation("s0");
-  DrAPCache *apCache = unknown08->unknown5c0;
+  DrAPCache *apCache = m_drMan->m_drAPCache;
   f32 mainHeight = static_cast<f32>(mainTarget->unknownc0);
   f32 mainWidth = static_cast<f32>(mainTarget->unknownbc);
   f32 scale[4];
@@ -82,23 +87,23 @@ void DrPixlMan::captureMainFrameBuffer(grlib::CGLibTextureBuffer *buffer, u32 wi
 }
 
 void DrPixlMan::setupGodRay() {
-  if (unknown08->unknown120[unknown08->unknown1c98]->m_bloomOn && (unknown7f0->unknown180->unknownf8 & DrPixlPostMan::FLAG_UNKNOWN_16)) {
+  if (m_drMan->unknown120[m_drMan->unknown1c98]->m_bloomOn && (unknown7f0->m_drPixlPostMan->unknownf8 & DrPixlPostMan::FLAG_UNKNOWN_16)) {
     unknown7f0->unknown00[7][0]->clearTexture(mm::Col4(0.0f, 0.0f, 0.0f, 0.0f), static_cast<GrlClaerMask>(0xf));
   }
 }
 
 void DrPixlMan::lastTexRender() {
-  DrShdDataList *shdList = unknown08->unknown80->unknown00;
+  DrShdDataList *shdList = m_drMan->m_drShdMan->m_drShdDataList;
   DrShdDataObj *shader = shdList->unknown001();
   shdList->unknown002(shader);
   grlib::CGLibUniformEtcUtility uniform(shader);
   uniform.setUseUniformBlock("U_POST");
   u32 offset = uniform.unknown001("gScal");
   int location = (shader->unknown38 + shader->unknown58)->getTextureLocation("s0");
-  DrPixlPostParm *postParm = unknown08->unknown120[unknown08->unknown1c98];
-  DrAPCache *apCache = unknown08->unknown5c0;
+  DrPixlPostParm *postParm = m_drMan->unknown120[m_drMan->unknown1c98];
+  DrAPCache *apCache = m_drMan->m_drAPCache;
   f32 scale[4];
-  if (!postParm->unknownfb2) {
+  if (!postParm->m_reduction) {
     scale[0] = 1.0f;
     scale[1] = 1.0f;
     scale[2] = 0.0f;
@@ -121,12 +126,12 @@ void DrPixlMan::lastTexRender() {
 }
 
 void DrPixlMan::toneMapRender(bool isDepth) {
-  DrMan *man = unknown08;
-  DrShdDataList *shdList = man->unknown80->unknown00;
-  DrPixlRenderTarget *downDepth = unknown7f0->unknown180->getDownDepth();
-  DrCalcViewWork *viewWork = man->unknown580->unknown10;
+  DrMan *man = m_drMan;
+  DrShdDataList *shdList = man->m_drShdMan->m_drShdDataList;
+  DrPixlRenderTarget *downDepth = unknown7f0->m_drPixlPostMan->getDownDepth();
+  DrCalcViewWork *viewWork = man->m_drCalcMan->m_drCalcViewWork;
   DrPixlPostParm *postParm = man->unknown120[man->unknown1c98];
-  DrAPCache *apCache = man->unknown5c0;
+  DrAPCache *apCache = man->m_drAPCache;
   DrAPGxType::setupScreenQuads(false);
   DrShdDataObj *shader = shdList->getPostShdObj(2);
   bool isDepthTest = downDepth != nullptr && isDepth;
@@ -147,7 +152,7 @@ void DrPixlMan::toneMapRender(bool isDepth) {
   tone[3] = 0.0f;
   uniform.setF32SetVec4(0, tone);
   f32 scale[4];
-  if (!postParm->unknownfb2 || !isDepth) {
+  if (!postParm->m_reduction || !isDepth) {
     scale[0] = 1.0f;
     scale[1] = 1.0f;
     scale[2] = 0.0f;
@@ -187,12 +192,12 @@ void DrPixlMan::toneMapRender(bool isDepth) {
 }
 
 void DrPixlMan::gammaRender(bool isDepth) {
-  DrMan *man = unknown08;
-  DrShdDataList *shdList = man->unknown80->unknown00;
-  DrPixlRenderTarget *downDepth = unknown7f0->unknown180->getDownDepth();
-  DrCalcViewWork *viewWork = man->unknown580->unknown10;
+  DrMan *man = m_drMan;
+  DrShdDataList *shdList = man->m_drShdMan->m_drShdDataList;
+  DrPixlRenderTarget *downDepth = unknown7f0->m_drPixlPostMan->getDownDepth();
+  DrCalcViewWork *viewWork = man->m_drCalcMan->m_drCalcViewWork;
   DrPixlPostParm *postParm = man->unknown120[man->unknown1c98];
-  DrAPCache *apCache = man->unknown5c0;
+  DrAPCache *apCache = man->m_drAPCache;
   DrAPGxType::setupScreenQuads(false);
   DrShdDataObj *shader = shdList->getSelectShdObj(5);
   bool isDepthTest = downDepth != nullptr && isDepth;
@@ -212,7 +217,7 @@ void DrPixlMan::gammaRender(bool isDepth) {
   tone[3] = 0.0f;
   uniform.setF32SetVec4(0, tone);
   f32 scale[4];
-  if (!postParm->unknownfb2 || !isDepth) {
+  if (!postParm->m_reduction || !isDepth) {
     scale[0] = 1.0f;
     scale[1] = 1.0f;
     scale[2] = 0.0f;
@@ -254,7 +259,7 @@ void DrPixlMan::offScreenAlphaRender() {
   DrAPGxType::setupScreenQuads(false);
   unknown7f0->unknown1d0->setRenderTarget(*unknown7f0->unknown1a0[DrMan::s_nDblIdx]->unknown120);
   DrAPGxType::setupStencilTest(false, false, 7, false, 0, 0, 7, 0, 0, 0);
-  DrShdDataList *shdList = unknown08->unknown80->unknown00;
+  DrShdDataList *shdList = m_drMan->m_drShdMan->m_drShdDataList;
   DrShdDataObj *shader = shdList->getPostShdObj(0x13);
   shdList->unknown002(shader);
   int location0 = (shader->unknown38 + shader->unknown58)->getTextureLocation("s0");
@@ -269,7 +274,7 @@ void DrPixlMan::offScreenAlphaRender() {
   uniform.setF32SetVec4(0, tone);
   uniform.updateData();
   uniform.setUniformBlock();
-  DrAPCache *apCache = unknown08->unknown5c0;
+  DrAPCache *apCache = m_drMan->m_drAPCache;
   apCache->beginTexSampling(2, 0);
   apCache->setTexture(*unknown7f0->unknown138->unknown70, location0);
   apCache->setTexture(*unknown7f0->unknown1d0->unknown70, location1);
@@ -290,11 +295,11 @@ void DrPixlMan::delViewInfo(int index) {
       }
     }
   }
-  grlib::CGLibRenderTarget *target = unknown7f0->unknown148;
+  grlib::CGLibRenderTarget *target = unknown7f0->m_backFaceDepthTexture;
   if (target != nullptr) {
     target->releaseWork();
     delete target;
-    unknown7f0->unknown148 = nullptr;
+    unknown7f0->m_backFaceDepthTexture = nullptr;
   }
   target = unknown7f0->unknown150;
   if (target != nullptr) {
@@ -367,52 +372,52 @@ void DrPixlMan::delViewInfo(int index) {
     delete target;
     unknown7f0->unknown1d0 = nullptr;
   }
-  DrPixlDeferred *deferred = unknown7f0->unknown170;
+  DrPixlDeferred *deferred = unknown7f0->m_drPixlDeferred;
   if (deferred != nullptr) {
     delete deferred;
-    unknown7f0->unknown170 = nullptr;
+    unknown7f0->m_drPixlDeferred = nullptr;
   }
-  DrPixlShadowMan *shadowMan = unknown7f0->unknown178;
+  DrPixlShadowMan *shadowMan = unknown7f0->m_drPixlShadowMan;
   if (shadowMan != nullptr) {
     delete shadowMan;
-    unknown7f0->unknown178 = nullptr;
+    unknown7f0->m_drPixlShadowMan = nullptr;
   }
-  DrPixlPostMan *postMan = unknown7f0->unknown180;
+  DrPixlPostMan *postMan = unknown7f0->m_drPixlPostMan;
   if (postMan != nullptr) {
     delete postMan;
-    unknown7f0->unknown180 = nullptr;
+    unknown7f0->m_drPixlPostMan = nullptr;
   }
   memset(unknown7f0, 0, sizeof(wkPixlManRes));
   unknown7f0 = unknown10;
 }
 
-void DrPixlMan::lastUpdate() { unknown7f8->update(); }
+void DrPixlMan::lastUpdate() { m_drPixlOccQuery->update(); }
 
 void DrPixlMan::lastRender() {
-  unknown7f0->unknown180->render();
-  DrPixlPostParm *postParm = unknown08->unknown120[unknown08->unknown1c98];
+  unknown7f0->m_drPixlPostMan->render();
+  DrPixlPostParm *postParm = m_drMan->unknown120[m_drMan->unknown1c98];
   if (!postParm->unknown1025) {
     if (postParm->unknown1028) {
-      unknown800->debugShadowCacheRender();
+      m_drPixlShadowCacheMan->debugShadowCacheRender();
     }
   } else {
-    unknown7f0->unknown178->shadowRender();
+    unknown7f0->m_drPixlShadowMan->shadowRender();
   }
-  postParm = unknown08->unknown120[unknown08->unknown1c98];
+  postParm = m_drMan->unknown120[m_drMan->unknown1c98];
   if (postParm->unknown1027) {
-    unknown7f0->unknown170->debugRender();
-    postParm = unknown08->unknown120[unknown08->unknown1c98];
+    unknown7f0->m_drPixlDeferred->debugRender();
+    postParm = m_drMan->unknown120[m_drMan->unknown1c98];
   }
-  if (postParm->unknown10fe) {
+  if (postParm->m_dispReduction) {
     debugReductionRender();
   }
 }
 
 void DrPixlMan::debugIlluminanceRender() {
-  DrMan *man = unknown08;
-  DrShdDataList *shdList = man->unknown80->unknown00;
+  DrMan *man = m_drMan;
+  DrShdDataList *shdList = man->m_drShdMan->m_drShdDataList;
   DrPixlPostParm *postParm = man->unknown120[man->unknown1c98];
-  DrAPCache *apCache = man->unknown5c0;
+  DrAPCache *apCache = man->m_drAPCache;
   DrAPGxType::setupScreenQuads(false);
   DrShdDataObj *shader = shdList->getDebugShdObj(0xe);
   shdList->unknown002(shader);
@@ -442,14 +447,14 @@ void DrPixlMan::endSkyRenderTarget() {
 }
 
 void DrPixlMan::setMainViewPort() {
-  grlib::LibMainStateViewPort viewPort(0.0f, 0.0f, static_cast<f32>(unknown08->unknown5b8->unknown18), static_cast<f32>(unknown08->unknown5b8->unknown1c), 0.0f, 1.0f);
+  grlib::LibMainStateViewPort viewPort(0.0f, 0.0f, static_cast<f32>(m_drMan->unknown5b8->unknown18), static_cast<f32>(m_drMan->unknown5b8->unknown1c), 0.0f, 1.0f);
   grlib::CGLibState::setViewport(viewPort);
 }
 
 void DrPixlMan::resetRenderTarget() { unknown858 = 0; }
 
 void DrPixlMan::endGBuffTexture() {
-  if (unknown08->unknown120[unknown08->unknown1c98]->m_toneMapOn) {
+  if (m_drMan->unknown120[m_drMan->unknown1c98]->m_toneMapOn) {
     unknown7f0->unknown00[6][0]->setColorInvalidate();
   }
 }
@@ -490,8 +495,8 @@ DrPixlRenderTarget *DrPixlMan::getPixlObj(int type) {
 }
 
 void DrPixlMan::setShadowObj(DrPixlShadowObj *shadowObj) {
-  unknown848 = shadowObj;
-  unknown850 = &shadowObj->unknown08;
+  m_drPixlShadowObj = shadowObj;
+  unknown850 = &shadowObj->m_cGLibDblUniformBlock;
 }
 
 void DrPixlMan::occRenderBegin(bool isFirst) {
@@ -503,17 +508,17 @@ void DrPixlMan::occRenderBegin(bool isFirst) {
   } else {
     unknown7f0->unknown1b0->setRenderTarget();
   }
-  DrPixlOccQuery *occQuery = unknown7f8;
+  DrPixlOccQuery *occQuery = m_drPixlOccQuery;
   DrAPGxType::beginOccQuery();
-  occQuery->unknown10->bindShdBoxVertex();
+  occQuery->m_drShdDataList->bindShdBoxVertex();
   occQuery->unknown28 = 0;
-  occQuery->unknown18->setupShader(0u);
-  occQuery->unknown24 = (occQuery->unknown18->unknown38 + occQuery->unknown18->unknown58)->getUniformBlockOfs("U_POST");
+  occQuery->m_drShdDataObj->setupShader(0u);
+  occQuery->unknown24 = (occQuery->m_drShdDataObj->unknown38 + occQuery->m_drShdDataObj->unknown58)->getUniformBlockOfs("U_POST");
 }
 
-void DrPixlMan::setShadowDirRenderTarget(int index) { unknown800->unknown0010[index].unknown5940.setRenderTarget(); }
+void DrPixlMan::setShadowDirRenderTarget(int index) { m_drPixlShadowCacheMan->m_SHCACHE_WORK_TBL[index].m_cGLibDepthTarget.setRenderTarget(); }
 
-void DrPixlMan::setupShadowUnifrom(int index) { unknown850 = &unknown800->m_shadowDirUniform[index]; }
+void DrPixlMan::setupShadowUnifrom(int index) { unknown850 = &m_drPixlShadowCacheMan->m_shadowDirUniform[index]; }
 
 grlib::CGLibDepthTarget *DrPixlMan::getDepthObj() { return unknown7f0->unknown1a0[DrMan::s_nDblIdx]; }
 
@@ -538,20 +543,20 @@ void DrPixlMan::updateShadowDisplayList() {
 
 DrPixlRenderTarget *DrPixlMan::getResponsiveAAMask() { return unknown7f0->unknown00[18][0]; }
 
-grlib::CGLibTextureBuffer *DrPixlMan::getSunShadowMap() { return unknown10[0].unknown170->getShadowMapTexture(); }
+grlib::CGLibTextureBuffer *DrPixlMan::getSunShadowMap() { return unknown10[0].m_drPixlDeferred->getShadowMapTexture(); }
 
 void DrPixlMan::resetColorBuff(bool isMain) {
   // The game never sets the registers of the last two arguments (calcColorBuffer does not read them): the original expressions
   // cannot be checked.
-  calcColorBuffer(unknown7f0, static_cast<f32>(unknown08->unknown5b8->unknown18), static_cast<f32>(unknown08->unknown5b8->unknown1c), 0.0f, 0.0f);
-  unknown7f0->unknown180->resetColorBuff();
-  unknown7f0->unknown170->resetColorBuff();
-  if (unknown08->unknown120[unknown08->unknown1c98]->unknownfe4 != 2) {
+  calcColorBuffer(unknown7f0, static_cast<f32>(m_drMan->unknown5b8->unknown18), static_cast<f32>(m_drMan->unknown5b8->unknown1c), 0.0f, 0.0f);
+  unknown7f0->m_drPixlPostMan->resetColorBuff();
+  unknown7f0->m_drPixlDeferred->resetColorBuff();
+  if (m_drMan->unknown120[m_drMan->unknown1c98]->unknownfe4 != 2) {
     if (unknown7f0->unknown1d8 & unknown001_4) {
       if (isMain) {
         unknown7f0->unknown1d8 |= unknown001_16;
         if (unknown7f0->unknown1d0 == nullptr) {
-          unknown7f0->unknown1d0 = new (unknown08->unknown0c) DrPixlRenderTarget(unknown08);
+          unknown7f0->unknown1d0 = new (m_drMan->unknown0c) DrPixlRenderTarget(m_drMan);
         }
       } else {
         unknown7f0->unknown1d8 &= ~unknown001_16;
@@ -566,13 +571,13 @@ void DrPixlMan::resetColorBuff(bool isMain) {
     unknown7f0->unknown1d8 |= unknown001_32;
     if ((unknown7f0->unknown1d8 & unknown001_4) && unknown7f0->unknown1d0 != nullptr) {
       unknown7f0->unknown1d0->setTextureInfo(
-          static_cast<f32>(unknown08->unknown5b8->unknown20), static_cast<f32>(unknown08->unknown5b8->unknown24), DrAPCache::TEXTYPE_RGBA_8, true, DrPixlMemMan::get()->unknown430);
+          static_cast<f32>(m_drMan->unknown5b8->unknown20), static_cast<f32>(m_drMan->unknown5b8->unknown24), DrAPCache::TEXTYPE_RGBA_8, true, DrPixlMemMan::get()->unknown430);
     }
   }
 }
 
 void DrPixlMan::calcColorBuffer(wkPixlManRes *res, f32 width, f32 height, f32 unknown1, f32 unknown2) {
-  DrPixlPostParm *postParm = unknown08->unknown120[unknown08->unknown1c98];
+  DrPixlPostParm *postParm = m_drMan->unknown120[m_drMan->unknown1c98];
   DrPixlMemMan *memMan = DrPixlMemMan::get();
   if (postParm->unknownfe4 == 3) {
     for (int i = 0; i < 19; i++) {
@@ -607,8 +612,8 @@ void DrPixlMan::calcColorBuffer(wkPixlManRes *res, f32 width, f32 height, f32 un
       }
     }
   }
-  if (res->unknown148 != nullptr) {
-    res->unknown148->setTextureInfo(width, height, DrPixlFormat::s_BackFaceDepth, true, (memMan->unknown010 + DrMan::getIns()->unknown1c98)->unknown0bc);
+  if (res->m_backFaceDepthTexture != nullptr) {
+    res->m_backFaceDepthTexture->setTextureInfo(width, height, DrPixlFormat::s_BackFaceDepth, true, (memMan->unknown010 + DrMan::getIns()->unknown1c98)->unknown0bc);
   }
   // The reduced sizes are integers: the game truncates each size (fcvtzs at 0x710083d090 and 0x710083d098), scales it, truncates the
   // product again (0x710083d0ac and 0x710083d0cc) and converts it back to float (scvtf at 0x710083d0b8 and 0x710083d0e0) as the argument.
@@ -621,7 +626,7 @@ void DrPixlMan::calcColorBuffer(wkPixlManRes *res, f32 width, f32 height, f32 un
   res->unknown1b0->setTextureInfo(reducedWidth, reducedHeight, DrPixlFormat::s_ZBufferFormat, true, (memMan->unknown010 + DrMan::getIns()->unknown1c98)->unknown0c8);
   res->unknown1b8->setTextureInfo(width, height, DrPixlFormat::s_UnbranchZBufferFormat, true, (memMan->unknown010 + DrMan::getIns()->unknown1c98)->unknown0cc);
   res->unknown1c0->setTextureInfo(width * 0.25f, height * 0.25f, DrPixlFormat::s_UnbranchZBufferFormat, true, (memMan->unknown010 + DrMan::getIns()->unknown1c98)->unknown0d0);
-  f32 iblScale = unknown08->isIBLHalfRes() ? 0.5f : 1.0f;
+  f32 iblScale = m_drMan->isIBLHalfRes() ? 0.5f : 1.0f;
   res->unknown1e0->setTextureInfo(iblScale * width, iblScale * height, DrPixlFormat::s_LgtLinkGIBFadeList, true, (memMan->unknown010 + DrMan::getIns()->unknown1c98)->unknown0d4);
   res->unknown1e8->setTextureInfo(iblScale * width, iblScale * height, DrPixlFormat::s_LgtLinkGIBIndexMask, true, (memMan->unknown010 + DrMan::getIns()->unknown1c98)->unknown0d8);
   res->unknown1c8 = width;
@@ -629,7 +634,7 @@ void DrPixlMan::calcColorBuffer(wkPixlManRes *res, f32 width, f32 height, f32 un
 }
 
 void DrPixlMan::releaseColorBuff() {
-  DrPixlPostParm *postParm = unknown08->unknown120[unknown08->unknown1c98];
+  DrPixlPostParm *postParm = m_drMan->unknown120[m_drMan->unknown1c98];
   wkPixlManRes *res = unknown7f0;
   if (postParm->unknownfe4 == 3) {
     for (int i = 0; i < 19; i++) {
@@ -660,12 +665,12 @@ void DrPixlMan::releaseColorBuff() {
       }
     }
   }
-  res->unknown180->releaseColorBuff();
-  res->unknown170->releaseColorBuff();
+  res->m_drPixlPostMan->releaseColorBuff();
+  res->m_drPixlDeferred->releaseColorBuff();
   if (postParm->unknownfe4 == 2) {
     return;
   }
-  res->unknown148->releaseTexture();
+  res->m_backFaceDepthTexture->releaseTexture();
   res->unknown150->releaseTexture();
   res->unknown158->releaseTexture();
   res->unknown160->releaseTexture();
@@ -678,24 +683,24 @@ void DrPixlMan::releaseColorBuff() {
 }
 
 grlib::CGLibDepthTarget *DrPixlMan::getSeparateTransDepthObj() {
-  if (unknown08->unknown120[unknown08->unknown1c98]->unknownfb4) {
+  if (m_drMan->unknown120[m_drMan->unknown1c98]->unknownfb4) {
     return unknown7f0->unknown1b0;
   }
   return getDepthObj();
 }
 
 void DrPixlMan::afterUpdate(int loop) {
-  unknown7f0->unknown180->update();
+  unknown7f0->m_drPixlPostMan->update();
   if (loop == 0) {
-    unknown7f0->unknown180->setDownDepth();
+    unknown7f0->m_drPixlPostMan->setDownDepth();
   }
-  if (unknown08->unknown88->unknown230->unknown04) {
-    unknown7f0->unknown180->setRefRactionMap();
+  if (m_drMan->m_drMdlMan->unknown230->unknown04) {
+    unknown7f0->m_drPixlPostMan->setRefRactionMap();
   }
-  unknown7f0->unknown178->afterUpdate();
+  unknown7f0->m_drPixlShadowMan->afterUpdate();
 }
 
-void DrPixlMan::displayUpdate() { unknown7f0->unknown170->displayUpdate(); }
+void DrPixlMan::displayUpdate() { unknown7f0->m_drPixlDeferred->displayUpdate(); }
 
 void DrPixlMan::renderEnd(int loop) {
   if (unknown7f0->unknown1d0 != nullptr) {
@@ -846,48 +851,48 @@ void DrPixlMan::skyGodRayRenderTarget() {
   }
 }
 
-void DrPixlMan::renderRefractionMap(bool isRefractionMap, bool isHalfMap) { unknown7f0->unknown180->renderRefractionMap(isRefractionMap, isHalfMap); }
+void DrPixlMan::renderRefractionMap(bool isRefractionMap, bool isHalfMap) { unknown7f0->m_drPixlPostMan->renderRefractionMap(isRefractionMap, isHalfMap); }
 
-void DrPixlMan::renderSkyDome() { unknown7f0->unknown180->renderSkyDome(); }
+void DrPixlMan::renderSkyDome() { unknown7f0->m_drPixlPostMan->renderSkyDome(); }
 
-void DrPixlMan::renderSkyGodRay() { unknown7f0->unknown180->renderSkyGodRay(); }
+void DrPixlMan::renderSkyGodRay() { unknown7f0->m_drPixlPostMan->renderSkyGodRay(); }
 
-void DrPixlMan::renderRainDrop() { unknown7f0->unknown180->renderRainDrop(); }
+void DrPixlMan::renderRainDrop() { unknown7f0->m_drPixlPostMan->renderRainDrop(); }
 
-void DrPixlMan::renderTMAA() { unknown7f0->unknown180->renderTMAA(); }
+void DrPixlMan::renderTMAA() { unknown7f0->m_drPixlPostMan->renderTMAA(); }
 
 bool DrPixlMan::renderRefractionBegin() {
-  unknown08->unknown5c0->begin();
+  m_drMan->m_drAPCache->begin();
   unknown858 = 5;
   grlib::CGLibState::beginRegisterRenderTarget();
   grlib::CGLibState::setRegisterDepthTarget(*unknown7f0->unknown1a0[DrMan::s_nDblIdx]->unknown120);
   grlib::CGLibState::endRegisterRenderTarget();
-  unknown08->unknown180->begin(DrPixlTileParm::TILE_TYPE_UNKNOWN_2);
-  return unknown7f0->unknown180->renderRefractionBegin();
+  m_drMan->m_drPixlTileParm->begin(DrPixlTileParm::TILE_TYPE_UNKNOWN_2);
+  return unknown7f0->m_drPixlPostMan->renderRefractionBegin();
 }
 
 void DrPixlMan::renderRefractionEnd() {
-  unknown08->unknown180->end(DrPixlTileParm::TILE_TYPE_UNKNOWN_2);
-  unknown7f0->unknown180->renderRefractionEnd();
+  m_drMan->m_drPixlTileParm->end(DrPixlTileParm::TILE_TYPE_UNKNOWN_2);
+  unknown7f0->m_drPixlPostMan->renderRefractionEnd();
 }
 
-void DrPixlMan::renderSkyLuminance() { unknown7f0->unknown180->renderSkyLuminance(); }
+void DrPixlMan::renderSkyLuminance() { unknown7f0->m_drPixlPostMan->renderSkyLuminance(); }
 
-bool DrPixlMan::isRefractionMap() { return unknown7f0->unknown180->unknownd0 != nullptr; }
+bool DrPixlMan::isRefractionMap() { return unknown7f0->m_drPixlPostMan->unknownd0 != nullptr; }
 
 void DrPixlMan::thicknessFirstBegin() {
   unknown858 = 13;
   grlib::CGLibState::beginRegisterRenderTarget();
-  grlib::CGLibState::setRegisterRenderTarget(*unknown7f0->unknown148, grlib::GRL_MRT_TYPE_0);
+  grlib::CGLibState::setRegisterRenderTarget(*unknown7f0->m_backFaceDepthTexture, grlib::GRL_MRT_TYPE_0);
   grlib::CGLibState::setRegisterDepthTarget(*getDepthObj()->unknown120);
   grlib::CGLibState::endRegisterRenderTarget();
 }
 
-DrPixlRenderTarget *DrPixlMan::getBackFaceDepthTexture() { return unknown7f0->unknown148; }
+DrPixlRenderTarget *DrPixlMan::getBackFaceDepthTexture() { return unknown7f0->m_backFaceDepthTexture; }
 
-void DrPixlMan::thicknessFirstEnd() { unknown7f0->unknown148->setColorInvalidate(); }
+void DrPixlMan::thicknessFirstEnd() { unknown7f0->m_backFaceDepthTexture->setColorInvalidate(); }
 
-void DrPixlMan::lastDeferredRender() { unknown7f0->unknown170->lastDeferredRender(); }
+void DrPixlMan::lastDeferredRender() { unknown7f0->m_drPixlDeferred->lastDeferredRender(); }
 
 void DrPixlMan::occRenderEnd() { DrAPGxType::endOccQuery(); }
 
@@ -908,7 +913,7 @@ void DrPixlMan::depCheckBegin(bool isDblDepth) {
 void DrPixlMan::depCheckEnd() { grlib::CGLibColorCtl::setColorBufferOn(); }
 
 void DrPixlMan::shadowCallDirBegin() {
-  unknown08->unknown5c0->shadowBegin();
+  m_drMan->m_drAPCache->shadowBegin();
   DrAPGxType::beginShadow();
 }
 
@@ -920,7 +925,7 @@ void DrPixlMan::shadowCallDirEnd() {
 }
 
 void DrPixlMan::shadowDirBegin() {
-  unknown08->unknown5c0->shadowBegin();
+  m_drMan->m_drAPCache->shadowBegin();
   DrAPGxType::beginShadow();
 }
 
@@ -931,24 +936,24 @@ void DrPixlMan::shadowDirEnd() {
   setMainViewPort();
 }
 
-void DrPixlMan::callShadowCacheUpdate(bool isAll) { unknown800->callShadowCacheUpdate(isAll); }
+void DrPixlMan::callShadowCacheUpdate(bool isAll) { m_drPixlShadowCacheMan->callShadowCacheUpdate(isAll); }
 
-void DrPixlMan::callShadowCacheVariance() { unknown800->callShadowCacheVariance(); }
+void DrPixlMan::callShadowCacheVariance() { m_drPixlShadowCacheMan->callShadowCacheVariance(); }
 
-void DrPixlMan::callFgShadowCacheUpdate() { unknown800->callFgShadowCacheUpdate(); }
+void DrPixlMan::callFgShadowCacheUpdate() { m_drPixlShadowCacheMan->callFgShadowCacheUpdate(); }
 
 void DrPixlMan::fastRender() {
-  unknown7f0->unknown180->fastRender();
+  unknown7f0->m_drPixlPostMan->fastRender();
   if (unknown860 == 0) {
-    unknown800->shadowCacheRender();
-    unknown800->fastRender();
+    m_drPixlShadowCacheMan->shadowCacheRender();
+    m_drPixlShadowCacheMan->fastRender();
   }
 }
 
-void DrPixlMan::lastCapRender() { unknown7f0->unknown180->capRender(); }
+void DrPixlMan::lastCapRender() { unknown7f0->m_drPixlPostMan->capRender(); }
 
 void DrPixlMan::setFinalViewPort() {
-  grlib::LibMainStateViewPort viewPort(0.0f, 0.0f, static_cast<f32>(unknown08->unknown5b8->unknown20), static_cast<f32>(unknown08->unknown5b8->unknown24), 0.0f, 1.0f);
+  grlib::LibMainStateViewPort viewPort(0.0f, 0.0f, static_cast<f32>(m_drMan->unknown5b8->unknown20), static_cast<f32>(m_drMan->unknown5b8->unknown24), 0.0f, 1.0f);
   grlib::CGLibState::setViewport(viewPort);
 }
 
@@ -977,7 +982,7 @@ DrPixlRenderTarget *DrPixlMan::getTempColorBuff() {
   return unknown7f0->unknown140;
 }
 
-void DrPixlMan::pixelEndMode() { unknown800->endMode(); }
+void DrPixlMan::pixelEndMode() { m_drPixlShadowCacheMan->endMode(); }
 
 void DrPixlMan::setToneAveRange(f32 min, f32 max) {
   unknown7f0->unknown194 = min;
@@ -1008,29 +1013,29 @@ void DrPixlMan::swapPixlObj(int type) {
 }
 
 DrPixlRenderTarget *DrPixlMan::getSpecIBLObj() {
-  int type = unknown08->unknown120[unknown08->unknown1c98]->unknown1061 ? 9 : 11;
-  return unknown08->unknown78->getPixlObj(type);
+  int type = m_drMan->unknown120[m_drMan->unknown1c98]->unknown1061 ? 9 : 11;
+  return m_drMan->m_drPixlMan->getPixlObj(type);
 }
 
 DrPixlRenderTarget *DrPixlMan::getDiffIBLObj() {
-  int type = unknown08->unknown120[unknown08->unknown1c98]->unknown1061 ? 14 : 10;
-  return unknown08->unknown78->getPixlObj(type);
+  int type = m_drMan->unknown120[m_drMan->unknown1c98]->unknown1061 ? 14 : 10;
+  return m_drMan->m_drPixlMan->getPixlObj(type);
 }
 
-DrPixlRenderTarget *DrPixlMan::getBackFaceDepthTexture() const { return unknown7f0->unknown148; }
+DrPixlRenderTarget *DrPixlMan::getBackFaceDepthTexture() const { return unknown7f0->m_backFaceDepthTexture; }
 
 // Ruling 8: the two shader blocks (stencil bit 0x40 and 0x80) are written out twice like the game (0x7100849174: the first block is
 // 0x71008491a0-0x71008492fc, the second one starts at 0x7100849318 and repeats it with its own 8-float `col` array and its own uniform utility). A
 // file-local helper taking the flag, the mask and the target row, called twice, is not inlined (72 instructions against 258), so no call form matches.
 void DrPixlMan::clearAccumBuffer() {
-  if (unknown08->unknown88->unknown230->unknown0a) {
+  if (m_drMan->m_drMdlMan->unknown230->unknown0a) {
     mm::Vec4 col[2];
     col[0] = col[1] = mm::Vec4::zero;
-    unknown08->unknown78->selectGBuffRenderTarget(0x40);
+    m_drMan->m_drPixlMan->selectGBuffRenderTarget(0x40);
     DrAPGxType::setupStencilTest(false, false, 7, true, 0x40, 0x40, 5, 1, 1, 1);
     DrAPGxType::setupBlend(0);
     DrAPGxType::setupCullingOff();
-    DrShdDataList *shdList = unknown08->unknown80->unknown00;
+    DrShdDataList *shdList = m_drMan->m_drShdMan->m_drShdDataList;
     DrShdDataObj *shader = shdList->getSelectShdObj(1);
     shader->setDeclarationIdx(shader->getDeclarationOfs("PIXL_TYPE"), 2);
     shader->setDeclarationIdx(shader->getDeclarationOfs("MRT_NUM"), 1);
@@ -1045,14 +1050,14 @@ void DrPixlMan::clearAccumBuffer() {
   } else {
     unknown7f0->unknown00[5][0]->clearTexture(mm::Col4(0.0f, 0.0f, 0.0f, 0.0f), static_cast<GrlClaerMask>(0xf));
   }
-  if (unknown08->unknown88->unknown230->unknown0b) {
+  if (m_drMan->m_drMdlMan->unknown230->unknown0b) {
     mm::Vec4 col[2];
     col[0] = col[1] = mm::Vec4::zero;
-    unknown08->unknown78->selectGBuffRenderTarget(0x80);
+    m_drMan->m_drPixlMan->selectGBuffRenderTarget(0x80);
     DrAPGxType::setupStencilTest(false, false, 7, true, 0x80, 0x80, 5, 1, 1, 1);
     DrAPGxType::setupBlend(0);
     DrAPGxType::setupCullingOff();
-    DrShdDataList *shdList = unknown08->unknown80->unknown00;
+    DrShdDataList *shdList = m_drMan->m_drShdMan->m_drShdDataList;
     DrShdDataObj *shader = shdList->getSelectShdObj(1);
     shader->setDeclarationIdx(shader->getDeclarationOfs("PIXL_TYPE"), 2);
     shader->setDeclarationIdx(shader->getDeclarationOfs("MRT_NUM"), 1);
@@ -1078,6 +1083,147 @@ void DrPixlMan::clearAccumBuffer() {
   unknown7f0->unknown00[10][0]->clearTexture(mm::Col4::black, static_cast<GrlClaerMask>(0xf));
   unknown7f0->unknown00[11][0]->clearTexture(mm::Col4::black, static_cast<GrlClaerMask>(0xf));
   unknown7f0->unknown00[15][0]->clearTexture(mm::Col4::black, static_cast<GrlClaerMask>(0xf));
+}
+
+void DrPixlMan::fastDeferredRender() {
+  if (m_drMan->unknown120[m_drMan->unknown1c98]->m_gBuffDebug) {
+    debugGBuffRender();
+  }
+  unknown7f0->m_drPixlPostMan->renderDeferredFast();
+  DrShdLgtMan *shdLgtMan = unknown7f0->m_drPixlDeferred->m_drMan->m_drShdMan->m_drShdLgtMan;
+  shdLgtMan->m_drShdLgtGlobalIBL->render(shdLgtMan);
+  unknown7f0->m_drPixlDeferred->shadowTexRender(unknown860);
+  unknown7f0->m_drPixlPostMan->renderDeferredTemporal();
+  if (unknown7f0->m_drPixlPostMan->m_drPixlPostObjTSSAO != nullptr) {
+    unknown7f0->m_drPixlPostMan->m_drPixlPostObjTSSAO->render_afterTemporal();
+  }
+  // Ruling 6: the game never sets the argument register (0x71008435b4); DrPixlDeferred::fastDeferredRender never reads its parameter, and
+  // the original expression cannot be checked. unknown860 is the cate that shadowTexRender takes above.
+  unknown7f0->m_drPixlDeferred->fastDeferredRender(unknown860);
+}
+
+void DrPixlMan::debugGBuffRender() {
+  DrMan *man = m_drMan;
+  DrPixlPostParm *postParm = man->unknown120[man->unknown1c98];
+  DrShdMan *shdMan = man->m_drShdMan;
+  DrAPGxType::setupScreenQuads(false);
+  DrShdDataList *shdList = shdMan->m_drShdDataList;
+  shdList->bindShdVertex();
+  DrShdDataObj *shader = shdList->getDebugShdObj(4);
+  shader->setupShader(0u);
+  {
+    grlib::CGLibUniformEtcUtility uniform(shader);
+    uniform.setUseUniformBlock("U_POST");
+    u32 parm = uniform.unknown001("parm");
+    // The four passes of each iteration (render target 0, 1, 2 and 4, each with its own vector) are written out one after the other, as the game inlines them: the
+    // asm repeats the register target, vector and renderQuads sequence with no call to a shared function (0x71008436cc onwards).
+    for (int i = 0; i < 2; i++) {
+      if (i == 0) {
+        DrAPGxType::setupBlend(7);
+      } else {
+        DrAPGxType::setupBlend(5);
+        // The game tests the second pass again (cmp x25, #4 on the induction variable scaled by 4, 0x71008436a0); without the test clang folds it and gives 294
+        // instructions against the game's 296.
+        if (i == 1) {
+          uniform.unknown20.Rebuilding();
+          static_cast<grlib::CGLibUniBaseUtility &>(uniform).setMoveMem();
+        }
+      }
+      grlib::CGLibState::beginRegisterRenderTarget();
+      grlib::CGLibState::setRegisterRenderTarget(*unknown7f0->unknown00[0][0], grlib::GRL_MRT_TYPE_0);
+      grlib::CGLibState::setRegisterDepthTarget(*unknown7f0->unknown1a0[DrMan::s_nDblIdx]->unknown120);
+      grlib::CGLibState::endRegisterRenderTarget();
+      f32 vec[4];
+      vec[0] = vec[1] = vec[2] = postParm->unknown320[0].unknown00[i];
+      vec[3] = postParm->unknown320[3].unknown00[i];
+      uniform.setF32SetVec4(parm, vec);
+      uniform.updateData();
+      uniform.setUniformBlock();
+      shdList->renderQuads();
+      uniform.unknown20.Rebuilding();
+      static_cast<grlib::CGLibUniBaseUtility &>(uniform).setMoveMem();
+      grlib::CGLibState::beginRegisterRenderTarget();
+      grlib::CGLibState::setRegisterRenderTarget(*unknown7f0->unknown00[1][0], grlib::GRL_MRT_TYPE_0);
+      grlib::CGLibState::setRegisterDepthTarget(*unknown7f0->unknown1a0[DrMan::s_nDblIdx]->unknown120);
+      grlib::CGLibState::endRegisterRenderTarget();
+      vec[0] = postParm->unknown320[1].unknown00[i];
+      vec[1] = postParm->unknown320[2].unknown00[i];
+      vec[2] = postParm->unknown320[7].unknown00[i];
+      f32 isMax = i == 0 ? 0.0f : 1.0f;
+      vec[3] = isMax;
+      uniform.setF32SetVec4(parm, vec);
+      uniform.updateData();
+      uniform.setUniformBlock();
+      shdList->renderQuads();
+      uniform.unknown20.Rebuilding();
+      static_cast<grlib::CGLibUniBaseUtility &>(uniform).setMoveMem();
+      grlib::CGLibState::beginRegisterRenderTarget();
+      grlib::CGLibState::setRegisterRenderTarget(*unknown7f0->unknown00[2][0], grlib::GRL_MRT_TYPE_0);
+      grlib::CGLibState::setRegisterDepthTarget(*unknown7f0->unknown1a0[DrMan::s_nDblIdx]->unknown120);
+      grlib::CGLibState::endRegisterRenderTarget();
+      vec[0] = isMax;
+      vec[1] = isMax;
+      vec[2] = postParm->unknown320[5].unknown00[i];
+      vec[3] = isMax;
+      uniform.setF32SetVec4(parm, vec);
+      uniform.updateData();
+      uniform.setUniformBlock();
+      shdList->renderQuads();
+      uniform.unknown20.Rebuilding();
+      static_cast<grlib::CGLibUniBaseUtility &>(uniform).setMoveMem();
+      grlib::CGLibState::beginRegisterRenderTarget();
+      grlib::CGLibState::setRegisterRenderTarget(*unknown7f0->unknown00[4][0], grlib::GRL_MRT_TYPE_0);
+      grlib::CGLibState::setRegisterDepthTarget(*unknown7f0->unknown1a0[DrMan::s_nDblIdx]->unknown120);
+      grlib::CGLibState::endRegisterRenderTarget();
+      vec[0] = isMax;
+      vec[1] = isMax;
+      vec[2] = isMax;
+      vec[3] = postParm->unknown320[6].unknown00[i];
+      uniform.setF32SetVec4(parm, vec);
+      uniform.updateData();
+      uniform.setUniformBlock();
+      shdList->renderQuads();
+    }
+  }
+  shader = shdList->getDebugShdObj(0x18);
+  shader->setupShader(0u);
+  DrPixlRenderTarget *target = unknown7f0->unknown00[1][0];
+  grlib::CGLibState::beginRegisterRenderTarget();
+  grlib::CGLibState::setRegisterRenderTarget(*target, grlib::GRL_MRT_TYPE_0);
+  grlib::CGLibState::endRegisterRenderTarget();
+  grlib::CGLibUniformEtcUtility uniform(shader);
+  uniform.setUseUniformBlock("U_POST");
+  u32 parm = uniform.unknown001("parm");
+  u32 value = 0;
+  u32 mask = 0;
+  if (postParm->unknown10e0[0] > 0) {
+    value = postParm->unknown10e0[0] - 1;
+    mask = 7;
+  }
+  if (postParm->unknown10e0[1] > 0) {
+    mask |= 0x10;
+    value |= postParm->unknown10e0[1] * 0x10 - 0x10;
+  }
+  if (postParm->unknown10e0[2] > 0) {
+    mask |= 0x20;
+    value |= postParm->unknown10e0[2] * 0x20 - 0x20;
+  }
+  if (postParm->unknown10e0[3] > 0) {
+    mask |= 0x40;
+    value |= postParm->unknown10e0[3] * 0x40 - 0x40;
+  }
+  u32 vec[4];
+  vec[0] = ~mask;
+  vec[1] = value;
+  vec[2] = 0;
+  vec[3] = 0;
+  uniform.setU32SetUVec4(parm, vec);
+  uniform.updateData();
+  uniform.setUniformBlock();
+  grlib::CGLibCtlTexture::setUAVTexture(*target->unknown70, 0, 0, 0);
+  grlib::CGLibColorCtl::setColorBufferOff();
+  shdList->renderQuads();
+  grlib::CGLibColorCtl::setColorBufferOn();
 }
 
 } // namespace ml

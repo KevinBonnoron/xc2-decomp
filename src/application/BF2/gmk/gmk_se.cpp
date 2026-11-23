@@ -33,7 +33,7 @@ template bool TGmkList<GmkSeLinePoint, GmkSeLinePoint::BdatInfo, 1414548563u, 1u
 template class TGmkActiveList<GmkSe>;
 template class TGmkActiveList<GmkSeLine>;
 
-GmkSe::GmkSe() : IntrusiveListNode(), unknown60(nullptr), unknownf0(false), unknownf1(false), unknownf4(0), unknownf8(0.0f), unknownfc(0.0f), unknown100(false) {}
+GmkSe::GmkSe() : IntrusiveListNode(), m_gmkPhantom(nullptr), unknownf0(false), unknownf1(false), unknownf4(0), unknownf8(0.0f), unknownfc(0.0f), unknown100(false) {}
 
 void GmkSe::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gmk) {
   unknown00 = Bdat::getFlagVal(bdat.unknown00, "flag", id, "se_type") != 0;
@@ -41,32 +41,32 @@ void GmkSe::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gmk) {
   unknown02 = bdat.getValCheck("seName", id, BDAT_TYPE_UNKNOWN_2);
   unknown04 = bdat.getValCheck("volumeMAX", id, BDAT_TYPE_UNKNOWN_1);
   unknown05 = bdat.getValCheck("volumeMIN", id, BDAT_TYPE_UNKNOWN_1);
-  unknown0a = ScenarioFlagCond(bdat.getValCheck("ScenarioFlagMin", id, BDAT_TYPE_UNKNOWN_2), bdat.getValCheck("ScenarioFlagMax", id, BDAT_TYPE_UNKNOWN_2));
-  unknown0e =
+  m_scenarioFlagCond = ScenarioFlagCond(bdat.getValCheck("ScenarioFlagMin", id, BDAT_TYPE_UNKNOWN_2), bdat.getValCheck("ScenarioFlagMax", id, BDAT_TYPE_UNKNOWN_2));
+  m_questFlagCond =
       QuestFlagCond(bdat.getValCheck("QuestFlag", id, BDAT_TYPE_UNKNOWN_2), bdat.getValCheck("QuestFlagMin", id, BDAT_TYPE_UNKNOWN_1), bdat.getValCheck("QuestFlagMax", id, BDAT_TYPE_UNKNOWN_1));
   unknown06 = bdat.getValCheck("Condition", id, BDAT_TYPE_UNKNOWN_2);
   u16 popTime = bdat.getValCheck("SEpopTime", id, BDAT_TYPE_UNKNOWN_2);
-  unknown18.unknown08 = popTime;
-  unknown28.unknown08 = bdat.getValCheck("wtrSEType", id, BDAT_TYPE_UNKNOWN_1);
+  m_timeCond.unknown08 = popTime;
+  m_weatherCond.unknown08 = bdat.getValCheck("wtrSEType", id, BDAT_TYPE_UNKNOWN_1);
   unknown38 = BootedGmkCond(bdat, id, nullptr);
   unknown3c = BootedGmkCond(bdat, id, "OP_");
   unknown08 = bdat.getValCheck("InRoom_volume", id, BDAT_TYPE_UNKNOWN_1);
 }
 
 bool GmkSe::BdatInfo::isPopCondMatched() const {
-  if (unknown0a.isEnable() && !unknown0a.isMatch()) {
+  if (m_scenarioFlagCond.isEnable() && !m_scenarioFlagCond.isMatch()) {
     return false;
   }
-  if (unknown0e.isEnable() && !unknown0e.isMatch()) {
+  if (m_questFlagCond.isEnable() && !m_questFlagCond.isMatch()) {
     return false;
   }
   if (unknown06 != 0 && !gf::GfGameCond::isGameCond(unknown06)) {
     return false;
   }
-  if (unknown18.isEnable() && !unknown18.isMatch()) {
+  if (m_timeCond.isEnable() && !m_timeCond.isMatch()) {
     return false;
   }
-  if (unknown28.isEnable() && !unknown28.isMatch()) {
+  if (m_weatherCond.isEnable() && !m_weatherCond.isMatch()) {
     return false;
   }
   if (unknown38.isEnable() && !unknown38.isMatch()) {
@@ -87,7 +87,7 @@ fw::SoundPack *GmkSe::BdatInfo::getSoundPack() const {
 
 GmkType GmkSeLinePoint::getGmkType() const { return GMK_TYPE; }
 
-bool GmkSeLinePoint::isValid() const { return unknown08.unknown00 != nullptr && unknown20.unknown08 != nullptr; }
+bool GmkSeLinePoint::isValid() const { return m_createBaseInfo.m_ownerGmkEnemyList != nullptr && m_createInfo.unknown08 != nullptr; }
 
 GmkType GmkSe::getGmkType() const { return GMK_TYPE; }
 
@@ -116,7 +116,7 @@ void GmkSe::update(f32 deltaTime) {
     if (isPopCondMatched) {
       createGmkPhantom();
     } else {
-      unknown60.dispose();
+      m_gmkPhantom.dispose();
     }
     unknownf0 = isPopCondMatched;
   }
@@ -140,7 +140,7 @@ void GmkSe::updateInActiveList(f32 deltaTime) {
     return;
   }
   const mm::Vec3 &playerPos = gf::GfObjUtil::getObj(gf::GfGameManager::getControlMover())->getComponent<gf::GfComTransform>()->getPosition();
-  const mm::Vec3 &pos = AGmkBase::unknown08.unknown08->unknown00;
+  const mm::Vec3 &pos = AGmkBase::m_createBaseInfo.m_xform->unknown00;
   mm::Vec3 diff = pos - playerPos;
   unknownfc = sqrtf(diff.x * diff.x + diff.y * diff.y + diff.z * diff.z);
   const BdatInfo *info = getBdatInfo();
@@ -169,7 +169,7 @@ void GmkSe::debugDraw() const {
   if (!isValid() || !unknownf0) {
     return;
   }
-  mm::Vec3 position = AGmkBase::unknown08.unknown08->unknown00;
+  mm::Vec3 position = AGmkBase::m_createBaseInfo.m_xform->unknown00;
   mm::Mat44 matrix;
   unknown001(matrix, position);
   const Data *data = getData();
@@ -185,8 +185,8 @@ void GmkSe::validateMute() const {
 }
 
 void GmkSe::createGmkPhantom() {
-  if (canCreateGameEntity() && static_cast<u32>(AGmkBase::unknown08.unknown10->unknown0c - SHAPE_TYPE_UNKNOWN_2) < 3) {
-    unknown60.create(*this, nullptr, false);
+  if (canCreateGameEntity() && static_cast<u32>(AGmkBase::m_createBaseInfo.unknown10->unknown0c - SHAPE_TYPE_UNKNOWN_2) < 3) {
+    m_gmkPhantom.create(*this, nullptr, false);
   }
 }
 
@@ -197,15 +197,15 @@ bool GmkSe::canPopInst() const {
   if (!unknownf0) {
     return false;
   }
-  if (unknown60.unknown78 != nullptr && !unknown60.unknown83) {
+  if (m_gmkPhantom.unknown78 != nullptr && !m_gmkPhantom.unknown83) {
     return false;
   }
   return true;
 }
 
 void GmkSe::createInst() {
-  const GmkSet *set = AGmkBase::unknown08.unknown00->getCreateInfo().unknown08;
-  if (set != nullptr && set->unknown10.unknown24) {
+  const GmkSet *set = AGmkBase::m_createBaseInfo.m_ownerGmkEnemyList->getCreateInfo().m_gmkSet;
+  if (set != nullptr && set->m_createInfo.unknown24) {
     return;
   }
   disposeInst(true);
@@ -222,10 +222,7 @@ void GmkSe::createInst() {
   fw::SoundManager::get()->setVolume(unknownf4, info->unknown05 * 0.01f, 1.0f);
   unknownf8 = 0.0f;
   unknownf1 = true;
-  TGmkActiveList<GmkSe> *list = TGmkActiveList<GmkSe>::get();
-  if (list->unknown08.end() == list->unknown08.unknown002(list->unknown08.begin(), list->unknown08.end(), this)) {
-    TGmkActiveList<GmkSe>::get()->unknown08.push_back(this);
-  }
+  TGmkActiveList<GmkSe>::unknown002(this);
 }
 
 bool GmkSe::canDepopInst() const {
@@ -233,7 +230,7 @@ bool GmkSe::canDepopInst() const {
     if (!unknownf0) {
       return true;
     }
-    if (unknown60.unknown78 != nullptr && !unknown60.unknown83) {
+    if (m_gmkPhantom.unknown78 != nullptr && !m_gmkPhantom.unknown83) {
       return true;
     }
   }
@@ -258,18 +255,18 @@ void GmkSeLine::debugDraw() const {
     if (prev == nullptr) {
       continue;
     }
-    prevPos = *reinterpret_cast<const mm::Vec3 *>(prev->unknown20.unknown08);
+    prevPos = *reinterpret_cast<const mm::Vec3 *>(prev->m_createInfo.unknown08);
     const AGmkBase *current = getPoint(i);
     if (current == nullptr) {
       continue;
     }
-    currentPos = *reinterpret_cast<const mm::Vec3 *>(current->unknown20.unknown08);
+    currentPos = *reinterpret_cast<const mm::Vec3 *>(current->m_createInfo.unknown08);
     fw::debug::drawLine(prevPos, currentPos, color);
   }
 }
 
 const AGmkBase *GmkSeLine::getPoint(u32 index) const {
-  const GmkSet *set = AGmkBase::unknown08.unknown00->getCreateInfo().unknown08;
+  const GmkSet *set = AGmkBase::m_createBaseInfo.m_ownerGmkEnemyList->getCreateInfo().m_gmkSet;
   if (set == nullptr) {
     return nullptr;
   }
@@ -294,7 +291,7 @@ bool GmkSeLine::getPointPos(mm::Vec3 &position, u32 index) const {
   if (point == nullptr) {
     return false;
   }
-  const mm::Vec3 *pointPos = reinterpret_cast<const mm::Vec3 *>(point->unknown20.unknown08);
+  const mm::Vec3 *pointPos = reinterpret_cast<const mm::Vec3 *>(point->m_createInfo.unknown08);
   position = *pointPos;
   return true;
 }
@@ -420,10 +417,7 @@ void GmkSeLine::createInst() {
   fw::SoundManager::get()->setVolume(unknown5c, info->unknown05 * 0.01f, 1.0f);
   unknown60 = 0.0f;
   unknown59 = true;
-  TGmkActiveList<GmkSeLine> *list = TGmkActiveList<GmkSeLine>::get();
-  if (list->unknown08.end() == list->unknown08.unknown002(list->unknown08.begin(), list->unknown08.end(), this)) {
-    TGmkActiveList<GmkSeLine>::get()->unknown08.push_back(this);
-  }
+  TGmkActiveList<GmkSeLine>::unknown002(this);
 }
 
 bool GmkSeLine::canDepopInst() const {

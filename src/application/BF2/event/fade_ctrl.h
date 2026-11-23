@@ -26,13 +26,13 @@ public:
   virtual ~FadeCtrl() {}
   bool isFading() const {
     for (u32 i = 0; i < PRIO_COUNT; i++) {
-      if (unknown08[i].isFading()) {
+      if (m_fadeUpdater[i].isFading()) {
         return true;
       }
     }
     return false;
   }
-  bool isFading(PRIO prio) const { return unknown08[prio].isFading(); }
+  bool isFading(PRIO prio) const { return m_fadeUpdater[prio].isFading(); }
   void clear();
   void update();
   void fadeout(int frame, PRIO prio, const mm::Col4 *color);
@@ -41,8 +41,8 @@ public:
   void fadeinEventSkip(int frame);
 
 private:
-  FadeUpdater unknown08[PRIO_COUNT]; // Inferred role: updaters; original member name unknown.
-  u32 unknown68;                     // Inferred role: flags; original member name unknown.
+  FadeUpdater m_fadeUpdater[PRIO_COUNT]; // Inferred role: updaters; original member name unknown.
+  u32 unknown68;                         // Inferred role: flags; original member name unknown.
 };
 
 static_assert(sizeof(FadeCtrl) == 0x70, "");

@@ -64,10 +64,10 @@ public:
   virtual void term();
 
 private:
-  u32 unknown08;                // Inferred role: flags; original member name unknown.
-  gf::GF_OBJ_HANDLE *unknown10; // Inferred role: handle; original member name unknown.
-  CharaDysUpdater *unknown18;   // Inferred role: dys; original member name unknown.
-  f32 unknown20;                // Inferred role: life; original member name unknown.
+  u32 unknown08;                      // Inferred role: flags; original member name unknown.
+  gf::GF_OBJ_HANDLE *unknown10;       // Inferred role: handle; original member name unknown.
+  CharaDysUpdater *m_charaDysUpdater; // Inferred role: dys; original member name unknown.
+  f32 unknown20;                      // Inferred role: life; original member name unknown.
 };
 
 static_assert(sizeof(CharaPlayActionAuto) == 0x28, "");

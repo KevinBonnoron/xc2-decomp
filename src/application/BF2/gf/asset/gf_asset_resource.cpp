@@ -16,7 +16,8 @@ constexpr u32 unknown002 = 0x19283746; // Inferred role: initial sample word; or
 } // namespace
 
 GfAssetResource::GfAssetResource()
-    : unknown0c(unknown001_0), unknown10(0), unknown18(nullptr), unknown20(nullptr), unknown28(), unknown30(nullptr), unknown38(0), unknownc8(nullptr), unknownd0(unknown002), unknownd4(unknown002) {}
+    : unknown0c(unknown001_0), unknown10(0), unknown18(nullptr), unknown20(nullptr), m_ALLOC_HANDLE(), unknown30(nullptr), unknown38(0), unknownc8(nullptr), unknownd0(unknown002),
+      unknownd4(unknown002) {}
 
 GfAssetResource::~GfAssetResource() { destroy(); }
 
@@ -62,7 +63,7 @@ void GfAssetResource::setup(const char *assetName, const char *name, mtl::ALLOC_
   unknown3c = name;
   unknownc0 = assetName;
   unknown10 = priority;
-  unknown28 = handle;
+  m_ALLOC_HANDLE = handle;
   unknown0c = unknown001_1;
 }
 

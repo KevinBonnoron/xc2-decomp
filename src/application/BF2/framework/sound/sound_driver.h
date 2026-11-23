@@ -49,9 +49,9 @@ enum SoundOutputType : int;
 // (P1, decision of 2026-11-14).
 struct SoundPlayInfo {
   SoundPlayInfo(const SoundPlayInfo &other)
-      : unknown00(other.unknown00), unknown08(other.unknown08), unknown0c(other.unknown0c), unknown10(other.unknown10), unknown14(other.unknown14), unknown20(other.unknown20) {}
+      : m_soundPack(other.m_soundPack), unknown08(other.unknown08), unknown0c(other.unknown0c), unknown10(other.unknown10), unknown14(other.unknown14), unknown20(other.unknown20) {}
 
-  SoundPack *unknown00;    // Inferred role: pack, the common pack when null; original member name unknown.
+  SoundPack *m_soundPack;  // Inferred role: pack, the common pack when null; original member name unknown.
   u32 unknown08;           // Inferred role: sound id; original member name unknown.
   f32 unknown0c;           // Inferred role: volume; original member name unknown.
   SoundCategory unknown10; // Inferred role: category; original member name unknown.

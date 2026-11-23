@@ -28,7 +28,7 @@ struct BGMCOND {
   bool isSilentPlay() const;
 
   f32 unknown00;                 // Inferred role: volume; original member name unknown.
-  SoundHandle unknown04;         // Inferred role: playing sound handle; original member name unknown.
+  SoundHandle m_soundHandle;     // Inferred role: playing sound handle; original member name unknown.
   u32 unknown0c;                 // Inferred role: play parameter cleared by clear; original member name unknown.
   u8 unknown10;                  // Inferred role: play flag; original member name unknown.
   u8 unknown11;                  // Inferred role: play flag read by isInvalidPlay; original member name unknown.
@@ -36,7 +36,7 @@ struct BGMCOND {
   u32 unknown58;                 // Inferred role: cleared by the constructor; original member name unknown.
 };
 
-static_assert(offsetof(BGMCOND, unknown04) == 0x04, "");
+static_assert(offsetof(BGMCOND, m_soundHandle) == 0x04, "");
 static_assert(offsetof(BGMCOND, unknown14) == 0x14, "");
 static_assert(offsetof(BGMCOND, unknown58) == 0x58, "");
 static_assert(sizeof(BGMCOND) == 0x5c, "");
@@ -106,7 +106,7 @@ public:
   // Inferred role: first bgm condition with a valid sound handle; original name unknown.
   BGMCOND *unknown003() {
     for (u32 i = 0; i < 4; i++) {
-      if (unknown08[i].unknown04.isValid()) {
+      if (unknown08[i].m_soundHandle.isValid()) {
         return &unknown08[i];
       }
     }
@@ -116,7 +116,7 @@ public:
   // Inferred role: first bgm condition with a valid sound handle; original name unknown.
   const BGMCOND *unknown003() const {
     for (u32 i = 0; i < 4; i++) {
-      if (unknown08[i].unknown04.isValid()) {
+      if (unknown08[i].m_soundHandle.isValid()) {
         return &unknown08[i];
       }
     }
@@ -126,8 +126,8 @@ public:
   // Inferred role: first valid sound handle of the bgm conditions; original name unknown.
   const SoundHandle *unknown004() const {
     for (u32 i = 0; i < 4; i++) {
-      if (unknown08[i].unknown04.isValid()) {
-        return &unknown08[i].unknown04;
+      if (unknown08[i].m_soundHandle.isValid()) {
+        return &unknown08[i].m_soundHandle;
       }
     }
     return nullptr;
@@ -144,7 +144,7 @@ public:
   f32 unknown614;         // Inferred role: applied volume; original member name unknown.
   f32 unknown618;         // Inferred role: volume scale; original member name unknown.
   f32 unknown61c;         // Inferred role: start play time; original member name unknown.
-  GfFieldBgm *unknown620; // Inferred role: owner field bgm; original member name unknown.
+  GfFieldBgm *m_fieldBgm; // Inferred role: owner field bgm; original member name unknown.
   bool m_pause;
   bool unknown629; // Inferred role: set by copyPlayParam; original member name unknown.
   u8 m_categoryApply;
@@ -155,7 +155,7 @@ static_assert(offsetof(BgmTrack, unknown178) == 0x178, "");
 static_assert(offsetof(BgmTrack, unknown3c0) == 0x3c0, "");
 static_assert(offsetof(BgmTrack, m_bgmCondID) == 0x608, "");
 static_assert(offsetof(BgmTrack, unknown610) == 0x610, "");
-static_assert(offsetof(BgmTrack, unknown620) == 0x620, "");
+static_assert(offsetof(BgmTrack, m_fieldBgm) == 0x620, "");
 static_assert(offsetof(BgmTrack, m_pause) == 0x628, "");
 static_assert(offsetof(BgmTrack, m_categoryApply) == 0x62a, "");
 static_assert(sizeof(BgmTrack::unknown001) == 0x30, "");
@@ -163,10 +163,10 @@ static_assert(sizeof(BgmTrack::unknown002) == 0x30, "");
 static_assert(sizeof(BgmTrack) == 0x630, "");
 
 struct ExecFadeParam {
-  BgmTrack *unknown00;                   // Inferred role: bgm track; original member name unknown.
+  BgmTrack *m_bgmTrack;                  // Inferred role: bgm track; original member name unknown.
   const fw::UpdateInfo *unknown08;       // Inferred role: update info; original member name unknown.
   const BgmTrack::unknown001 *unknown10; // Inferred role: volume fade entry; original member name unknown.
-  const BGMCOND *unknown18;              // Inferred role: bgm condition; original member name unknown.
+  const BGMCOND *m_BGMCOND;              // Inferred role: bgm condition; original member name unknown.
 };
 
 static_assert(sizeof(ExecFadeParam) == 0x20, "");
@@ -199,11 +199,11 @@ public:
   void updateEventBgm(const fw::UpdateInfo &info);
   void beginPlay();
 
-  EventBgmSetup unknown638;        // Inferred role: setup of the playing event bgm; original member name unknown.
+  EventBgmSetup m_eventBgmSetup;   // Inferred role: setup of the playing event bgm; original member name unknown.
   mm::mtl::FixStr<128> unknown6a0; // Inferred role: name of the hand over bgm; original member name unknown.
 };
 
-static_assert(offsetof(BgmEvent, unknown638) == 0x638, "");
+static_assert(offsetof(BgmEvent, m_eventBgmSetup) == 0x638, "");
 static_assert(offsetof(BgmEvent, unknown6a0) == 0x6a0, "");
 static_assert(sizeof(BgmEvent) == 0x728, "");
 

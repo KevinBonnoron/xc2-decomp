@@ -24,7 +24,7 @@ namespace ml {
 DrMdoCtlSeamRead::DrMdoCtlSeamRead(int viewNum) : DrMdoCtlSeamLight(viewNum) {}
 
 _wkSeamReadCall *DrMdoCtlSeamRead::getSeamReadCall() {
-  _wkSeamReadCall *call = &unknown1370[unknown14b0];
+  _wkSeamReadCall *call = &m_wkSeamReadCall[unknown14b0];
   if (unknown14b0++ > 6) {
     unknownc7c |= 0x80000;
   }
@@ -34,7 +34,7 @@ _wkSeamReadCall *DrMdoCtlSeamRead::getSeamReadCall() {
 void DrMdoCtlSeamRead::releaseSeamReadCall(int index) {
   unknown14b0--;
   for (int i = index; i < unknown14b0; i++) {
-    memcpy(&unknown1370[i], &unknown1370[i + 1], sizeof(_wkSeamReadCall));
+    memcpy(&m_wkSeamReadCall[i], &m_wkSeamReadCall[i + 1], sizeof(_wkSeamReadCall));
   }
 }
 
@@ -46,7 +46,7 @@ void DrMdoCtlSeamRead::releaseSeamReadCall(int index) {
 // (callVertexStream at 0x7100826bb0).
 template <typename T> inline void DrMdoCtlSeamRead::unknown007(DrResMdoSeamMemObj *mem, void *work, const T &size, s16 kind, const int &handle, const _wkSeamReadWait *wait) {
   _wkSeamReadCall *call = getSeamReadCall();
-  call->unknown00 = mem;
+  call->m_drResMdoSeamMemObj = mem;
   call->unknown08 = work;
   call->unknown20 = size;
   call->unknown1e = kind;
@@ -63,8 +63,8 @@ void DrMdoCtlSeamRead::callBaseMapStream(_wkSeamReadWait *wait) {
     DrResMdoSeamWrkBase *base = unknown290.unknown001();
     if (base != nullptr) {
       int handle;
-      if (unknowncd0.read(handle, entry->unknown34, entry->unknown38, mem)) {
-        base->unknown158 = mem;
+      if (m_drResMdoSeamRead.read(handle, entry->unknown34, entry->unknown38, mem)) {
+        base->m_drResMdoSeamMemObj = mem;
         base->unknown84 = wait->unknown08;
         base->unknown18 = entry;
         base->unknownb4 = entry->unknown38;
@@ -75,7 +75,7 @@ void DrMdoCtlSeamRead::callBaseMapStream(_wkSeamReadWait *wait) {
       }
       releaseFreeSeamBase(base);
     }
-    unknown6e0.releaseFreeObj(mem);
+    m_drResMdoSeamMemMan.releaseFreeObj(mem);
   }
   unknownc7c |= 0x200000;
   setErrCode(0, entry->unknown38);
@@ -89,8 +89,8 @@ void DrMdoCtlSeamRead::callLowMdlStream(_wkSeamReadWait *wait) {
     DrResMdoSeamWrkLow *low = unknown2c8.unknown001();
     if (low != nullptr) {
       int handle;
-      if (unknowncd0.read(handle, entry->unknown28, entry->unknown2c, mem)) {
-        low->unknown30 = mem;
+      if (m_drResMdoSeamRead.read(handle, entry->unknown28, entry->unknown2c, mem)) {
+        low->m_drResMdoSeamMemObj = mem;
         low->unknowna0 = wait->unknown08;
         mem->unknown24 |= 4;
         unknown007(mem, low, entry->unknown2c, 1, handle, wait);
@@ -98,7 +98,7 @@ void DrMdoCtlSeamRead::callLowMdlStream(_wkSeamReadWait *wait) {
       }
       releaseFreeSeamLow(low);
     }
-    unknown6e0.releaseFreeObj(mem);
+    m_drResMdoSeamMemMan.releaseFreeObj(mem);
   }
   setErrCode(1, entry->unknown2c);
   unknownc7c |= 0x200000;
@@ -112,8 +112,8 @@ void DrMdoCtlSeamRead::callInstMapStream(_wkSeamReadWait *wait) {
     DrResMdoSeamWrkInst *inst = unknown300.unknown001();
     if (inst != nullptr) {
       int handle;
-      if (unknowncd0.read(handle, entry->unknown34, entry->unknown38, mem)) {
-        inst->unknown108 = mem;
+      if (m_drResMdoSeamRead.read(handle, entry->unknown34, entry->unknown38, mem)) {
+        inst->m_drResMdoSeamMemObj = mem;
         inst->unknown68 = wait->unknown08;
         inst->unknown18 = entry;
         inst->unknown84 = entry->unknown38;
@@ -121,7 +121,7 @@ void DrMdoCtlSeamRead::callInstMapStream(_wkSeamReadWait *wait) {
         // Not through unknown007: the game also stores the linked work between the work and the size (the helper returning the call and the
         // store written after it gives another register for the counter, 0x71008264a8).
         _wkSeamReadCall *call = getSeamReadCall();
-        call->unknown00 = mem;
+        call->m_drResMdoSeamMemObj = mem;
         call->unknown08 = inst;
         call->unknown10 = wait->unknown00;
         call->unknown20 = entry->unknown38;
@@ -134,7 +134,7 @@ void DrMdoCtlSeamRead::callInstMapStream(_wkSeamReadWait *wait) {
       }
       releaseFreeSeamInst(inst);
     }
-    unknown6e0.releaseFreeObj(mem);
+    m_drResMdoSeamMemMan.releaseFreeObj(mem);
   }
   setErrCode(2, entry->unknown38);
   unknownc7c |= 0x200000;
@@ -148,7 +148,7 @@ void DrMdoCtlSeamRead::callMpfMdlStream(_wkSeamReadWait *wait) {
     DrResMdoSeamWrkMpf *mpf = unknown338.unknown001();
     if (mpf != nullptr) {
       int handle;
-      if (unknowncd0.read(handle, entry->unknown34, entry->unknown38, mem)) {
+      if (m_drResMdoSeamRead.read(handle, entry->unknown34, entry->unknown38, mem)) {
         mpf->unknown18 = mem;
         mpf->unknown4c = wait->unknown08;
         mpf->unknown28 = entry;
@@ -160,7 +160,7 @@ void DrMdoCtlSeamRead::callMpfMdlStream(_wkSeamReadWait *wait) {
       }
       releaseFreeSeamMpf(mpf);
     }
-    unknown6e0.releaseFreeObj(mem);
+    m_drResMdoSeamMemMan.releaseFreeObj(mem);
   }
   setErrCode(3, entry->unknown38);
   unknownc7c |= 0x200000;
@@ -174,8 +174,8 @@ void DrMdoCtlSeamRead::callEnvMdlStream(_wkSeamReadWait *wait) {
     DrResMdoSeamWrkEnv *env = unknown370.unknown001();
     if (env != nullptr) {
       int handle;
-      if (unknowncd0.read(handle, entry->unknown34, entry->unknown38, mem)) {
-        env->unknown60 = mem;
+      if (m_drResMdoSeamRead.read(handle, entry->unknown34, entry->unknown38, mem)) {
+        env->m_drResMdoSeamMemObj = mem;
         env->unknown50 = wait->unknown08;
         mem->unknown24 |= 4;
         unknown007(mem, env, entry->unknown38, 4, handle, wait);
@@ -184,7 +184,7 @@ void DrMdoCtlSeamRead::callEnvMdlStream(_wkSeamReadWait *wait) {
       }
       releaseFreeSeamEnvMap(env);
     }
-    unknown6e0.releaseFreeObj(mem);
+    m_drResMdoSeamMemMan.releaseFreeObj(mem);
   }
   unknownc7c |= 0x200000;
 }
@@ -196,14 +196,14 @@ void DrMdoCtlSeamRead::callBaseVertexStream(_wkSeamReadWait *wait) {
   DrResMdoSeamMemObj *mem = createFreeSeamMemObj4K(entry->unknown04);
   if (mem != nullptr) {
     int handle;
-    if (unknowncd0.read(handle, entry->unknown00, entry->unknown04, mem)) {
+    if (m_drResMdoSeamRead.read(handle, entry->unknown00, entry->unknown04, mem)) {
       base->unknowna0 |= 0x10;
       mem->unknown24 |= 4;
       unknown007(mem, base, entry->unknown04, 5, handle, wait);
       unknownc7c |= 0x10000;
       return;
     }
-    unknown6e0.releaseFreeObj(mem);
+    m_drResMdoSeamMemMan.releaseFreeObj(mem);
   }
   setErrCode(5, entry->unknown04);
   unknownc7c |= 0x200000;
@@ -217,10 +217,10 @@ void DrMdoCtlSeamRead::callVertexStream(_wkSeamReadWait *wait) {
     DrResMdoSeamVertex *vertex = unknown220.unknown001();
     if (vertex != nullptr) {
       int handle;
-      if (unknowncd0.read(handle, entry->unknown00, entry->unknown04, mem)) {
+      if (m_drResMdoSeamRead.read(handle, entry->unknown00, entry->unknown04, mem)) {
         vertex->unknown2c = wait->unknown08;
         vertex->unknown2a = 0;
-        vertex->unknown18 = mem;
+        vertex->m_drResMdoSeamMemObj = mem;
         mem->unknown24 |= 4;
         unknown007(mem, vertex, entry->unknown04, 6, handle, wait);
         unknownc7c |= 0x10000;
@@ -228,7 +228,7 @@ void DrMdoCtlSeamRead::callVertexStream(_wkSeamReadWait *wait) {
       }
       releaseFreeSeamVertex(vertex, true);
     }
-    unknown6e0.releaseFreeObj(mem);
+    m_drResMdoSeamMemMan.releaseFreeObj(mem);
   }
   setErrCode(6, entry->unknown04);
   unknownc7c |= 0x200000;
@@ -242,7 +242,7 @@ void DrMdoCtlSeamRead::callTexutreStream(_wkSeamReadWait *wait) {
     DrResMdoSeamTexture *texture = unknown1b0.unknown001();
     if (texture != nullptr) {
       int handle;
-      if (unknowncd0.read(handle, entry->unknown00, entry->unknown04, mem)) {
+      if (m_drResMdoSeamRead.read(handle, entry->unknown00, entry->unknown04, mem)) {
         texture->unknown9e = wait->unknown08;
         texture->unknowna0 = 0;
         texture->unknown88 = mem;
@@ -253,7 +253,7 @@ void DrMdoCtlSeamRead::callTexutreStream(_wkSeamReadWait *wait) {
       }
       releaseFreeSeamTexture(texture, true);
     }
-    unknown6e0.releaseFreeObj(mem);
+    m_drResMdoSeamMemMan.releaseFreeObj(mem);
   }
   setErrCode(7, entry->unknown04);
   unknownc7c |= 0x200000;
@@ -268,7 +268,7 @@ void DrMdoCtlSeamRead::callHeightTexutreStream(_wkSeamReadWait *wait) {
     DrResMdoSeamMemObj *mem = createFreeSeamMemObjBack4K(size);
     if (mem != nullptr) {
       int handle;
-      if (unknowncd0.read(handle, entry->unknown08, entry->unknown0c, mem)) {
+      if (m_drResMdoSeamRead.read(handle, entry->unknown08, entry->unknown0c, mem)) {
         // The game zero-extends the index (umaddl) instead of sign-extending it.
         DrResMdoSeamTexture *texture = &unknown1b0.unknown20[static_cast<u32>(unknownbe0[wait->unknown08] - 1)];
         texture->unknowna0 = 0;
@@ -281,7 +281,7 @@ void DrMdoCtlSeamRead::callHeightTexutreStream(_wkSeamReadWait *wait) {
         texture->unknown88->unknown24 |= 4;
         return;
       }
-      unknown6e0.releaseFreeObj(mem);
+      m_drResMdoSeamMemMan.releaseFreeObj(mem);
     }
     unknownc20 = 0x3c;
     setErrCode(8, entry->unknown0c);
@@ -296,10 +296,10 @@ void DrMdoCtlSeamRead::callTexListStream(_wkSeamReadWait *wait) {
     DrResMdoSeamTexList *texList = unknown1e8.unknown001();
     if (texList != nullptr) {
       int handle;
-      if (unknowncd0.read(handle, entry->unknown00, entry->unknown04, mem)) {
+      if (m_drResMdoSeamRead.read(handle, entry->unknown00, entry->unknown04, mem)) {
         texList->unknown3c = wait->unknown08;
         texList->unknown3a = 0;
-        texList->unknown18 = mem;
+        texList->m_drResMdoSeamMemObj = mem;
         mem->unknown24 |= 4;
         unknown007(mem, texList, entry->unknown04, 9, handle, wait);
         unknownc7c |= 0x10000;
@@ -307,7 +307,7 @@ void DrMdoCtlSeamRead::callTexListStream(_wkSeamReadWait *wait) {
       }
       releaseFreeSeamTexList(texList, true);
     }
-    unknown6e0.releaseFreeObj(mem);
+    m_drResMdoSeamMemMan.releaseFreeObj(mem);
   }
   setErrCode(9, entry->unknown04);
   unknownc7c |= 0x200000;
@@ -320,14 +320,14 @@ void DrMdoCtlSeamRead::callInstPosStream(_wkSeamReadWait *wait) {
   DrResMdoSeamMemObj *mem = createFreeSeamMemObj4K(entry->unknown04);
   if (mem != nullptr) {
     int handle;
-    if (unknowncd0.read(handle, entry->unknown00, entry->unknown04, mem)) {
+    if (m_drResMdoSeamRead.read(handle, entry->unknown00, entry->unknown04, mem)) {
       inst->unknown8a |= 0x20;
       mem->unknown24 |= 4;
       unknown007(mem, inst, entry->unknown04, 10, handle, wait);
       unknownc7c |= 0x10000;
       return;
     }
-    unknown6e0.releaseFreeObj(mem);
+    m_drResMdoSeamMemMan.releaseFreeObj(mem);
   }
   setErrCode(10, entry->unknown04);
   unknownc7c |= 0x200000;
@@ -339,7 +339,7 @@ void DrMdoCtlSeamRead::callMpfEtclStream(_wkSeamReadWait *wait) {
   DrResMdoSeamMemObj *mem = createFreeSeamMemObj4K(entry->unknown04);
   if (mem != nullptr) {
     int handle;
-    if (unknowncd0.read(handle, entry->unknown00, entry->unknown04, mem)) {
+    if (m_drResMdoSeamRead.read(handle, entry->unknown00, entry->unknown04, mem)) {
       DrResMdoSeamWrkMpf *mpf = static_cast<DrResMdoSeamWrkMpf *>(wait->unknown00);
       mpf->unknown5c |= 1;
       mem->unknown24 |= 4;
@@ -347,7 +347,7 @@ void DrMdoCtlSeamRead::callMpfEtclStream(_wkSeamReadWait *wait) {
       unknownc7c |= 0x10000;
       return;
     }
-    unknown6e0.releaseFreeObj(mem);
+    m_drResMdoSeamMemMan.releaseFreeObj(mem);
   }
   setErrCode(11, entry->unknown04);
   unknownc7c |= 0x200000;
@@ -359,7 +359,7 @@ void DrMdoCtlSeamRead::callMpfPolilStream(_wkSeamReadWait *wait) {
   DrResMdoSeamMemObj *mem = createFreeSeamMemObj4K(entry->unknown04);
   if (mem != nullptr) {
     int handle;
-    if (unknowncd0.read(handle, entry->unknown00, entry->unknown04, mem)) {
+    if (m_drResMdoSeamRead.read(handle, entry->unknown00, entry->unknown04, mem)) {
       DrResMdoSeamWrkMpf *mpf = static_cast<DrResMdoSeamWrkMpf *>(wait->unknown00);
       mpf->unknown5c |= 1;
       mem->unknown24 |= 4;
@@ -367,7 +367,7 @@ void DrMdoCtlSeamRead::callMpfPolilStream(_wkSeamReadWait *wait) {
       unknownc7c |= 0x10000;
       return;
     }
-    unknown6e0.releaseFreeObj(mem);
+    m_drResMdoSeamMemMan.releaseFreeObj(mem);
   }
   setErrCode(12, entry->unknown04);
   unknownc7c |= 0x200000;
@@ -381,8 +381,8 @@ void DrMdoCtlSeamRead::callLightStream(_wkSeamReadWait *wait) {
     DrResMdoSeamWrkLight *light = unknown3a8.unknown001();
     if (light != nullptr) {
       int handle;
-      if (unknowncd0.read(handle, entry->unknown18, entry->unknown1c, mem)) {
-        light->unknown28 = mem;
+      if (m_drResMdoSeamRead.read(handle, entry->unknown18, entry->unknown1c, mem)) {
+        light->m_drResMdoSeamMemObj = mem;
         light->unknown30 = wait->unknown08;
         mem->unknown24 |= 4;
         unknown007(mem, light, entry->unknown1c, 13, handle, wait);
@@ -391,7 +391,7 @@ void DrMdoCtlSeamRead::callLightStream(_wkSeamReadWait *wait) {
       }
       releaseFreeSeamLight(light);
     }
-    unknown6e0.releaseFreeObj(mem);
+    m_drResMdoSeamMemMan.releaseFreeObj(mem);
   }
   setErrCode(13, entry->unknown1c);
   unknownc7c |= 0x200000;
@@ -400,7 +400,7 @@ void DrMdoCtlSeamRead::callLightStream(_wkSeamReadWait *wait) {
 void DrMdoCtlSeamRead::waitBaseMapStream(_wkSeamReadCall *call, bool isRead) {
   if (isRead) {
     initBaseMapParts(static_cast<DrResMdoSeamWrkBase *>(call->unknown08));
-    unknowncd0.unknown48 &= ~(1 << call->unknown1c);
+    m_drResMdoSeamRead.unknown48 &= ~(1 << call->unknown1c);
   } else {
     unknown006(0);
   }
@@ -409,7 +409,7 @@ void DrMdoCtlSeamRead::waitBaseMapStream(_wkSeamReadCall *call, bool isRead) {
 void DrMdoCtlSeamRead::waitLowMdlStream(_wkSeamReadCall *call, bool isRead) {
   if (isRead) {
     initLowMapParts(static_cast<DrResMdoSeamWrkLow *>(call->unknown08));
-    unknowncd0.unknown48 &= ~(1 << call->unknown1c);
+    m_drResMdoSeamRead.unknown48 &= ~(1 << call->unknown1c);
   } else {
     unknown006(0);
   }
@@ -418,7 +418,7 @@ void DrMdoCtlSeamRead::waitLowMdlStream(_wkSeamReadCall *call, bool isRead) {
 void DrMdoCtlSeamRead::waitInstMapStream(_wkSeamReadCall *call, bool isRead) {
   if (isRead) {
     initInstMapParts(static_cast<DrResMdoSeamWrkInst *>(call->unknown08), static_cast<DrResMdoSeamWrkInst *>(call->unknown10));
-    unknowncd0.unknown48 &= ~(1 << call->unknown1c);
+    m_drResMdoSeamRead.unknown48 &= ~(1 << call->unknown1c);
   } else {
     unknown006(0);
   }
@@ -427,7 +427,7 @@ void DrMdoCtlSeamRead::waitInstMapStream(_wkSeamReadCall *call, bool isRead) {
 void DrMdoCtlSeamRead::waitMpfMdlStream(_wkSeamReadCall *call, bool isRead) {
   if (isRead) {
     initMpfMapParts(static_cast<DrResMdoSeamWrkMpf *>(call->unknown08));
-    unknowncd0.unknown48 &= ~(1 << call->unknown1c);
+    m_drResMdoSeamRead.unknown48 &= ~(1 << call->unknown1c);
   } else {
     unknown006(0);
   }
@@ -436,7 +436,7 @@ void DrMdoCtlSeamRead::waitMpfMdlStream(_wkSeamReadCall *call, bool isRead) {
 void DrMdoCtlSeamRead::waitEnvMdlStream(_wkSeamReadCall *call, bool isRead) {
   if (isRead) {
     initEnvMapParts(static_cast<DrResMdoSeamWrkEnv *>(call->unknown08));
-    unknowncd0.unknown48 &= ~(1 << call->unknown1c);
+    m_drResMdoSeamRead.unknown48 &= ~(1 << call->unknown1c);
   } else {
     unknown006(0);
   }
@@ -445,8 +445,8 @@ void DrMdoCtlSeamRead::waitEnvMdlStream(_wkSeamReadCall *call, bool isRead) {
 void DrMdoCtlSeamRead::waitBaseVertexStream(_wkSeamReadCall *call, bool isRead) {
   DrResMdoSeamWrkBase *base = static_cast<DrResMdoSeamWrkBase *>(call->unknown08);
   if (isRead) {
-    base->setVertexCache(call->unknown18, call->unknown00, call->unknown20, this);
-    unknowncd0.unknown48 &= ~(1 << call->unknown1c);
+    base->setVertexCache(call->unknown18, call->m_drResMdoSeamMemObj, call->unknown20, this);
+    m_drResMdoSeamRead.unknown48 &= ~(1 << call->unknown1c);
     unknownc90 = 0;
   } else {
     base->unknowna0 |= 0x10;
@@ -465,7 +465,7 @@ void DrMdoCtlSeamRead::waitVertexStream(_wkSeamReadCall *call, bool isRead) {
     // 64-bit load, the game keeps two ldrh (0x7100827e1c). The same in waitTexutreStream and waitTexListStream.
     u16 index = vertex->unknown2c;
     unknownbd0[index] = vertex->unknown28 + 1;
-    unknowncd0.unknown48 &= ~(1 << call->unknown1c);
+    m_drResMdoSeamRead.unknown48 &= ~(1 << call->unknown1c);
   } else {
     unknown006(2);
   }
@@ -480,7 +480,7 @@ void DrMdoCtlSeamRead::waitTexutreStream(_wkSeamReadCall *call, bool isRead) {
     unknownc34 += table[texture->unknown9e].unknown04;
     u16 index = texture->unknown9e;
     unknownbe0[index] = texture->unknown9c + 1;
-    unknowncd0.unknown48 &= ~(1 << call->unknown1c);
+    m_drResMdoSeamRead.unknown48 &= ~(1 << call->unknown1c);
   } else {
     unknown006(3);
   }
@@ -494,7 +494,7 @@ void DrMdoCtlSeamRead::waitHeightTexutreStream(_wkSeamReadCall *call, bool isRea
     DrResMdoSeamMemObj *mem = texture->unknown88;
     texture->unknown88 = texture->unknown90;
     texture->unknown90 = nullptr;
-    unknown6e0.releaseFreeObj(mem);
+    m_drResMdoSeamMemMan.releaseFreeObj(mem);
   }
   if (isRead) {
     const MdsSeamOfsTexTblData *table = reinterpret_cast<const MdsSeamOfsTexTblData *>(reinterpret_cast<const u8 *>(unknown1a8) + unknown1a8->unknown5c);
@@ -502,7 +502,7 @@ void DrMdoCtlSeamRead::waitHeightTexutreStream(_wkSeamReadCall *call, bool isRea
     texture->createHeightTexture(calcSemaAlignment(entry->unknown0c, 0x1000), entry->unknown04);
     texture->unknowna3 = 1;
     unknownc34 += entry->unknown0c;
-    unknowncd0.unknown48 &= ~(1 << call->unknown1c);
+    m_drResMdoSeamRead.unknown48 &= ~(1 << call->unknown1c);
   }
 }
 
@@ -515,7 +515,7 @@ void DrMdoCtlSeamRead::waitTexListStream(_wkSeamReadCall *call, bool isRead) {
     unknownc34 += table[texList->unknown3c].unknown04;
     u16 index = texList->unknown3c;
     unknownbf0[index] = texList->unknown38 + 1;
-    unknowncd0.unknown48 &= ~(1 << call->unknown1c);
+    m_drResMdoSeamRead.unknown48 &= ~(1 << call->unknown1c);
   } else {
     unknown006(1);
   }
@@ -524,12 +524,12 @@ void DrMdoCtlSeamRead::waitTexListStream(_wkSeamReadCall *call, bool isRead) {
 void DrMdoCtlSeamRead::waitInstPosStream(_wkSeamReadCall *call, bool isRead) {
   DrResMdoSeamWrkInst *inst = static_cast<DrResMdoSeamWrkInst *>(call->unknown08);
   if (isRead) {
-    if (!inst->setEtcPosCache(m_drMan->unknown14, call->unknown18, call->unknown00, &unknown698)) {
-      unknown6e0.releaseFreeObj(call->unknown00);
+    if (!inst->setEtcPosCache(m_drMan->unknown14, call->unknown18, call->m_drResMdoSeamMemObj, &m_drResMdoInstAnmObj)) {
+      m_drResMdoSeamMemMan.releaseFreeObj(call->m_drResMdoSeamMemObj);
     } else {
       unknownc98 = 0;
     }
-    unknowncd0.unknown48 &= ~(1 << call->unknown1c);
+    m_drResMdoSeamRead.unknown48 &= ~(1 << call->unknown1c);
   } else {
     unknown006(0);
     inst->unknown8a |= 0x20;
@@ -539,8 +539,8 @@ void DrMdoCtlSeamRead::waitInstPosStream(_wkSeamReadCall *call, bool isRead) {
 void DrMdoCtlSeamRead::waitMpfEtcStream(_wkSeamReadCall *call, bool isRead) {
   DrResMdoSeamWrkMpf *mpf = static_cast<DrResMdoSeamWrkMpf *>(call->unknown08);
   if (isRead) {
-    mpf->setEtcMpfCache(call->unknown18, call->unknown00);
-    unknowncd0.unknown48 &= ~(1 << call->unknown1c);
+    mpf->setEtcMpfCache(call->unknown18, call->m_drResMdoSeamMemObj);
+    m_drResMdoSeamRead.unknown48 &= ~(1 << call->unknown1c);
   } else {
     unknownc7c |= 0x10000;
     mpf->unknown5c |= 1;
@@ -553,8 +553,8 @@ void DrMdoCtlSeamRead::waitMpfEtcStream(_wkSeamReadCall *call, bool isRead) {
 void DrMdoCtlSeamRead::waitMpfPoliStream(_wkSeamReadCall *call, bool isRead) {
   DrResMdoSeamWrkMpf *mpf = static_cast<DrResMdoSeamWrkMpf *>(call->unknown08);
   if (isRead) {
-    mpf->setMpfPoliCache(call->unknown18, call->unknown00);
-    unknowncd0.unknown48 &= ~(1 << call->unknown1c);
+    mpf->setMpfPoliCache(call->unknown18, call->m_drResMdoSeamMemObj);
+    m_drResMdoSeamRead.unknown48 &= ~(1 << call->unknown1c);
   } else {
     unknownc7c |= 0x10000;
     mpf->unknown5c |= 1;
@@ -573,10 +573,10 @@ void DrMdoCtlSeamRead::waitLightStream(_wkSeamReadCall *call, bool isRead) {
     unknown723(unknownbc0, light->unknown30) |= 1 << (light->unknown30 & 0x1f);
     unknownc0c++;
     light->setupWork(data);
-    DrEnvironmentObj *environment = light->unknown20;
+    DrEnvironmentObj *environment = light->m_drEnvironmentObj;
     environment->unknown8c |= 4;
-    environment->unknown90 = unknownc88;
-    unknowncd0.unknown48 &= ~(1 << call->unknown1c);
+    environment->m_group = unknownc88;
+    m_drResMdoSeamRead.unknown48 &= ~(1 << call->unknown1c);
   } else {
     unknown006(0);
   }

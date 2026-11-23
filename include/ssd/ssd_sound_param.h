@@ -15,7 +15,7 @@ public:
     bool operator==(const TextRef &text);
 
     char16_t unknown00[32]; // Inferred role: text; original member name unknown.
-    Hash unknown40;         // Inferred role: text hash; original member name unknown.
+    Hash m_hash;            // Inferred role: text hash; original member name unknown.
   };
 
   struct Base {
@@ -66,20 +66,20 @@ public:
 
   void Init();
 
-  Name unknown00; // Inferred role: name; original member name unknown.
-  u16 unknown48;  // Inferred role: sound number; original member name unknown.
+  Name m_name;   // Inferred role: name; original member name unknown.
+  u16 unknown48; // Inferred role: sound number; original member name unknown.
   u8 _4a[0x4c - 0x4a];
-  Base unknown4c;      // Inferred role: base; original member name unknown.
-  State unknown68;     // Inferred role: state; original member name unknown.
-  Surround unknown70;  // Inferred role: surround; original member name unknown.
-  Effect unknown84[2]; // Inferred role: effects; original member name unknown.
+  Base m_base;         // Inferred role: base; original member name unknown.
+  State m_state;       // Inferred role: state; original member name unknown.
+  Surround m_surround; // Inferred role: surround; original member name unknown.
+  Effect m_effect[2];  // Inferred role: effects; original member name unknown.
 };
 
 static_assert(offsetof(SoundParam, unknown48) == 0x48, "");
-static_assert(offsetof(SoundParam, unknown4c) == 0x4c, "");
-static_assert(offsetof(SoundParam, unknown68) == 0x68, "");
-static_assert(offsetof(SoundParam, unknown70) == 0x70, "");
-static_assert(offsetof(SoundParam, unknown84) == 0x84, "");
+static_assert(offsetof(SoundParam, m_base) == 0x4c, "");
+static_assert(offsetof(SoundParam, m_state) == 0x68, "");
+static_assert(offsetof(SoundParam, m_surround) == 0x70, "");
+static_assert(offsetof(SoundParam, m_effect) == 0x84, "");
 static_assert(sizeof(SoundParam) == 0x94, "");
 
 } // namespace ssd

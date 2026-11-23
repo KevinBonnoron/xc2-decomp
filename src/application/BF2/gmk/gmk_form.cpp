@@ -31,7 +31,7 @@ GmkForm::GmkForm(const CreateInfo *info) : unknown00(0) {
 }
 
 bool GmkForm::create(const CreateInfo &info) {
-  GmkSet *set = info.unknown00;
+  GmkSet *set = info.m_gmkSet;
   bool isEvent = info.unknown0c;
   u32 index = info.unknown08;
   if (!isEvent) {

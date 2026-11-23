@@ -11,20 +11,20 @@ class TodoItem {
 public:
   typedef ITodo *(*CREATE_FUNC)();
 
-  TodoItem(f32 frame, CREATE_FUNC create, const Param &param, ITodo *todo) : unknown08(frame), unknown10(create), unknown18(param), unknown110(todo) {}
+  TodoItem(f32 frame, CREATE_FUNC create, const Param &param, ITodo *todo) : unknown08(frame), unknown10(create), m_param(param), m_iTodo(todo) {}
   virtual ~TodoItem() {}
   void createString(mm::mtl::FixStr<256> &string);
 
   f32 getFrame() const { return unknown08; }
-  ITodo *getTodo() const { return unknown110; }
-  void setTodo(ITodo *todo) { unknown110 = todo; }
-  const Param &getParam() const { return unknown18; }
+  ITodo *getTodo() const { return m_iTodo; }
+  void setTodo(ITodo *todo) { m_iTodo = todo; }
+  const Param &getParam() const { return m_param; }
 
 private:
   f32 unknown08;         // Inferred role: frame; original member name unknown.
   CREATE_FUNC unknown10; // Inferred role: create; original member name unknown.
-  Param unknown18;       // Inferred role: param; original member name unknown.
-  ITodo *unknown110;     // Inferred role: todo; original member name unknown.
+  Param m_param;         // Inferred role: param; original member name unknown.
+  ITodo *m_iTodo;        // Inferred role: todo; original member name unknown.
 };
 
 static_assert(sizeof(TodoItem) == 0x118, "");

@@ -73,16 +73,7 @@ bool CMovie::isplaying() {
   if (player == nullptr) {
     return false;
   }
-  bool audioFinished;
-  if (player->unknown430 == nullptr) {
-    audioFinished = true;
-  } else {
-    audioFinished = player->unknown430->unknown4b0;
-  }
-  if ((player->unknown438 == nullptr || player->unknown438->unknown269) && audioFinished) {
-    player->unknownb30 = true;
-  }
-  return !player->unknownb30;
+  return !player->IsPlaybackComplete();
 }
 
 } // namespace CMovieNX
@@ -108,6 +99,33 @@ movie::Status MediaClock::ClearAnchorTime() {
   unknown28 = -1;
   nn::os::UnlockMutex(&unknown00);
   return movie::Status_Success;
+}
+
+movie::Status MediaClock::GetMediaTime(s64 currentTimeUs, s64 *mediaTimeUs, bool ignoreClamp) const {
+  if (unknown28 == -1) {
+    return movie::Status_UNKNOWN_4096;
+  }
+  s64 mediaTime = unknown20 + (currentTimeUs - unknown28); // Inferred: media time elapsed since the anchor, from the anchor pair.
+  if (mediaTime > unknown30 && !ignoreClamp) {
+    mediaTime = unknown30;
+  }
+  if (mediaTime < unknown38) {
+    mediaTime = unknown38;
+  }
+  if (mediaTime < 0) {
+    mediaTime = 0;
+  }
+  *mediaTimeUs = mediaTime;
+  return movie::Status_Success;
+}
+
+VideoRenderer::VideoRenderer() {
+  unknown20 = 0x40000;
+  unknown28 = nullptr;
+  unknown250 = 0;
+  unknown258 = nullptr;
+  unknown268 = false;
+  unknown269 = false;
 }
 
 movie::Status VideoRenderer::Open(movie::Decoder *decoder, int unknown01, int unknown02, double unknown03) {
@@ -312,3 +330,17 @@ void MovieDecoderPlayer::ResetPlaybackComplete() {
 }
 
 movie::Status MovieDecoderPlayer::AudioFormatChangedEvent() { return movie::Status_Success; }
+
+bool MovieDecoderPlayer::IsPlaybackComplete() {
+  bool audioFinished = unknown430 == nullptr || unknown430->unknown4b0;
+  if ((unknown438 == nullptr || unknown438->unknown269) && audioFinished) {
+    unknownb30 = true;
+  }
+  return unknownb30;
+}
+
+bool MovieDecoderPlayer::StartPlayback() {
+  bool audioFilled = unknownb08 && unknownb4c < unknownb54;
+  bool videoFilled = unknownb09 && unknownb50 < unknownb58;
+  return !(audioFilled || videoFilled);
+}

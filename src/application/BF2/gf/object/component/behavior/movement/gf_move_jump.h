@@ -23,14 +23,14 @@ public:
   };
 
   struct Packet {
-    Packet() : unknown18() {}
+    Packet() : m_paramAdapter() {}
 
-    mm::Vec3 unknown00;         // Inferred role: velocity; original member name unknown.
-    f32 unknown10;              // Inferred role: angular velocity; original member name unknown.
-    fw::ParamAdapter unknown18; // Inferred role: jump param; original member name unknown.
-    f32 unknown20;              // Inferred role: input power; original member name unknown.
-    mm::Vec3 unknown30;         // Inferred role: input direction; original member name unknown.
-    mm::Vec3 unknown40;         // Inferred role: current direction; original member name unknown.
+    mm::Vec3 unknown00;              // Inferred role: velocity; original member name unknown.
+    f32 unknown10;                   // Inferred role: angular velocity; original member name unknown.
+    fw::ParamAdapter m_paramAdapter; // Inferred role: jump param; original member name unknown.
+    f32 unknown20;                   // Inferred role: input power; original member name unknown.
+    mm::Vec3 unknown30;              // Inferred role: input direction; original member name unknown.
+    mm::Vec3 unknown40;              // Inferred role: current direction; original member name unknown.
   };
 
   static void createReflection(fw::Reflection *reflection, const char *name, u32 index);
@@ -44,7 +44,7 @@ static_assert(offsetof(GfMoveJumpControler::Param, angularVelMax) == 0x08, "");
 static_assert(offsetof(GfMoveJumpControler::Param, angularAccel) == 0x0c, "");
 static_assert(sizeof(GfMoveJumpControler::Param) == 0x10, "");
 static_assert(offsetof(GfMoveJumpControler::Packet, unknown10) == 0x10, "");
-static_assert(offsetof(GfMoveJumpControler::Packet, unknown18) == 0x18, "");
+static_assert(offsetof(GfMoveJumpControler::Packet, m_paramAdapter) == 0x18, "");
 static_assert(offsetof(GfMoveJumpControler::Packet, unknown20) == 0x20, "");
 static_assert(offsetof(GfMoveJumpControler::Packet, unknown30) == 0x30, "");
 static_assert(offsetof(GfMoveJumpControler::Packet, unknown40) == 0x40, "");

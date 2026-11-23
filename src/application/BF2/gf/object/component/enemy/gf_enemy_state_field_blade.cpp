@@ -34,7 +34,7 @@ f32 StateFieldBlade::getEnRadius(const GfComBehaviorEnemy &behavior) const {
 }
 
 void StateFieldBlade::enter(GfComBehaviorEnemy *behavior, ai::State *previous) {
-  behavior->unknown140.applyFieldMoveSpeed(GfBehaviorEnemyField::MOVE_SPEED_UNKNOWN_0, *behavior);
+  behavior->m_behaviorEnemyField.applyFieldMoveSpeed(GfBehaviorEnemyField::MOVE_SPEED_UNKNOWN_0, *behavior);
   unknown18.create(TFieldExecCmd<GfComAsm>::CreateInfo(static_cast<GfObj *>(behavior->unknown08)->unknownf8, "C_idle"));
   unknown50 = &StateFieldBlade::seqWaitIdle;
 }
@@ -43,7 +43,7 @@ void StateFieldBlade::leave(GfComBehaviorEnemy *behavior, ai::State *next) {}
 
 void StateFieldBlade::update(GfComBehaviorEnemy *behavior, const fw::UpdateInfo &info) {
   if (behavior->isStateCondMatch(STATE_ID_UNKNOWN_1)) {
-    behavior->unknown140.isArrivedToGoal();
+    behavior->m_behaviorEnemyField.isArrivedToGoal();
   }
 
   if (unknown50) {
@@ -74,8 +74,8 @@ void StateFieldBlade::seqIdle(GfComBehaviorEnemy &behavior, const fw::UpdateInfo
     return;
   }
 
-  behavior.unknown140.unknownc0 = driverPos;
-  behavior.unknown140.applyFieldMoveSpeed(GfBehaviorEnemyField::MOVE_SPEED_UNKNOWN_1, behavior);
+  behavior.m_behaviorEnemyField.unknownc0 = driverPos;
+  behavior.m_behaviorEnemyField.applyFieldMoveSpeed(GfBehaviorEnemyField::MOVE_SPEED_UNKNOWN_1, behavior);
   unknown18.create(TFieldExecCmd<GfComAsm>::CreateInfo(static_cast<GfObj *>(behavior.unknown08)->unknownf8, "C_move"));
   unknown50 = &StateFieldBlade::seqMoveToDriver;
 }
@@ -89,7 +89,7 @@ void StateFieldBlade::seqMoveToDriver(GfComBehaviorEnemy &behavior, const fw::Up
   behavior.unknown003(info.unknown04);
   mm::Vec3 driverPos;
   if (getOwnerDriverPos(driverPos, static_cast<GfObj *>(behavior.unknown08)->unknownf8)) {
-    behavior.unknown140.unknownc0 = driverPos;
+    behavior.m_behaviorEnemyField.unknownc0 = driverPos;
     const mm::Vec3 &current = behavior.getTransform().unknown00;
     f32 dx = driverPos.x - current.x;
     f32 dy = driverPos.y - current.y;
@@ -101,7 +101,7 @@ void StateFieldBlade::seqMoveToDriver(GfComBehaviorEnemy &behavior, const fw::Up
     }
   }
 
-  behavior.unknown140.applyFieldMoveSpeed(GfBehaviorEnemyField::MOVE_SPEED_UNKNOWN_0, behavior);
+  behavior.m_behaviorEnemyField.applyFieldMoveSpeed(GfBehaviorEnemyField::MOVE_SPEED_UNKNOWN_0, behavior);
   unknown18.create(TFieldExecCmd<GfComAsm>::CreateInfo(static_cast<GfObj *>(behavior.unknown08)->unknownf8, "C_walkend"));
   unknown50 = &StateFieldBlade::seqWaitIdle;
 }

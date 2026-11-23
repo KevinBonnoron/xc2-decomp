@@ -45,7 +45,7 @@ public:
   void systemWait();
   void systemUpdate();
 
-  bool unknown08;                                       // Inferred role: initialized; original member name unknown.
+  bool m_initialized;                                   // Inferred role: initialized; named after the game accessor gf::GfMenuHUD::isInitialized.
   u32 unknown0c;                                        // Inferred role: scene id; original member name unknown.
   u32 unknown10;                                        // Inferred role: next scene id; original member name unknown.
   mm::mtl::FixedVector<u32, LAYER_UNKNOWN_8> unknown18; // Inferred role: layers; original member name unknown.
@@ -53,7 +53,7 @@ public:
   mm::mtl::Delegate<void()> unknown60;                  // Inferred role: scene updater; original member name unknown.
 };
 
-static_assert(offsetof(GfMenuHUD, unknown08) == 0x08, "");
+static_assert(offsetof(GfMenuHUD, m_initialized) == 0x08, "");
 static_assert(offsetof(GfMenuHUD, unknown0c) == 0x0c, "");
 static_assert(offsetof(GfMenuHUD, unknown10) == 0x10, "");
 static_assert(offsetof(GfMenuHUD, unknown18) == 0x18, "");

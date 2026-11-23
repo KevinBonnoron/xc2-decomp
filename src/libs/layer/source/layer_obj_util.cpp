@@ -25,10 +25,10 @@ void LayerObjUtil::releaseWorldMatrixUniform(grlib::CGLibDblUniformBlock *&unifo
 }
 
 void LayerObjUtil::calcLayoutDispInfo(LayerResDispInfo &disp, const LayerResMatrix &matrix, const LayerResRenderInfo &info) {
-  f32 right = info.unknown10 + info.unknown14;
-  f32 bottom = info.unknown12 + info.unknown16;
-  f32 left = info.unknown10;
-  f32 top = info.unknown12;
+  f32 right = info.m_pixelX + info.m_pixelWidth;
+  f32 bottom = info.m_pixelY + info.m_pixelHeight;
+  f32 left = info.m_pixelX;
+  f32 top = info.m_pixelY;
   f32 rightX = right * matrix.unknown08 * LayerManager::get()->getScreenCalcSclWidth();
   f32 bottomX = bottom * matrix.unknown14 * LayerManager::get()->getScreenCalcSclWidth();
   f32 leftX = left * matrix.unknown08 * LayerManager::get()->getScreenCalcSclWidth();
@@ -59,41 +59,41 @@ void LayerObjUtil::calcLayoutDispInfo(LayerResDispInfo &disp, const LayerResMatr
 
 void LayerObjUtil::calcLayerRenderView(LayerRenderView &result, LayerResViewPortInfo &viewPort, grlib::CGLibDblUniformBlock *&uniform, const LayerViewPort &port, const LayerRenderView *view,
                                        const LayerResMatrix *matrix) {
-  LayerShdManager *shader = LayerManager::get()->unknown58;
+  LayerShdManager *shader = LayerManager::get()->m_layerShdManager;
   result = *view;
-  f32 posX = matrix->unknown00 * shader->unknown530;
-  f32 posY = matrix->unknown04 * shader->unknown534 * (1.0f / shader->unknown574);
-  viewPort.unknown00.unknown00 = posX + port.unknown00;
-  viewPort.unknown00.unknown04 = posY + port.unknown04;
-  viewPort.unknown00.unknown0c = port.unknown0c;
-  viewPort.unknown00.unknown08 = port.unknown08;
+  f32 posX = matrix->unknown00 * shader->m_screenWidth;
+  f32 posY = matrix->unknown04 * shader->m_screenHeight * (1.0f / shader->m_screenRatioHeight);
+  viewPort.m_layerViewPort.unknown00 = posX + port.unknown00;
+  viewPort.m_layerViewPort.unknown04 = posY + port.unknown04;
+  viewPort.m_layerViewPort.unknown0c = port.unknown0c;
+  viewPort.m_layerViewPort.unknown08 = port.unknown08;
   if (uniform == nullptr) {
     uniform = new (LayerManager::get()->unknown2c) grlib::CGLibDblUniformBlock();
     uniform->setup(0x40);
   }
 
   f32 *buff = static_cast<f32 *>(uniform->getBuff());
-  f32 x = viewPort.unknown00.unknown00 * shader->unknown558 / shader->unknown530;
-  f32 y = shader->unknown558 * viewPort.unknown00.unknown04 / shader->unknown534;
-  f32 sclX = 1.0f / (shader->unknown558 * viewPort.unknown00.unknown08 / shader->unknown530);
-  f32 sclY = 1.0f / (shader->unknown558 * viewPort.unknown00.unknown0c / shader->unknown534);
+  f32 x = viewPort.m_layerViewPort.unknown00 * shader->unknown558 / shader->m_screenWidth;
+  f32 y = shader->unknown558 * viewPort.m_layerViewPort.unknown04 / shader->m_screenHeight;
+  f32 sclX = 1.0f / (shader->unknown558 * viewPort.m_layerViewPort.unknown08 / shader->m_screenWidth);
+  f32 sclY = 1.0f / (shader->unknown558 * viewPort.m_layerViewPort.unknown0c / shader->m_screenHeight);
   buff[0] = sclX;
   buff[1] = sclY;
   buff[2] = sclX - 1.0f - x * 2.0f * sclX;
   buff[3] = -(sclY - 1.0f - y * 2.0f * sclY);
   uniform->updateData();
   viewPort.unknown18 = uniform;
-  result.unknown08 = &viewPort;
+  result.m_layerResViewPortInfo = &viewPort;
 }
 
 void LayerObjUtil::calcLayerColor(LayerResColor &result, const LayerResColor &base, const LayerResColor &parent) {
-  result.unknown00.r = base.unknown00.r * parent.unknown00.r;
-  result.unknown00.g = base.unknown00.g * parent.unknown00.g;
-  result.unknown00.b = base.unknown00.b * parent.unknown00.b;
-  result.unknown00.a = base.unknown00.a * parent.unknown00.a;
-  result.unknown10.r = base.unknown10.r + parent.unknown10.r;
-  result.unknown10.g = base.unknown10.g + parent.unknown10.g;
-  result.unknown10.b = base.unknown10.b + parent.unknown10.b;
+  result.m_mulCol.r = base.m_mulCol.r * parent.m_mulCol.r;
+  result.m_mulCol.g = base.m_mulCol.g * parent.m_mulCol.g;
+  result.m_mulCol.b = base.m_mulCol.b * parent.m_mulCol.b;
+  result.m_mulCol.a = base.m_mulCol.a * parent.m_mulCol.a;
+  result.m_addCol.r = base.m_addCol.r + parent.m_addCol.r;
+  result.m_addCol.g = base.m_addCol.g + parent.m_addCol.g;
+  result.m_addCol.b = base.m_addCol.b + parent.m_addCol.b;
 }
 
 void LayerObjUtil::updateUnitUniformBlock(f32 *uniform) {
@@ -176,13 +176,13 @@ void LayerObjUtil::calcLayerInvertMatrix(mm::Vec3 &pos, mm::Vec3 &scl, const Lay
 }
 
 void LayerObjUtil::updateColorUniformBlock(f32 *uniform, const LayerResColor &color) {
-  uniform[0] = color.unknown00.r;
-  uniform[1] = color.unknown00.g;
-  uniform[2] = color.unknown00.b;
-  uniform[3] = color.unknown00.a;
-  uniform[4] = color.unknown10.r;
-  uniform[5] = color.unknown10.g;
-  uniform[6] = color.unknown10.b;
+  uniform[0] = color.m_mulCol.r;
+  uniform[1] = color.m_mulCol.g;
+  uniform[2] = color.m_mulCol.b;
+  uniform[3] = color.m_mulCol.a;
+  uniform[4] = color.m_addCol.r;
+  uniform[5] = color.m_addCol.g;
+  uniform[6] = color.m_addCol.b;
   uniform[7] = 0.0f;
 }
 
@@ -235,17 +235,17 @@ void LayerObjUtil::calcSwfScl_Correction_Up(f32 *scl, const LayerBasePos &base, 
 }
 
 void LayerObjUtil::calcScl_Pixel_Up(f32 *scl, const LayerBasePos &base, const LayerResRenderInfo &info) {
-  f32 pixelWidth = info.unknown14 + info.unknown10;
+  f32 pixelWidth = info.m_pixelWidth + info.m_pixelX;
   f32 width = LayerManager::get()->getScreenCalcSclWidth() * pixelWidth;
-  f32 pixelHeight = info.unknown16 + info.unknown12;
+  f32 pixelHeight = info.m_pixelHeight + info.m_pixelY;
   f32 height = LayerManager::get()->getScreenCalcSclHeight() * pixelHeight;
   scl[0] = base.unknown0c * width;
   scl[1] = height * base.unknown10;
 }
 
 void LayerObjUtil::calcSwfScl_Pixel_Up(f32 *scl, const LayerBasePos &base, const LayerResRenderInfo &info) {
-  f32 width = info.unknown14 + info.unknown10;
-  f32 height = info.unknown16 + info.unknown12;
+  f32 width = info.m_pixelWidth + info.m_pixelX;
+  f32 height = info.m_pixelHeight + info.m_pixelY;
   f32 size = height;
   if (width > height) {
     size = width;
@@ -331,13 +331,13 @@ u32 LayerObjUtil::getUniformBlockSizeAlOff(LayerUniType type) { return UNIFORM_B
 
 u32 LayerObjUtil::getUniformBlockSize(LayerUniType type) { return getUniformBlockAligment(UNIFORM_BLOCK_SIZE[type]); }
 
-void LayerObjUtil::getLayoutInfo(f32 *info, const LyrLayoutPosData *data, LayerCenterType type, f32 x, f32 y) { s_CallDataPos[LayerManager::get()->unknown9c](info, data, type, x, y); }
+void LayerObjUtil::getLayoutInfo(f32 *info, const LyrLayoutPosData *data, LayerCenterType type, f32 x, f32 y) { s_CallDataPos[LayerManager::get()->m_coordinate](info, data, type, x, y); }
 
 void LayerObjUtil::calcLayer3DSpaceTransRotScaleMatrix(LayerResMatrix &result, const LayerBasePos &base, const LayerResRenderInfo &info) {
   f32 sinRot = sinf(base.unknown08);
   f32 cosRot = cosf(base.unknown08);
-  f32 width = static_cast<f32>(info.unknown14 + info.unknown10) * LayerManager::get()->unknown98;
-  f32 height = static_cast<f32>(info.unknown16 + info.unknown12) * LayerManager::get()->unknown98;
+  f32 width = static_cast<f32>(info.m_pixelWidth + info.m_pixelX) * LayerManager::get()->unknown98;
+  f32 height = static_cast<f32>(info.m_pixelHeight + info.m_pixelY) * LayerManager::get()->unknown98;
   f32 scl[2];
   scl[0] = width * base.unknown0c;
   scl[1] = base.unknown10 * height;
@@ -345,7 +345,7 @@ void LayerObjUtil::calcLayer3DSpaceTransRotScaleMatrix(LayerResMatrix &result, c
   pos[0] = base.unknown00 * LayerManager::get()->unknown98;
   pos[1] = base.unknown04 * LayerManager::get()->unknown98;
   f32 size[2];
-  s_CallMdl[info.unknown18](pos, size, scl, base);
+  s_CallMdl[info.m_centerType](pos, size, scl, base);
   f32 x = size[0] + (cosRot * -size[0] + sinRot * -size[1]);
   f32 y = size[1] + (-sinRot * -size[0] + cosRot * -size[1]);
   result.unknown08 = cosRot * scl[0];
@@ -373,15 +373,15 @@ void LayerObjUtil::calcLayerTransRotScaleMatrix(LayerResMatrix &result, const La
   f32 sinRot = sinf(base.unknown08);
   f32 cosRot = cosf(base.unknown08);
   f32 scl[2];
-  s_CallScl[LayerManager::get()->unknown9c](scl, base, info);
+  s_CallScl[LayerManager::get()->m_coordinate](scl, base, info);
   f32 pos[2];
-  s_CallPos[LayerManager::get()->unknown9c](pos, base);
-  f32 width = static_cast<f32>(info.unknown14 + info.unknown10) * LayerManager::get()->getScreenCalcSclWidth();
-  f32 height = static_cast<f32>(info.unknown16 + info.unknown12) * LayerManager::get()->getScreenCalcSclHeight();
+  s_CallPos[LayerManager::get()->m_coordinate](pos, base);
+  f32 width = static_cast<f32>(info.m_pixelWidth + info.m_pixelX) * LayerManager::get()->getScreenCalcSclWidth();
+  f32 height = static_cast<f32>(info.m_pixelHeight + info.m_pixelY) * LayerManager::get()->getScreenCalcSclHeight();
   pos[0] -= scl[0] * base.unknown14 - width * base.unknown14;
   pos[1] -= scl[1] * base.unknown18 - height * base.unknown18;
   f32 size[2];
-  s_CallMdl[info.unknown18](pos, size, scl, base);
+  s_CallMdl[info.m_centerType](pos, size, scl, base);
   f32 x = size[0] + (cosRot * -size[0] + sinRot * -size[1]);
   f32 y = size[1] + (-sinRot * -size[0] + cosRot * -size[1]);
   result.unknown08 = cosRot * scl[0];
@@ -396,15 +396,15 @@ void LayerObjUtil::calcLayerTransRotScaleFontMatrix(LayerResMatrix &result, cons
   f32 sinRot = sinf(base.unknown08);
   f32 cosRot = cosf(base.unknown08);
   f32 scl[2];
-  s_CallScl[LayerManager::get()->unknown9c](scl, base, info);
+  s_CallScl[LayerManager::get()->m_coordinate](scl, base, info);
   f32 pos[2];
-  s_CallPos[LayerManager::get()->unknown9c](pos, base);
-  f32 width = static_cast<f32>(info.unknown14 + info.unknown10) * LayerManager::get()->getScreenCalcSclWidth();
-  f32 height = static_cast<f32>(info.unknown16 + info.unknown12) * LayerManager::get()->getScreenCalcSclHeight();
+  s_CallPos[LayerManager::get()->m_coordinate](pos, base);
+  f32 width = static_cast<f32>(info.m_pixelWidth + info.m_pixelX) * LayerManager::get()->getScreenCalcSclWidth();
+  f32 height = static_cast<f32>(info.m_pixelHeight + info.m_pixelY) * LayerManager::get()->getScreenCalcSclHeight();
   pos[0] -= scl[0] * base.unknown14 - width * base.unknown14;
   pos[1] -= scl[1] * base.unknown18 - height * base.unknown18;
   f32 size[2];
-  s_CallMdl[info.unknown18](pos, size, scl, base);
+  s_CallMdl[info.m_centerType](pos, size, scl, base);
   f32 x = size[0] + (cosRot * -size[0] + sinRot * -size[1]);
   f32 y = size[1] + (-sinRot * -size[0] + cosRot * -size[1]);
   result.unknown08 = cosRot * scl[0];
@@ -419,15 +419,15 @@ void LayerObjUtil::calcLayerTransRotScaleLaoutMatrix(LayerResMatrix &result, con
   f32 sinRot = sinf(base.unknown08);
   f32 cosRot = cosf(base.unknown08);
   f32 scl[2];
-  s_CallScl[LayerManager::get()->unknown9c](scl, base, info);
+  s_CallScl[LayerManager::get()->m_coordinate](scl, base, info);
   f32 pos[2];
-  s_CallPos[LayerManager::get()->unknown9c](pos, base);
-  f32 width = static_cast<f32>(info.unknown14 + info.unknown10) * LayerManager::get()->getScreenCalcSclWidth();
-  f32 height = static_cast<f32>(info.unknown16 + info.unknown12) * LayerManager::get()->getScreenCalcSclHeight();
+  s_CallPos[LayerManager::get()->m_coordinate](pos, base);
+  f32 width = static_cast<f32>(info.m_pixelWidth + info.m_pixelX) * LayerManager::get()->getScreenCalcSclWidth();
+  f32 height = static_cast<f32>(info.m_pixelHeight + info.m_pixelY) * LayerManager::get()->getScreenCalcSclHeight();
   pos[0] -= scl[0] * base.unknown14 - width * base.unknown14;
   pos[1] -= scl[1] * base.unknown18 - height * base.unknown18;
   f32 size[2];
-  s_CallMdl[info.unknown18](pos, size, scl, base);
+  s_CallMdl[info.m_centerType](pos, size, scl, base);
   f32 x = size[0] + (cosRot * -size[0] + sinRot * -size[1]);
   f32 y = size[1] + (-sinRot * -size[0] + cosRot * -size[1]);
   result.unknown08 = cosRot * base.unknown0c;
@@ -442,17 +442,17 @@ void LayerObjUtil::calcLayerTransRotScaleSWFMatrix(LayerResMatrix &result, const
   f32 sinRot = sinf(base.unknown08);
   f32 cosRot = cosf(base.unknown08);
   f32 scl[2];
-  s_CallSwfScl[LayerManager::get()->unknown9c](scl, base, info);
+  s_CallSwfScl[LayerManager::get()->m_coordinate](scl, base, info);
   f32 pos[2];
-  s_CallPos[LayerManager::get()->unknown9c](pos, base);
-  f32 width = static_cast<f32>(info.unknown14 + info.unknown10) * LayerManager::get()->getScreenCalcSclWidth();
-  f32 height = static_cast<f32>(info.unknown16 + info.unknown12) * LayerManager::get()->getScreenCalcSclHeight();
+  s_CallPos[LayerManager::get()->m_coordinate](pos, base);
+  f32 width = static_cast<f32>(info.m_pixelWidth + info.m_pixelX) * LayerManager::get()->getScreenCalcSclWidth();
+  f32 height = static_cast<f32>(info.m_pixelHeight + info.m_pixelY) * LayerManager::get()->getScreenCalcSclHeight();
   pos[0] -= scl[0] * base.unknown14 - width * base.unknown14;
   pos[1] -= scl[1] * base.unknown18 - height * base.unknown18;
   f32 mdlScl[2];
-  s_CallScl[LayerManager::get()->unknown9c](mdlScl, base, info);
+  s_CallScl[LayerManager::get()->m_coordinate](mdlScl, base, info);
   f32 size[2];
-  s_CallMdl[info.unknown18](pos, size, mdlScl, base);
+  s_CallMdl[info.m_centerType](pos, size, mdlScl, base);
   f32 x = size[0] + (cosRot * -size[0] + sinRot * -size[1]);
   f32 y = size[1] + (-sinRot * -size[0] + cosRot * -size[1]);
   result.unknown08 = cosRot * scl[0];
@@ -466,8 +466,8 @@ void LayerObjUtil::calcLayerTransRotScaleSWFMatrix(LayerResMatrix &result, const
 void LayerObjUtil::calcLayer3DSpaceTransRotScaleFontMatrix(LayerResMatrix &result, const LayerBasePos &base, const LayerResRenderInfo &info) {
   f32 sinRot = sinf(base.unknown08);
   f32 cosRot = cosf(base.unknown08);
-  f32 width = static_cast<f32>(info.unknown14 + info.unknown10) * LayerManager::get()->unknown98;
-  f32 height = static_cast<f32>(info.unknown16 + info.unknown12) * LayerManager::get()->unknown98;
+  f32 width = static_cast<f32>(info.m_pixelWidth + info.m_pixelX) * LayerManager::get()->unknown98;
+  f32 height = static_cast<f32>(info.m_pixelHeight + info.m_pixelY) * LayerManager::get()->unknown98;
   // Inferred: the game fills four scale floats and only the first two reach the model position; the role of the copy is unknown.
   f32 scl[4];
   scl[0] = width * base.unknown0c;
@@ -478,7 +478,7 @@ void LayerObjUtil::calcLayer3DSpaceTransRotScaleFontMatrix(LayerResMatrix &resul
   pos[0] = base.unknown00 * LayerManager::get()->unknown98;
   pos[1] = base.unknown04 * LayerManager::get()->unknown98;
   f32 size[2];
-  s_CallMdl[info.unknown18](pos, size, scl, base);
+  s_CallMdl[info.m_centerType](pos, size, scl, base);
   f32 x = size[0] + (cosRot * -size[0] + sinRot * -size[1]);
   f32 y = size[1] + (-sinRot * -size[0] + cosRot * -size[1]);
   result.unknown08 = cosRot * scl[0];

@@ -4,12 +4,12 @@
 
 namespace ml {
 
-DrPixlRenderTargetMipMap::DrPixlRenderTargetMipMap(DrMan *man) { unknown488 = man; }
+DrPixlRenderTargetMipMap::DrPixlRenderTargetMipMap(DrMan *man) { m_drMan = man; }
 
 DrPixlRenderTargetMipMap::~DrPixlRenderTargetMipMap() { releaseWork(); }
 
-void DrPixlRenderTargetMipMap::debugRender(int x, int y, int width, int height, bool isAlpha) { unknown488->unknown78->debugRender(*unknown70, x, y, width, height, isAlpha, false, 1.0f, true); }
+void DrPixlRenderTargetMipMap::debugRender(int x, int y, int width, int height, bool isAlpha) { m_drMan->m_drPixlMan->debugRender(*unknown70, x, y, width, height, isAlpha, false, 1.0f, true); }
 
-void DrPixlRenderTargetMipMap::debugRenderCh(int x, int y, int width, int height, u32 channel) { unknown488->unknown78->debugRenderCh(*unknown70, x, y, width, height, channel); }
+void DrPixlRenderTargetMipMap::debugRenderCh(int x, int y, int width, int height, u32 channel) { m_drMan->m_drPixlMan->debugRenderCh(*unknown70, x, y, width, height, channel); }
 
 } // namespace ml

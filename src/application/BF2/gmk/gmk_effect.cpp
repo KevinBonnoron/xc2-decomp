@@ -26,17 +26,17 @@ void GmkEffect::debugDraw() const { isValid(); }
 void GmkEffect::debugUpdateMmf() {}
 
 void GmkEffect::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gmk) {
-  unknown02 = ScenarioFlagCond(bdat.getValCheck("ScenarioFlagMin", id, BDAT_TYPE_UNKNOWN_2), bdat.getValCheck("ScenarioFlagMax", id, BDAT_TYPE_UNKNOWN_2));
-  unknown06 =
+  m_scenarioFlagCond = ScenarioFlagCond(bdat.getValCheck("ScenarioFlagMin", id, BDAT_TYPE_UNKNOWN_2), bdat.getValCheck("ScenarioFlagMax", id, BDAT_TYPE_UNKNOWN_2));
+  m_questFlagCond =
       QuestFlagCond(bdat.getValCheck("QuestFlag", id, BDAT_TYPE_UNKNOWN_2), bdat.getValCheck("QuestFlagMin", id, BDAT_TYPE_UNKNOWN_1), bdat.getValCheck("QuestFlagMax", id, BDAT_TYPE_UNKNOWN_1));
   unknown00 = bdat.getValCheck("Condition", id, BDAT_TYPE_UNKNOWN_2);
 }
 
 bool GmkEffect::BdatInfo::isPopCondMatched() const {
-  if (unknown02.isEnable() && !unknown02.isMatch()) {
+  if (m_scenarioFlagCond.isEnable() && !m_scenarioFlagCond.isMatch()) {
     return false;
   }
-  if (unknown06.isEnable() && !unknown06.isMatch()) {
+  if (m_questFlagCond.isEnable() && !m_questFlagCond.isMatch()) {
     return false;
   }
   if (unknown00 != 0 && !gf::GfGameCond::isGameCond(unknown00)) {
@@ -47,7 +47,7 @@ bool GmkEffect::BdatInfo::isPopCondMatched() const {
 
 GmkType GmkEffectLocator::getGmkType() const { return GMK_TYPE; }
 
-bool GmkEffectLocator::isValid() const { return unknown08.unknown00 != nullptr && unknown20.unknown08 != nullptr; }
+bool GmkEffectLocator::isValid() const { return m_createBaseInfo.m_ownerGmkEnemyList != nullptr && m_createInfo.unknown08 != nullptr; }
 
 GmkType GmkEffect::getGmkType() const { return GMK_TYPE; }
 

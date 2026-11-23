@@ -13,9 +13,9 @@ public:
   void setup(DrResMdoLodParts *parts, int partsNum, bool isFixed, bool isChange);
   bool update(DrResMdlLodArg &arg, u32 &flags);
 
-  DrResMdoLodParts *unknown00; // Inferred role: lod parts; original member name unknown.
-  s32 unknown08;               // Inferred role: lod parts count; original member name unknown.
-  s32 unknown0c;               // Inferred role: cleared with the lod parts count; original member name unknown.
+  DrResMdoLodParts *m_drResMdoLodParts; // Inferred role: lod parts; original member name unknown.
+  s32 unknown08;                        // Inferred role: lod parts count; original member name unknown.
+  s32 unknown0c;                        // Inferred role: cleared with the lod parts count; original member name unknown.
   union {
     u32 unknown10; // Inferred role: flags; original member name unknown.
     struct {

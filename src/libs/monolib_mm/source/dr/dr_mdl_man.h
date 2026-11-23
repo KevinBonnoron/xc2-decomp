@@ -71,6 +71,7 @@ public:
   void deleteAll();
   void deleteAll(int cate);
   void addDelList(int cate);
+  void updateList(int cate);
   void DepthCheckRender(bool isDblDepth);
   void setupCate(int cate);
   void setupEnd();
@@ -114,21 +115,21 @@ public:
   // Inferred role: true when the DrMan skips the view renders of this category; original name unknown.
   bool unknown001() const {
     u32 cate = unknown238;
-    return (unknown000->unknown1c9c & (1 << cate)) != 0;
+    return (m_drMan->unknown1c9c & (1 << cate)) != 0;
   }
 
-  DrMan *unknown000;              // Inferred role: dr man; original member name unknown.
-  DrMdoVertexMan *unknown008;     // Inferred role: vertex man; original member name unknown.
-  DrMdoTextureMan *unknown010;    // Inferred role: texture man; original member name unknown.
-  DrMdoSamplerMan *unknown018;    // Inferred role: sampler man; original member name unknown.
-  DrMdoMpfMan *unknown020;        // Inferred role: mpf man; original member name unknown.
-  DrMdoTexSimpleMan *unknown028;  // Inferred role: simple texture man; original member name unknown.
-  DrMdoSmlShadowMan *unknown030;  // Inferred role: small shadow man; original member name unknown.
-  DrResOccUniformObj *unknown038; // Inferred role: occ uniform; original member name unknown.
-  DrResEtcUniformObj *unknown040; // Inferred role: etc uniform; original member name unknown.
-  DrGpuCheckRender *unknown048;   // Inferred role: gpu check render; original member name unknown.
-  DrMdoZSortMan *unknown050[4];   // Inferred role: z sort men per category; original member name unknown.
-  unknown004 unknown070[4];       // Inferred role: render flags per category; original member name unknown.
+  DrMan *m_drMan;                           // Inferred role: dr man; original member name unknown.
+  DrMdoVertexMan *m_drMdoVertexMan;         // Inferred role: vertex man; original member name unknown.
+  DrMdoTextureMan *m_drMdoTextureMan;       // Inferred role: texture man; original member name unknown.
+  DrMdoSamplerMan *m_drMdoSamplerMan;       // Inferred role: sampler man; original member name unknown.
+  DrMdoMpfMan *m_drMdoMpfMan;               // Inferred role: mpf man; original member name unknown.
+  DrMdoTexSimpleMan *m_drMdoTexSimpleMan;   // Inferred role: simple texture man; original member name unknown.
+  DrMdoSmlShadowMan *m_drMdoSmlShadowMan;   // Inferred role: small shadow man; original member name unknown.
+  DrResOccUniformObj *m_drResOccUniformObj; // Inferred role: occ uniform; original member name unknown.
+  DrResEtcUniformObj *m_drResEtcUniformObj; // Inferred role: etc uniform; original member name unknown.
+  DrGpuCheckRender *m_drGpuCheckRender;     // Inferred role: gpu check render; original member name unknown.
+  DrMdoZSortMan *unknown050[4];             // Inferred role: z sort men per category; original member name unknown.
+  unknown004 unknown070[4];                 // Inferred role: render flags per category; original member name unknown.
   u8 _0a4[0x0a8 - 0x0a4];
   DrResChankList<DrMdlBase> unknown0a8[4];     // Inferred role: models per view; original member name unknown.
   DrResChankList<DrMdlBase> unknown0e8[2];     // Inferred role: models created per buffer; original member name unknown.
@@ -147,17 +148,17 @@ public:
   u32 unknown240;                              // Inferred role: views whose gpu check objects render; original member name unknown.
 };
 
-static_assert(offsetof(DrMdlMan, unknown000) == 0x000, "");
-static_assert(offsetof(DrMdlMan, unknown008) == 0x008, "");
-static_assert(offsetof(DrMdlMan, unknown010) == 0x010, "");
-static_assert(offsetof(DrMdlMan, unknown018) == 0x018, "");
-static_assert(offsetof(DrMdlMan, unknown020) == 0x020, "");
-static_assert(offsetof(DrMdlMan, unknown028) == 0x028, "");
-static_assert(offsetof(DrMdlMan, unknown030) == 0x030, "");
-static_assert(offsetof(DrMdlMan, unknown038) == 0x038, "");
-static_assert(offsetof(DrMdlMan, unknown040) == 0x040, "");
+static_assert(offsetof(DrMdlMan, m_drMan) == 0x000, "");
+static_assert(offsetof(DrMdlMan, m_drMdoVertexMan) == 0x008, "");
+static_assert(offsetof(DrMdlMan, m_drMdoTextureMan) == 0x010, "");
+static_assert(offsetof(DrMdlMan, m_drMdoSamplerMan) == 0x018, "");
+static_assert(offsetof(DrMdlMan, m_drMdoMpfMan) == 0x020, "");
+static_assert(offsetof(DrMdlMan, m_drMdoTexSimpleMan) == 0x028, "");
+static_assert(offsetof(DrMdlMan, m_drMdoSmlShadowMan) == 0x030, "");
+static_assert(offsetof(DrMdlMan, m_drResOccUniformObj) == 0x038, "");
+static_assert(offsetof(DrMdlMan, m_drResEtcUniformObj) == 0x040, "");
 static_assert(offsetof(DrMdlMan, unknown050) == 0x050, "");
-static_assert(offsetof(DrMdlMan, unknown048) == 0x048, "");
+static_assert(offsetof(DrMdlMan, m_drGpuCheckRender) == 0x048, "");
 static_assert(offsetof(DrMdlMan, unknown0a8) == 0x0a8, "");
 static_assert(offsetof(DrMdlMan, unknown0e8) == 0x0e8, "");
 static_assert(offsetof(DrMdlMan, unknown108) == 0x108, "");

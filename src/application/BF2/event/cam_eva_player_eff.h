@@ -14,8 +14,8 @@ public:
   void play(void *data);
 
 private:
-  RchaCamEff *unknown08; // Inferred role: rcha; original member name unknown.
-  f32 unknown10;         // Inferred role: frame; original member name unknown.
+  RchaCamEff *m_rchaCamEff; // Inferred role: rcha; original member name unknown.
+  f32 unknown10;            // Inferred role: frame; original member name unknown.
 };
 
 static_assert(sizeof(CamEvaPlayerEff) == 0x18, "");

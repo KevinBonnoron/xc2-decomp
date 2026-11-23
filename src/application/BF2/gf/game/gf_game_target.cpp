@@ -38,6 +38,36 @@ constexpr u32 ACCESS_TYPE_UNKNOWN_4 = 4; // Inferred role: access type water hol
 
 static bool unknown004; // Inferred role: display target mode flag; original variable name unknown.
 
+// gf::mergeObjList (0x7100344418) merges two lists sorted by unknown20. `useFirst` is a flag that reproduces the game's block shape (P2): it leads both ways
+// into one shared push of each list, so the game's `b.pl` after the compare jumps straight to the push of the first list. A nested loop with the test after it
+// (188 instructions) sends that exit through the `first.end() == firstIt` test, and writing the three cases as separate pushes (189) keeps two copies of the
+// push of the first list and makes the register allocator copy `first` before it spills it. The end() written on the left is needed (with it on the right:
+// 188 instructions, another jump threading).
+void mergeObjList(const mm::mtl::FixedList<GfSearchInfo *, 256> &first, const mm::mtl::FixedList<GfSearchInfo *, 256> &second, mm::mtl::FixedList<GfSearchInfo *, 256> *merged) {
+  mm::mtl::FixedList<GfSearchInfo *, 256>::const_iterator secondIt = second.begin();
+  mm::mtl::FixedList<GfSearchInfo *, 256>::const_iterator firstIt = first.begin();
+  while (true) {
+    bool useFirst;
+    if (secondIt == second.end()) {
+      if (firstIt == first.end()) {
+        return;
+      }
+      useFirst = true;
+    } else if (first.end() == firstIt) {
+      useFirst = false;
+    } else {
+      useFirst = !((*secondIt)->unknown20 < (*firstIt)->unknown20);
+    }
+    if (useFirst) {
+      merged->push_back(*firstIt);
+      ++firstIt;
+    } else {
+      merged->push_back(*secondIt);
+      ++secondIt;
+    }
+  }
+}
+
 bool isEnableTarget(GF_OBJ_HANDLE *handle) {
   GfObj *obj = GfObjUtil::getObj(handle);
   if (obj == nullptr || (GfGameInsideBattleLock::get()->unknown20 && !GfGameInsideBattleLock::isInside(handle))) {
@@ -181,19 +211,19 @@ void GfGameTarget::build(const GfSetupParam &param) {
 
 void GfGameTarget::setup(const GfSetupParam &) {
   unknown110 = fw::ParamManager::get()->unknown408[0];
-  unknown28.beginSetup(this, 4);
-  unknown28.registerState<StateDriverNotActive>(STATE_UNKNOWN_0);
-  unknown28.registerState<StateAutoTarget>(STATE_UNKNOWN_1);
-  unknown28.registerState<StateEnemyTarget>(STATE_UNKNOWN_2);
-  unknown28.registerState<StateBattleTarget>(STATE_UNKNOWN_3);
-  unknown28.endSetup();
-  unknown28.setState(STATE_UNKNOWN_0);
-  unknownd8.bind(0, 3, getAllocator(ALLOCATOR_UNKNOWN_0));
-  unknownd8.bindAction("change_mode", this, &GfGameTarget::changeMode);
-  unknownd8.bindAction("select_right", this, &GfGameTarget::selectRight);
-  unknownd8.bindAction("select_left", this, &GfGameTarget::selectLeft);
-  unknownd8.bindAction("close_target_on", this, &GfGameTarget::startNearTarget);
-  unknownd8.bindAction("close_target_off", this, &GfGameTarget::judgeNearTarget);
+  m_fsm.beginSetup(this, 4);
+  m_fsm.registerState<StateDriverNotActive>(STATE_UNKNOWN_0);
+  m_fsm.registerState<StateAutoTarget>(STATE_UNKNOWN_1);
+  m_fsm.registerState<StateEnemyTarget>(STATE_UNKNOWN_2);
+  m_fsm.registerState<StateBattleTarget>(STATE_UNKNOWN_3);
+  m_fsm.endSetup();
+  m_fsm.setState(STATE_UNKNOWN_0);
+  m_padRelay.bind(0, 3, getAllocator(ALLOCATOR_UNKNOWN_0));
+  m_padRelay.bindAction("change_mode", this, &GfGameTarget::changeMode);
+  m_padRelay.bindAction("select_right", this, &GfGameTarget::selectRight);
+  m_padRelay.bindAction("select_left", this, &GfGameTarget::selectLeft);
+  m_padRelay.bindAction("close_target_on", this, &GfGameTarget::startNearTarget);
+  m_padRelay.bindAction("close_target_off", this, &GfGameTarget::judgeNearTarget);
   GfEvent::addEventCallback(this);
 }
 
@@ -205,8 +235,8 @@ void GfGameTarget::destroy() {
 
 void GfGameTarget::cleanup() {
   GfEvent::removeEventCallback(this);
-  unknownd8.unbind();
-  unknown28.cleanup();
+  m_padRelay.unbind();
+  m_fsm.cleanup();
   destroySearchObj();
   unknown110 = nullptr;
 }
@@ -225,11 +255,11 @@ void GfGameTarget::updateImpl(const fw::UpdateInfo &info) {
   unknownc9 = false;
   unknownca = false;
   unknowncb = false;
-  unknownd8.update();
-  if (!GfGameManager::isEnableFieldBattleTarget() && unknown002(unknown28)) {
+  m_padRelay.update();
+  if (!GfGameManager::isEnableFieldBattleTarget() && unknown002(m_fsm)) {
     resetTarget();
     notifyTarget();
-    unknown28.setState(STATE_UNKNOWN_0);
+    m_fsm.setState(STATE_UNKNOWN_0);
   }
   const Param *param = getParam();
   if (unknownc2) {
@@ -238,14 +268,14 @@ void GfGameTarget::updateImpl(const fw::UpdateInfo &info) {
       resetTarget();
     }
   }
-  unknown28.update(&info);
+  m_fsm.update(&info);
   notifyTarget();
 }
 
-bool GfGameTarget::testActive() { return unknown002(get()->unknown28); }
+bool GfGameTarget::testActive() { return unknown002(get()->m_fsm); }
 
 GfGameTarget::GfGameTarget()
-    : unknown28(getAllocator(ALLOCATOR_UNKNOWN_0)), unknowna0(unknown012), unknowna8(unknown012), unknownb0(unknown020), unknownb8(unknown020), unknownc0(false), unknownc1(false), unknownc2(false),
+    : m_fsm(getAllocator(ALLOCATOR_UNKNOWN_0)), unknowna0(unknown012), unknowna8(unknown012), unknownb0(unknown020), unknownb8(unknown020), unknownc0(false), unknownc1(false), unknownc2(false),
       unknownc4(0.0f), unknownc8(false), unknownc9(false), unknownca(false), unknowncb(false), unknowncc(false), unknownd0(0.0f) {}
 
 GfGameTarget::~GfGameTarget() {}
@@ -390,16 +420,16 @@ bool GfGameTarget::setTargetNearest(const mm::mtl::FixedList<GfSearchInfo *, 256
   bool isSwim = isSwimPlayer();
   for (mm::mtl::FixedList<GfSearchInfo *, 256>::const_iterator it = list.begin(); it != list.end(); ++it) {
     GfSearchInfo *info = *it;
-    if (!isEnableTarget(info->unknown00) || !info->unknown2c_0) {
+    if (!isEnableTarget(info->m_GF_OBJ_HANDLE) || !info->unknown2c_0) {
       continue;
     }
-    if (GfObjUtil::getObjType(info->unknown00) != OBJECT_TYPE_ENEMY && fabsf(info->unknown24) > param->nearAngle) {
+    if (GfObjUtil::getObjType(info->m_GF_OBJ_HANDLE) != OBJECT_TYPE_ENEMY && fabsf(info->unknown24) > param->nearAngle) {
       continue;
     }
-    if (isSwim && !isWaterHole(info->unknown00)) {
+    if (isSwim && !isWaterHole(info->m_GF_OBJ_HANDLE)) {
       continue;
     }
-    unknown001(info->unknown00);
+    unknown001(info->m_GF_OBJ_HANDLE);
     return true;
   }
   return false;
@@ -433,9 +463,9 @@ bool GfGameTarget::setTargetNearestEnemy(const mm::mtl::FixedList<GfSearchInfo *
   GfSearchInfo *hidden = nullptr;
   for (mm::mtl::FixedList<GfSearchInfo *, 256>::const_iterator it = list.begin(); it != list.end(); ++it) {
     GfSearchInfo *info = *it;
-    if (isEnableTarget(info->unknown00)) {
-      if (GfGameVisible::isVisible(info->unknown00)) {
-        unknown001(info->unknown00);
+    if (isEnableTarget(info->m_GF_OBJ_HANDLE)) {
+      if (GfGameVisible::isVisible(info->m_GF_OBJ_HANDLE)) {
+        unknown001(info->m_GF_OBJ_HANDLE);
         return true;
       }
       if (hidden == nullptr) {
@@ -444,7 +474,7 @@ bool GfGameTarget::setTargetNearestEnemy(const mm::mtl::FixedList<GfSearchInfo *
     }
   }
   if (hidden != nullptr) {
-    unknown001(hidden->unknown00);
+    unknown001(hidden->m_GF_OBJ_HANDLE);
     return true;
   }
   resetTarget();
@@ -455,13 +485,13 @@ bool GfGameTarget::setTargetNearestEnemyBattle(const mm::mtl::FixedList<GfSearch
   GF_OBJ_HANDLE *hidden = unknown020;
   for (mm::mtl::FixedList<GfSearchInfo *, 256>::const_iterator it = list.begin(); it != list.end(); ++it) {
     GfSearchInfo *info = *it;
-    if (isEnableTargetBattle(info->unknown00) && GfObjUtil::isBattle(info->unknown00)) {
-      if (GfGameVisible::isVisible(info->unknown00)) {
-        unknown001(info->unknown00);
+    if (isEnableTargetBattle(info->m_GF_OBJ_HANDLE) && GfObjUtil::isBattle(info->m_GF_OBJ_HANDLE)) {
+      if (GfGameVisible::isVisible(info->m_GF_OBJ_HANDLE)) {
+        unknown001(info->m_GF_OBJ_HANDLE);
         return true;
       }
       if (hidden == unknown020) {
-        hidden = info->unknown00;
+        hidden = info->m_GF_OBJ_HANDLE;
       }
     }
   }
@@ -473,14 +503,14 @@ bool GfGameTarget::setTargetNearestEnemyBattle(const mm::mtl::FixedList<GfSearch
 }
 
 void GfGameTarget::gevChangeLeader(GF_OBJ_HANDLE *) {
-  if (unknown002(unknown28)) {
+  if (unknown002(m_fsm)) {
     resetTarget();
-    unknown28.setState(STATE_UNKNOWN_0);
+    m_fsm.setState(STATE_UNKNOWN_0);
   }
 }
 
 void GfGameTarget::gevSwapFormation(u32, u32) {
-  if (unknown002(unknown28)) {
+  if (unknown002(m_fsm)) {
     GF_OBJ_HANDLE *mover = GfGameManager::getControlMover();
     GfObj *obj = GfObjUtil::getObj(unknownb0);
     if (obj != nullptr) {
@@ -496,20 +526,20 @@ void GfGameTarget::gevSwapFormation(u32, u32) {
     obj = GfObjUtil::getObj(mover);
     if (obj != nullptr) {
       mm::mtl::IntrusivePtr<fw::ReferenceFrame> frame = obj->getComponent<GfComTransform>()->unknown001();
-      GfGameSearchObj::getInfo(unknowna0)->unknown00.unknown48 = frame;
-      GfGameSearchObj::getInfo(unknowna8)->unknown00.unknown48 = frame;
+      GfGameSearchObj::getInfo(unknowna0)->m_searchParam.unknown48 = frame;
+      GfGameSearchObj::getInfo(unknowna8)->m_searchParam.unknown48 = frame;
     }
   }
 }
 
 void GfGameTarget::changeBattleTarget(bool isEnable) {
-  bool isBattleTarget = unknown28.getState()->unknown08 == STATE_UNKNOWN_3;
+  bool isBattleTarget = m_fsm.getState()->m_state == STATE_UNKNOWN_3;
   if (isEnable) {
     if (!isBattleTarget) {
-      unknown28.setState(STATE_UNKNOWN_3);
+      m_fsm.setState(STATE_UNKNOWN_3);
     }
   } else if (isBattleTarget) {
-    unknown28.setState(STATE_UNKNOWN_1);
+    m_fsm.setState(STATE_UNKNOWN_1);
   }
   notifyTarget();
 }
@@ -543,7 +573,7 @@ bool GfGameTarget::recieveMessage(fw::MessageObject *sender, fw::Message &messag
 }
 
 void GfGameTarget::procMsgGameChangeTarget(fw::MessageObject *, MsgGameChangeTarget &message) {
-  unknown001(message.unknown08);
+  unknown001(message.m_GF_OBJ_HANDLE);
   notifyTarget();
 }
 

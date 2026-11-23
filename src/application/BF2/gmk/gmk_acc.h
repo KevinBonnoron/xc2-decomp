@@ -46,14 +46,14 @@ public:
   void dispose();
   void update();
 
-  CreateInfo unknown18;         // Inferred role: create info; original member name unknown.
-  CreateInfoByBdatId unknown28; // Inferred role: create info by bdat id; original member name unknown.
-  const AGmkBase *unknown38;    // Inferred role: gmk; original member name unknown.
+  CreateInfo m_createInfo;                 // Inferred role: create info; original member name unknown.
+  CreateInfoByBdatId m_createInfoByBdatId; // Inferred role: create info by bdat id; original member name unknown.
+  const AGmkBase *m_aGmkBase;              // Inferred role: gmk; original member name unknown.
 };
 
-static_assert(offsetof(GmkAcc, unknown18) == 0x18, "");
-static_assert(offsetof(GmkAcc, unknown28) == 0x28, "");
-static_assert(offsetof(GmkAcc, unknown38) == 0x38, "");
+static_assert(offsetof(GmkAcc, m_createInfo) == 0x18, "");
+static_assert(offsetof(GmkAcc, m_createInfoByBdatId) == 0x28, "");
+static_assert(offsetof(GmkAcc, m_aGmkBase) == 0x38, "");
 static_assert(sizeof(GmkAcc) == 0x40, "");
 
 class GmkAccManager : public mm::mtl::PtrSingleton<GmkAccManager> {

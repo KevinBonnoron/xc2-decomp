@@ -71,14 +71,14 @@ public:
   void changeBladeData(u32 blade, u32 driver) override;
 
   mm::mtl::Delegate<bool()> unknown38; // Inferred role: updater; original member name unknown.
-  IConverter *unknown58;               // Inferred role: converter; original member name unknown.
+  IConverter *m_iConverter;            // Inferred role: converter; original member name unknown.
   u32 unknown60;                       // Inferred role: blade; original member name unknown.
   u32 unknown64;                       // Inferred role: driver; original member name unknown.
   u32 unknown68;                       // Inferred role: arts slot; original member name unknown.
 };
 
 static_assert(offsetof(GfMenuBladeDataAdapter, unknown38) == 0x38, "");
-static_assert(offsetof(GfMenuBladeDataAdapter, unknown58) == 0x58, "");
+static_assert(offsetof(GfMenuBladeDataAdapter, m_iConverter) == 0x58, "");
 static_assert(offsetof(GfMenuBladeDataAdapter, unknown60) == 0x60, "");
 static_assert(offsetof(GfMenuBladeDataAdapter, unknown64) == 0x64, "");
 static_assert(offsetof(GfMenuBladeDataAdapter, unknown68) == 0x68, "");

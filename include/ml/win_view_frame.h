@@ -8,6 +8,7 @@
 
 namespace ml {
 
+class DebDraw;
 class EventView;
 class WinView;
 
@@ -54,6 +55,8 @@ public:
   FMOVE getFramePick(const mm::Pnt<int> &pos) const;
   MCURSOR evtMouseSelect(const mm::Pnt<int> &pos) const;
   void render(WinView *parent) const;
+  void renderTitle(DebDraw *draw) const;
+  void renderFrame(DebDraw *draw, const mm::Rect<int> &rect) const;
   bool checkMFrame(const mm::Rect<int> &rect, const mm::Pnt<int> &pos) const;
   bool checkTFrame(const mm::Rect<int> &rect, const mm::Pnt<int> &pos) const;
   bool checkLFrame(const mm::Rect<int> &rect, const mm::Pnt<int> &pos) const;

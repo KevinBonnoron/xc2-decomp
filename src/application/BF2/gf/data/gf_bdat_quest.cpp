@@ -15,14 +15,14 @@ GfBdatQuest::GfBdatQuest()
       unknown58(nullptr), unknown60(nullptr), unknown68(nullptr), unknown70(nullptr), unknown78(nullptr), unknown80(nullptr), unknown88(nullptr), unknown90(nullptr), unknown98(nullptr),
       unknowna0(nullptr), unknowna8(nullptr), unknownb0(nullptr), unknownb8(nullptr), unknownc0(nullptr), unknownc8(nullptr), unknownd0(nullptr), unknownd8(nullptr), unknowne0(nullptr),
       unknowne8(nullptr), unknownf0(nullptr), unknownf8(nullptr), unknown100(nullptr), unknown108(nullptr), unknown110(nullptr), unknown118(nullptr), unknown120(nullptr), unknown128(nullptr) {
-  unknown130 = new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) QuestListAcc();
+  m_questListAcc = new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) QuestListAcc();
   bdatRefresh();
 }
 
 GfBdatQuest::~GfBdatQuest() {
-  if (unknown130 != nullptr) {
-    delete unknown130;
-    unknown130 = nullptr;
+  if (m_questListAcc != nullptr) {
+    delete m_questListAcc;
+    m_questListAcc = nullptr;
   }
 
   destroyFP();
@@ -279,20 +279,20 @@ static inline void unknown002(QuestListAcc *acc, CBdatWrapper *list, u32 type, C
 void GfBdatQuest::bdatRefresh() {
   destroyFP();
   createFP();
-  unknown130->rebuild();
-  unknown001(unknown130, unknown10, 1);
-  unknown001(unknown130, unknown20, 3);
-  unknown001(unknown130, unknown18, 3);
-  unknown001(unknown130, unknown28, 5);
-  unknown001(unknown130, unknown38, 2);
-  unknown001(unknown130, unknown30, 6);
-  unknown002(unknown130, unknown10, 1, unknown48);
-  unknown002(unknown130, unknown20, 3, unknown58);
-  unknown002(unknown130, unknown18, 3, unknown50);
-  unknown002(unknown130, unknown28, 5, unknown60);
-  unknown002(unknown130, unknown38, 2, unknown70);
-  unknown002(unknown130, unknown30, 6, unknown68);
-  unknown130->makeQuestTaskInfo();
+  m_questListAcc->rebuild();
+  unknown001(m_questListAcc, unknown10, 1);
+  unknown001(m_questListAcc, unknown20, 3);
+  unknown001(m_questListAcc, unknown18, 3);
+  unknown001(m_questListAcc, unknown28, 5);
+  unknown001(m_questListAcc, unknown38, 2);
+  unknown001(m_questListAcc, unknown30, 6);
+  unknown002(m_questListAcc, unknown10, 1, unknown48);
+  unknown002(m_questListAcc, unknown20, 3, unknown58);
+  unknown002(m_questListAcc, unknown18, 3, unknown50);
+  unknown002(m_questListAcc, unknown28, 5, unknown60);
+  unknown002(m_questListAcc, unknown38, 2, unknown70);
+  unknown002(m_questListAcc, unknown30, 6, unknown68);
+  m_questListAcc->makeQuestTaskInfo();
 }
 
 } // namespace gf

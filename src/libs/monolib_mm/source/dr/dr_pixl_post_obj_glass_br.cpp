@@ -30,18 +30,18 @@ DrPixlPostObjGlassBr::DrPixlPostObjGlassBr(DrMan *drMan, DrPixlMan *pixlMan, DrP
 
 void DrPixlPostObjGlassBr::setup() {
   unknown508 &= ~FLAG_UNKNOWN_0;
-  DrIniSys::unknown004 *glass = unknown00->unknown70->getGlassBreakage();
+  DrIniSys::unknown004 *glass = m_drMan->m_drIniSys->getGlassBreakage();
   unknown4f0 = glass;
-  unknown68.setupBuffer(glass->unknown002(glass->unknown10), glass->unknown14);
-  unknown18.createMemVertexBuff(&unknown68, glass->unknown18, glass->unknown1c, 0xc);
-  unknown40.createMemIndexBuff(&unknown68, glass->unknown24, glass->unknown2c, GRL_PRIMITIVE_TRIANGLES, GRL_INDEX_FORMAT_U16);
+  m_cGLibVtlMemPool.setupBuffer(glass->unknown002(glass->unknown10), glass->unknown14);
+  m_cGLibVtxVertex.createMemVertexBuff(&m_cGLibVtlMemPool, glass->unknown18, glass->unknown1c, 0xc);
+  m_cGLibVtxIndex.createMemIndexBuff(&m_cGLibVtlMemPool, glass->unknown24, glass->unknown2c, GRL_PRIMITIVE_TRIANGLES, GRL_INDEX_FORMAT_U16);
   // Placed before the store of the count: the game loads the count once, shifts it (lsl w1, w8, #6 at 0x71008bab28) and then stores it (0x71008bab2c). Without the
   // local the store comes first (first difference at 0x71008bab28); a local holding the count itself loads it as ldrsw instead of ldr.
   u32 size = glass->unknown0c * sizeof(unknown001);
   unknown500 = glass->unknown0c;
-  unknown4f8 = static_cast<unknown001 *>(mtl::MemManager::allocate(unknown00->unknown14, size, 0x10, false, "no name", 0));
-  unknown460.setup(unknown500 * 0x30 + 0x70);
-  unknown98.setTextureInfo(static_cast<f32>(unknown00->unknown5b8->unknown28) * 0.5f, static_cast<f32>(unknown00->unknown5b8->unknown2c) * 0.5f, DrAPCache::TEXTYPE_RGBA_8, false, 0);
+  unknown4f8 = static_cast<unknown001 *>(mtl::MemManager::allocate(m_drMan->unknown14, size, 0x10, false, "no name", 0));
+  m_cGLibDblUniformBlock.setup(unknown500 * 0x30 + 0x70);
+  m_cGLibRenderTarget.setTextureInfo(static_cast<f32>(m_drMan->unknown5b8->unknown28) * 0.5f, static_cast<f32>(m_drMan->unknown5b8->unknown2c) * 0.5f, DrAPCache::TEXTYPE_RGBA_8, false, 0);
   posInt();
 }
 
@@ -56,13 +56,13 @@ void DrPixlPostObjGlassBr::render() {
 void DrPixlPostObjGlassBr::renderCaputre() {
   if (unknown508 & 2) {
     unknown508 &= ~2;
-    unknown98.setRenderTarget();
-    DrShdDataList *shdList = unknown00->unknown80->unknown00;
+    m_cGLibRenderTarget.setRenderTarget();
+    DrShdDataList *shdList = m_drMan->m_drShdMan->m_drShdDataList;
     DrShdDataObj *shader = shdList->unknown001();
     shdList->bindTriangleTex();
     shader->setupShader(0u);
     int location = (shader->unknown38 + shader->unknown58)->getTextureLocation("s0");
-    DrAPCache *apCache = unknown00->unknown5c0;
+    DrAPCache *apCache = m_drMan->m_drAPCache;
     apCache->beginTexSampling(2, 1);
     apCache->setTexture(*grlib::CGLibState::getMainRenderTarget()->unknown70, location);
     grlib::CGLibUniformEtcUtility uniform(shader);
@@ -87,25 +87,25 @@ void DrPixlPostObjGlassBr::renderGlass() {
   grlib::CGLibState::setMainFrameBuffer();
   grlib::CGLibPolygon::setCullingFront();
   grlib::CGLibColorCtl::setBlendControl(GRL_BLEND_FUNC_SRC_ALPHA, GRL_BLEND_FUNC_ONE_MINUS_SRC_ALPHA, GRL_BLEND_COMBINE_ADD, GRL_LOGIC_TYPE_COPY);
-  DrShdDataObj *shader = unknown00->unknown80->unknown00->getPostShdObj(0x3d);
+  DrShdDataObj *shader = m_drMan->m_drShdMan->m_drShdDataList->getPostShdObj(0x3d);
   shader->setupShader(0u);
-  grlib::CGLibCtlVertex::setVertex(unknown18);
+  grlib::CGLibCtlVertex::setVertex(m_cGLibVtxVertex);
   int location = (shader->unknown38 + shader->unknown58)->getTextureLocation("s0");
-  DrAPCache *apCache = unknown00->unknown5c0;
+  DrAPCache *apCache = m_drMan->m_drAPCache;
   apCache->beginTexSampling(2, 1);
-  apCache->setTexture(*unknown98.unknown70, location);
+  apCache->setTexture(*m_cGLibRenderTarget.unknown70, location);
   int blockOffset = (shader->unknown38 + shader->unknown58)->getUniformBlockOfs("U_POST");
-  unknown460.setUniformBlock(blockOffset);
-  unknown40.drawIndex();
+  m_cGLibDblUniformBlock.setUniformBlock(blockOffset);
+  m_cGLibVtxIndex.drawIndex();
   grlib::CGLibColorCtl::setBlendOffControl(GRL_LOGIC_TYPE_COPY);
 }
 
 void DrPixlPostObjGlassBr::release() {
-  unknown98.release();
-  unknown18.release();
-  unknown40.release();
-  unknown68.release();
-  unknown460.release();
+  m_cGLibRenderTarget.release();
+  m_cGLibVtxVertex.release();
+  m_cGLibVtxIndex.release();
+  m_cGLibVtlMemPool.release();
+  m_cGLibDblUniformBlock.release();
   if (unknown4f8 != nullptr) {
     mtl::MemManager::deallocate(unknown4f8, 0, false);
     unknown4f8 = nullptr;

@@ -21,7 +21,7 @@ GfMenuMissionList *GfMenuMissionList::create() {
 void GfMenuMissionList::setupFromZone(const MissionSetup &setup) {
   mm::mtl::FixedVector<u16, 500> missions;
   GfGameMercenaries::getZoneMission(missions, setup.unknown14);
-  SetupParam param = setup.unknown00;
+  SetupParam param = setup.m_setupParam;
   UIListInfo<MenuMissionInfo>::setup(getAllocator(ALLOCATOR_UNKNOWN_0), param);
   if (isValid()) {
     MenuMissionInfo info = {};

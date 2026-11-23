@@ -44,11 +44,11 @@ public:
   };
 
   struct Item {
-    IManiCallback *unknown00; // Inferred role: callback; original member name unknown.
-    mm::Mat44 unknown10;      // Inferred role: callback origin matrix; original member name unknown.
-    mm::Mat44 unknown50;      // Inferred role: inverse of the origin matrix; original member name unknown.
-    mm::Mat44 unknown90;      // Inferred role: local matrix; original member name unknown.
-    mm::Mat44 unknownd0;      // Inferred role: local matrix times the origin matrix; original member name unknown.
+    IManiCallback *m_iManiCallback; // Inferred role: callback; original member name unknown.
+    mm::Mat44 unknown10;            // Inferred role: callback origin matrix; original member name unknown.
+    mm::Mat44 unknown50;            // Inferred role: inverse of the origin matrix; original member name unknown.
+    mm::Mat44 unknown90;            // Inferred role: local matrix; original member name unknown.
+    mm::Mat44 unknownd0;            // Inferred role: local matrix times the origin matrix; original member name unknown.
   };
 
   ManiManager();

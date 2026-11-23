@@ -80,19 +80,19 @@ public:
   bool isAmbModeOn() const;
   bool isCacheShadow() const;
 
-  DrLightObj *unknown08;      // Inferred role: prev; original member name unknown.
-  DrLightObj *unknown10;      // Inferred role: next; original member name unknown.
-  Type unknown18;             // Inferred role: type; original member name unknown.
-  u32 unknown1c;              // Inferred role: flags; original member name unknown.
-  DrPixlMan *unknown20;       // Inferred role: pixl man; original member name unknown.
-  DrPixlShadowObj *unknown28; // Inferred role: shadow; original member name unknown.
+  DrLightObj *unknown08;              // Inferred role: prev; original member name unknown.
+  DrLightObj *unknown10;              // Inferred role: next; original member name unknown.
+  Type unknown18;                     // Inferred role: type; original member name unknown.
+  u32 unknown1c;                      // Inferred role: flags; original member name unknown.
+  DrPixlMan *m_drPixlMan;             // Inferred role: pixl man; original member name unknown.
+  DrPixlShadowObj *m_drPixlShadowObj; // Inferred role: shadow; original member name unknown.
 };
 
 static_assert(offsetof(DrLightObj, unknown08) == 0x08, "");
 static_assert(offsetof(DrLightObj, unknown18) == 0x18, "");
 static_assert(offsetof(DrLightObj, unknown1c) == 0x1c, "");
-static_assert(offsetof(DrLightObj, unknown20) == 0x20, "");
-static_assert(offsetof(DrLightObj, unknown28) == 0x28, "");
+static_assert(offsetof(DrLightObj, m_drPixlMan) == 0x20, "");
+static_assert(offsetof(DrLightObj, m_drPixlShadowObj) == 0x28, "");
 
 class DrLightObjAmb : public DrLightObj {
 public:

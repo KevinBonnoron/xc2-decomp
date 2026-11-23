@@ -216,11 +216,11 @@ public:
   static void setState(GF_STATE state, bool isForce);
 
 private:
-  ai::Fsm unknown08;  // Inferred role: fsm; original member name unknown.
-  u32 unknown80;      // Inferred role: state flag; original member name unknown.
-  GF_STATE unknown84; // Inferred role: state reserve; original member name unknown.
-  u32 unknown88;      // Inferred role: count state reserve; original member name unknown.
-  f32 unknown8c;      // Inferred role: state time; original member name unknown.
+  ai::Fsm m_fsm;           // Inferred role: fsm; original member name unknown.
+  u32 m_stateFlg;          // Inferred role: state flag; named after the game accessor gf::GfGameState::setStateFlg.
+  GF_STATE m_stateReserve; // Inferred role: state reserve; named after the game accessor gf::GfGameState::getStateReserve.
+  u32 m_countStateReserve; // Inferred role: count state reserve; named after the game accessor gf::GfGameState::getCountStateReserve.
+  f32 unknown8c;           // Inferred role: state time; original member name unknown.
 };
 
 static_assert(sizeof(GfGameState) == 0x90, "");

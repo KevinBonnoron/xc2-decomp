@@ -12,7 +12,7 @@
 
 namespace fw {
 
-DynamicsUpdater::DynamicsUpdater() : unknown18(nullptr), unknown20(), unknown70(true), unknown71(true), unknown72(false), unknown78(), unknown98(1.0f), unknowna0(nullptr) {
+DynamicsUpdater::DynamicsUpdater() : unknown18(nullptr), unknown20(), unknown70(true), unknown71(true), unknown72(false), unknown78(), unknown98(1.0f), m_dynamicsDrawer(nullptr) {
   unknown30.unknown00 = mm::Vec3::zero;
   unknown30.unknown10 = mm::Quat::identity;
   unknown50.unknown00 = mm::Vec3::zero;
@@ -89,9 +89,9 @@ void DynamicsUpdater::update(const UpdateInfo &info) {
 }
 
 void DynamicsUpdater::drawDebug() {
-  if (unknowna0 != nullptr) {
+  if (m_dynamicsDrawer != nullptr) {
     mm::Mat44 matrix = unknown20->getSyncedWorldMatrix();
-    unknowna0->draw(matrix, *unknown18);
+    m_dynamicsDrawer->draw(matrix, *unknown18);
   }
 }
 

@@ -39,7 +39,7 @@ namespace gf {
 
 GfMenuObjQuestList::GfMenuObjQuestList(u32 handle)
     : GfMenuObject(handle), unknown28(nullptr), unknown30(nullptr), unknown38(nullptr), unknown40(nullptr), unknown48(nullptr), unknown58(0), unknown5c(0), unknown60(0), unknown68(nullptr),
-      unknown70(nullptr), unknown78(nullptr), unknown80(nullptr), unknown88(nullptr), unknown0a0(nullptr), unknown0b0(this), unknown340(0), unknown344(0), unknown358(nullptr), unknown360(true) {
+      unknown70(nullptr), unknown78(nullptr), unknown80(nullptr), unknown88(nullptr), unknown0a0(nullptr), unknown0b0(this), unknown340(0), unknown344(0), m_menuItemList(nullptr), unknown360(true) {
   unknown0a0 = GfMenuCallContext::create();
   unknown0a8 = GfMenuCallContext::create();
 }
@@ -61,7 +61,7 @@ GfMenuObjQuestList::~GfMenuObjQuestList() {
   mm::mtl::safeRelease(unknown48);
   mm::mtl::safeRelease(unknown0a0);
   mm::mtl::safeRelease(unknown0a8);
-  mm::mtl::safeRelease(unknown358);
+  mm::mtl::safeRelease(m_menuItemList);
 }
 
 void GfMenuObjQuestList::initialize() {
@@ -269,8 +269,8 @@ void GfMenuObjQuestList::initializeSub(ui::UIObjectAcc &acc) {
     mm::mtl::FixStr<32> taskName;
     unknown348 = unknown161();
     unknown350 = unknown160();
-    unknown358 = GfMenuItemList::create();
-    unknown358->setup(getAllocator(ALLOCATOR_UNKNOWN_0), ui::UIListInfoBase::SetupParam());
+    m_menuItemList = GfMenuItemList::create();
+    m_menuItemList->setup(getAllocator(ALLOCATOR_UNKNOWN_0), ui::UIListInfoBase::SetupParam());
     GfMenuQuestAdapter::createFromReference(detail.searchChild("TXT_detail_win_title"), unknown348, 0, false);
     GfMenuQuestAdapter::createFromReference(detail.searchChild("IMG_detail_thumb"), unknown348, 0x39, false);
     GfMenuQuestAdapter::createFromReference(detail.searchChild("TXT_detail_win_info"), unknown348, 1, false);
@@ -290,7 +290,7 @@ void GfMenuObjQuestList::initializeSub(ui::UIObjectAcc &acc) {
         adapter->unknown98 = i;
       }
       taskName.format("TXT_detail_task_item_name@%02d", i + 1);
-      GfMenuItemAdapter::createFromList(detail.searchChild(taskName.c_str()), 0, unknown358, i, false);
+      GfMenuItemAdapter::createFromList(detail.searchChild(taskName.c_str()), 0, m_menuItemList, i, false);
       taskName.format("TXT_detail_task_item_num@%02d", i + 1);
       adapter = GfMenuQuestAdapter::createFromReference(detail.searchChild(taskName.c_str()), unknown348, 0x2f, false);
       if (adapter != nullptr) {
@@ -563,7 +563,7 @@ void GfMenuObjQuestList::MainListener::reciveEvent(const ui::EventData &event, u
   ui::UIObjectAcc acc(handle);
   switch (event.unknown00) {
   case 1: {
-    unknown20->initializeSub(acc);
+    m_menuObjQuestList->initializeSub(acc);
     GfMenuObjUtil::PresetCtrlParam param;
     param.unknown00 = 6;
     param.unknown04 = 0;
@@ -574,7 +574,7 @@ void GfMenuObjQuestList::MainListener::reciveEvent(const ui::EventData &event, u
   }
   case 2:
   case GfMenuTypes::unknown003_34:
-    if (!unknown20->unknown360) {
+    if (!m_menuObjQuestList->unknown360) {
       unknown163(handle, 3, 2);
     } else {
       GfMenuObjUtil::PresetCtrlParam param;
@@ -599,7 +599,7 @@ void GfMenuObjQuestList::MainListener::reciveEvent(const ui::EventData &event, u
     param.unknown04 = 1;
     param.unknown10 = 1;
     GfMenuObjUtil::startPresetCtrl(acc.unknown10, param);
-    unknown20->unknown360 = false;
+    m_menuObjQuestList->unknown360 = false;
     break;
   }
   default:
@@ -619,8 +619,8 @@ void GfMenuObjQuestList::ListListener::reciveEvent(const ui::EventData &event, u
     u32 index = event.unknown08;
     u32 previous = event.unknown0c;
     if (index != 0xffffffff) {
-      unknown20->unknown28->setIndex(index);
-      unknown20->unknown68->setIndex(unknown20->unknown28->getIndex(true));
+      m_menuObjQuestList->unknown28->setIndex(index);
+      m_menuObjQuestList->unknown68->setIndex(m_menuObjQuestList->unknown28->getIndex(true));
     }
     if (previous != 0xffffffff && index != previous) {
       GfMenuObjUtil::playSECommonCursor();
@@ -628,10 +628,10 @@ void GfMenuObjQuestList::ListListener::reciveEvent(const ui::EventData &event, u
     break;
   }
   case 8:
-    if (event.unknown0c == 1 && unknown20->unknown28->getSize() != 0) {
-      if (unknown20->unknown28->getContents(unknown20->unknown28->getIndex(false)).unknown00 != 0) {
-        unknown20->sendSuspendEvent(acc.unknown10, 0);
-        unknown20->unknown340 = unknown20->unknown28->getContents(unknown20->unknown28->getIndex(false)).unknown00;
+    if (event.unknown0c == 1 && m_menuObjQuestList->unknown28->getSize() != 0) {
+      if (m_menuObjQuestList->unknown28->getContents(m_menuObjQuestList->unknown28->getIndex(false)).unknown00 != 0) {
+        m_menuObjQuestList->sendSuspendEvent(acc.unknown10, 0);
+        m_menuObjQuestList->unknown340 = m_menuObjQuestList->unknown28->getContents(m_menuObjQuestList->unknown28->getIndex(false)).unknown00;
         GfMenuObject::sendOpenEvent(acc.searchSibiling("LAY_detail"), 0, 0.0f);
         GfMenuObjMainMenu2::setSystemKeyEnable(false);
         GfMenuObjUtil::playSECommonDecide();
@@ -649,17 +649,17 @@ void GfMenuObjQuestList::ListListener::reciveEvent(const ui::EventData &event, u
     break;
   case GfMenuTypes::unknown003_257:
     acc.setDispChild(false, "IMG_list_cursor");
-    if (unknown20->unknown58 == 1) {
+    if (m_menuObjQuestList->unknown58 == 1) {
       GfMenuObject::disableInput(acc.unknown10);
       GfMenuObjOperationInfo::remove(acc.unknown10, 0, 0, 0);
     }
     break;
   case GfMenuTypes::unknown003_258:
-    if (unknown20->unknown58 == 1) {
+    if (m_menuObjQuestList->unknown58 == 1) {
       GfMenuObject::enableInput(acc.unknown10);
       GfMenuObjMainMenu2::setSystemKeyEnable(true);
       GfMenuObjOperationInfo::add(acc.unknown10, 0, 0, 0);
-      bool hasQuest = unknown20->unknown28->getSize() != 0;
+      bool hasQuest = m_menuObjQuestList->unknown28->getSize() != 0;
       if (!hasQuest) {
         acc.setDispChild(false, "IMG_list_cursor");
       } else {
@@ -667,7 +667,7 @@ void GfMenuObjQuestList::ListListener::reciveEvent(const ui::EventData &event, u
       }
       GfMenuObjOperationInfo::setActionEnable(acc.unknown10, 1, hasQuest);
       GfMenuObject::resetInputSelection(acc.unknown10);
-      GfMenuObject::setupInputSelectionFromList(acc.unknown10, *unknown20->unknown28);
+      GfMenuObject::setupInputSelectionFromList(acc.unknown10, *m_menuObjQuestList->unknown28);
     }
     break;
   case GfMenuTypes::unknown003_260:
@@ -692,8 +692,8 @@ void GfMenuObjQuestList::TabOpenListener::reciveEvent(const ui::EventData &event
     if (event.unknown0c == 9) {
       GfMenuObject::sendOpenEvent(acc.searchSibiling("LAY_tab"), 0, 0.0f);
       GfMenuObject::sendCloseEvent(acc.unknown10, 0, 0.0f);
-      unknown20->sendSuspendEvent(acc.searchSibiling("LAY_thumb"), 0);
-      unknown20->sendSuspendEvent(acc.searchSibiling("LAY_list"), 0);
+      m_menuObjQuestList->sendSuspendEvent(acc.searchSibiling("LAY_thumb"), 0);
+      m_menuObjQuestList->sendSuspendEvent(acc.searchSibiling("LAY_list"), 0);
       GfMenuObjMainMenu2::setSystemKeyEnable(false);
       GfMenuObjUtil::playSECommonOpenSubMenu();
     }
@@ -702,8 +702,8 @@ void GfMenuObjQuestList::TabOpenListener::reciveEvent(const ui::EventData &event
     acc.setDisp(true);
     GfMenuObject::enableInput(acc.unknown10);
     GfMenuObjOperationInfo::add(acc.unknown10, 0, 0, 0);
-    unknown20->sendResumeEvent(acc.searchSibiling("LAY_thumb"), 0);
-    unknown20->sendResumeEvent(acc.searchSibiling("LAY_list"), 0);
+    m_menuObjQuestList->sendResumeEvent(acc.searchSibiling("LAY_thumb"), 0);
+    m_menuObjQuestList->sendResumeEvent(acc.searchSibiling("LAY_list"), 0);
     GfMenuObjMainMenu2::setSystemKeyEnable(true);
     break;
   case GfMenuTypes::unknown003_34:
@@ -733,7 +733,7 @@ void GfMenuObjQuestList::TaskListener::reciveEvent(const ui::EventData &event, u
   case 8:
     if (event.unknown0c == 2) {
       GfMenuObject::sendCloseEvent(acc.unknown10, 0, 0.0f);
-      unknown20->sendResumeEvent(acc.getParentHandle(), 0);
+      m_menuObjQuestList->sendResumeEvent(acc.getParentHandle(), 0);
       GfMenuObjUtil::playSECommonCloseSubMenu();
     }
     break;
@@ -744,7 +744,7 @@ void GfMenuObjQuestList::TaskListener::reciveEvent(const ui::EventData &event, u
     GfMenuObjUtil::startCtrl(acc.unknown10, param, nullptr);
     QuestID quest;
     QuestID progress;
-    unknown20->unknown348->getQuest(quest);
+    m_menuObjQuestList->unknown348->getQuest(quest);
     progress = GfQuestInfo::getProgressQuest(quest);
     if (!progress.empty()) {
       quest = progress;
@@ -761,7 +761,7 @@ void GfMenuObjQuestList::TaskListener::reciveEvent(const ui::EventData &event, u
     u32 taskCount;
     u32 completeCount;
     GfQuestInfo::getQuestTaskInfo(taskCount, completeCount, quest);
-    unknown20->unknown358->clear();
+    m_menuObjQuestList->m_menuItemList->clear();
     for (u32 i = 0; i < count; i++) {
       bool isDisp = false;
       MenuItemInfo info;
@@ -777,7 +777,7 @@ void GfMenuObjQuestList::TaskListener::reciveEvent(const ui::EventData &event, u
           }
         }
       }
-      unknown20->unknown358->addItem(info, false);
+      m_menuObjQuestList->m_menuItemList->addItem(info, false);
       name.format("LAY_detail_task_item@%02d", i + 1);
       acc.setDispChild(isDisp, name.c_str());
     }
@@ -800,15 +800,15 @@ void GfMenuObjQuestList::ThumbListener::reciveEvent(const ui::EventData &event, 
   switch (event.unknown00) {
   case 1:
     GfMenuObject::disableInput(acc.unknown10);
-    acc.setDispChild(unknown20->unknown28->getSize() != 0 && unknown20->unknown98->unknown0c > 1, "LAY_thumb_input");
+    acc.setDispChild(m_menuObjQuestList->unknown28->getSize() != 0 && m_menuObjQuestList->unknown98->unknown0c > 1, "LAY_thumb_input");
     acc.setDisp(false);
     break;
   case 6: {
     u32 index = event.unknown08;
     u32 previous = event.unknown0c;
     if (index != 0xffffffff) {
-      unknown20->unknown30->setIndex(index);
-      unknown20->unknown70->setIndex(unknown20->unknown30->getIndex(true));
+      m_menuObjQuestList->unknown30->setIndex(index);
+      m_menuObjQuestList->unknown70->setIndex(m_menuObjQuestList->unknown30->getIndex(true));
     }
     if (previous != 0xffffffff && index != previous) {
       GfMenuObjUtil::playSECommonCursor();
@@ -816,10 +816,10 @@ void GfMenuObjQuestList::ThumbListener::reciveEvent(const ui::EventData &event, 
     break;
   }
   case 8:
-    if (event.unknown0c == 1 && unknown20->unknown28->getSize() != 0) {
-      if (unknown20->unknown28->getContents(unknown20->unknown28->getIndex(false)).unknown00 != 0) {
-        unknown20->sendSuspendEvent(acc.unknown10, 0);
-        unknown20->unknown340 = unknown20->unknown30->getContents(unknown20->unknown30->getIndex(false)).unknown00;
+    if (event.unknown0c == 1 && m_menuObjQuestList->unknown28->getSize() != 0) {
+      if (m_menuObjQuestList->unknown28->getContents(m_menuObjQuestList->unknown28->getIndex(false)).unknown00 != 0) {
+        m_menuObjQuestList->sendSuspendEvent(acc.unknown10, 0);
+        m_menuObjQuestList->unknown340 = m_menuObjQuestList->unknown30->getContents(m_menuObjQuestList->unknown30->getIndex(false)).unknown00;
         GfMenuObject::sendOpenEvent(acc.searchSibiling("LAY_detail"), 0, 0.0f);
         GfMenuObjMainMenu2::setSystemKeyEnable(false);
         GfMenuObjUtil::playSECommonDecide();
@@ -832,9 +832,9 @@ void GfMenuObjQuestList::ThumbListener::reciveEvent(const ui::EventData &event, 
   case 9: {
     bool changed;
     if (event.unknown08 == 3) {
-      changed = unknown20->changeThumbPage(unknown20->unknown90->unknown0c + 1);
+      changed = m_menuObjQuestList->changeThumbPage(m_menuObjQuestList->unknown90->unknown0c + 1);
     } else if (event.unknown08 == 4) {
-      changed = unknown20->changeThumbPage(unknown20->unknown90->unknown0c - 1);
+      changed = m_menuObjQuestList->changeThumbPage(m_menuObjQuestList->unknown90->unknown0c - 1);
     } else {
       break;
     }
@@ -851,34 +851,34 @@ void GfMenuObjQuestList::ThumbListener::reciveEvent(const ui::EventData &event, 
     break;
   case GfMenuTypes::unknown003_257:
     acc.setDispChild(false, "IMG_thumb_cursor");
-    if (unknown20->unknown58 == 0) {
+    if (m_menuObjQuestList->unknown58 == 0) {
       GfMenuObject::disableInput(acc.unknown10);
       GfMenuObjOperationInfo::remove(acc.unknown10, 0, 0, 0);
     }
     break;
   case GfMenuTypes::unknown003_258:
-    if (unknown20->unknown58 == 0) {
+    if (m_menuObjQuestList->unknown58 == 0) {
       GfMenuObject::enableInput(acc.unknown10);
       GfMenuObjMainMenu2::setSystemKeyEnable(true);
       GfMenuObjOperationInfo::add(acc.unknown10, 0, 0, 0);
-      bool hasQuest = unknown20->unknown28->getSize() != 0;
+      bool hasQuest = m_menuObjQuestList->unknown28->getSize() != 0;
       bool isDispInput;
       if (!hasQuest) {
         acc.setDispChild(false, "IMG_thumb_cursor");
         isDispInput = false;
       } else {
         acc.setDispChild(true, "IMG_thumb_cursor");
-        isDispInput = unknown20->unknown98->unknown0c > 1;
+        isDispInput = m_menuObjQuestList->unknown98->unknown0c > 1;
       }
       acc.setDispChild(isDispInput, "LAY_thumb_input");
       GfMenuObjOperationInfo::setActionEnable(acc.unknown10, 1, hasQuest);
       GfMenuObject::resetInputSelection(acc.unknown10);
-      GfMenuObject::setupInputSelectionFromList(acc.unknown10, *unknown20->unknown30);
+      GfMenuObject::setupInputSelectionFromList(acc.unknown10, *m_menuObjQuestList->unknown30);
       GfMenuObject::setupPadLineSelection(acc.unknown10, 3);
     }
     break;
   case GfMenuTypes::unknown003_260:
-    unknown20->changeThumbPage(0);
+    m_menuObjQuestList->changeThumbPage(0);
     break;
   default:
     ui::UIObjectListener::reciveEvent(event, handle);
@@ -903,12 +903,12 @@ void GfMenuObjQuestList::DetailListener::reciveEvent(const ui::EventData &event,
       GfMenuObject::enableInput(acc.unknown10);
       GfMenuObjOperationInfo::add(acc.unknown10, 0, 0, 0);
       QuestID quest;
-      unknown20->unknown348->getQuest(quest);
+      m_menuObjQuestList->unknown348->getQuest(quest);
       GfMenuObjOperationInfo::setActionEnable(acc.unknown10, 9, finished != 1);
       GfMenuObjOperationInfo::setActionEnable(acc.unknown10, 10, finished != 1);
       if (finished != 1) {
-        bool isCurrent = GfQuestManager::getCurrentQuest(QTYPE_UNKNOWN_0).unknown00 == unknown20->unknown340;
-        if (unknown20->unknown364 == 0) {
+        bool isCurrent = GfQuestManager::getCurrentQuest(QTYPE_UNKNOWN_0).unknown00 == m_menuObjQuestList->unknown340;
+        if (m_menuObjQuestList->unknown364 == 0) {
           GfMenuObjOperationInfo::changeText(acc.unknown10, 10, isCurrent);
         } else {
           GfMenuObjOperationInfo::changeText(acc.unknown10, 10, isCurrent ? 2u : 0u);
@@ -925,26 +925,26 @@ void GfMenuObjQuestList::DetailListener::reciveEvent(const ui::EventData &event,
       GfMenuObjUtil::playSECommonCancel();
     } else if (event.unknown0c == 9) {
       QuestID quest;
-      unknown20->unknown348->getQuest(quest);
+      m_menuObjQuestList->unknown348->getQuest(quest);
       if (!GfQuestInfo::isQuestFin(quest)) {
-        unknown20->sendSuspendEvent(acc.unknown10, 0);
+        m_menuObjQuestList->sendSuspendEvent(acc.unknown10, 0);
         GfMenuObject::sendOpenEvent(acc.searchChild("LAY_detail_task"), 0, 0.0f);
         GfMenuObjUtil::playSECommonOpenSubMenu();
       }
     } else if (event.unknown0c == 10) {
       QuestID quest;
-      unknown20->unknown348->getQuest(quest);
+      m_menuObjQuestList->unknown348->getQuest(quest);
       if (!GfQuestInfo::isQuestFin(quest)) {
-        unknown20->unknown344 = acc.unknown10;
-        unknown20->unknown340 = quest.unknown00;
-        unknown20->unknown0b0.unknown002(&GfMenuObjQuestList::seqActivateStart);
+        m_menuObjQuestList->unknown344 = acc.unknown10;
+        m_menuObjQuestList->unknown340 = quest.unknown00;
+        m_menuObjQuestList->unknown0b0.unknown002(&GfMenuObjQuestList::seqActivateStart);
         GfMenuObject::disableInput(acc.unknown10);
       }
     }
     break;
   case GfMenuTypes::unknown003_33: {
-    QuestID quest = toQuestID(unknown20->unknown340);
-    unknown20->unknown348->unknown0c = quest;
+    QuestID quest = toQuestID(m_menuObjQuestList->unknown340);
+    m_menuObjQuestList->unknown348->m_questID = quest;
     bool isFinished = GfQuestInfo::isQuestFin(quest);
     acc.setDispChild(!isFinished, "LAY_detail_summary");
     acc.setDispChild(isFinished, "LAY_detail_result");
@@ -976,7 +976,7 @@ void GfMenuObjQuestList::DetailListener::reciveEvent(const ui::EventData &event,
     param.unknown11 = true;
     param.unknown04 = 1;
     GfMenuObjUtil::startCtrl(acc.unknown10, param, nullptr);
-    GfMenuObjQuestReward::open(unknown20->unknown0a8, false);
+    GfMenuObjQuestReward::open(m_menuObjQuestList->unknown0a8, false);
     unknown0c = isFinished;
     break;
   }
@@ -1011,8 +1011,8 @@ void GfMenuObjQuestList::DetailListener::reciveEvent(const ui::EventData &event,
     break;
   }
   case GfMenuTypes::unknown003_259: {
-    bool isCurrent = GfQuestManager::getCurrentQuest(QTYPE_UNKNOWN_0).unknown00 == unknown20->unknown340;
-    if (unknown20->unknown364 == 0) {
+    bool isCurrent = GfQuestManager::getCurrentQuest(QTYPE_UNKNOWN_0).unknown00 == m_menuObjQuestList->unknown340;
+    if (m_menuObjQuestList->unknown364 == 0) {
       GfMenuObjOperationInfo::changeText(acc.unknown10, 10, isCurrent);
     } else {
       GfMenuObjOperationInfo::changeText(acc.unknown10, 10, isCurrent ? 2u : 0u);
@@ -1035,13 +1035,13 @@ void GfMenuObjQuestList::TabListener::reciveEvent(const ui::EventData &event, u3
     if (index != 0xffffffff) {
       u32 previous = event.unknown0c;
       if (previous != 0xffffffff) {
-        ui::UIObjectAcc prev(unknown20->unknown78->getObject(previous));
+        ui::UIObjectAcc prev(m_menuObjQuestList->unknown78->getObject(previous));
         prev.loadDefColor();
         prev.setBorderWeight(-0.5f);
       }
-      unknown20->unknown78->setIndex(index);
+      m_menuObjQuestList->unknown78->setIndex(index);
       {
-        ui::UIObjectAcc select(unknown20->unknown78->getSelectObject());
+        ui::UIObjectAcc select(m_menuObjQuestList->unknown78->getSelectObject());
         GfMenuObjUtil::setColMulandAdd(select.unknown10, "txt_normal");
         select.setBorderWeight(1.0f);
       }
@@ -1053,9 +1053,9 @@ void GfMenuObjQuestList::TabListener::reciveEvent(const ui::EventData &event, u3
   }
   case GfMenuTypes::unknown003_33:
     GfMenuObject::resetInputSelection(acc.unknown10);
-    GfMenuObject::setupInputSelection(acc.unknown10, 0, unknown20->unknown78->getSize());
-    for (u32 i = 0; i < unknown20->unknown78->getSize(); i++) {
-      ui::UIObjectAcc tab(unknown20->unknown78->getObject(i));
+    GfMenuObject::setupInputSelection(acc.unknown10, 0, m_menuObjQuestList->unknown78->getSize());
+    for (u32 i = 0; i < m_menuObjQuestList->unknown78->getSize(); i++) {
+      ui::UIObjectAcc tab(m_menuObjQuestList->unknown78->getObject(i));
       tab.loadDefColor();
       tab.setBorderWeight(-0.5f);
     }
@@ -1071,10 +1071,10 @@ void GfMenuObjQuestList::TabListener::reciveEvent(const ui::EventData &event, u3
       GfMenuObject::sendOpenEvent(acc.searchSibiling("LAY_tab_open"), 0, 0.0f);
       GfMenuObjUtil::playSECommonCancel();
     } else if (event.unknown0c == 1) {
-      GfMenuObject::sendOpenEvent(acc.searchChild("LAY_tab_select"), unknown20->unknown78->getIndex(false), 0.0f);
-      unknown20->sendSuspendEvent(acc.unknown10, 0);
-      unknown20->sendSuspendEvent(acc.searchSibiling("LAY_thumb"), 0);
-      unknown20->sendSuspendEvent(acc.searchSibiling("LAY_list"), 0);
+      GfMenuObject::sendOpenEvent(acc.searchChild("LAY_tab_select"), m_menuObjQuestList->unknown78->getIndex(false), 0.0f);
+      m_menuObjQuestList->sendSuspendEvent(acc.unknown10, 0);
+      m_menuObjQuestList->sendSuspendEvent(acc.searchSibiling("LAY_thumb"), 0);
+      m_menuObjQuestList->sendSuspendEvent(acc.searchSibiling("LAY_list"), 0);
       GfMenuObjUtil::playSECommonDecide();
     }
     break;
@@ -1093,8 +1093,8 @@ void GfMenuObjQuestList::TabListener::reciveEvent(const ui::EventData &event, u3
       GfMenuObject::sendOpenEvent(acc.searchSibiling("LAY_tab_open"), 0, 0.0f);
     }
     if (isUpdate) {
-      unknown20->sendUpdateEvent(acc.searchSibiling("LAY_thumb"), 0);
-      unknown20->sendUpdateEvent(acc.searchSibiling("LAY_list"), 0);
+      m_menuObjQuestList->sendUpdateEvent(acc.searchSibiling("LAY_thumb"), 0);
+      m_menuObjQuestList->sendUpdateEvent(acc.searchSibiling("LAY_list"), 0);
     }
     break;
   }

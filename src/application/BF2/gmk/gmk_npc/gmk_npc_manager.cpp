@@ -46,15 +46,15 @@ void GmkNpcIdInfo::addGmkNpc(AGmkNpc *npc) {
   if (!npc->intoNode()) {
     unknown10->push_back(npc);
   }
-  npc->unknown18 = this;
+  npc->m_gmkNpcIdInfo = this;
 }
 
 // Inferred role: destroys the game object right away and activates the first NPC whose pop condition is matched; original name unknown.
 inline void GmkNpcIdInfo::unknown001() {
-  unknown18->unbindToGameObj(unknown30);
+  m_aGmkNpc->unbindToGameObj(unknown30);
   gf::GfObjUtil::destroy(unknown30);
   unknown30 = gf::unknown020;
-  unknown18 = nullptr;
+  m_aGmkNpc = nullptr;
   for (mm::mtl::IntrusiveList<AGmkNpc>::iterator it = unknown10->begin(); it != unknown10->end(); ++it) {
     if (it.get()->isPopCondMatched()) {
       setActiveGmkNpc(it.get());
@@ -72,8 +72,8 @@ void GmkNpcIdInfo::dispose() {
     delete unknown10;
     unknown10 = nullptr;
   }
-  unknown00.unknown00 = 0;
-  unknown00.unknown08 = nullptr;
+  m_createInfo.unknown00 = 0;
+  m_createInfo.unknown08 = nullptr;
 }
 
 void GmkNpcIdInfo::disposeGobInst(bool isFadeOut) {
@@ -117,10 +117,10 @@ void GmkNpcIdInfo::update(f32 deltaTime, bool isCreate) {
     }
   }
   if (unknown30 == gf::unknown020) {
-    if (isCreate && unknown18 != nullptr && unknown18->isPopDistCondMatched()) {
+    if (isCreate && m_aGmkNpc != nullptr && m_aGmkNpc->isPopDistCondMatched()) {
       createGobInst();
     }
-  } else if (unknown18->isDepopCondMatched() || unknown18->isDepopDistCondMatched()) {
+  } else if (m_aGmkNpc->isDepopCondMatched() || m_aGmkNpc->isDepopDistCondMatched()) {
     disposeGobInst(true);
   }
 }
@@ -129,14 +129,14 @@ void GmkNpcIdInfo::createGobInst() {
   if (unknown30 != gf::unknown020) {
     unknown001();
   }
-  unknown30 = gf::GfObjFactory::createGmkNpc({unknown18->getBindedBdatFp()}, unknown18->getBindedBdatId());
+  unknown30 = gf::GfObjFactory::createGmkNpc({m_aGmkNpc->getBindedBdatFp()}, m_aGmkNpc->getBindedBdatId());
   if (unknown30 != gf::unknown020) {
-    unknown18->bindToGameObj(unknown30);
-    unknown18->validateDisp();
+    m_aGmkNpc->bindToGameObj(unknown30);
+    m_aGmkNpc->validateDisp();
     gf::GfObjSetupNpc *setup = gf::GfObjUtil::getObjSetup<gf::GfObjSetupNpc>(unknown30);
     mm::Vec3 position;
     mm::Vec3 rotation;
-    unknown18->findPopPosRot(position, rotation);
+    m_aGmkNpc->findPopPosRot(position, rotation);
     setup->unknown20 = position;
     setup->unknown30 = rotation;
   }
@@ -178,14 +178,18 @@ void GmkNpcIdInfo::removeGmkNpc(AGmkNpc *npc) {
   if (npc == nullptr) {
     return;
   }
-  npc->unknown18 = nullptr;
-  if (unknown18 == npc) {
+  npc->m_gmkNpcIdInfo = nullptr;
+  if (m_aGmkNpc == npc) {
     if (unknown30 != gf::unknown020) {
       unknown001();
     }
-    unknown18 = nullptr;
+    m_aGmkNpc = nullptr;
   }
   unknown10->erase(npc);
 }
 
 } // namespace gmk
+
+template void mm::mtl::Vector<gmk::GmkNpcIdInfo>::expand(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkNpcIdInfo>::extend(size_t, size_t);
+template void mm::mtl::Vector<gmk::GmkNpcIdInfo>::resize(size_t);

@@ -95,7 +95,7 @@ void GfMenuObjEventSubtitle::MainListener::reciveEvent(const ui::EventData &even
     case 0:
       if (isVertical) {
         child = acc.searchChild("TXT_str_v");
-      } else if (GfDataManager::getDataOption()->unknown4c._1c) {
+      } else if (GfDataManager::getDataOption()->m_sSoundUiOption._1c) {
         child = acc.searchChild("TXT_str00");
       } else {
         releaseString(event.unknown08);

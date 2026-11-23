@@ -70,7 +70,7 @@ public:
   static mm::mtl::RTTI m_rtti;
   static const u32 COMPONENT_INDEX = 6;
 
-  GfComBehavior() : unknown10(fw::Allocator::getProcAllocator()) {}
+  GfComBehavior() : m_pluginManager(fw::Allocator::getProcAllocator()) {}
 
   const mm::mtl::RTTI *getRTTI() const override { return &m_rtti; }
   void changeLayer(u32 oldLayer, u32 newLayer) override {}
@@ -83,8 +83,8 @@ public:
 
   // Inferred helper: plugin at index when it has the type T; original name unknown.
   template <typename T> T *unknown001(u32 index) const {
-    if (index < unknown10.unknown28.size()) {
-      Plugin *plugin = unknown10.unknown28[index];
+    if (index < m_pluginManager.unknown28.size()) {
+      Plugin *plugin = m_pluginManager.unknown28[index];
       if (plugin != nullptr) {
         return mm::mtl::dynamicCast<T>(plugin);
       }
@@ -99,10 +99,10 @@ public:
     comAsm->unknown70[0].unknown08.bind<GfComBehavior>(this, &GfComBehavior::callbackAnim);
   }
 
-  PluginManager unknown10; // Inferred role: plugin manager; original member name unknown.
+  PluginManager m_pluginManager; // Inferred role: plugin manager; original member name unknown.
 };
 
-static_assert(offsetof(GfComBehavior, unknown10) == 0x10, "");
+static_assert(offsetof(GfComBehavior, m_pluginManager) == 0x10, "");
 static_assert(sizeof(GfComBehavior) == 0x98, "");
 
 } // namespace gf

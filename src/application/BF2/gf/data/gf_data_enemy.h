@@ -9,11 +9,27 @@ namespace gf {
 
 constexpr u32 PARTS_UNKNOWN_4 = 4; // Inferred role: extra parts count; original name unknown.
 
-// Inferred role: bit 9 of SDataEnemy::unknown04 (field damage, unknown05_1), read through the 32-bit word by GmkDmgPhantomManager::listenerGfObj; original name unknown.
+// Inferred roles: bits 0 to 8 of SDataEnemy::unknown04, set and cleared by setupSDataEnemy (the roles are those of the bit-field members below, or of the table flag that sets them); original names
+// unknown.
+constexpr u32 ENEMY_FLAG_UNKNOWN_0 = 1 << 0; // Inferred role: named.
+constexpr u32 ENEMY_FLAG_UNKNOWN_1 = 1 << 1; // Inferred role: boss.
+constexpr u32 ENEMY_FLAG_UNKNOWN_2 = 1 << 2; // Inferred role: FAOff flag of the arrange table.
+constexpr u32 ENEMY_FLAG_UNKNOWN_3 = 1 << 3; // Inferred role: NoEcSkip flag of the arrange table.
+constexpr u32 ENEMY_FLAG_UNKNOWN_4 = 1 << 4; // Inferred role: link genus.
+constexpr u32 ENEMY_FLAG_UNKNOWN_5 = 1 << 5; // Inferred role: guard front.
+constexpr u32 ENEMY_FLAG_UNKNOWN_6 = 1 << 6; // Inferred role: guard left.
+constexpr u32 ENEMY_FLAG_UNKNOWN_7 = 1 << 7; // Inferred role: guard right.
+constexpr u32 ENEMY_FLAG_UNKNOWN_8 = 1 << 8; // Inferred role: guard back.
+
+// Inferred role: bit 9 of SDataEnemy::unknown04 (field damage, m_fieldDamage), read through the 32-bit word by GmkDmgPhantomManager::listenerGfObj; original name unknown.
 constexpr u32 ENEMY_FLAG_UNKNOWN_9 = 1 << 9;
 
 // Inferred role: bit 10 of SDataEnemy::unknown04, set by setupSDataEnemy from GfBdatRsc::isRscEnGenusFlaggimmicktype; original name unknown.
 constexpr u32 ENEMY_FLAG_UNKNOWN_10 = 1 << 10;
+
+// Inferred roles: bits 11 and 12 of SDataEnemy::unknown04, set and cleared by setupSDataEnemy from GfBdatRsc::isRscEnFlagNoCamera and isRscEnFlagWeaponDrawDisp; original names unknown.
+constexpr u32 ENEMY_FLAG_UNKNOWN_11 = 1 << 11; // Inferred role: no camera fade.
+constexpr u32 ENEMY_FLAG_UNKNOWN_12 = 1 << 12; // Inferred role: weapon draw disp.
 
 // Layout from GfDataEnemy::setupSDataEnemy (0x7100299478), which fills each member from a CHR_EnArrange,
 // CHR_EnParam or RSC_En column, and from the zeroing stores of SDataEnemy::clear (0x710029285c).
@@ -27,101 +43,101 @@ struct SDataEnemy {
       u8 unknown04_0 : 1; // Inferred role: named; original member name unknown.
       u8 unknown04_1 : 1; // Inferred role: boss; original member name unknown.
       u8 : 2;
-      u8 unknown04_4 : 1; // Inferred role: link genus; original member name unknown.
-      u8 unknown04_5 : 1; // Inferred role: guard front; original member name unknown.
-      u8 unknown04_6 : 1; // Inferred role: guard left; original member name unknown.
-      u8 unknown04_7 : 1; // Inferred role: guard right; original member name unknown.
-      u8 unknown05_0 : 1; // Inferred role: guard back; original member name unknown.
-      u8 unknown05_1 : 1; // Inferred role: field damage; original member name unknown.
+      u8 m_linkGenus : 1;   // Inferred role: link genus; named after the game accessor gf::DataObjEnemy::isLinkGenus.
+      u8 m_guardFront : 1;  // Inferred role: guard front; named after the game accessor gf::DataObjEnemy::isGuardFront.
+      u8 m_guardLeft : 1;   // Inferred role: guard left; named after the game accessor gf::DataObjEnemy::isGuardLeft.
+      u8 m_guardRight : 1;  // Inferred role: guard right; named after the game accessor gf::DataObjEnemy::isGuardRight.
+      u8 m_guardBack : 1;   // Inferred role: guard back; named after the game accessor gf::DataObjEnemy::isGuardBack.
+      u8 m_fieldDamage : 1; // Inferred role: field damage; named after the game accessor gf::DataObjEnemy::isFieldDamage.
       u8 : 1;
-      u8 unknown05_3 : 1; // Inferred role: no camera fade; original member name unknown.
-      u8 unknown05_4 : 1; // Inferred role: weapon draw disp; original member name unknown.
+      u8 m_noCameraFade : 1;   // Inferred role: no camera fade; named after the game accessor gf::DataObjEnemy::isNoCameraFade.
+      u8 m_weaponDrawDisp : 1; // Inferred role: weapon draw disp; named after the game accessor gf::DataObjEnemy::isWeaponDrawDisp.
       u8 : 3;
     };
   };
-  u16 unknown08;     // Inferred role: param id; original member name unknown.
-  u16 unknown0a;     // Inferred role: blade id; original member name unknown.
-  u16 unknown0c;     // Inferred role: name; original member name unknown.
-  u8 unknown0e;      // Inferred role: level; original member name unknown.
-  u16 unknown10;     // Inferred role: exp rev; original member name unknown.
-  u16 unknown12;     // Inferred role: gold rev; original member name unknown.
-  u16 unknown14;     // Inferred role: drop table id; original member name unknown.
-  u16 unknown16;     // Inferred role: drop table id 2; original member name unknown.
-  u16 unknown18;     // Inferred role: drop table id 3; original member name unknown.
-  u16 unknown1a;     // Inferred role: precious id; original member name unknown.
-  u16 unknown1c;     // Inferred role: scale; original member name unknown.
-  u8 unknown1e;      // Inferred role: chr size; original member name unknown.
-  u8 unknown1f;      // Inferred role: link radius; original member name unknown.
-  u8 unknown20;      // Inferred role: detects; original member name unknown.
-  u16 unknown22;     // Inferred role: search range; original member name unknown.
-  u16 unknown24;     // Inferred role: search angle; original member name unknown.
-  u8 unknown26;      // Inferred role: search radius; original member name unknown.
-  u8 unknown27;      // Inferred role: battle area; original member name unknown.
-  u8 unknown28;      // Role and original member name unknown.
-  u8 unknown29;      // Inferred role: ai group; original member name unknown.
-  u8 unknown2a;      // Inferred role: ai group num; original member name unknown.
-  u16 unknown2c;     // Inferred role: book id; original member name unknown.
-  u16 unknown2e;     // Inferred role: enhance id 1; original member name unknown.
-  u16 unknown30;     // Inferred role: enhance id 2; original member name unknown.
-  u16 unknown32;     // Inferred role: enhance id 3; original member name unknown.
-  u16 unknown34;     // Inferred role: param; original member name unknown.
-  u16 unknown36;     // Inferred role: rst debuff rev; original member name unknown.
-  u16 unknown38;     // Inferred role: heal pot type rev; original member name unknown.
-  u16 unknown3a;     // Inferred role: summon id; original member name unknown.
-  u8 unknown3c;      // Inferred role: bgm id; original member name unknown.
-  u8 unknown3d;      // Inferred role: se env id; original member name unknown.
-  u8 unknown3e;      // Inferred role: zone id; original member name unknown.
-  u8 unknown3f;      // Role and original member name unknown.
-  u8 unknown40;      // Role and original member name unknown.
-  u8 unknown41;      // Inferred role: blade attribute; original member name unknown.
-  u8 unknown42;      // Inferred role: extra parts; original member name unknown.
-  u16 unknown44;     // Inferred role: resource; original member name unknown.
-  u16 unknown46;     // Inferred role: ai id; original member name unknown.
-  u8 unknown48;      // Inferred role: enemy role; original member name unknown.
-  u8 unknown49;      // Inferred role: walk speed; original member name unknown.
-  u8 unknown4a;      // Inferred role: run speed; original member name unknown.
-  u8 unknown4b;      // Inferred role: battle speed; original member name unknown.
-  u8 unknown4c;      // Inferred role: hp default; original member name unknown.
-  u8 unknown4d;      // Inferred role: hp limit; original member name unknown.
-  u8 unknown4e;      // Inferred role: scout start hp; original member name unknown.
-  u8 unknown4f;      // Inferred role: scout end hp; original member name unknown.
-  u16 unknown50;     // Inferred role: hp max rev; original member name unknown.
-  u16 unknown52;     // Inferred role: strength rev; original member name unknown.
-  u16 unknown54;     // Inferred role: power ether rev; original member name unknown.
-  u16 unknown56;     // Inferred role: dex rev; original member name unknown.
-  u16 unknown58;     // Inferred role: agility rev; original member name unknown.
-  u16 unknown5a;     // Inferred role: luck rev; original member name unknown.
-  u16 unknown5c;     // Inferred role: p armor; original member name unknown.
-  u16 unknown5e;     // Inferred role: e armor; original member name unknown.
-  u8 unknown60;      // Inferred role: resistance power; original member name unknown.
-  u8 unknown61;      // Inferred role: resistance ether; original member name unknown.
-  u8 unknown62;      // Inferred role: blade attribute; original member name unknown.
-  u8 unknown63;      // Inferred role: critical rate; original member name unknown.
-  u8 unknown64;      // Inferred role: guard rate; original member name unknown.
-  u8 unknown65;      // Inferred role: heal pot drop; original member name unknown.
-  u16 unknown66;     // Inferred role: resistance combo; original member name unknown.
-  u16 unknown68;     // Inferred role: invincible combo; original member name unknown.
-  u16 unknown6a;     // Inferred role: aura; original member name unknown.
-  u8 unknown6c;      // Inferred role: dying hp; original member name unknown.
-  u8 unknown6d;      // Inferred role: wt normal; original member name unknown.
-  u8 unknown6e;      // Inferred role: wt dying; original member name unknown.
-  u8 unknown6f;      // Inferred role: hate 0 target; original member name unknown.
-  u16 unknown70;     // Inferred role: death arts; original member name unknown.
-  u32 unknown74;     // Inferred role: death arts stop; original member name unknown.
-  u16 unknown78[16]; // Inferred role: arts; original member name unknown.
-  u8 unknown98;      // Inferred role: family; original member name unknown.
-  u8 unknown99;      // Inferred role: genus; original member name unknown.
-  u8 unknown9a;      // Inferred role: move type; original member name unknown.
-  u8 unknown9b;      // Inferred role: field move type; original member name unknown.
-  u8 unknown9c;      // Inferred role: memory slot; original member name unknown.
-  u16 unknown9e[5];  // Inferred role: equip weapons; original member name unknown.
-  u16 unknowna8;     // Inferred role: level; original member name unknown.
-  u32 unknownac;     // Inferred role: hp max; original member name unknown.
-  u16 unknownb0;     // Inferred role: strength; original member name unknown.
-  u16 unknownb2;     // Inferred role: power ether; original member name unknown.
-  u16 unknownb4;     // Inferred role: dex; original member name unknown.
-  u16 unknownb6;     // Inferred role: agility; original member name unknown.
-  u16 unknownb8;     // Inferred role: luck; original member name unknown.
+  u16 unknown08;         // Inferred role: param id; original member name unknown.
+  u16 unknown0a;         // Inferred role: blade id; original member name unknown.
+  u16 unknown0c;         // Inferred role: name; original member name unknown.
+  u8 unknown0e;          // Inferred role: level; original member name unknown.
+  u16 unknown10;         // Inferred role: exp rev; original member name unknown.
+  u16 unknown12;         // Inferred role: gold rev; original member name unknown.
+  u16 unknown14;         // Inferred role: drop table id; original member name unknown.
+  u16 unknown16;         // Inferred role: drop table id 2; original member name unknown.
+  u16 unknown18;         // Inferred role: drop table id 3; original member name unknown.
+  u16 unknown1a;         // Inferred role: precious id; original member name unknown.
+  u16 unknown1c;         // Inferred role: scale; original member name unknown.
+  u8 unknown1e;          // Inferred role: chr size; original member name unknown.
+  u8 m_linkRadius;       // Inferred role: link radius; named after the game accessor gf::DataObjEnemy::getLinkRadius.
+  u8 unknown20;          // Inferred role: detects; original member name unknown.
+  u16 unknown22;         // Inferred role: search range; original member name unknown.
+  u16 unknown24;         // Inferred role: search angle; original member name unknown.
+  u8 unknown26;          // Inferred role: search radius; original member name unknown.
+  u8 unknown27;          // Inferred role: battle area; original member name unknown.
+  u8 unknown28;          // Role and original member name unknown.
+  u8 unknown29;          // Inferred role: ai group; original member name unknown.
+  u8 unknown2a;          // Inferred role: ai group num; original member name unknown.
+  u16 unknown2c;         // Inferred role: book id; original member name unknown.
+  u16 unknown2e;         // Inferred role: enhance id 1; original member name unknown.
+  u16 unknown30;         // Inferred role: enhance id 2; original member name unknown.
+  u16 unknown32;         // Inferred role: enhance id 3; original member name unknown.
+  u16 unknown34;         // Inferred role: param; original member name unknown.
+  u16 unknown36;         // Inferred role: rst debuff rev; original member name unknown.
+  u16 unknown38;         // Inferred role: heal pot type rev; original member name unknown.
+  u16 unknown3a;         // Inferred role: summon id; original member name unknown.
+  u8 unknown3c;          // Inferred role: bgm id; original member name unknown.
+  u8 unknown3d;          // Inferred role: se env id; original member name unknown.
+  u8 unknown3e;          // Inferred role: zone id; original member name unknown.
+  u8 unknown3f;          // Role and original member name unknown.
+  u8 unknown40;          // Role and original member name unknown.
+  u8 unknown41;          // Inferred role: blade attribute; original member name unknown.
+  u8 unknown42;          // Inferred role: extra parts; original member name unknown.
+  u16 unknown44;         // Inferred role: resource; original member name unknown.
+  u16 unknown46;         // Inferred role: ai id; original member name unknown.
+  u8 unknown48;          // Inferred role: enemy role; original member name unknown.
+  u8 unknown49;          // Inferred role: walk speed; original member name unknown.
+  u8 unknown4a;          // Inferred role: run speed; original member name unknown.
+  u8 unknown4b;          // Inferred role: battle speed; original member name unknown.
+  u8 unknown4c;          // Inferred role: hp default; original member name unknown.
+  u8 unknown4d;          // Inferred role: hp limit; original member name unknown.
+  u8 unknown4e;          // Inferred role: scout start hp; original member name unknown.
+  u8 unknown4f;          // Inferred role: scout end hp; original member name unknown.
+  u16 unknown50;         // Inferred role: hp max rev; original member name unknown.
+  u16 unknown52;         // Inferred role: strength rev; original member name unknown.
+  u16 unknown54;         // Inferred role: power ether rev; original member name unknown.
+  u16 unknown56;         // Inferred role: dex rev; original member name unknown.
+  u16 unknown58;         // Inferred role: agility rev; original member name unknown.
+  u16 unknown5a;         // Inferred role: luck rev; original member name unknown.
+  u16 unknown5c;         // Inferred role: p armor; original member name unknown.
+  u16 unknown5e;         // Inferred role: e armor; original member name unknown.
+  u8 m_resistancePower;  // Inferred role: resistance power; named after the game accessor gf::DataObjEnemy::getResistancePower.
+  u8 m_resistanceEther;  // Inferred role: resistance ether; named after the game accessor gf::DataObjEnemy::getResistanceEther.
+  u8 unknown62;          // Inferred role: blade attribute; original member name unknown.
+  u8 unknown63;          // Inferred role: critical rate; original member name unknown.
+  u8 unknown64;          // Inferred role: guard rate; original member name unknown.
+  u8 unknown65;          // Inferred role: heal pot drop; original member name unknown.
+  u16 m_resistanceCombo; // Inferred role: resistance combo; named after the game accessor gf::DataObjEnemy::getResistanceCombo.
+  u16 m_invincibleCombo; // Inferred role: invincible combo; named after the game accessor gf::DataObjEnemy::getInvincibleCombo.
+  u16 unknown6a;         // Inferred role: aura; original member name unknown.
+  u8 unknown6c;          // Inferred role: dying hp; original member name unknown.
+  u8 unknown6d;          // Inferred role: wt normal; original member name unknown.
+  u8 unknown6e;          // Inferred role: wt dying; original member name unknown.
+  u8 unknown6f;          // Inferred role: hate 0 target; original member name unknown.
+  u16 unknown70;         // Inferred role: death arts; original member name unknown.
+  u32 unknown74;         // Inferred role: death arts stop; original member name unknown.
+  u16 unknown78[16];     // Inferred role: arts; original member name unknown.
+  u8 unknown98;          // Inferred role: family; original member name unknown.
+  u8 m_genus;            // Inferred role: genus; named after the game accessor gf::DataObjEnemy::getGenus.
+  u8 unknown9a;          // Inferred role: move type; original member name unknown.
+  u8 unknown9b;          // Inferred role: field move type; original member name unknown.
+  u8 unknown9c;          // Inferred role: memory slot; original member name unknown.
+  u16 m_equipWeapon[5];  // Inferred role: equip weapons; named after the game accessor gf::DataObjEnemy::getEquipWeapon.
+  u16 unknowna8;         // Inferred role: level; original member name unknown.
+  u32 unknownac;         // Inferred role: hp max; original member name unknown.
+  u16 unknownb0;         // Inferred role: strength; original member name unknown.
+  u16 unknownb2;         // Inferred role: power ether; original member name unknown.
+  u16 unknownb4;         // Inferred role: dex; original member name unknown.
+  u16 unknownb6;         // Inferred role: agility; original member name unknown.
+  u16 unknownb8;         // Inferred role: luck; original member name unknown.
 
   SDataEnemy();
   SDataEnemy(u32 arrange, u32 level);
@@ -134,7 +150,7 @@ static_assert(offsetof(SDataEnemy, unknown0e) == 0x00e, "");
 static_assert(offsetof(SDataEnemy, unknown10) == 0x010, "");
 static_assert(offsetof(SDataEnemy, unknown12) == 0x012, "");
 static_assert(offsetof(SDataEnemy, unknown1e) == 0x01e, "");
-static_assert(offsetof(SDataEnemy, unknown1f) == 0x01f, "");
+static_assert(offsetof(SDataEnemy, m_linkRadius) == 0x01f, "");
 static_assert(offsetof(SDataEnemy, unknown22) == 0x022, "");
 static_assert(offsetof(SDataEnemy, unknown28) == 0x028, "");
 static_assert(offsetof(SDataEnemy, unknown2a) == 0x02a, "");
@@ -146,19 +162,19 @@ static_assert(offsetof(SDataEnemy, unknown44) == 0x044, "");
 static_assert(offsetof(SDataEnemy, unknown49) == 0x049, "");
 static_assert(offsetof(SDataEnemy, unknown4a) == 0x04a, "");
 static_assert(offsetof(SDataEnemy, unknown5c) == 0x05c, "");
-static_assert(offsetof(SDataEnemy, unknown60) == 0x060, "");
+static_assert(offsetof(SDataEnemy, m_resistancePower) == 0x060, "");
 static_assert(offsetof(SDataEnemy, unknown62) == 0x062, "");
 static_assert(offsetof(SDataEnemy, unknown64) == 0x064, "");
-static_assert(offsetof(SDataEnemy, unknown66) == 0x066, "");
-static_assert(offsetof(SDataEnemy, unknown68) == 0x068, "");
+static_assert(offsetof(SDataEnemy, m_resistanceCombo) == 0x066, "");
+static_assert(offsetof(SDataEnemy, m_invincibleCombo) == 0x068, "");
 static_assert(offsetof(SDataEnemy, unknown70) == 0x070, "");
 static_assert(offsetof(SDataEnemy, unknown74) == 0x074, "");
 static_assert(offsetof(SDataEnemy, unknown78) == 0x078, "");
 static_assert(offsetof(SDataEnemy, unknown98) == 0x098, "");
-static_assert(offsetof(SDataEnemy, unknown99) == 0x099, "");
+static_assert(offsetof(SDataEnemy, m_genus) == 0x099, "");
 static_assert(offsetof(SDataEnemy, unknown9a) == 0x09a, "");
 static_assert(offsetof(SDataEnemy, unknown9c) == 0x09c, "");
-static_assert(offsetof(SDataEnemy, unknown9e) == 0x09e, "");
+static_assert(offsetof(SDataEnemy, m_equipWeapon) == 0x09e, "");
 static_assert(offsetof(SDataEnemy, unknowna8) == 0x0a8, "");
 static_assert(offsetof(SDataEnemy, unknownac) == 0x0ac, "");
 static_assert(offsetof(SDataEnemy, unknownb0) == 0x0b0, "");

@@ -5,7 +5,6 @@
 #include "mm_mtl/intrusive_ptr.h"
 #include "types.h"
 #include "ui/event/ui_object_listener.h"
-#include "ui/list/ui_list_info.h"
 
 namespace ui {
 class UICtrlCursorSelect;
@@ -14,15 +13,13 @@ class UISelectObjList;
 
 namespace gf {
 
+class GfMenuBladeList;
 class GfMenuCallContext;
 class GfMenuDriverList;
 class GfMenuIDList;
 class GfMenuItemList;
 class GfMenuReferenceNumber;
 struct MenuCommonWindowParam;
-struct MenuID;
-struct MenuDriverInfo;
-struct MenuItemInfo;
 
 class GfMenuObjCommonText : public GfMenuObject {
 public:
@@ -32,61 +29,98 @@ public:
   static int setFadeIn(u32 handle);
   class DialogListener : public ui::UIObjectListener {
   public:
+    DialogListener(GfMenuObjCommonText *owner) : unknown0c(0), _10(), unknown18(0), m_menuObjCommonText(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     int unknown0c; // Inferred role: dialog type, 0 for a single button; original member name unknown.
     u8 _10[0x18 - 0x10];
-    int unknown18;                  // Inferred role: open flag; original member name unknown.
-    GfMenuObjCommonText *unknown20; // Inferred role: owner; original member name unknown.
+    int unknown18;                            // Inferred role: open flag; original member name unknown.
+    GfMenuObjCommonText *m_menuObjCommonText; // Inferred role: owner; original member name unknown.
   };
   class DrChangeListener : public ui::UIObjectListener {
   public:
+    DrChangeListener(GfMenuObjCommonText *owner) : _0c(), unknown18(0), m_menuObjCommonText(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x18 - 0x0c];
-    int unknown18;                  // Inferred role: open flag; original member name unknown.
-    GfMenuObjCommonText *unknown20; // Inferred role: owner; original member name unknown.
+    int unknown18;                            // Inferred role: open flag; original member name unknown.
+    GfMenuObjCommonText *m_menuObjCommonText; // Inferred role: owner; original member name unknown.
   };
   class ErrorListener : public ui::UIObjectListener {
   public:
+    ErrorListener(GfMenuObjCommonText *owner) : _0c(), unknown18(0), m_menuObjCommonText(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x18 - 0x0c];
-    int unknown18;                  // Inferred role: open flag; original member name unknown.
-    GfMenuObjCommonText *unknown20; // Inferred role: owner; original member name unknown.
+    int unknown18;                            // Inferred role: open flag; original member name unknown.
+    GfMenuObjCommonText *m_menuObjCommonText; // Inferred role: owner; original member name unknown.
   };
   class GetItemListener : public ui::UIObjectListener {
   public:
+    GetItemListener(GfMenuObjCommonText *owner) : _0c(), unknown18(0), m_menuObjCommonText(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x18 - 0x0c];
-    int unknown18;                  // Inferred role: open flag; original member name unknown.
-    GfMenuObjCommonText *unknown20; // Inferred role: owner; original member name unknown.
+    int unknown18;                            // Inferred role: open flag; original member name unknown.
+    GfMenuObjCommonText *m_menuObjCommonText; // Inferred role: owner; original member name unknown.
   };
-  // Only the members that reciveEvent (1.0.0: 0x710043d188) reads or writes are declared: the constructor is inlined in GfMenuObjCommonText::initialize, which is not matched, so the rest of the
-  // layout and the size are not proven.
+  // The members that reciveEvent (1.0.0: 0x710043d188) reads or writes, and the owner and the zeroed range that the constructor inlined in GfMenuObjCommonText::initialize (0x710043c558) stores.
   class MainListener : public ui::UIObjectListener {
   public:
+    MainListener(GfMenuObjCommonText *owner) : unknown0c(0), unknown10(0), _14(), m_menuObjCommonText(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u32 unknown0c; // Inferred role: input group priority saved while a window is open; original member name unknown.
     u32 unknown10; // Inferred role: type of the open window, 0xff for none; original member name unknown.
+    u8 _14[0x1c - 0x14];
+    GfMenuObjCommonText *m_menuObjCommonText; // Inferred role: owner; original member name unknown.
   };
   class NumSelectListener : public ui::UIObjectListener {
   public:
+    NumSelectListener(GfMenuObjCommonText *owner) : _0c(), unknown18(0), m_menuObjCommonText(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x18 - 0x0c];
-    int unknown18;                  // Inferred role: open flag; original member name unknown.
-    GfMenuObjCommonText *unknown20; // Inferred role: owner; original member name unknown.
+    int unknown18;                            // Inferred role: open flag; original member name unknown.
+    GfMenuObjCommonText *m_menuObjCommonText; // Inferred role: owner; original member name unknown.
   };
   class OwnerChangeListener : public ui::UIObjectListener {
   public:
+    OwnerChangeListener(GfMenuObjCommonText *owner) : _0c(), unknown18(0), m_menuObjCommonText(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x18 - 0x0c];
-    int unknown18;                  // Inferred role: open flag; original member name unknown.
-    GfMenuObjCommonText *unknown20; // Inferred role: owner; original member name unknown.
+    int unknown18;                            // Inferred role: open flag; original member name unknown.
+    GfMenuObjCommonText *m_menuObjCommonText; // Inferred role: owner; original member name unknown.
+  };
+  // The next three listeners are declared for the constructors inlined in GfMenuObjCommonText::initialize (zeroed range 0x0c to 0x1c, owner at 0x20); their reciveEvent is not matched yet. The members
+  // that MerListener::reciveEvent (0x710043ddf4) and SelectListener::reciveEvent (0x710043f124) read or write are named, KizunaListener::reciveEvent (0x710043e724) reads none of the zeroed range.
+  class MerListener : public ui::UIObjectListener {
+  public:
+    MerListener(GfMenuObjCommonText *owner) : _0c(), unknown18(0), m_menuObjCommonText(owner) {}
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x18 - 0x0c];
+    int unknown18;                            // Inferred role: open flag; original member name unknown.
+    GfMenuObjCommonText *m_menuObjCommonText; // Inferred role: owner; original member name unknown.
+  };
+  class KizunaListener : public ui::UIObjectListener {
+  public:
+    KizunaListener(GfMenuObjCommonText *owner) : _0c(), m_menuObjCommonText(owner) {}
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x1c - 0x0c];                      // Actively zero-initialized unknown byte range, NOT padding; original name/role unknown.
+    GfMenuObjCommonText *m_menuObjCommonText; // Inferred role: owner; original member name unknown.
+  };
+  class SelectListener : public ui::UIObjectListener {
+  public:
+    SelectListener(GfMenuObjCommonText *owner) : unknown0c(0), _10(), unknown18(0), m_menuObjCommonText(owner) {}
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    int unknown0c; // Inferred role: parameter of the open event, tested against zero by the next events; original member name unknown.
+    u8 _10[0x18 - 0x10];
+    int unknown18;                            // Inferred role: open flag; original member name unknown.
+    GfMenuObjCommonText *m_menuObjCommonText; // Inferred role: owner; original member name unknown.
   };
   static int setFadeOut(u32 handle);
   void initialize() override;
@@ -121,13 +155,21 @@ public:
   static void openOwnerChange(GfMenuCallContext *context, u32 driver, u32 other);
   static void openNumSelect(GfMenuCallContext *context, const OpenNumSelectParam &param);
 
-  static ui::UIListInfo<MenuItemInfo> *s_pItemList;
-  static ui::UIListInfo<MenuID> *s_pSubMenuIDList;
-  static ui::UIListInfo<MenuDriverInfo> *s_pChangeDrList;
+  static GfMenuItemList *s_pItemList;
+  static GfMenuIDList *s_pSubMenuIDList;
+  static GfMenuDriverList *s_pChangeDrList;
 
   u8 _24[0x28 - 0x24];
   ui::UICtrlCursorSelect *unknown28; // Inferred role: dialog cursor; original member name unknown.
-  u8 _30[0x68 - 0x30];
+  // 0x30, 0x38 and 0x60 are released by the destructor (0x710043bf04). MerListener::reciveEvent stores the UISelectObjList it creates at 0x30 and the cursor created over it at 0x38;
+  // KizunaListener::reciveEvent stores its UISelectObjList at 0x60.
+  ui::UISelectObjList *unknown30;                         // Inferred role: mercenary dialog objects; original member name unknown.
+  ui::UICtrlCursorSelect *unknown38;                      // Inferred role: mercenary dialog cursor; original member name unknown.
+  mm::mtl::IntrusivePtr<GfMenuReferenceNumber> unknown40; // Inferred role: reference number; original member name unknown.
+  mm::mtl::IntrusivePtr<GfMenuReferenceNumber> unknown48; // Inferred role: reference number; original member name unknown.
+  GfMenuBladeList *m_menuBladeList;                       // Inferred role: blade list; original member name unknown.
+  GfMenuDriverList *unknown58;                            // Inferred role: driver list; original member name unknown.
+  ui::UISelectObjList *unknown60;                         // Inferred role: kizuna dialog objects; original member name unknown.
   ui::UISelectObjList *unknown68;                         // Inferred role: driver change objects; original member name unknown.
   ui::UICtrlCursorSelect *unknown70;                      // Inferred role: driver change cursor; original member name unknown.
   mm::mtl::IntrusivePtr<GfMenuReferenceNumber> unknown78; // Inferred role: selected number; original member name unknown.
@@ -136,15 +178,27 @@ public:
 };
 
 static_assert(offsetof(GfMenuObjCommonText::DialogListener, unknown0c) == 0x0c, "");
-static_assert(offsetof(GfMenuObjCommonText::DialogListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjCommonText::DialogListener, m_menuObjCommonText) == 0x20, "");
 static_assert(offsetof(GfMenuObjCommonText::MainListener, unknown0c) == 0x0c, "");
 static_assert(offsetof(GfMenuObjCommonText::MainListener, unknown10) == 0x10, "");
-static_assert(offsetof(GfMenuObjCommonText::DrChangeListener, unknown20) == 0x20, "");
-static_assert(offsetof(GfMenuObjCommonText::ErrorListener, unknown20) == 0x20, "");
-static_assert(offsetof(GfMenuObjCommonText::GetItemListener, unknown20) == 0x20, "");
-static_assert(offsetof(GfMenuObjCommonText::NumSelectListener, unknown20) == 0x20, "");
-static_assert(offsetof(GfMenuObjCommonText::OwnerChangeListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjCommonText::DrChangeListener, m_menuObjCommonText) == 0x20, "");
+static_assert(offsetof(GfMenuObjCommonText::ErrorListener, m_menuObjCommonText) == 0x20, "");
+static_assert(offsetof(GfMenuObjCommonText::GetItemListener, m_menuObjCommonText) == 0x20, "");
+static_assert(offsetof(GfMenuObjCommonText::NumSelectListener, m_menuObjCommonText) == 0x20, "");
+static_assert(offsetof(GfMenuObjCommonText::OwnerChangeListener, m_menuObjCommonText) == 0x20, "");
+static_assert(offsetof(GfMenuObjCommonText::MerListener, m_menuObjCommonText) == 0x20, "");
+static_assert(offsetof(GfMenuObjCommonText::KizunaListener, m_menuObjCommonText) == 0x20, "");
+static_assert(offsetof(GfMenuObjCommonText::SelectListener, unknown0c) == 0x0c, "");
+static_assert(offsetof(GfMenuObjCommonText::SelectListener, m_menuObjCommonText) == 0x20, "");
+static_assert(offsetof(GfMenuObjCommonText::MainListener, m_menuObjCommonText) == 0x20, "");
 static_assert(offsetof(GfMenuObjCommonText, unknown28) == 0x28, "");
+static_assert(offsetof(GfMenuObjCommonText, unknown30) == 0x30, "");
+static_assert(offsetof(GfMenuObjCommonText, unknown38) == 0x38, "");
+static_assert(offsetof(GfMenuObjCommonText, unknown40) == 0x40, "");
+static_assert(offsetof(GfMenuObjCommonText, unknown48) == 0x48, "");
+static_assert(offsetof(GfMenuObjCommonText, m_menuBladeList) == 0x50, "");
+static_assert(offsetof(GfMenuObjCommonText, unknown58) == 0x58, "");
+static_assert(offsetof(GfMenuObjCommonText, unknown60) == 0x60, "");
 static_assert(offsetof(GfMenuObjCommonText, unknown68) == 0x68, "");
 static_assert(offsetof(GfMenuObjCommonText, unknown70) == 0x70, "");
 static_assert(offsetof(GfMenuObjCommonText, unknown78) == 0x78, "");

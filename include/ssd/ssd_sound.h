@@ -54,9 +54,9 @@ public:
   Object(ObjectType::Id type);
   virtual ~Object() {}
 
-  u32 unknown08;        // Inferred role: type; original member name unknown.
-  u32 unknown0c;        // Inferred role: cleared by the constructor; original member name unknown.
-  SoundCore *unknown10; // Inferred role: sound core instance at construction; original member name unknown.
+  u32 unknown08;          // Inferred role: type; original member name unknown.
+  u32 unknown0c;          // Inferred role: cleared by the constructor; original member name unknown.
+  SoundCore *m_soundCore; // Inferred role: sound core instance at construction; original member name unknown.
 };
 
 class SoundActor : public Object, public List<SoundActor>::Node {
@@ -141,17 +141,17 @@ public:
   ~SoundEntry() override;
   SoundGroup *GetSoundGroup() const;
 
-  SoundParam unknown30; // Inferred role: sound parameters; original member name unknown.
+  SoundParam m_soundParam; // Inferred role: sound parameters; original member name unknown.
   u8 _c4[0xc8 - 0xc4];
-  WaveSource *unknownc8; // Inferred role: wave source; original member name unknown.
-  SoundBank *unknownd0;  // Inferred role: sound bank; original member name unknown.
-  bool unknownd8;        // Inferred role: allocated entry; original member name unknown.
+  WaveSource *m_waveSource; // Inferred role: wave source; original member name unknown.
+  SoundBank *m_soundBank;   // Inferred role: sound bank; original member name unknown.
+  bool unknownd8;           // Inferred role: allocated entry; original member name unknown.
   u8 _d9[0xe0 - 0xd9];
 };
 
-static_assert(offsetof(SoundEntry, unknown30) == 0x30, "");
-static_assert(offsetof(SoundEntry, unknownc8) == 0xc8, "");
-static_assert(offsetof(SoundEntry, unknownd0) == 0xd0, "");
+static_assert(offsetof(SoundEntry, m_soundParam) == 0x30, "");
+static_assert(offsetof(SoundEntry, m_waveSource) == 0xc8, "");
+static_assert(offsetof(SoundEntry, m_soundBank) == 0xd0, "");
 static_assert(sizeof(SoundEntry) == 0xe0, "");
 
 class SoundBank : public Object, public List<SoundBank>::Node {
@@ -180,13 +180,13 @@ public:
 
   int m_number;
   u8 _34[0x38 - 0x34];
-  TextFixed<64> unknown38;        // Inferred role: name; original member name unknown.
+  TextFixed<64> m_name;           // Inferred role: name; named after the game accessor ssd::SoundBank::GetName.
   List<SoundEntry> unknowne0;     // Inferred role: sound entries; original member name unknown.
   Array<SoundGroup *> unknown108; // Inferred role: sound groups; original member name unknown.
 };
 
 static_assert(offsetof(SoundBank, m_number) == 0x30, "");
-static_assert(offsetof(SoundBank, unknown38) == 0x38, "");
+static_assert(offsetof(SoundBank, m_name) == 0x38, "");
 static_assert(offsetof(SoundBank, unknowne0) == 0xe0, "");
 static_assert(offsetof(SoundBank, unknown108) == 0x108, "");
 
@@ -324,13 +324,13 @@ public:
   void ClearDelegate();
   void ClearDelegateImpl();
 
-  const SoundEntry *unknown30; // Inferred role: sound entry; original member name unknown.
-  SoundActor *unknown38;       // Inferred role: sound actor; original member name unknown.
-  u32 unknown40;               // Inferred role: cleared by the constructor; original member name unknown.
-  SoundCategory unknown48;     // Inferred role: category; original member name unknown.
-  bool unknown58;              // Inferred role: valid; original member name unknown.
-  bool unknown59;              // Inferred role: cleared by the constructor; original member name unknown.
-  bool unknown5a;              // Inferred role: cleared by the constructor; original member name unknown.
+  const SoundEntry *m_soundEntry; // Inferred role: sound entry; original member name unknown.
+  SoundActor *m_soundActor;       // Inferred role: sound actor; original member name unknown.
+  u32 unknown40;                  // Inferred role: cleared by the constructor; original member name unknown.
+  SoundCategory m_soundCategory;  // Inferred role: category; original member name unknown.
+  bool unknown58;                 // Inferred role: valid; original member name unknown.
+  bool unknown59;                 // Inferred role: cleared by the constructor; original member name unknown.
+  bool unknown5a;                 // Inferred role: cleared by the constructor; original member name unknown.
   u8 _5b[0x60 - 0x5b];
   f64 unknown60;        // Inferred role: time at the start; original member name unknown.
   f32 unknown68;        // Inferred role: pregap time; original member name unknown.
@@ -340,22 +340,22 @@ public:
   f32 unknownb4;        // Inferred role: value set to 1.0 by Init; original member name unknown.
   f32 unknownb8;        // Inferred role: category volume; original member name unknown.
   f32 unknownbc;        // Inferred role: value cleared by Init; original member name unknown.
-  Effect unknownc0[2];  // Inferred role: effects; original member name unknown.
+  Effect m_effect[2];   // Inferred role: effects; original member name unknown.
   u32 unknownf8;        // Inferred role: voice handle id; original member name unknown.
   u8 _fc[0x100 - 0xfc];
-  Delegate::MultiCast unknown100;       // Inferred role: delegates; original member name unknown.
+  Delegate::MultiCast m_multiCast;      // Inferred role: delegates; original member name unknown.
   Array<Delegate::Handle *> unknown128; // Inferred role: delegates added internally; original member name unknown.
 };
 
-static_assert(offsetof(SoundHandle, unknown38) == 0x38, "");
-static_assert(offsetof(SoundHandle, unknown30) == 0x30, "");
-static_assert(offsetof(SoundHandle, unknown48) == 0x48, "");
+static_assert(offsetof(SoundHandle, m_soundActor) == 0x38, "");
+static_assert(offsetof(SoundHandle, m_soundEntry) == 0x30, "");
+static_assert(offsetof(SoundHandle, m_soundCategory) == 0x48, "");
 static_assert(offsetof(SoundHandle, unknown58) == 0x58, "");
 static_assert(offsetof(SoundHandle, unknown68) == 0x68, "");
 static_assert(offsetof(SoundHandle, unknown9c) == 0x9c, "");
-static_assert(offsetof(SoundHandle, unknownc0) == 0xc0, "");
+static_assert(offsetof(SoundHandle, m_effect) == 0xc0, "");
 static_assert(offsetof(SoundHandle, unknownf8) == 0xf8, "");
-static_assert(offsetof(SoundHandle, unknown100) == 0x100, "");
+static_assert(offsetof(SoundHandle, m_multiCast) == 0x100, "");
 static_assert(offsetof(SoundHandle, unknown128) == 0x128, "");
 static_assert(sizeof(SoundHandle) == 0x140, "");
 static_assert(offsetof(SoundHandle, unknown84) == 0x84, "");

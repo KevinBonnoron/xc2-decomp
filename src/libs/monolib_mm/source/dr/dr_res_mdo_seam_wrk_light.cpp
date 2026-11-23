@@ -10,15 +10,16 @@ namespace ml {
 
 f32 DrResMdoSeamWrkLight::SEAM_LIGHT_READ_CHECK = 5.0f;
 
-DrResMdoSeamWrkLight::DrResMdoSeamWrkLight() : unknown08(nullptr), unknown10(nullptr), unknown20(nullptr), unknown28(nullptr), unknown30(0), unknown34(0), unknown38(0), unknown3a(0) {}
+DrResMdoSeamWrkLight::DrResMdoSeamWrkLight()
+    : unknown08(nullptr), unknown10(nullptr), m_drEnvironmentObj(nullptr), m_drResMdoSeamMemObj(nullptr), unknown30(0), unknown34(0), unknown38(0), unknown3a(0) {}
 
 DrResMdoSeamWrkLight::~DrResMdoSeamWrkLight() { release(); }
 
-void DrResMdoSeamWrkLight::objLgtRelease() { mm::mtl::safeRelease(unknown20); }
+void DrResMdoSeamWrkLight::objLgtRelease() { mm::mtl::safeRelease(m_drEnvironmentObj); }
 
 void DrResMdoSeamWrkLight::release() {
   objLgtRelease();
-  unknown28 = nullptr;
+  m_drResMdoSeamMemObj = nullptr;
   unknown3a = 0;
 }
 
@@ -28,16 +29,16 @@ void DrResMdoSeamWrkLight::delCall() {
 }
 
 void DrResMdoSeamWrkLight::setupWork(const MdsSeamLgtMapData *data) {
-  unknown20 = DrMan::getIns()->unknown598->createObj(unknown28->m_buffer);
-  unknown18 = data;
+  m_drEnvironmentObj = DrMan::getIns()->m_drEnvironmentMan->createObj(m_drResMdoSeamMemObj->m_buffer);
+  m_mdsSeamLgtMapData = data;
   unknown38 = 0;
   unknown3a = 0;
   unknown34 = data->unknown1c;
 }
 
 void DrResMdoSeamWrkLight::changeMemCall() {
-  if (unknown20 != nullptr) {
-    unknown20->changeMemCall(unknown28->m_buffer);
+  if (m_drEnvironmentObj != nullptr) {
+    m_drEnvironmentObj->changeMemCall(m_drResMdoSeamMemObj->m_buffer);
   }
 }
 

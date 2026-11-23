@@ -14,7 +14,7 @@ public:
   virtual void redo(const Param &param);
 
 private:
-  PosAxis unknown10; // Inferred role: prev axis; original member name unknown.
+  PosAxis m_posAxis; // Inferred role: prev axis; original member name unknown.
 };
 
 static_assert(sizeof(ScriptCharaLinerPos) == 0x30, "");

@@ -44,8 +44,8 @@ void IDColiParmsCharacter::createCharacter(f32 radius, f32 height) {
 
 void IDColiParmsCharacter::createData(const void *binary) { m_character->createBinary(binary); }
 
-void IDColiParmsCharacter::setAdsorption(f32 adsorption) { m_character->unknown220 = adsorption; }
+void IDColiParmsCharacter::setAdsorption(f32 adsorption) { m_character->m_adsorption = adsorption; }
 
-f32 IDColiParmsCharacter::getAdsorption() const { return m_character->unknown220; }
+f32 IDColiParmsCharacter::getAdsorption() const { return m_character->m_adsorption; }
 
 } // namespace idcoli

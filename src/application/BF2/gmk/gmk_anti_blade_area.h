@@ -26,7 +26,7 @@ public:
 
   static const GmkType GMK_TYPE = GMK_TYPE_ANTI_BLADE_AREA; // Inferred name; shared by every gimmick class for the TGmkList templates.
 
-  GmkAntiBladeArea() : unknown60(nullptr) {}
+  GmkAntiBladeArea() : m_gmkPhantom(nullptr) {}
   ~GmkAntiBladeArea() override { dispose(); }
   GmkType getGmkType() const override;
   void create(const CreateInfo &info) override;
@@ -36,28 +36,28 @@ public:
   void onLeavePhantom(const IGmkPhantomEventListener::OnLeaveInfo &info) override;
   void createGmkPhantom();
 
-  GmkPhantom unknown60; // Inferred role: phantom; original member name unknown.
+  GmkPhantom m_gmkPhantom; // Inferred role: phantom; original member name unknown.
 };
 
 static_assert(sizeof(GmkAntiBladeArea::BdatInfo) == 0x2, "");
-static_assert(offsetof(GmkAntiBladeArea, unknown60) == 0x60, "");
+static_assert(offsetof(GmkAntiBladeArea, m_gmkPhantom) == 0x60, "");
 static_assert(sizeof(GmkAntiBladeArea) == 0xf0, "");
 
 typedef TGmkList<GmkAntiBladeArea, GmkAntiBladeArea::BdatInfo, 0x414c4241, 2, GmkAntiBladeAreaGob> GmkAntiBladeAreaList;
 
 class GmkAntiBladeAreaManager : public mm::mtl::PtrSingleton<GmkAntiBladeAreaManager> {
 public:
-  GmkAntiBladeAreaManager() : unknown20(nullptr) {}
+  GmkAntiBladeAreaManager() : m_gmkAntiBladeArea(nullptr) {}
   ~GmkAntiBladeAreaManager() override { dispose(); }
   void dispose();
   static void addGmk(GmkAntiBladeArea *gmk);
   static void removeGmk(GmkAntiBladeArea *gmk);
 
   mm::mtl::IntrusiveList<GmkAntiBladeArea> unknown08; // Inferred role: gimmicks inside; original member name unknown.
-  GmkAntiBladeArea *unknown20;                        // Inferred role: front gimmick; original member name unknown.
+  GmkAntiBladeArea *m_gmkAntiBladeArea;               // Inferred role: front gimmick; original member name unknown.
 };
 
 static_assert(offsetof(GmkAntiBladeAreaManager, unknown08) == 0x08, "");
-static_assert(offsetof(GmkAntiBladeAreaManager, unknown20) == 0x20, "");
+static_assert(offsetof(GmkAntiBladeAreaManager, m_gmkAntiBladeArea) == 0x20, "");
 
 } // namespace gmk

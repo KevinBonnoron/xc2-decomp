@@ -16,7 +16,7 @@
 namespace event {
 
 ICmd::RESULT CharaPlayEvaEff::update(const Param &param) {
-  if (unknown10 != nullptr && gf::GfObjUtil::getObj(unknown10->unknown20) != nullptr) {
+  if (unknown10 != nullptr && gf::GfObjUtil::getObj(unknown10->m_GF_OBJ_HANDLE) != nullptr) {
     f32 delta = static_cast<CharaObj *>(param.val(0).getUserdata())->getFrameInfo().unknown0c;
     if (param.getFrame() <= 0) {
       const char *name = mm::mtl::Singleton<Extend>::getPtr()->replaceString(param.val(1).getStr(), "event", "effect");
@@ -30,7 +30,7 @@ ICmd::RESULT CharaPlayEvaEff::update(const Param &param) {
       if (data == nullptr) {
         return RESULT_UNKNOWN_1;
       }
-      unknown30.play(unknown10, unknown18, data);
+      m_charaEvaPlayerEff.play(unknown10, m_charaEffectPlayer, data);
       f32 life = param.val(2).getF32();
       this->unknown28 = life;
       this->unknown20 = data;
@@ -40,7 +40,7 @@ ICmd::RESULT CharaPlayEvaEff::update(const Param &param) {
         unknown08 = (unknown08 & ~FLAG_UNKNOWN_1) | FLAG_UNKNOWN_0;
       }
     }
-    unknown30.update(delta * param.val(3).getF32());
+    m_charaEvaPlayerEff.update(delta * param.val(3).getF32());
     if ((unknown08 & FLAG_UNKNOWN_1) != 0) {
       return RESULT_UNKNOWN_2;
     }
@@ -48,7 +48,7 @@ ICmd::RESULT CharaPlayEvaEff::update(const Param &param) {
     if (!(unknown28 < 0.0f)) {
       return RESULT_UNKNOWN_2;
     }
-    unknown30.stop();
+    m_charaEvaPlayerEff.stop();
   }
   if (mm::mtl::Singleton<CharaManager>::getPtr()->isStreamMode() && unknown20 != nullptr) {
     mm::mtl::Singleton<MotstmManager>::getPtr()->free(unknown20);

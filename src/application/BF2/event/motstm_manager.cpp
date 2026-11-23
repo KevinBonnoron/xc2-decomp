@@ -9,11 +9,11 @@
 
 namespace event {
 
-MotstmManager::MotstmManager() : unknown10(), unknown14(0), unknown18("streaming 1(eva lgt hkt)") {}
+MotstmManager::MotstmManager() : unknown10(), unknown14(0), m_stmManager("streaming 1(eva lgt hkt)") {}
 
 void MotstmManager::create(mtl::ALLOC_HANDLE handle) {
-  unknown18.create(mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), handle);
-  unknown18.pause(true);
+  m_stmManager.create(mm::mtl::Singleton<MemoryManager>::getPtr()->getSysHandle(), handle);
+  m_stmManager.pause(true);
   unknown10.set(FLAG_UNKNOWN_0);
   unknown10.set(FLAG_UNKNOWN_2);
 }
@@ -23,13 +23,13 @@ void MotstmManager::loadStream(const char *name) {
   headerPath.format("/event/stm/%s.motstm", name);
   mm::mtl::FixStr<128> dataPath;
   dataPath.format("/event/stm/%s.motstm_data", name);
-  unknown18.loadStream(name, headerPath.c_str(), dataPath.c_str());
+  m_stmManager.loadStream(name, headerPath.c_str(), dataPath.c_str());
 }
 
-void MotstmManager::changeStream(const char *name) { unknown18.changeStream(name); }
+void MotstmManager::changeStream(const char *name) { m_stmManager.changeStream(name); }
 
 void MotstmManager::clear() {
-  unknown18.destroy();
+  m_stmManager.destroy();
   unknown10.clear();
 }
 
@@ -41,13 +41,13 @@ void MotstmManager::start() {
 
 void MotstmManager::stop() {
   if (unknown10.test(FLAG_UNKNOWN_0)) {
-    unknown18.stopStream();
+    m_stmManager.stopStream();
   }
 }
 
 bool MotstmManager::isBusy() {
   if (unknown10.test(FLAG_UNKNOWN_0)) {
-    return unknown18.isBusy();
+    return m_stmManager.isBusy();
   }
   return false;
 }
@@ -56,11 +56,11 @@ void MotstmManager::update() {
   if (!mm::mtl::Singleton<SkipManager>::getPtr()->isSkipFast() && unknown10.test(FLAG_UNKNOWN_0)) {
     bool isPause = !unknown10.test(FLAG_UNKNOWN_1);
     if (unknown10.test(FLAG_UNKNOWN_2) != isPause) {
-      unknown18.pause(isPause);
+      m_stmManager.pause(isPause);
       unknown10.set(FLAG_UNKNOWN_2, isPause);
     }
-    unknown18.update();
-    unknown18.tail();
+    m_stmManager.update();
+    m_stmManager.tail();
   }
 }
 
@@ -86,13 +86,13 @@ void MotstmManager::OnEventProc(MSG_TYPE type) {
   }
 }
 
-void *MotstmManager::adr(const char *path, size_t *size) { return unknown18.adr(path, size); }
+void *MotstmManager::adr(const char *path, size_t *size) { return m_stmManager.adr(path, size); }
 
-void MotstmManager::free(void *adr) { unknown18.free(adr, 0); }
+void MotstmManager::free(void *adr) { m_stmManager.free(adr, 0); }
 
-bool MotstmManager::isLoadingPrio(f32 prio) const { return unknown18.isLoadingPrio(prio); }
+bool MotstmManager::isLoadingPrio(f32 prio) const { return m_stmManager.isLoadingPrio(prio); }
 
-bool MotstmManager::isFailure() const { return unknown18.isFailure(); }
+bool MotstmManager::isFailure() const { return m_stmManager.isFailure(); }
 
 void MotstmManager::setDisp(bool isDisp) {
   if (isDisp) {

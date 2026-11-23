@@ -111,18 +111,18 @@ constexpr f32 unknown005 = 0.75f;
 
 } // namespace
 
-GfFieldGimmick::GfFieldGimmick(const GfSetupParam &param) : unknownf4a8(false), unknownf4c0(nullptr), unknownfe40(false), unknownfe41(true) {
+GfFieldGimmick::GfFieldGimmick(const GfSetupParam &param) : unknownf4a8(false), m_gmkLocatorAtlas(nullptr), unknownfe40(false), unknownfe41(true) {
   initialize(param);
   GfObjManager::addListener(this, OBJEVT_UNKNOWN_0);
 }
 
 void GfFieldGimmick::initialize(const GfSetupParam &) {
   gmk::GmkManager::CreateInfo info;
-  info.unknown00 = getAllocator(ALLOCATOR_UNKNOWN_9)->getMemHandle();
+  info.m_ALLOC_HANDLE = getAllocator(ALLOCATOR_UNKNOWN_9)->getMemHandle();
   info.unknown04 = "bdat/common_gmk.bdat";
   info.unknown28 = "RSC_GmkSetList";
   info.unknown4c = 1;
-  unknown20.create(info);
+  m_gmkManager.create(info);
   unknownf4a8 = true;
 }
 
@@ -138,7 +138,7 @@ void GfFieldGimmick::gevMapjump(GEV event, const MapjumpCallbackInfo &info) {
     }
     break;
   case GEV_UNKNOWN_2:
-    for (gmk::GmkSet **it = unknown20.unknownf358.begin(); it != unknown20.unknownf358.end(); ++it) {
+    for (gmk::GmkSet **it = m_gmkManager.unknownf358.begin(); it != m_gmkManager.unknownf358.end(); ++it) {
       gmk::GmkEffectList *list = static_cast<gmk::GmkEffectList *>((*it)->getGmkList(gmk::GMK_TYPE_EFFECT));
       if (list == nullptr || !list->isValid()) {
         continue;
@@ -146,13 +146,13 @@ void GfFieldGimmick::gevMapjump(GEV event, const MapjumpCallbackInfo &info) {
       u32 num = list->getInstNum();
       for (u32 index = 0; index < num; index++) {
         gmk::GmkEffect &effect = list->gmkInsts[index];
-        gmk::AGmkBase::CreateInfo createInfo = effect.unknown20;
+        gmk::AGmkBase::CreateInfo createInfo = effect.m_createInfo;
         if (createInfo.unknown08 != nullptr) {
           effect.create(createInfo);
         }
       }
     }
-    for (gmk::GmkSet **it = unknown20.unknownf358.begin(); it != unknown20.unknownf358.end(); ++it) {
+    for (gmk::GmkSet **it = m_gmkManager.unknownf358.begin(); it != m_gmkManager.unknownf358.end(); ++it) {
       gmk::IGmkList *list = (*it)->getGmkList(gmk::GMK_TYPE_EVENT);
       if (list == nullptr) {
         continue;
@@ -241,7 +241,7 @@ void GfFieldGimmick::destroy() {
 }
 
 void GfFieldGimmick::finalize() {
-  unknown20.dispose();
+  m_gmkManager.dispose();
   unknownf4a8 = false;
 }
 
@@ -258,11 +258,11 @@ void GfFieldGimmick::update(const fw::UpdateInfo &info) {
     return;
   }
   GfFieldGimmick *gimmick = mm::mtl::PtrSingleton<GfFieldGimmick>::get();
-  gimmick->unknown20.update(info.unknown04);
-  gimmick->unknownf3b0.update();
-  gimmick->unknownf3e8.update(info.unknown04);
-  gimmick->unknownf418.update(info.unknown04);
-  gimmick->unknownf480.update(info.unknown04);
+  gimmick->m_gmkManager.update(info.unknown04);
+  gimmick->m_gmkAccManager.update();
+  gimmick->m_gmkDoorPhantomManager.update(info.unknown04);
+  gimmick->m_gmkDmgPhantomManager.update(info.unknown04);
+  gimmick->m_gmkCtrlVolSeManager.update(info.unknown04);
   if (gimmick->unknownf4ac.unknown00) {
     f32 deltaTime = info.unknown04;
     if (!gimmick->unknownf4ac.unknown01) {
@@ -275,19 +275,19 @@ void GfFieldGimmick::update(const fw::UpdateInfo &info) {
       gimmick->unknownf4ac.unknown02 = true;
     }
   }
-  gimmick->unknownf910.update();
+  gimmick->m_mobSlotManager.update();
   if (gmk::isPlayerExist()) {
     gimmick->unknownfe41 = GfGameUtil::isPointSavable(gmk::getPlayerPos());
   }
 }
 
 bool GfFieldGimmick::createGmkSet(int gmkSet) {
-  if (!mm::mtl::PtrSingleton<GfFieldGimmick>::get()->unknown20.isValid()) {
+  if (!mm::mtl::PtrSingleton<GfFieldGimmick>::get()->m_gmkManager.isValid()) {
     return false;
   }
   mtl::ALLOC_HANDLE memory = getAllocator(ALLOCATOR_UNKNOWN_8)->getMemHandle();
   int rscGmkSet = getBdatIdFrom_FLD_maplist_To_RSC_GmkSetList(gmkSet);
-  mm::mtl::PtrSingleton<GfFieldGimmick>::get()->unknown20.createGmkSet(memory, rscGmkSet, mm::Vec3::zero, 0.0f);
+  mm::mtl::PtrSingleton<GfFieldGimmick>::get()->m_gmkManager.createGmkSet(memory, rscGmkSet, mm::Vec3::zero, 0.0f);
   return true;
 }
 
@@ -295,26 +295,26 @@ bool GfFieldGimmick::isGmkSetReady() {
   if (GfManager::isDestroyNow()) {
     return true;
   }
-  return mm::mtl::PtrSingleton<GfFieldGimmick>::get()->unknown20.isGmkSetsReady();
+  return mm::mtl::PtrSingleton<GfFieldGimmick>::get()->m_gmkManager.isGmkSetsReady();
 }
 
 int GfFieldGimmick::getBdatIdFrom_FLD_maplist_To_RSC_GmkSetList(int map) {
-  if (mm::mtl::PtrSingleton<GfFieldGimmick>::get()->unknown20.isValid()) {
-    return mm::mtl::PtrSingleton<GfFieldGimmick>::get()->unknown20.findFirstBdatId_RSC_GmkSetList(map);
+  if (mm::mtl::PtrSingleton<GfFieldGimmick>::get()->m_gmkManager.isValid()) {
+    return mm::mtl::PtrSingleton<GfFieldGimmick>::get()->m_gmkManager.findFirstBdatId_RSC_GmkSetList(map);
   }
   return -1;
 }
 
 void GfFieldGimmick::disposeGmkSet(int gmkSet) {
-  if (mm::mtl::PtrSingleton<GfFieldGimmick>::get()->unknown20.isValid()) {
+  if (mm::mtl::PtrSingleton<GfFieldGimmick>::get()->m_gmkManager.isValid()) {
     int rscGmkSet = getBdatIdFrom_FLD_maplist_To_RSC_GmkSetList(gmkSet);
-    mm::mtl::PtrSingleton<GfFieldGimmick>::get()->unknown20.disposeGmkSet(rscGmkSet);
+    mm::mtl::PtrSingleton<GfFieldGimmick>::get()->m_gmkManager.disposeGmkSet(rscGmkSet);
   }
 }
 
 int GfFieldGimmick::getBdatIdFrom_RSC_GmkSetList_To_FLD_maplist(int gmkSet) {
-  if (mm::mtl::PtrSingleton<GfFieldGimmick>::get()->unknown20.isValid()) {
-    return mm::mtl::PtrSingleton<GfFieldGimmick>::get()->unknown20.getMapBdatId(gmkSet);
+  if (mm::mtl::PtrSingleton<GfFieldGimmick>::get()->m_gmkManager.isValid()) {
+    return mm::mtl::PtrSingleton<GfFieldGimmick>::get()->m_gmkManager.getMapBdatId(gmkSet);
   }
   return -1;
 }
@@ -325,9 +325,9 @@ int GfFieldGimmick::getBdatIdOfActiveGmkAntiBladeArea() {
   }
   gmk::GmkAntiBladeAreaManager *manager = mm::mtl::PtrSingleton<gmk::GmkAntiBladeAreaManager>::get();
   if (manager != nullptr) {
-    gmk::GmkAntiBladeArea *area = manager->unknown20;
+    gmk::GmkAntiBladeArea *area = manager->m_gmkAntiBladeArea;
     if (area != nullptr) {
-      return area->unknown20.unknown10->id;
+      return area->m_createInfo.unknown10->id;
     }
     return 0;
   }

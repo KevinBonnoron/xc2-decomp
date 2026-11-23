@@ -77,7 +77,7 @@ public:
   void update(const fw::UpdateInfo &info) override;
 
   mm::mtl::Delegate<bool()> unknown30; // Inferred role: updater; original member name unknown.
-  IConverter *unknown50;               // Inferred role: converter; original member name unknown.
+  IConverter *m_iConverter;            // Inferred role: converter; original member name unknown.
   u8 _58[0x5c - 0x58];
   u32 unknown5c; // Inferred role: driver; original member name unknown.
   u32 unknown60; // Inferred role: line; original member name unknown.
@@ -86,7 +86,7 @@ public:
 };
 
 static_assert(offsetof(GfMenuSkillAdapter, unknown30) == 0x30, "");
-static_assert(offsetof(GfMenuSkillAdapter, unknown50) == 0x50, "");
+static_assert(offsetof(GfMenuSkillAdapter, m_iConverter) == 0x50, "");
 static_assert(offsetof(GfMenuSkillAdapter, unknown5c) == 0x5c, "");
 static_assert(offsetof(GfMenuSkillAdapter, unknown60) == 0x60, "");
 static_assert(offsetof(GfMenuSkillAdapter, unknown64) == 0x64, "");

@@ -43,6 +43,7 @@
 #include "gf/field/gf_field_manager.h"
 #include "gf/field/gf_field_time.h"
 #include "gf/field/gf_field_weather.h"
+#include "gf/field/gf_real_time.h"
 #include "gf/game/gf_game_cond.h"
 #include "gf/game/gf_game_manager.h"
 #include "gf/game/gf_game_mount.h"
@@ -57,8 +58,10 @@
 #include "gf/game/quest/gf_quest_util.h"
 #include "gf/object/component/behavior/gf_com_behavior_event.h"
 #include "gf/object/component/behavior/gf_com_behavior_npc.h"
+#include "gf/object/component/enemy/gf_behavior_enemy_field.h"
 #include "gf/object/component/enemy/gf_com_behavior_enemy.h"
 #include "gf/object/component/enemy/gf_enemy_state_id.h"
+#include "gf/object/component/gf_com_transform.h"
 #include "gf/object/component/property/gf_com_property.h"
 #include "gf/object/gf_append.h"
 #include "gf/object/gf_append_info.h"
@@ -195,6 +198,25 @@ bool GfGameUtil::isUiGfObjHandleValid(GF_OBJ_HANDLE *handle) {
   return objAcc.isValid() && !objAcc.isDestroy() && !objAcc.testFlag(OBJ_FLAG_UNKNOWN_17);
 }
 
+void GfGameUtil::UiEnemyStatusIconInfo::create(GF_OBJ_HANDLE *handle) {
+  unknown00 = false;
+  unknown01 = false;
+  if (!isUiGfObjHandleValid(handle)) {
+    return;
+  }
+
+  GfObjAcc objAcc(handle);
+  GfObj *obj = objAcc.getObj();
+  // The game tests only the low byte of the Detects column (tst w0, #0xff at 0x710034850c) where the accessor returns u32 (it zero-extends the u8 value itself, 0x7100234990): the u8 local is that
+  // truncation (an accessor returning u8 loses its own `and` and no longer matches; `static_cast<u8>` in the comparison matches too).
+  u8 detects = GfBdatChrEnArrange::get()->getChrEnArrangeDetects(mm::mtl::dynamicCast<GfObjSetupEnemy>(GfObjManager::getObjInfo(handle)->unknown30)->m_enArrangeID);
+  unknown00 = detects != 0;
+  GfComBehaviorEnemy *behavior = obj->getComponent<GfComBehaviorEnemy>();
+  if (behavior != nullptr) {
+    unknown01 = behavior->m_behaviorEnemyField.unknown37 != 0;
+  }
+}
+
 void GfGameUtil::UiActionWindowInfo::create(GF_OBJ_HANDLE *handle) {
   unknown00 = nullptr;
   unknown08 = -1;
@@ -229,7 +251,7 @@ void GfGameUtil::UiActionWindowInfo::create(GF_OBJ_HANDLE *handle) {
       break;
     }
     case gmk::GMK_TYPE_MAP_GIMMICK:
-      unknown08 = static_cast<u16>(Bdat::getValCheck(gmkInst->getBindedBdatFp(), "actionwindowID", gmkInst->unknown20.unknown18, gmk::BDAT_TYPE_UNKNOWN_2));
+      unknown08 = static_cast<u16>(Bdat::getValCheck(gmkInst->getBindedBdatFp(), "actionwindowID", gmkInst->m_createInfo.unknown18, gmk::BDAT_TYPE_UNKNOWN_2));
       break;
     default: {
       int row = unknown038[gmkInst->getGmkType()];
@@ -332,6 +354,52 @@ bool GfGameUtil::isUiNameDistMatch(GF_OBJ_HANDLE *handle) {
   return false;
 }
 
+bool GfGameUtil::isUiInfoIconDistMatch(GF_OBJ_HANDLE *handle) {
+  if (isUiGfObjHandleValid(handle)) {
+    GfObjAcc objAcc(handle);
+    switch (objAcc.getType()) {
+    case OBJECT_TYPE_ENEMY:
+    case OBJECT_TYPE_NPC:
+    case OBJECT_TYPE_GIMMICK:
+      break;
+    default:
+      return false;
+    }
+
+    // The game (0x7100348734) reads the bdat value 0xc once for the null and default paths: the two identical statements are merged. A bool set in the
+    // case body and tested afterwards also matches (85 instructions), but the game holds no such value.
+    f32 distance;
+    gmk::AGmkBase *gmkInst = gmk::getBindedGmkInst(handle);
+    if (gmkInst != nullptr) {
+      switch (gmkInst->getGmkType()) {
+      case gmk::GMK_TYPE_TBOX:
+      case gmk::GMK_TYPE_COLLECTION:
+      case gmk::GMK_TYPE_MAP_GIMMICK:
+      case gmk::GMK_TYPE_GRAVE:
+      case gmk::GMK_TYPE_DOOR:
+      case gmk::GMK_TYPE_ELEVATOR:
+        distance = getUiNameDist(handle);
+        if (!(distance > 0.0f)) {
+          return false;
+        }
+        distance *= Bdat::getValCheck(GfDataBdat::getFP(BDAT_FLD_WILDCARD_DATA), 0, 0x39, gmk::BDAT_TYPE_UNKNOWN_8).valueF32;
+        break;
+      default:
+        distance = Bdat::getValCheck(GfDataBdat::getFP(BDAT_FLD_WILDCARD_DATA), 0, 0xc, gmk::BDAT_TYPE_UNKNOWN_8).valueF32;
+        break;
+      }
+    } else {
+      distance = Bdat::getValCheck(GfDataBdat::getFP(BDAT_FLD_WILDCARD_DATA), 0, 0xc, gmk::BDAT_TYPE_UNKNOWN_8).valueF32;
+    }
+    if (!(distance <= 0.0f)) {
+      const mm::Vec3 &position = objAcc.getWorldTransform().unknown00;
+      return gmk::DistCond::isMatch(distance * distance, position);
+    }
+  }
+
+  return false;
+}
+
 static void makeWeaponBattleIdleState(mm::mtl::FixStr<32> &state, u32 weaponType) {
   mm::mtl::FixStr<16> weaponName;
   if (weaponType >= 10) {
@@ -398,7 +466,7 @@ void GfGameUtil::flushProperty(GF_OBJ_HANDLE *handle) {
     driver->unknown19c = paramAcc.getSkillPoint();
     driver->unknown194 = paramAcc.getExpNext(false);
   } else if (acc.getType() == OBJECT_TYPE_BLADE) {
-    mm::mtl::FixedArray<unknown109, 3> &skills = property->getBlade()->unknown190;
+    mm::mtl::FixedArray<unknown110, 3> &skills = property->getBlade()->unknown190;
     SDataBlade &sdata = GfDataBlade::getSDataBlade(paramAcc.isValid() ? paramAcc.getBdatId() : 0);
     skills = sdata.unknownae;
   }
@@ -699,6 +767,44 @@ u32 GfGameUtil::getTrustRank(u32 blade) {
   return trustRank;
 }
 
+u32 GfGameUtil::getKizunaLink(u32 blade) {
+  GfBdatBtl *bdat = GfBdatBtl::get();
+  u32 kizunaLinkSet = GfDataBlade::getSDataBlade(blade).unknown84a;
+  u32 type = bdat->getBTL_Bl_KizunaLinkSetLinkChType(kizunaLinkSet);
+  int number = bdat->getBTL_Bl_KizunaLinkSetLinkChNum(kizunaLinkSet);
+  switch (type) {
+  case 0:
+    return bdat->getBTL_Bl_KizunaLinkSetKizunaLink1(kizunaLinkSet);
+  case 1:
+    if (static_cast<int>(getTrustRank(blade)) >= number) {
+      return bdat->getBTL_Bl_KizunaLinkSetKizunaLink2(kizunaLinkSet);
+    }
+    break;
+  case 2:
+    if (GfGameCond::isGameCond(number)) {
+      return bdat->getBTL_Bl_KizunaLinkSetKizunaLink2(kizunaLinkSet);
+    }
+    break;
+  default:
+    return 0;
+  }
+
+  return bdat->getBTL_Bl_KizunaLinkSetKizunaLink1(kizunaLinkSet);
+}
+
+void GfGameUtil::setTransformPreEnemy(GF_OBJ_HANDLE *handle, const mm::Vec3 &position, const mm::Vec3 &rotation) {
+  GfObjAcc objAcc(handle);
+  if (objAcc.isValidTransform() && objAcc.getType() == OBJECT_TYPE_ENEMY && !GfGameObj::isValidGameObj(handle, true, nullptr)) {
+    GfComTransform *transform = objAcc.getObj()->getComponent<GfComTransform>();
+    if (transform != nullptr) {
+      mm::Quat quat;
+      mm::unknown009(quat, rotation);
+      transform->setPosition(position);
+      transform->setRotation(quat);
+    }
+  }
+}
+
 void GfGameUtil::addTrustRankForKizunaRing(u32 blade) {
   int oldTrustRank = getTrustRank(blade);
   int trustRank = GfDataBlade::getTrustRank(blade);
@@ -833,7 +939,7 @@ bool GfGameUtil::getGmkTargetPointPos(mm::Vec3 &position, GF_OBJ_HANDLE *handle)
   if (gmkInst != nullptr) {
     u32 type = gmkInst->getGmkType();
     if (type <= gmk::GMK_TYPE_ROUTED_ENEMY) {
-      return getGmkTargetPointPos(position, gmkInst->unknown20.unknown10->id);
+      return getGmkTargetPointPos(position, gmkInst->m_createInfo.unknown10->id);
     }
   }
 
@@ -870,7 +976,7 @@ bool GfGameUtil::getGmkTargetPointPos(mm::Vec3 &position, u32 gimmick) {
     if (list != nullptr && list->isValid() && gimmick <= list->getInstNum()) {
       const gmk::AGmkBase *gmkInst = list->getInst(gimmick - 1);
       if (gmkInst != nullptr && gmkInst->isValid()) {
-        position = gmkInst->unknown08.unknown08->unknown00;
+        position = gmkInst->m_createBaseInfo.m_xform->unknown00;
         return true;
       }
     }
@@ -920,15 +1026,15 @@ public:
     switch (gmk.getGmkType()) {
     case gmk::GMK_TYPE_ENEMY: {
       const gmk::GmkEnemy &enemy = static_cast<const gmk::GmkEnemy &>(gmk);
-      if (enemy.unknown48.unknown98.hasEneID(unknown00, true)) {
-        enemy.unknown48.reqClearRepopCounter();
+      if (enemy.m_gmkEnemyInsts.m_popInfo.hasEneID(unknown00, true)) {
+        enemy.m_gmkEnemyInsts.reqClearRepopCounter();
       }
       break;
     }
     case gmk::GMK_TYPE_ROUTED_ENEMY: {
       const gmk::GmkRoutedEnemy &enemy = static_cast<const gmk::GmkRoutedEnemy &>(gmk);
-      if (enemy.unknown50.unknown98.hasEneID(unknown00, true)) {
-        enemy.unknown50.reqClearRepopCounter();
+      if (enemy.m_gmkEnemyInsts.m_popInfo.hasEneID(unknown00, true)) {
+        enemy.m_gmkEnemyInsts.reqClearRepopCounter();
       }
       break;
     }
@@ -995,12 +1101,12 @@ u32 GfGameUtil::setFormationParam(GF_OBJ_HANDLE *handle) {
     GfGamePlayerFormation *current = GfGamePlayerFormation::get();
     const GfGamePlayerFormation::unknown004 *slot = current->unknown1a0;
     for (u32 index = 0; index < GfGamePlayerFormation::PLAYER_UNKNOWN_6; index++, slot++) {
-      GfObjSetup *setup = GfObjUtil::getObjSetup(slot->unknown08);
-      if (setup != nullptr && setup->unknown14 == partyId && GfObjUtil::getObjType(slot->unknown08) == type) {
+      GfObjSetup *setup = GfObjUtil::getObjSetup(slot->m_playerHandle);
+      if (setup != nullptr && setup->unknown14 == partyId && GfObjUtil::getObjType(slot->m_playerHandle) == type) {
         // The game copies the slot through a local (0x710034d010 loads its 64-bit word at 0x1b0, 0x710034d014 stores the handle, 0x710034d018 stores the low byte of the main pc flag back); assigning
         // the handle alone does not match.
         GfGamePlayerFormation::unknown004 player = formation->unknown1a0[index];
-        player.unknown08 = handle;
+        player.m_playerHandle = handle;
         formation->unknown1a0[index] = player;
         return index;
       }
@@ -1023,7 +1129,7 @@ u32 GfGameUtil::setFormationParam(GF_OBJ_HANDLE *handle) {
     isMain = true;
   }
   formation->unknown1a0[playerId].unknown00 = follow;
-  formation->unknown1a0[playerId].unknown08 = handle;
+  formation->unknown1a0[playerId].m_playerHandle = handle;
   formation->unknown1a0[playerId].unknown10 = isMain;
   return playerId;
 }
@@ -1035,7 +1141,7 @@ void GfGameUtil::resetFormationParam(GF_OBJ_HANDLE *handle) {
 
   GfGamePlayerFormation *formation = GfGamePlayerFormation::get();
   for (u32 playerId = 0; playerId < GfGamePlayerFormation::PLAYER_UNKNOWN_6; playerId++) {
-    GF_OBJ_HANDLE *&player = formation->unknown1a0[playerId].unknown08;
+    GF_OBJ_HANDLE *&player = formation->unknown1a0[playerId].m_playerHandle;
     if (player == handle) {
       formation->unknown1a0[playerId].unknown00 = PLAYER_ID_UNKNOWN_4294967295;
       player = unknown020;
@@ -1226,7 +1332,7 @@ void GfGameUtil::changeStopLayer(GF_OBJ_HANDLE *handle, bool isStop) {
     if (stopSection != section && GfObjUtil::getParentHandle(handle) == unknown020) {
       for (mm::mtl::IntrusiveList<fw::UpdatableObject>::iterator it = obj->unknownb8.begin(), last = obj->unknownb8.end(); it != last; ++it) {
         GfObj *child = mm::mtl::dynamicCast<GfObj>(it.operator->());
-        GfObjUtil::changeLayer(child, child->unknown2c + sectionDiff);
+        GfObjUtil::changeLayer(child, child->m_layer + sectionDiff);
       }
       GfObjUtil::changeLayer(obj, layer + sectionDiff);
     }
@@ -1282,8 +1388,8 @@ bool GfGameUtil::getMaxHpForUi(GF_OBJ_HANDLE *handle, u32 *maxHp) {
 void GfGameUtil::incGameClearCount() {
   GfGameFlag::setLocal(1, FLAG_UNKNOWN_48589, 1);
   SDataGame *dataGame = GfDataManager::getDataGame();
-  if (dataGame->unknown109b2c < GAME_UNKNOWN_9999) {
-    dataGame->unknown109b2c++;
+  if (dataGame->m_gameClearCount < GAME_UNKNOWN_9999) {
+    dataGame->m_gameClearCount++;
   }
 }
 
@@ -1550,7 +1656,7 @@ void GfGameUtil::levelupForEnemy(GF_OBJ_HANDLE *handle, u32 addLevel) {
 
   u32 levelMax = GfBdatChrEnParam::get()->getChrEnParamTableEnd() - 1;
   u32 level = dataParamAcc.getLevel(false) + addLevel;
-  GfDataEnemy::setupGameParamForLevel(*setup->unknowna0, level > levelMax ? levelMax : level);
+  GfDataEnemy::setupGameParamForLevel(*setup->m_enemy, level > levelMax ? levelMax : level);
   GfObj *obj = GfObjUtil::getObj(handle);
   MsgObjectMaxHp changeHpMax(dataParamAcc.getHpMax(false));
   obj->sendMessage(obj, changeHpMax);
@@ -1689,8 +1795,8 @@ u32 GfGameUtil::execAddRareBlade(const SDataBlade &dataBlade) {
       GfDataBlade::setCreator(BLADE_UNKNOWN_1050, GfDataBlade::getCreator(BLADE_UNKNOWN_1022));
     }
 
-    if (addedBlade.unknown850 != 0) {
-      setWatchedEvent(addedBlade.unknown850);
+    if (addedBlade.m_createEvent != 0) {
+      setWatchedEvent(addedBlade.m_createEvent);
     }
 
     GfEvent::callBladeActivate(blade, activateType, ACTIVATE_TYPE_UNKNOWN_1);
@@ -1703,8 +1809,8 @@ u32 GfGameUtil::execAddCommonBlade(const SDataBlade &dataBlade) {
   u32 blade = GfDataBlade::addCommonBlade(dataBlade);
   if (blade != 0) {
     SDataBlade &addedBlade = GfDataBlade::getSDataBlade(blade);
-    if (addedBlade.unknown850 != 0) {
-      setWatchedEvent(addedBlade.unknown850);
+    if (addedBlade.m_createEvent != 0) {
+      setWatchedEvent(addedBlade.m_createEvent);
     }
 
     GfEvent::callBladeActivate(blade, ACTIVATE_TYPE_UNKNOWN_0, ACTIVATE_TYPE_UNKNOWN_1);
@@ -1746,7 +1852,7 @@ bool GfGameUtil::hasBelonging(GF_OBJ_HANDLE *handle, u32 belonging) {
 }
 
 bool GfGameUtil::execTurnCmd(const ExecTurnCmdInfo &info) {
-  GfObjAcc objAcc(info.unknown00);
+  GfObjAcc objAcc(info.m_GF_OBJ_HANDLE);
   GfObj *obj = objAcc.getObj();
   if (obj == nullptr) {
     return false;
@@ -1891,7 +1997,7 @@ GF_OBJ_HANDLE *GfGameUtil::getWeaponOwner(GF_OBJ_HANDLE *handle) {
   GfAppendInfo *info = GfObjUtil::getAppendInfo(handle, GFATTACH_UNKNOWN_0);
   if (info != nullptr) {
     GfObjSetupWeapon *setup = GfObjUtil::getObjSetup<GfObjSetupWeapon>(handle);
-    if (setup != nullptr && info->unknown00[1].size() != 0 && !setup->unknown80.unknown98.unknown80) {
+    if (setup != nullptr && info->unknown00[1].size() != 0 && !setup->m_initParamWeapon.m_append.unknown80) {
       return GfMountManager::getHandle(owner, GFATTACH_UNKNOWN_0, OPTMNT_UNKNOWN_3);
     }
   }
@@ -2037,23 +2143,6 @@ void GfGameUtil::setMaxPartyGauge() {
 
 GF_OBJ_HANDLE *GfGameUtil::getBlade(GF_OBJ_HANDLE *handle) { return GfMountManager::getHandle(handle, GFATTACH_UNKNOWN_0, OPTMNT_UNKNOWN_3); }
 
-// Inferred helper: copies one game flag of a size from one save game to another; original name unknown (inlined in GfGameUtil::setupNewGameParam, 0x7100351354).
-static void unknown039(SDataGame &dst, const SDataGame &src, u32 size, int flag) { GfGameFlag::setLocal(dst.unknownfbbc4, size, flag, GfGameFlag::getLocal(src.unknownfbbc4, size, flag)); }
-
-// Inferred helper: copies the game flags of a size from first up to last (excluded), the loops of 0x71003517e4 starting at the first flag; original name unknown.
-static void unknown040(SDataGame &dst, const SDataGame &src, u32 size, int first, int last) {
-  for (int flag = first; flag < last; flag++) {
-    unknown039(dst, src, size, flag);
-  }
-}
-
-// Inferred helper: copies count game flags of a size from a base flag, the loops of 0x7100351370 that add the base to a counter; original name unknown.
-static void unknown041(SDataGame &dst, const SDataGame &src, u32 size, int base, int count) {
-  for (int i = 0; i < count; i++) {
-    unknown039(dst, src, size, base + i);
-  }
-}
-
 // Inferred role: tells the blades whose driver and activation setupNewGameParam resets (the bit test of mask 0x27f7 at 0x710035273c, 0x7100352788, 0x71003527d8 and 0x7100352a00); original name
 // unknown.
 static bool unknown042(u32 blade) {
@@ -2080,19 +2169,19 @@ static bool unknown042(u32 blade) {
 // Forms tried without the helper: the same body inlined in the loop with `break` and the end of the search re-tested (1708 instructions against the game's 1705), the same body with `goto`
 // (matches, but gotos are not accepted).
 static void removeFromDriverSet(SDataBlade &dataBlade, u32 blade) {
-  if (dataBlade.unknown04 != 0) {
-    SDataDriver &dataDriver = GfDataDriver::getSDataDriver(dataBlade.unknown04);
-    for (int slot = 0; slot < GfDataDriver::getMaxSetBladeNum(dataBlade.unknown04); slot++) {
+  if (dataBlade.m_driverBySetBlade != 0) {
+    SDataDriver &dataDriver = GfDataDriver::getSDataDriver(dataBlade.m_driverBySetBlade);
+    for (int slot = 0; slot < GfDataDriver::getMaxSetBladeNum(dataBlade.m_driverBySetBlade); slot++) {
       if (dataDriver.unknown26[slot] == blade) {
         dataDriver.unknown26[slot] = 0;
-        if (dataDriver.unknown24 == slot) {
-          for (int next = 0; next < GfDataDriver::getMaxSetBladeNum(dataBlade.unknown04); next++) {
+        if (dataDriver.m_bladeSet == slot) {
+          for (int next = 0; next < GfDataDriver::getMaxSetBladeNum(dataBlade.m_driverBySetBlade); next++) {
             if (dataDriver.unknown26[next] != 0) {
-              dataDriver.unknown24 = next;
+              dataDriver.m_bladeSet = next;
               return;
             }
           }
-          dataDriver.unknown24 = -1;
+          dataDriver.m_bladeSet = -1;
         }
         return;
       }
@@ -2120,100 +2209,100 @@ void GfGameUtil::setupNewGameParam(const SDataGame &dataGame) {
   currentGame->unknown5a2c = dataGame.unknown5a2c;
   currentGame->unknown10ad4c = dataGame.unknown10ad4c;
   currentGame->unknown10ad48 = dataGame.unknown10ad48;
-  currentGame->unknown10ae7e = dataGame.unknown10ae7e;
-  currentGame->unknown109b28 = dataGame.unknown109b28;
-  currentGame->unknown10ae7c = dataGame.unknown10ae7c;
-  currentGame->unknown10ae78 = dataGame.unknown10ae78;
-  currentGame->unknown10ae74 = dataGame.unknown10ae74;
-  currentGame->unknown10ad70 = dataGame.unknown10ad70;
-  currentGame->unknown109b2c = dataGame.unknown109b2c;
-  currentGame->unknown10ad3c = dataGame.unknown10ad3c;
-  currentGame->unknown1098c0 = dataGame.unknown1098c0;
-  currentGame->unknowne98d8 = dataGame.unknowne98d8;
+  currentGame->m_autoEventAfterLoad = dataGame.m_autoEventAfterLoad;
+  currentGame->m_playerCameraDistance = dataGame.m_playerCameraDistance;
+  currentGame->m_cameraFreeMode = dataGame.m_cameraFreeMode;
+  currentGame->m_cameraPitch = dataGame.m_cameraPitch;
+  currentGame->m_cameraYaw = dataGame.m_cameraYaw;
+  currentGame->m_cameraHeight = dataGame.m_cameraHeight;
+  currentGame->m_gameClearCount = dataGame.m_gameClearCount;
+  currentGame->m_ether = dataGame.m_ether;
+  currentGame->m_gameTime = dataGame.m_gameTime;
+  currentGame->m_itemBox = dataGame.m_itemBox;
   currentGame->unknown10ad74 = dataGame.unknown10ad74;
   currentGame->unknown10ad40 = dataGame.unknown10ad40;
   currentGame->unknown10ad44 = dataGame.unknown10ad44;
-  currentGame->unknown10ad54 = dataGame.unknown10ad54;
-  currentGame->unknown10ae80 = dataGame.unknown10ae80;
-  currentGame->unknown00 = dataGame.unknown00;
-  currentGame->unknown1098c4 = dataGame.unknown1098c4;
-  currentGame->unknown10ad50 = dataGame.unknown10ad50;
-  currentGame->unknown10ad68 = dataGame.unknown10ad68;
-  currentGame->unknown109b30 = dataGame.unknown109b30;
+  currentGame->m_coin = dataGame.m_coin;
+  currentGame->m_collectFlagNewVersion = dataGame.m_collectFlagNewVersion;
+  currentGame->m_money = dataGame.m_money;
+  currentGame->m_elapseTime = dataGame.m_elapseTime;
+  currentGame->m_rareBladeAppearType = dataGame.m_rareBladeAppearType;
+  currentGame->m_saveRealTime = dataGame.m_saveRealTime;
+  currentGame->m_taskAchieve = dataGame.m_taskAchieve;
   currentGame->unknown24 = dataGame.unknown24;
   // The game flag ranges copied from the save game. The numbers are indices into the flags of one width (the first argument, in bits), not the ids GfGameFlag::getFlag takes, and the game gives them
-  // no name. Each range is a loop of its own in the game, some with a base and a count and the others with a first and a last index (unknown041, unknown040): a table of ranges walked by one loop
-  // would give a single loop, so the calls stay written out (ruling 8; the quality gate reports the repeated statements).
-  unknown039(*currentGame, dataGame, 1, 0xbdcd);
-  unknown041(*currentGame, dataGame, 1, 0xd651, 300);
-  unknown041(*currentGame, dataGame, 1, 0xd588, 200);
-  unknown041(*currentGame, dataGame, 1, 0xc775, 100);
-  unknown041(*currentGame, dataGame, 1, 0xc710, 100);
-  unknown041(*currentGame, dataGame, 1, 0xc25e, 200);
-  unknown041(*currentGame, dataGame, 1, 0xc1b8, 64);
-  unknown041(*currentGame, dataGame, 1, 0xbdcf, 1000);
-  unknown041(*currentGame, dataGame, 1, 0xb78b, 100);
-  unknown041(*currentGame, dataGame, 1, 0x9fad, 1000);
-  unknown041(*currentGame, dataGame, 1, 0x9bc4, 1000);
-  unknown041(*currentGame, dataGame, 1, 0x9a97, 300);
-  unknown041(*currentGame, dataGame, 1, 0x8a5f, 2000);
-  unknown041(*currentGame, dataGame, 1, 0x88cd, 300);
-  unknown041(*currentGame, dataGame, 1, 0x7129, 50);
-  unknown041(*currentGame, dataGame, 1, 0x33d2, 100);
-  unknown041(*currentGame, dataGame, 1, 0x32d1, 256);
-  unknown041(*currentGame, dataGame, 1, 0x2f4a, 200);
-  unknown041(*currentGame, dataGame, 1, 0x16ac, 6000);
-  unknown041(*currentGame, dataGame, 1, 0x11fb, 1200);
-  unknown040(*currentGame, dataGame, 1, 0xfa2, 0x11fa);
-  unknown040(*currentGame, dataGame, 1, 0x1, 0xfa1);
-  unknown041(*currentGame, dataGame, 2, 0xe91a, 1000);
-  unknown040(*currentGame, dataGame, 2, 0xc209, 0xe919);
-  unknown040(*currentGame, dataGame, 2, 0x9af8, 0xc208);
-  unknown041(*currentGame, dataGame, 2, 0x8ce6, 2000);
-  unknown041(*currentGame, dataGame, 2, 0x8bb9, 300);
-  unknown041(*currentGame, dataGame, 2, 0x89c4, 500);
-  unknown041(*currentGame, dataGame, 2, 0x87cf, 500);
-  unknown041(*currentGame, dataGame, 2, 0x40fc, 15000);
-  unknown041(*currentGame, dataGame, 2, 0x663, 15000);
-  unknown040(*currentGame, dataGame, 2, 0x27a, 0x662);
-  unknown040(*currentGame, dataGame, 2, 0x25b, 0x279);
-  unknown040(*currentGame, dataGame, 4, 0x27b, 0x28b);
-  unknown040(*currentGame, dataGame, 4, 0x205, 0x20a);
-  unknown039(*currentGame, dataGame, 4, 0x1);
-  unknown040(*currentGame, dataGame, 4, 0x5, 0x1f9);
-  unknown040(*currentGame, dataGame, 8, 0xf8d, 0xf9d);
-  unknown040(*currentGame, dataGame, 8, 0x12, 0x5ee);
-  unknown040(*currentGame, dataGame, 8, 0x5ef, 0x847);
-  unknown040(*currentGame, dataGame, 16, 0x763, 0xb4b);
-  unknown039(*currentGame, dataGame, 16, 0x60b);
-  unknown040(*currentGame, dataGame, 16, 0x2e, 0x60a);
-  unknown040(*currentGame, dataGame, 16, 0x28, 0x2d);
-  unknown040(*currentGame, dataGame, 16, 0x22, 0x27);
-  unknown040(*currentGame, dataGame, 16, 0x1c, 0x21);
-  unknown040(*currentGame, dataGame, 16, 0x16, 0x1b);
-  unknown040(*currentGame, dataGame, 16, 0x5, 0x15);
-  unknown039(*currentGame, dataGame, 16, 0x3);
-  unknown040(*currentGame, dataGame, 32, 0x915, 0xcfd);
-  unknown040(*currentGame, dataGame, 32, 0x52c, 0x914);
-  unknown040(*currentGame, dataGame, 32, 0x143, 0x52b);
-  unknown040(*currentGame, dataGame, 32, 0x102, 0x142);
-  unknown040(*currentGame, dataGame, 32, 0x1, 0x101);
-  unknown039(*currentGame, dataGame, 1, 0x89fc);
-  unknown040(*currentGame, dataGame, 1, 0x89ff, 0x8a04);
-  unknown039(*currentGame, dataGame, 1, 0xc3de);
-  unknown039(*currentGame, dataGame, 1, 0xc3e9);
-  unknown039(*currentGame, dataGame, 1, 0xc400);
-  unknown039(*currentGame, dataGame, 1, 0xc40b);
-  unknown039(*currentGame, dataGame, 1, 0xc410);
-  unknown041(*currentGame, dataGame, 1, 0xc430, 29);
-  unknown040(*currentGame, dataGame, 1, 0xc44e, 0xc451);
-  unknown039(*currentGame, dataGame, 1, 0xc4a2);
-  unknown040(*currentGame, dataGame, 1, 0xc4d6, 0xc4d8);
-  unknown039(*currentGame, dataGame, 1, 0xc51c);
-  unknown040(*currentGame, dataGame, 1, 0xc559, 0xc55d);
-  unknown039(*currentGame, dataGame, 8, 0x84e);
-  unknown040(*currentGame, dataGame, 8, 0x854, 0x859);
-  unknown040(*currentGame, dataGame, 8, 0x85d, 0x862);
+  // no name. Each range is a loop of its own in the game, some with a base and a count and the others with a first and a last index (SDataGame::unknown003, unknown002): a table of ranges walked by
+  // one loop would give a single loop, so the calls stay written out (ruling 8; the quality gate reports the repeated statements).
+  currentGame->unknown001(dataGame, 1, 0xbdcd);
+  currentGame->unknown003(dataGame, 1, 0xd651, 300);
+  currentGame->unknown003(dataGame, 1, 0xd588, 200);
+  currentGame->unknown003(dataGame, 1, 0xc775, 100);
+  currentGame->unknown003(dataGame, 1, 0xc710, 100);
+  currentGame->unknown003(dataGame, 1, 0xc25e, 200);
+  currentGame->unknown003(dataGame, 1, 0xc1b8, 64);
+  currentGame->unknown003(dataGame, 1, 0xbdcf, 1000);
+  currentGame->unknown003(dataGame, 1, 0xb78b, 100);
+  currentGame->unknown003(dataGame, 1, 0x9fad, 1000);
+  currentGame->unknown003(dataGame, 1, 0x9bc4, 1000);
+  currentGame->unknown003(dataGame, 1, 0x9a97, 300);
+  currentGame->unknown003(dataGame, 1, 0x8a5f, 2000);
+  currentGame->unknown003(dataGame, 1, 0x88cd, 300);
+  currentGame->unknown003(dataGame, 1, 0x7129, 50);
+  currentGame->unknown003(dataGame, 1, 0x33d2, 100);
+  currentGame->unknown003(dataGame, 1, 0x32d1, 256);
+  currentGame->unknown003(dataGame, 1, 0x2f4a, 200);
+  currentGame->unknown003(dataGame, 1, 0x16ac, 6000);
+  currentGame->unknown003(dataGame, 1, 0x11fb, 1200);
+  currentGame->unknown002(dataGame, 1, 0xfa2, 0x11fa);
+  currentGame->unknown002(dataGame, 1, 0x1, 0xfa1);
+  currentGame->unknown003(dataGame, 2, 0xe91a, 1000);
+  currentGame->unknown002(dataGame, 2, 0xc209, 0xe919);
+  currentGame->unknown002(dataGame, 2, 0x9af8, 0xc208);
+  currentGame->unknown003(dataGame, 2, 0x8ce6, 2000);
+  currentGame->unknown003(dataGame, 2, 0x8bb9, 300);
+  currentGame->unknown003(dataGame, 2, 0x89c4, 500);
+  currentGame->unknown003(dataGame, 2, 0x87cf, 500);
+  currentGame->unknown003(dataGame, 2, 0x40fc, 15000);
+  currentGame->unknown003(dataGame, 2, 0x663, 15000);
+  currentGame->unknown002(dataGame, 2, 0x27a, 0x662);
+  currentGame->unknown002(dataGame, 2, 0x25b, 0x279);
+  currentGame->unknown002(dataGame, 4, 0x27b, 0x28b);
+  currentGame->unknown002(dataGame, 4, 0x205, 0x20a);
+  currentGame->unknown001(dataGame, 4, 0x1);
+  currentGame->unknown002(dataGame, 4, 0x5, 0x1f9);
+  currentGame->unknown002(dataGame, 8, 0xf8d, 0xf9d);
+  currentGame->unknown002(dataGame, 8, 0x12, 0x5ee);
+  currentGame->unknown002(dataGame, 8, 0x5ef, 0x847);
+  currentGame->unknown002(dataGame, 16, 0x763, 0xb4b);
+  currentGame->unknown001(dataGame, 16, 0x60b);
+  currentGame->unknown002(dataGame, 16, 0x2e, 0x60a);
+  currentGame->unknown002(dataGame, 16, 0x28, 0x2d);
+  currentGame->unknown002(dataGame, 16, 0x22, 0x27);
+  currentGame->unknown002(dataGame, 16, 0x1c, 0x21);
+  currentGame->unknown002(dataGame, 16, 0x16, 0x1b);
+  currentGame->unknown002(dataGame, 16, 0x5, 0x15);
+  currentGame->unknown001(dataGame, 16, 0x3);
+  currentGame->unknown002(dataGame, 32, 0x915, 0xcfd);
+  currentGame->unknown002(dataGame, 32, 0x52c, 0x914);
+  currentGame->unknown002(dataGame, 32, 0x143, 0x52b);
+  currentGame->unknown002(dataGame, 32, 0x102, 0x142);
+  currentGame->unknown002(dataGame, 32, 0x1, 0x101);
+  currentGame->unknown001(dataGame, 1, 0x89fc);
+  currentGame->unknown002(dataGame, 1, 0x89ff, 0x8a04);
+  currentGame->unknown001(dataGame, 1, 0xc3de);
+  currentGame->unknown001(dataGame, 1, 0xc3e9);
+  currentGame->unknown001(dataGame, 1, 0xc400);
+  currentGame->unknown001(dataGame, 1, 0xc40b);
+  currentGame->unknown001(dataGame, 1, 0xc410);
+  currentGame->unknown003(dataGame, 1, 0xc430, 29);
+  currentGame->unknown002(dataGame, 1, 0xc44e, 0xc451);
+  currentGame->unknown001(dataGame, 1, 0xc4a2);
+  currentGame->unknown002(dataGame, 1, 0xc4d6, 0xc4d8);
+  currentGame->unknown001(dataGame, 1, 0xc51c);
+  currentGame->unknown002(dataGame, 1, 0xc559, 0xc55d);
+  currentGame->unknown001(dataGame, 8, 0x84e);
+  currentGame->unknown002(dataGame, 8, 0x854, 0x859);
+  currentGame->unknown002(dataGame, 8, 0x85d, 0x862);
 
   // The blade list of the first driver is scoped: the game gives it and the list below one stack slot (0x7100352728, 0x71003527c4).
   {
@@ -2231,11 +2320,11 @@ void GfGameUtil::setupNewGameParam(const SDataGame &dataGame) {
       }
     }
   }
-  GfDataDriver::getSDataDriver(2).unknown20 = 0;
-  GfDataDriver::getSDataDriver(4).unknown20 = 0;
-  GfDataDriver::getSDataDriver(5).unknown20 = 0;
-  GfDataDriver::getSDataDriver(6).unknown20 = 0;
-  GfDataDriver::getSDataDriver(3).unknown20 = 0;
+  GfDataDriver::getSDataDriver(2).m_dataType = 0;
+  GfDataDriver::getSDataDriver(4).m_dataType = 0;
+  GfDataDriver::getSDataDriver(5).m_dataType = 0;
+  GfDataDriver::getSDataDriver(6).m_dataType = 0;
+  GfDataDriver::getSDataDriver(3).m_dataType = 0;
   for (int slot = 0; slot < GfDataDriver::getMaxSetBladeNum(1); slot++) {
     u32 setBlade = GfDataDriver::getBlade(1, slot);
     if (setBlade != 0 && setBlade != BLADE_UNKNOWN_1012) {
@@ -2259,9 +2348,9 @@ void GfGameUtil::setupNewGameParam(const SDataGame &dataGame) {
       SDataBlade &dataBlade = GfDataBlade::getSDataBlade(blade);
       if (unknown042(blade)) {
         removeFromDriverSet(dataBlade, blade);
-        dataBlade.unknown04 = 0;
-        dataBlade.unknown00 = 0;
-      } else if (dataBlade.unknown00 != 0) {
+        dataBlade.m_driverBySetBlade = 0;
+        dataBlade.m_dataType = 0;
+      } else if (dataBlade.m_dataType != 0) {
         GfDataBlade::setUnselect(blade, true);
       }
     }
@@ -2453,3 +2542,14 @@ u32 GfWeapon::getRscLeft() const {
 }
 
 } // namespace gf
+
+// The game builds the shop, hana, skip travel and save data utilities in this unit: their functions alternate with the functions of GfGameUtil in one
+// contiguous range with no other unit between (GfGameUtil to 0x7100352b34, GfGameUtilShop 0x7100352bd8 to 0x7100353240, GfGameUtilHana 0x71003532f8 to
+// 0x7100354cc4, GfGameUtilCloudSea 0x7100354d48 to 0x7100354db8, GfGameUtilSkipTravel 0x7100354dbc to 0x7100354ec4, GfGameUtilNanakoori and GfWeapon
+// 0x7100354f8c to 0x71003550e8, GfGameUtilSaveData 0x7100355178 to 0x7100355d90, GfGameUtil again 0x71003560ec to 0x7100356a28).
+// clang-format off
+#include "gf_game_util_shop.cpp"
+#include "gf_game_util_hana.cpp"
+#include "gf_game_util_skip_travel.cpp"
+#include "gf_game_util_save_data.cpp"
+// clang-format on

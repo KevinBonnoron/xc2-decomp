@@ -30,29 +30,29 @@ enum {
 
 // Inferred role: object collision enter message; original type name unknown.
 struct unknown095 : fw::Message {
-  unknown095() : fw::Message(MSG_OBJECT_COLI_UNKNOWN_16777276, 0x40), unknown08(reinterpret_cast<GF_OBJ_HANDLE *>(-1)), unknown10(nullptr) {}
+  unknown095() : fw::Message(MSG_OBJECT_COLI_UNKNOWN_16777276, 0x40), m_GF_OBJ_HANDLE(reinterpret_cast<GF_OBJ_HANDLE *>(-1)), unknown10(nullptr) {}
 
-  GF_OBJ_HANDLE *unknown08;                           // Inferred role: handle; original member name unknown.
+  GF_OBJ_HANDLE *m_GF_OBJ_HANDLE;                     // Inferred role: handle; original member name unknown.
   const fw::IColiEventListener::EnterInfo *unknown10; // Inferred role: info; original member name unknown.
 };
 
 // Inferred role: object collision leave message; original type name unknown.
 struct unknown096 : fw::Message {
-  unknown096() : fw::Message(MSG_OBJECT_COLI_UNKNOWN_16777277, 0x40), unknown08(reinterpret_cast<GF_OBJ_HANDLE *>(-1)), unknown10(nullptr) {}
+  unknown096() : fw::Message(MSG_OBJECT_COLI_UNKNOWN_16777277, 0x40), m_GF_OBJ_HANDLE(reinterpret_cast<GF_OBJ_HANDLE *>(-1)), unknown10(nullptr) {}
 
-  GF_OBJ_HANDLE *unknown08;                           // Inferred role: handle; original member name unknown.
+  GF_OBJ_HANDLE *m_GF_OBJ_HANDLE;                     // Inferred role: handle; original member name unknown.
   const fw::IColiEventListener::LeaveInfo *unknown10; // Inferred role: info; original member name unknown.
 };
 
 // Inferred role: object collision contact message; original type name unknown.
 struct unknown097 : fw::Message {
-  unknown097() : fw::Message(MSG_OBJECT_COLI_UNKNOWN_16777278, 0x40), unknown08(reinterpret_cast<GF_OBJ_HANDLE *>(-1)), unknown10(nullptr) {}
+  unknown097() : fw::Message(MSG_OBJECT_COLI_UNKNOWN_16777278, 0x40), m_GF_OBJ_HANDLE(reinterpret_cast<GF_OBJ_HANDLE *>(-1)), unknown10(nullptr) {}
 
-  GF_OBJ_HANDLE *unknown08;                           // Inferred role: handle; original member name unknown.
+  GF_OBJ_HANDLE *m_GF_OBJ_HANDLE;                     // Inferred role: handle; original member name unknown.
   const fw::IColiEventListener::EnterInfo *unknown10; // Inferred role: info; original member name unknown.
 };
 
-static_assert(offsetof(unknown095, unknown08) == 0x08, "");
+static_assert(offsetof(unknown095, m_GF_OBJ_HANDLE) == 0x08, "");
 static_assert(offsetof(unknown095, unknown10) == 0x10, "");
 
 class GfComCollider : public GfComponent, public fw::IColiEventListener {
@@ -64,10 +64,10 @@ public:
   public:
     static mm::mtl::RTTI m_rtti;
 
-    UserData() : unknown08(nullptr) {}
+    UserData() : m_comCollider(nullptr) {}
     const mm::mtl::RTTI *getRTTI() const override;
 
-    GfComCollider *unknown08; // Inferred role: owner; original member name unknown.
+    GfComCollider *m_comCollider; // Inferred role: owner; original member name unknown.
   };
 
   struct SetupInfo;
@@ -86,13 +86,18 @@ public:
   const mm::mtl::RTTI *getRTTI() const override;
   void changeLayer(u32 oldLayer, u32 newLayer) override;
 
-  mm::mtl::Vector<fw::ColiObject *> unknown18; // Inferred role: colis; original member name unknown.
-  UserData unknown40;                          // Inferred role: user data; original member name unknown.
-  fw::AnimColPoseModifier unknown50;           // Inferred role: pose modifier; original member name unknown.
+  // Inferred helper: first collision object; original name unknown. Users: DeadColCheckPlugin::testDead (1.0.0: 0x7100577a64), StateUtil::reflectionAdsorption (0x710057254c) and
+  // GfComBehaviorPc::warpBattle (0x7100567b5c) and warpExternal (0x7100567dbc). Taking the component keeps the game's null test of the caller's getComponent<GfComCollider>(), see
+  // UpdatableObject::getComponent.
+  fw::ColiObject *unknown001() const { return unknown18[0]; }
+
+  mm::mtl::Vector<fw::ColiObject *> unknown18;   // Inferred role: colis; original member name unknown.
+  UserData m_userData;                           // Inferred role: user data; original member name unknown.
+  fw::AnimColPoseModifier m_animColPoseModifier; // Inferred role: pose modifier; original member name unknown.
 };
 
 static_assert(offsetof(GfComCollider, unknown18) == 0x18, "");
-static_assert(offsetof(GfComCollider, unknown40) == 0x40, "");
-static_assert(offsetof(GfComCollider, unknown50) == 0x50, "");
+static_assert(offsetof(GfComCollider, m_userData) == 0x40, "");
+static_assert(offsetof(GfComCollider, m_animColPoseModifier) == 0x50, "");
 
 } // namespace gf

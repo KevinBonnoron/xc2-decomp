@@ -17,7 +17,7 @@ namespace pc {
 void StateFieldLure::enter(GfComBehaviorPc *behavior, ai::State *previous) {
   GfComPropertyPc *property = behavior->unknown08->getComponent<GfComPropertyPc>();
   property->unknown007();
-  unknown18 = StateUtilField::getLureTargetHandle(*behavior);
+  m_GF_OBJ_HANDLE = StateUtilField::getLureTargetHandle(*behavior);
 }
 
 void StateFieldLure::leave(GfComBehaviorPc *behavior, ai::State *next) { StateUtilField::setEnableLure(*behavior, false); }
@@ -31,7 +31,7 @@ void StateFieldLure::update(GfComBehaviorPc *behavior, const fw::UpdateInfo &inf
 }
 
 void StateFieldLure::notifyLure(GfComBehaviorPc *behavior) {
-  GfObj *obj = GfObjUtil::getObj(unknown18);
+  GfObj *obj = GfObjUtil::getObj(m_GF_OBJ_HANDLE);
   if (obj != nullptr) {
     MsgObjectLure message;
     static_cast<GfObj *>(behavior->unknown08)->sendMessage(obj, message);

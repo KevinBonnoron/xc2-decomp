@@ -25,7 +25,7 @@ SoundResource *SoundResource::request(mm::mtl::IAllocator *allocator, const char
   resource = new (ResourceManager::getMemSYS()) SoundResource(allocator, priority);
   if (resource != nullptr) {
     resource->setPath(path);
-    resource->unknownd0 = info;
+    resource->m_setupInfo = info;
     resource->addRef();
     resource->update();
   }
@@ -34,18 +34,18 @@ SoundResource *SoundResource::request(mm::mtl::IAllocator *allocator, const char
 }
 
 SoundResource::SoundResource(mm::mtl::IAllocator *allocator, LOAD_PRIO priority)
-    : ResourceObject(5, allocator, priority, 0x1000), unknownb0(STATE_UNKNOWN_0), unknownb8(nullptr), unknownc0(nullptr), m_soundPack(nullptr) {}
+    : ResourceObject(5, allocator, priority, 0x1000), unknownb0(STATE_UNKNOWN_0), m_assetLoader(nullptr), m_assetData(nullptr), m_soundPack(nullptr) {}
 
 SoundResource::~SoundResource() {
-  if (unknownb8 != nullptr) {
-    unknownb8->Release();
-    unknownb8 = nullptr;
+  if (m_assetLoader != nullptr) {
+    m_assetLoader->Release();
+    m_assetLoader = nullptr;
   }
 
   mm::mtl::safeRelease(m_soundPack);
-  if (unknownc0 != nullptr) {
-    ResourceManager::get()->removeSafeObject(unknownc0);
-    mm::mtl::safeRelease(unknownc0);
+  if (m_assetData != nullptr) {
+    ResourceManager::get()->removeSafeObject(m_assetData);
+    mm::mtl::safeRelease(m_assetData);
   }
 }
 
@@ -55,59 +55,59 @@ void SoundResource::update() {
     case STATE_UNKNOWN_0: {
       mm::mtl::FixStr<256> fileName;
       ml::DevFileTh::normalizeDvdFileName(fileName, unknown2c.c_str());
-      unknownc0 = AssetData::CreateFromCache(unknown18, fileName.c_str());
-      if (unknownc0 != nullptr) {
+      m_assetData = AssetData::CreateFromCache(unknown18, fileName.c_str());
+      if (m_assetData != nullptr) {
         SoundPack::SetupInfo info;
-        info.unknown00 = unknownc0->unknown30.c_str();
-        info.unknown84 = unknownd0.unknown00;
-        info.unknown88 = unknownd0.unknown04;
-        info.unknowna4 = unknownd0.unknown08;
-        info.unknown90 = unknownc0->unknown30.c_str();
-        info.unknown98 = unknownc0->unknown20;
-        info.unknowna0 = unknownc0->unknown1c;
+        info.unknown00 = m_assetData->unknown30.c_str();
+        info.unknown84 = m_setupInfo.unknown00;
+        info.unknown88 = m_setupInfo.unknown04;
+        info.unknowna4 = m_setupInfo.unknown08;
+        info.unknown90 = m_assetData->unknown30.c_str();
+        info.unknown98 = m_assetData->unknown20;
+        info.unknowna0 = m_assetData->unknown1c;
         m_soundPack = SoundPack::createFromStream(unknown18, info);
-        ResourceManager::get()->addSafeObject(unknownc0, static_cast<eResourceType>(5));
+        ResourceManager::get()->addSafeObject(m_assetData, static_cast<eResourceType>(5));
         unknownb0 = STATE_UNKNOWN_2;
       } else {
-        unknownb8 = AssetLoader::Create(unknown18, fileName.c_str(), unknown28, unknown24);
+        m_assetLoader = AssetLoader::Create(unknown18, fileName.c_str(), unknown28, unknown24);
         unknownb0 = static_cast<State>(unknownb0 + 1);
       }
       break;
     }
     case STATE_UNKNOWN_1:
-      if (unknownb8 == nullptr) {
+      if (m_assetLoader == nullptr) {
         unknownb0 = STATE_UNKNOWN_2;
         break;
       }
 
-      if (unknownb8->unknownc0 != nullptr) {
+      if (m_assetLoader->m_fileHandleTh != nullptr) {
         return;
       }
 
-      if (unknownb8->unknownd0 == -2) {
-        unknownb8->Release();
-        unknownb8 = nullptr;
+      if (m_assetLoader->unknownd0 == -2) {
+        m_assetLoader->Release();
+        m_assetLoader = nullptr;
         break;
       }
 
-      if (unknownb8->isExist()) {
-        unknownb8->unknownf0 = false;
-        unknownc0 = AssetData::AssignFromMemory(unknown18, unknownb8->unknownc8, unknownb8->unknownd0, unknownb8->unknown0c.c_str(), 0);
+      if (m_assetLoader->isExist()) {
+        m_assetLoader->unknownf0 = false;
+        m_assetData = AssetData::AssignFromMemory(unknown18, m_assetLoader->m_glassBreakage, m_assetLoader->unknownd0, m_assetLoader->unknown0c.c_str(), 0);
         SoundPack::SetupInfo info;
-        info.unknown00 = unknownc0->unknown30.c_str();
-        info.unknown84 = unknownd0.unknown00;
-        info.unknown88 = unknownd0.unknown04;
-        info.unknowna4 = unknownd0.unknown08;
-        info.unknown90 = unknownc0->unknown30.c_str();
-        info.unknown98 = unknownc0->unknown20;
-        info.unknowna0 = unknownc0->unknown1c;
+        info.unknown00 = m_assetData->unknown30.c_str();
+        info.unknown84 = m_setupInfo.unknown00;
+        info.unknown88 = m_setupInfo.unknown04;
+        info.unknowna4 = m_setupInfo.unknown08;
+        info.unknown90 = m_assetData->unknown30.c_str();
+        info.unknown98 = m_assetData->unknown20;
+        info.unknowna0 = m_assetData->unknown1c;
         m_soundPack = SoundPack::createFromStream(unknown18, info);
-        ResourceManager::get()->addSafeObject(unknownc0, static_cast<eResourceType>(5));
+        ResourceManager::get()->addSafeObject(m_assetData, static_cast<eResourceType>(5));
       }
 
-      if (unknownb8 != nullptr) {
-        unknownb8->Release();
-        unknownb8 = nullptr;
+      if (m_assetLoader != nullptr) {
+        m_assetLoader->Release();
+        m_assetLoader = nullptr;
       }
       break;
     default:
@@ -127,22 +127,22 @@ const char *SoundResource::getMemName() {
 bool SoundResource::valid() const { return unknownb0 == STATE_UNKNOWN_2; }
 
 void *SoundResource::getAssetData() {
-  if (unknownc0 != nullptr) {
-    return unknownc0->unknown20;
+  if (m_assetData != nullptr) {
+    return m_assetData->unknown20;
   }
 
   return nullptr;
 }
 
 int SoundResource::getAssetSize() const {
-  if (unknownc0 != nullptr) {
-    return unknownc0->unknown1c;
+  if (m_assetData != nullptr) {
+    return m_assetData->unknown1c;
   }
 
   return 0;
 }
 
-const char *SoundResource::getAssetName() const { return unknownc0 != nullptr ? unknownc0->unknown30.c_str() : nullptr; }
+const char *SoundResource::getAssetName() const { return m_assetData != nullptr ? m_assetData->unknown30.c_str() : nullptr; }
 
 SoundPack *SoundResource::getSoundPack() { return m_soundPack; }
 

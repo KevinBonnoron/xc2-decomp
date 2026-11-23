@@ -63,7 +63,7 @@ public:
   f32 unknown1b4;               // Inferred role: scale x; original member name unknown.
   f32 unknown1b8;               // Inferred role: scale y; original member name unknown.
   FONT_STYLE unknown1bc;        // Inferred role: style; original member name unknown.
-  const FontLayer *unknown1c0;  // Inferred role: owner layer; original member name unknown.
+  const FontLayer *m_fontLayer; // Inferred role: owner layer; original member name unknown.
   bool unknown1c8;              // Inferred role: shadow; original member name unknown.
   mm::Col4 unknown1cc;          // Inferred role: back color; original member name unknown.
   mm::Col4 unknown1dc;          // Inferred role: color; original member name unknown.
@@ -80,7 +80,7 @@ static_assert(offsetof(DevFontLayer, unknown1a8) == 0x1a8, "");
 static_assert(offsetof(DevFontLayer, unknown1b0) == 0x1b0, "");
 static_assert(offsetof(DevFontLayer, unknown1b4) == 0x1b4, "");
 static_assert(offsetof(DevFontLayer, unknown1bc) == 0x1bc, "");
-static_assert(offsetof(DevFontLayer, unknown1c0) == 0x1c0, "");
+static_assert(offsetof(DevFontLayer, m_fontLayer) == 0x1c0, "");
 static_assert(offsetof(DevFontLayer, unknown1c8) == 0x1c8, "");
 static_assert(offsetof(DevFontLayer, unknown1cc) == 0x1cc, "");
 static_assert(offsetof(DevFontLayer, unknown1dc) == 0x1dc, "");

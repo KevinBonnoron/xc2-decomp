@@ -32,6 +32,7 @@ class GfMenuCallContext;
 enum {
   MSG_PC_UNKNOWN_16777245 = 0x100001d, // Inferred role: msg pc field notify skill event; original name unknown.
   MSG_PC_UNKNOWN_16777254 = 0x1000026, // Inferred role: msg pc get elv lift; original name unknown.
+  MSG_PC_UNKNOWN_16777256 = 0x1000028, // Inferred role: msg pc field elv warp; original name unknown.
 };
 
 struct MsgPcFieldNotifySkillEvent : fw::Message {
@@ -43,12 +44,25 @@ struct MsgPcFieldNotifySkillEvent : fw::Message {
 static_assert(offsetof(MsgPcFieldNotifySkillEvent, unknown08) == 0x08, "");
 
 struct MsgPcGetElvLift : fw::Message {
+  MsgPcGetElvLift() : fw::Message(MSG_PC_UNKNOWN_16777254, 0x40), unknown08(), unknown90(false) {}
+
   mm::mtl::FixedVector<GF_OBJ_HANDLE *, 16> unknown08; // Inferred role: objects riding the lift of the elevator; original member name unknown.
   bool unknown90;                                      // Inferred role: lift switch; original member name unknown.
 };
 
 static_assert(offsetof(MsgPcGetElvLift, unknown08) == 0x08, "");
 static_assert(offsetof(MsgPcGetElvLift, unknown90) == 0x90, "");
+
+// Layout from StateFieldAccess::enter (0x7100553b88), which builds it on the stack: the lift message at 0x08 and the accessed object at 0x10.
+struct MsgPcFieldElvWarp : fw::Message {
+  MsgPcFieldElvWarp(MsgPcGetElvLift *lift, GF_OBJ_HANDLE *handle) : fw::Message(MSG_PC_UNKNOWN_16777256, 0x40), m_msgPcGetElvLift(lift), m_GF_OBJ_HANDLE(handle) {}
+
+  MsgPcGetElvLift *m_msgPcGetElvLift; // Inferred role: lift message answered by the elevator; original member name unknown.
+  GF_OBJ_HANDLE *m_GF_OBJ_HANDLE;     // Inferred role: elevator object; original member name unknown.
+};
+
+static_assert(offsetof(MsgPcFieldElvWarp, m_msgPcGetElvLift) == 0x08, "");
+static_assert(offsetof(MsgPcFieldElvWarp, m_GF_OBJ_HANDLE) == 0x10, "");
 
 // Layout from its constructor (0x710052a63c), destructor, setup and cleanup: the moving collision at 0x98, the route navi
 // at 0xa0, the target info menu context at 0xa8, the big object at 0xb0 and the look point frame at 0xc0.
@@ -76,15 +90,15 @@ public:
 
   fw::ColiObject *unknown98;                           // Inferred role: moving collision; original member name unknown.
   gmk::GmkRouteNavi *unknowna0;                        // Inferred role: route navi; original member name unknown.
-  GfMenuCallContext *unknowna8;                        // Inferred role: target info menu context; original member name unknown.
-  GfBigObjUnique unknownb0;                            // Inferred role: big object; original member name unknown.
+  GfMenuCallContext *m_menuCallContext;                // Inferred role: target info menu context; original member name unknown.
+  GfBigObjUnique m_bigObjUnique;                       // Inferred role: big object; original member name unknown.
   mm::mtl::IntrusivePtr<fw::ReferenceFrame> unknownc0; // Inferred role: look point frame; original member name unknown.
 };
 
 static_assert(offsetof(GfComBehaviorGmk, unknown98) == 0x98, "");
 static_assert(offsetof(GfComBehaviorGmk, unknowna0) == 0xa0, "");
-static_assert(offsetof(GfComBehaviorGmk, unknowna8) == 0xa8, "");
-static_assert(offsetof(GfComBehaviorGmk, unknownb0) == 0xb0, "");
+static_assert(offsetof(GfComBehaviorGmk, m_menuCallContext) == 0xa8, "");
+static_assert(offsetof(GfComBehaviorGmk, m_bigObjUnique) == 0xb0, "");
 static_assert(offsetof(GfComBehaviorGmk, unknownc0) == 0xc0, "");
 static_assert(sizeof(GfComBehaviorGmk) == 0xc8, "");
 

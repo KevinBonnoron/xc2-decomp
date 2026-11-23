@@ -10,9 +10,9 @@ public:
   DrShdCubeCapFilter(DrMan *man);
   ~DrShdCubeCapFilter();
 
-  DrMan *unknown00; // Inferred role: dr manager; original member name unknown.
+  DrMan *m_drMan; // Inferred role: dr manager; original member name unknown.
 };
 
-static_assert(offsetof(DrShdCubeCapFilter, unknown00) == 0x00, "");
+static_assert(offsetof(DrShdCubeCapFilter, m_drMan) == 0x00, "");
 
 } // namespace ml

@@ -71,7 +71,7 @@ private:
   u32 unknown18;                // Inferred role: bdat id; original member name unknown.
   u32 unknown1c;                // Inferred role: type; original member name unknown.
   u32 unknown20;                // Inferred role: aim type; original member name unknown.
-  ScheduleItem unknown28;       // Inferred role: item; original member name unknown.
+  ScheduleItem m_scheduleItem;  // Inferred role: item; original member name unknown.
   Func unknown50[ORDER_COUNT];  // Inferred role: funcs; original member name unknown.
   s32 unknown80;                // Inferred role: wait; original member name unknown.
 };

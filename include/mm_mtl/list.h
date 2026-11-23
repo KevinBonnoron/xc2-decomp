@@ -8,6 +8,34 @@
 namespace mm {
 namespace mtl {
 
+template <typename T> class _ReslistBase;
+
+// Name from the game symbol _ZN2gf10GfComSound10eraseCacheEN2mm3mtl17_reslist_iteratorINS0_9SoundInfoERS4_PS4_EE, whose parameter is the iterator of List<SoundInfo>
+// (_reslist_iterator<T, T &, T *>); the node type is the one of the list, as in ml::_reslist_iterator (include/ml/reslist.h).
+template <typename T, typename Ref, typename Ptr> class _reslist_iterator {
+public:
+  typedef typename _ReslistBase<T>::Node Node;
+
+  _reslist_iterator(Node *node, _ReslistBase<T> *list) : m_node(node) {}
+  _reslist_iterator(const _reslist_iterator &other) : m_node(other.m_node) {}
+  _reslist_iterator &operator=(const _reslist_iterator &other) {
+    m_node = other.m_node;
+    return *this;
+  }
+
+  Ref operator*() const { return m_node->m_value; }
+
+  _reslist_iterator &operator++() {
+    m_node = m_node->m_next;
+    return *this;
+  }
+
+  bool operator==(const _reslist_iterator &other) const { return m_node == other.m_node; }
+  bool operator!=(const _reslist_iterator &other) const { return m_node != other.m_node; }
+
+  Node *m_node;
+};
+
 template <typename T> class _ReslistBase {
 public:
   struct Node {
@@ -16,27 +44,7 @@ public:
     T m_value;
   };
 
-  class iterator {
-  public:
-    iterator(Node *node, _ReslistBase *list) : m_node(node) {}
-    iterator(const iterator &other) : m_node(other.m_node) {}
-    iterator &operator=(const iterator &other) {
-      m_node = other.m_node;
-      return *this;
-    }
-
-    T &operator*() const { return m_node->m_value; }
-
-    iterator &operator++() {
-      m_node = m_node->m_next;
-      return *this;
-    }
-
-    bool operator==(const iterator &other) const { return m_node == other.m_node; }
-    bool operator!=(const iterator &other) const { return m_node != other.m_node; }
-
-    Node *m_node;
-  };
+  typedef _reslist_iterator<T, T &, T *> iterator;
 
   class const_iterator {
   public:

@@ -20,10 +20,10 @@ public:
   };
 
   struct Packet {
-    Packet() : unknown08() {}
+    Packet() : m_paramAdapter() {}
 
-    f32 unknown00;              // Inferred role: vertical speed; original member name unknown.
-    fw::ParamAdapter unknown08; // Inferred role: fall param; original member name unknown.
+    f32 unknown00;                   // Inferred role: vertical speed; original member name unknown.
+    fw::ParamAdapter m_paramAdapter; // Inferred role: fall param; original member name unknown.
   };
 
   static void createReflection(fw::Reflection *reflection, const char *name, u32 index);
@@ -32,7 +32,7 @@ public:
 
 static_assert(offsetof(GfMoveFallControler::Param, speedMax) == 0x04, "");
 static_assert(sizeof(GfMoveFallControler::Param) == 0x08, "");
-static_assert(offsetof(GfMoveFallControler::Packet, unknown08) == 0x08, "");
+static_assert(offsetof(GfMoveFallControler::Packet, m_paramAdapter) == 0x08, "");
 static_assert(sizeof(GfMoveFallControler::Packet) == 0x10, "");
 
 } // namespace gf

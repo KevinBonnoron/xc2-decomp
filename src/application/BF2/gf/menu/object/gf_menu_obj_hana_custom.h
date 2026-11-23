@@ -38,7 +38,7 @@ public:
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x20 - 0x0c];
-    GfMenuObjHanaCustom *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjHanaCustom *m_menuObjHanaCustom; // Inferred role: owner; original member name unknown.
   };
 
   class EquipListListener : public ui::UIObjectListener {
@@ -46,7 +46,7 @@ public:
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x20 - 0x0c];
-    GfMenuObjHanaCustom *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjHanaCustom *m_menuObjHanaCustom; // Inferred role: owner; original member name unknown.
   };
 
   class PlanListener : public ui::UIObjectListener {
@@ -54,7 +54,7 @@ public:
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x20 - 0x0c];
-    GfMenuObjHanaCustom *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjHanaCustom *m_menuObjHanaCustom; // Inferred role: owner; original member name unknown.
   };
 
   GfMenuObjHanaCustom(u32 handle);
@@ -102,36 +102,36 @@ public:
   mm::mtl::FixedArray<GfMenuIDList *, 7> unknown48;  // Inferred role: identifiers; original member name unknown.
   u32 unknown80;                                     // Role and original member name unknown, cleared by the constructor.
   u32 unknown84;                                     // Role and original member name unknown, cleared by the constructor.
-  GfMenuItemList *unknown88;                         // Inferred role: items; original member name unknown.
+  GfMenuItemList *m_menuItemList;                    // Inferred role: items; original member name unknown.
   ui::UISelectObjList *unknown90;                    // Inferred role: list objects; original member name unknown.
   mm::mtl::ReferenceObject *unknown98;               // Inferred role: reference-counted object; type and original member name unknown.
-  GfMenuCallContext *unknown0a0;                     // Inferred role: call context; original member name unknown.
+  GfMenuCallContext *m_menuCallContext;              // Inferred role: call context; original member name unknown.
   GfMenuSequence<GfMenuObjHanaCustom, 8> unknown0a8; // Inferred role: queued steps; original member name unknown.
   u32 unknown338;                                    // Role and original member name unknown.
   u8 _33c[0x340 - 0x33c];
-  GfMenuReferenceItem *unknown340; // Inferred role: reference item; original member name unknown.
-  void *unknown348;                // Role, type and original member name unknown, cleared by the constructor.
-  u32 unknown350;                  // Role and original member name unknown, cleared by the constructor.
+  GfMenuReferenceItem *m_menuReferenceItem; // Inferred role: reference item; original member name unknown.
+  void *unknown348;                         // Role, type and original member name unknown, cleared by the constructor.
+  u32 unknown350;                           // Role and original member name unknown, cleared by the constructor.
   u8 _354[0x358 - 0x354];
   mm::mtl::IntrusivePtr<GfMenuReferenceNumber> unknown358; // Inferred role: reference number; original member name unknown.
 };
 
-static_assert(offsetof(GfMenuObjHanaCustom::MainListener, unknown20) == 0x20, "");
-static_assert(offsetof(GfMenuObjHanaCustom::EquipListListener, unknown20) == 0x20, "");
-static_assert(offsetof(GfMenuObjHanaCustom::PlanListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjHanaCustom::MainListener, m_menuObjHanaCustom) == 0x20, "");
+static_assert(offsetof(GfMenuObjHanaCustom::EquipListListener, m_menuObjHanaCustom) == 0x20, "");
+static_assert(offsetof(GfMenuObjHanaCustom::PlanListener, m_menuObjHanaCustom) == 0x20, "");
 static_assert(offsetof(GfMenuObjHanaCustom, unknown28) == 0x28, "");
 static_assert(offsetof(GfMenuObjHanaCustom, unknown30) == 0x30, "");
 static_assert(offsetof(GfMenuObjHanaCustom, unknown38) == 0x38, "");
 static_assert(offsetof(GfMenuObjHanaCustom, unknown40) == 0x40, "");
 static_assert(offsetof(GfMenuObjHanaCustom, unknown48) == 0x48, "");
 static_assert(offsetof(GfMenuObjHanaCustom, unknown80) == 0x80, "");
-static_assert(offsetof(GfMenuObjHanaCustom, unknown88) == 0x88, "");
+static_assert(offsetof(GfMenuObjHanaCustom, m_menuItemList) == 0x88, "");
 static_assert(offsetof(GfMenuObjHanaCustom, unknown90) == 0x90, "");
 static_assert(offsetof(GfMenuObjHanaCustom, unknown98) == 0x98, "");
-static_assert(offsetof(GfMenuObjHanaCustom, unknown0a0) == 0xa0, "");
+static_assert(offsetof(GfMenuObjHanaCustom, m_menuCallContext) == 0xa0, "");
 static_assert(offsetof(GfMenuObjHanaCustom, unknown0a8) == 0xa8, "");
 static_assert(offsetof(GfMenuObjHanaCustom, unknown338) == 0x338, "");
-static_assert(offsetof(GfMenuObjHanaCustom, unknown340) == 0x340, "");
+static_assert(offsetof(GfMenuObjHanaCustom, m_menuReferenceItem) == 0x340, "");
 static_assert(offsetof(GfMenuObjHanaCustom, unknown348) == 0x348, "");
 static_assert(offsetof(GfMenuObjHanaCustom, unknown350) == 0x350, "");
 static_assert(offsetof(GfMenuObjHanaCustom, unknown358) == 0x358, "");

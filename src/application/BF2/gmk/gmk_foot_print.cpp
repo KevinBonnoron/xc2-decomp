@@ -24,17 +24,17 @@ template bool TGmkList<GmkRoutedFootPrintPoint, GmkRoutedFootPrintPoint::BdatInf
 
 void GmkRoutedFootPrint::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gmk) {
   unknown00 = reinterpret_cast<const char *>(bdat.getValCheck("FootEffect", id, BDAT_TYPE_UNKNOWN_7));
-  unknown0a = ScenarioFlagCond(bdat.getValCheck("ScenarioFlagMin", id, BDAT_TYPE_UNKNOWN_2), bdat.getValCheck("ScenarioFlagMax", id, BDAT_TYPE_UNKNOWN_2));
-  unknown0e =
+  m_scenarioFlagCond = ScenarioFlagCond(bdat.getValCheck("ScenarioFlagMin", id, BDAT_TYPE_UNKNOWN_2), bdat.getValCheck("ScenarioFlagMax", id, BDAT_TYPE_UNKNOWN_2));
+  m_questFlagCond =
       QuestFlagCond(bdat.getValCheck("QuestFlag", id, BDAT_TYPE_UNKNOWN_2), bdat.getValCheck("QuestFlagMin", id, BDAT_TYPE_UNKNOWN_1), bdat.getValCheck("QuestFlagMax", id, BDAT_TYPE_UNKNOWN_1));
   unknown08 = bdat.getValCheck("Condition", id, BDAT_TYPE_UNKNOWN_2);
 }
 
 bool GmkRoutedFootPrint::BdatInfo::isPopCondMatched() const {
-  if (unknown0a.isEnable() && !unknown0a.isMatch()) {
+  if (m_scenarioFlagCond.isEnable() && !m_scenarioFlagCond.isMatch()) {
     return false;
   }
-  if (unknown0e.isEnable() && !unknown0e.isMatch()) {
+  if (m_questFlagCond.isEnable() && !m_questFlagCond.isMatch()) {
     return false;
   }
   if (unknown08 != 0 && !gf::GfGameCond::isGameCond(unknown08)) {
@@ -50,7 +50,7 @@ GmkType GmkRoutedFootPrint::getGmkType() const { return GMK_TYPE; }
 u32 GmkRoutedFootPrint::getRoutePointNum() const { return getData()->unknown10 - getData()->unknown0c; }
 
 const GmkRoutedFootPrintPointList *GmkRoutedFootPrint::getBindedRoutePointList() const {
-  return static_cast<const GmkRoutedFootPrintPointList *>(unknown08.unknown00->getCreateInfo().unknown08->unknown1b8[GMK_TYPE_ROUTED_FOOT_PRINT_POINT]);
+  return static_cast<const GmkRoutedFootPrintPointList *>(m_createBaseInfo.m_ownerGmkEnemyList->getCreateInfo().m_gmkSet->unknown1b8[GMK_TYPE_ROUTED_FOOT_PRINT_POINT]);
 }
 
 const GmkRoutedFootPrintPoint *GmkRoutedFootPrint::getRoutePoint(u32 index) const {
@@ -119,11 +119,11 @@ void GmkRoutedFootPrint::dispose() {
   unknown58 = nullptr;
 }
 
-GmkRoutedFootPrintPoint::GmkRoutedFootPrintPoint() : unknown50(0), unknown54(true) { unknown48.set(30.0f, 10.0f); }
+GmkRoutedFootPrintPoint::GmkRoutedFootPrintPoint() : unknown50(0), unknown54(true) { m_distHvCond.set(30.0f, 10.0f); }
 
 GmkType GmkRoutedFootPrintPoint::getGmkType() const { return GMK_TYPE; }
 
-bool GmkRoutedFootPrintPoint::isValid() const { return unknown08.unknown00 != nullptr && unknown20.unknown08 != nullptr; }
+bool GmkRoutedFootPrintPoint::isValid() const { return m_createBaseInfo.m_ownerGmkEnemyList != nullptr && m_createInfo.unknown08 != nullptr; }
 
 void GmkRoutedFootPrintPoint::validateDisp() const {
   if (unknown50 == 0) {
@@ -134,8 +134,8 @@ void GmkRoutedFootPrintPoint::validateDisp() const {
 }
 
 void GmkRoutedFootPrintPoint::createEffInst(void *data) {
-  const GmkSet *set = unknown08.unknown00->getCreateInfo().unknown08;
-  if (set != nullptr && set->unknown10.unknown24) {
+  const GmkSet *set = m_createBaseInfo.m_ownerGmkEnemyList->getCreateInfo().m_gmkSet;
+  if (set != nullptr && set->m_createInfo.unknown24) {
     return;
   }
   if (unknown50 != 0) {
@@ -153,7 +153,7 @@ void GmkRoutedFootPrintPoint::updateConcrete(void *data, f32 deltaTime) {
     return;
   }
   u32 effect = unknown50;
-  bool isCondMatched = unknown48.isMatch(getData()->unknown00);
+  bool isCondMatched = m_distHvCond.isMatch(getData()->unknown00);
   if (effect == 0) {
     if (isCondMatched) {
       createEffInst(data);
@@ -172,9 +172,9 @@ void GmkRoutedFootPrintPoint::disposeEffInst(bool isFadeOut) {
 
 void GmkRoutedFootPrintPoint::dispose() {
   disposeEffInst(false);
-  unknown20.unknown00 = 0;
-  unknown20.unknown08 = nullptr;
-  unknown20.unknown10 = nullptr;
+  m_createInfo.unknown00 = 0;
+  m_createInfo.unknown08 = nullptr;
+  m_createInfo.unknown10 = nullptr;
 }
 
 } // namespace gmk

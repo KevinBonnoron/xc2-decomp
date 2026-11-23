@@ -36,12 +36,12 @@ static GfMenuWorldMapAdapter::TypeInfo TYPE_INFOS[] = {
     {&GfMenuWorldMapAdapter::update_CurrentDisp, {GfMenuAdapter::unknown004_3, 0, 0}},
 };
 
-GfMenuWorldMapAdapter::GfMenuWorldMapAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways) : GfMenuAdapter(plugin, false, isUpdateAlways), unknown50(nullptr), unknown58(0), unknown5c(0) {}
+GfMenuWorldMapAdapter::GfMenuWorldMapAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways) : GfMenuAdapter(plugin, false, isUpdateAlways), m_iConverter(nullptr), unknown58(0), unknown5c(0) {}
 
 GfMenuWorldMapAdapter::~GfMenuWorldMapAdapter() {
-  if (unknown50 != nullptr) {
-    delete unknown50;
-    unknown50 = nullptr;
+  if (m_iConverter != nullptr) {
+    delete m_iConverter;
+    m_iConverter = nullptr;
   }
 }
 
@@ -96,7 +96,7 @@ GfMenuWorldMapAdapter *GfMenuWorldMapAdapter::createFromCoverter(u32 handle, u32
   }
   GfMenuWorldMapAdapter *adapter = create(handle, type, converter->getMapId(), isUpdateAlways);
   if (adapter != nullptr) {
-    adapter->unknown50 = converter;
+    adapter->m_iConverter = converter;
   }
   return adapter;
 }
@@ -110,7 +110,7 @@ GfMenuWorldMapAdapter *GfMenuWorldMapAdapter::createFromList(u32 handle, u32 typ
   ListConverter *converter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) ListConverter(list, listIndex, unknown14);
   GfMenuWorldMapAdapter *adapter = create(handle, type, converter->getMapId(), isUpdateAlways);
   if (adapter != nullptr) {
-    adapter->unknown50 = converter;
+    adapter->m_iConverter = converter;
   }
   return adapter;
 }
@@ -124,14 +124,14 @@ GfMenuWorldMapAdapter *GfMenuWorldMapAdapter::createFromReference(u32 handle, u3
   ReferenceConverter *converter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) ReferenceConverter();
   GfMenuWorldMapAdapter *adapter = create(handle, type, GfMenuReference::getReferenceWorldMapID(), isUpdateAlways);
   if (adapter != nullptr) {
-    adapter->unknown50 = converter;
+    adapter->m_iConverter = converter;
   }
   return adapter;
 }
 
 void GfMenuWorldMapAdapter::update(const fw::UpdateInfo &info) {
-  if (unknown50 != nullptr) {
-    u32 newMapId = unknown50->getMapId();
+  if (m_iConverter != nullptr) {
+    u32 newMapId = m_iConverter->getMapId();
     if (unknown58 != newMapId) {
       unknown58 = newMapId;
       setChange();

@@ -24,13 +24,13 @@ public:
   void unbind();
   void apply() override;
 
-  ModelObject *unknown18;         // Inferred role: model object; original member name unknown.
-  ColiObject *unknown20;          // Inferred role: coli object; original member name unknown.
+  ModelObject *m_modelObject;     // Inferred role: model object; original member name unknown.
+  ColiObject *m_coliObject;       // Inferred role: coli object; original member name unknown.
   mm::mtl::Vector<s16> unknown28; // Inferred role: bones; original member name unknown.
 };
 
-static_assert(offsetof(AnimColPoseModifier, unknown18) == 0x18, "");
-static_assert(offsetof(AnimColPoseModifier, unknown20) == 0x20, "");
+static_assert(offsetof(AnimColPoseModifier, m_modelObject) == 0x18, "");
+static_assert(offsetof(AnimColPoseModifier, m_coliObject) == 0x20, "");
 static_assert(offsetof(AnimColPoseModifier, unknown28) == 0x28, "");
 static_assert(sizeof(AnimColPoseModifier) == 0x50, "");
 

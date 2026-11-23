@@ -25,28 +25,28 @@ struct GfQuestReward;
 struct GfSetupParam;
 
 struct QuestOrderParam : QuestParam {
-  QuestOrderParam(QuestID quest) : QuestParam(QUEST_PARAM_UNKNOWN_3), unknown04(quest) {}
+  QuestOrderParam(QuestID quest) : QuestParam(QUEST_PARAM_UNKNOWN_3), m_questID(quest) {}
 
-  QuestID unknown04; // Inferred role: quest; original member name unknown.
+  QuestID m_questID; // Inferred role: quest; original member name unknown.
 };
 
 struct QuestCompleteParam : QuestParam {
-  QuestCompleteParam(QuestID quest, QSTATE state) : QuestParam(QUEST_PARAM_UNKNOWN_1), unknown04(quest), unknown08(state) {}
+  QuestCompleteParam(QuestID quest, QSTATE state) : QuestParam(QUEST_PARAM_UNKNOWN_1), m_questID(quest), unknown08(state) {}
 
-  QuestID unknown04; // Inferred role: quest; original member name unknown.
+  QuestID m_questID; // Inferred role: quest; original member name unknown.
   QSTATE unknown08;  // Inferred role: state; original member name unknown.
 };
 
 struct QuestPreCompleteParam : QuestParam {
-  QuestPreCompleteParam(QuestID quest) : QuestParam(QUEST_PARAM_UNKNOWN_5), unknown04(quest) {}
+  QuestPreCompleteParam(QuestID quest) : QuestParam(QUEST_PARAM_UNKNOWN_5), m_questID(quest) {}
 
-  QuestID unknown04; // Inferred role: quest; original member name unknown.
+  QuestID m_questID; // Inferred role: quest; original member name unknown.
 };
 
 struct QuestStateParam : QuestParam {
-  QuestStateParam(QuestID quest, QSTATE oldState, QSTATE state) : QuestParam(QUEST_PARAM_UNKNOWN_6), unknown04(quest), unknown08(oldState), unknown0c(state) {}
+  QuestStateParam(QuestID quest, QSTATE oldState, QSTATE state) : QuestParam(QUEST_PARAM_UNKNOWN_6), m_questID(quest), unknown08(oldState), unknown0c(state) {}
 
-  QuestID unknown04; // Inferred role: quest; original member name unknown.
+  QuestID m_questID; // Inferred role: quest; original member name unknown.
   QSTATE unknown08;  // Inferred role: old state; original member name unknown.
   QSTATE unknown0c;  // Inferred role: state; original member name unknown.
 };
@@ -59,9 +59,9 @@ struct QuestChangeParam : QuestParam {
 };
 
 struct QuestCompleteChildParam : QuestParam {
-  QuestCompleteChildParam(QuestID quest) : QuestParam(QUEST_PARAM_UNKNOWN_4), unknown04(quest) {}
+  QuestCompleteChildParam(QuestID quest) : QuestParam(QUEST_PARAM_UNKNOWN_4), m_questID(quest) {}
 
-  QuestID unknown04; // Inferred role: quest; original member name unknown.
+  QuestID m_questID; // Inferred role: quest; original member name unknown.
 };
 
 static_assert(sizeof(QuestOrderParam) == 0x08, "");
@@ -70,7 +70,7 @@ static_assert(sizeof(QuestPreCompleteParam) == 0x08, "");
 static_assert(sizeof(QuestStateParam) == 0x10, "");
 static_assert(sizeof(QuestChangeParam) == 0x0c, "");
 
-static_assert(offsetof(QuestCompleteChildParam, unknown04) == 0x04, "");
+static_assert(offsetof(QuestCompleteChildParam, m_questID) == 0x04, "");
 
 class IQuestEvent {
 public:
@@ -91,15 +91,15 @@ class GfQuestManager : public mm::mtl::PtrSingleton<GfQuestManager> {
 public:
   struct CompQuest {
     CompQuest &operator=(const CompQuest &other) {
-      unknown00.unknown00 = other.unknown00.unknown00;
-      unknown00.unknown02 = other.unknown00.unknown02;
+      m_questID.unknown00 = other.m_questID.unknown00;
+      m_questID.unknown02 = other.m_questID.unknown02;
       unknown04 = other.unknown04;
       return *this;
     }
 
-    bool operator==(const CompQuest &other) const { return unknown00 == other.unknown00 && unknown04 == other.unknown04; }
+    bool operator==(const CompQuest &other) const { return m_questID == other.m_questID && unknown04 == other.unknown04; }
 
-    QuestID unknown00; // Inferred role: quest; original member name unknown.
+    QuestID m_questID; // Inferred role: quest; original member name unknown.
     QSTATE unknown04;  // Inferred role: state; original member name unknown.
   };
 
@@ -208,15 +208,15 @@ public:
 
   mm::mtl::FixedQueue<IQuestEvent *, 16> unknown08;                         // Inferred role: events; original member name unknown.
   bool unknown98;                                                           // Inferred role: initialize; original member name unknown.
-  mm::mtl::FixedQueue<QuestData, 8000> unknowna0;                           // Inferred role: order quests; original member name unknown.
-  mm::mtl::FixedQueue<QuestData, 15000> unknown7db0;                        // Inferred role: order achievement quests; original member name unknown.
+  mm::mtl::FixedQueue<QuestData, 8000> m_orderQuest;                        // Inferred role: order quests; named after the game accessor gf::GfQuestManager::getOrderQuest.
+  mm::mtl::FixedQueue<QuestData, 15000> m_orderAchievementQuest;            // Inferred role: order achievement quests; named after the game accessor gf::GfQuestManager::getOrderAchievementQuest.
   mm::mtl::FixedQueue<QuestData, 8000> unknown16820;                        // Inferred role: blade quests; original member name unknown.
   mm::mtl::FixedQueue<QuestData, 8000> unknown1e530;                        // Inferred role: normal quests; original member name unknown.
   mm::mtl::FixedQueue<QuestData, 8000> unknown26240;                        // Inferred role: mercenaries quests; original member name unknown.
   mm::mtl::FixedQueue<QuestData, 128> unknown2df50;                         // Inferred role: prev complete quests; original member name unknown.
   mm::mtl::FixedQueue<QuestData, 128> unknown2e160;                         // Inferred role: remove quests; original member name unknown.
   mm::mtl::FixedQueue<CompQuest, 128> unknown2e370;                         // Inferred role: complete quests; original member name unknown.
-  QuestID unknown2e780;                                                     // Inferred role: last order; original member name unknown.
+  QuestID m_lastOrder;                                                      // Inferred role: last order; named after the game accessor gf::GfQuestManager::getLastOrder.
   mm::mtl::FixedList<QuestParam *, 256> unknown2e788;                       // Inferred role: event params; original member name unknown.
   mm::mtl::FixedQueue<QuestData, 15000> unknown2f9a8;                       // Inferred role: achievement task checks; original member name unknown.
   mm::mtl::FixedQueue<QuestData, 1024> unknown3e418;                        // Inferred role: parallel task checks; original member name unknown.
@@ -230,15 +230,15 @@ public:
 struct GfQuestManagerLayout {
   static_assert(offsetof(GfQuestManager, unknown08) == 0x08, "");
   static_assert(offsetof(GfQuestManager, unknown98) == 0x98, "");
-  static_assert(offsetof(GfQuestManager, unknowna0) == 0xa0, "");
-  static_assert(offsetof(GfQuestManager, unknown7db0) == 0x7db0, "");
+  static_assert(offsetof(GfQuestManager, m_orderQuest) == 0xa0, "");
+  static_assert(offsetof(GfQuestManager, m_orderAchievementQuest) == 0x7db0, "");
   static_assert(offsetof(GfQuestManager, unknown16820) == 0x16820, "");
   static_assert(offsetof(GfQuestManager, unknown1e530) == 0x1e530, "");
   static_assert(offsetof(GfQuestManager, unknown26240) == 0x26240, "");
   static_assert(offsetof(GfQuestManager, unknown2df50) == 0x2df50, "");
   static_assert(offsetof(GfQuestManager, unknown2e160) == 0x2e160, "");
   static_assert(offsetof(GfQuestManager, unknown2e370) == 0x2e370, "");
-  static_assert(offsetof(GfQuestManager, unknown2e780) == 0x2e780, "");
+  static_assert(offsetof(GfQuestManager, m_lastOrder) == 0x2e780, "");
   static_assert(offsetof(GfQuestManager, unknown2e788) == 0x2e788, "");
   static_assert(offsetof(GfQuestManager, unknown2f9a8) == 0x2f9a8, "");
   static_assert(offsetof(GfQuestManager, unknown3e418) == 0x3e418, "");

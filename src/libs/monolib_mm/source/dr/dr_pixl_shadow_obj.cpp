@@ -33,18 +33,18 @@ bool DrPixlShadowObj::setSptCalcPos(const mm::Vec3 &position, f32 value) { retur
 const f32 *DrPixlShadowObj::getParmTbl() const { return unknown60.rows[0]; }
 
 void DrPixlShadowObj::createWork(DrLightObj *light, int index, MdoShdPxlWrkTex *work) {
-  unknown40 = work;
+  m_mdoShdPxlWrkTex = work;
   unknown4a = index;
-  unknown198 = light;
-  unknown08.release();
+  m_drLightObj = light;
+  m_cGLibDblUniformBlock.release();
   if (unknown4c == 1) {
-    unknown08.setup(0x50);
+    m_cGLibDblUniformBlock.setup(0x50);
   } else {
-    unknown08.setup(0x40);
+    m_cGLibDblUniformBlock.setup(0x40);
   }
 }
 
-void DrPixlShadowObj::releaseWork() { unknown08.release(); }
+void DrPixlShadowObj::releaseWork() { m_cGLibDblUniformBlock.release(); }
 
 void DrPixlShadowObj::setInstSelMapShadow(bool value) {
   if (value) {
@@ -56,21 +56,21 @@ void DrPixlShadowObj::setInstSelMapShadow(bool value) {
 
 void DrPixlShadowObj::renderSetup() {
   if (!(unknown50 & 1)) {
-    unknown40->clearDepth(false);
-    unknown178->unknown5c0->shadowBegin();
+    m_mdoShdPxlWrkTex->clearDepth(false);
+    m_drMan->m_drAPCache->shadowBegin();
     DrAPGxType::beginShadow();
-    unknown178->unknown78->unknown858 = 0;
-    unknown40->setRenderTarget();
-    unknown178->unknown580->unknown10->shadowBegin(unknown60);
+    m_drMan->m_drPixlMan->unknown858 = 0;
+    m_mdoShdPxlWrkTex->setRenderTarget();
+    m_drMan->m_drCalcMan->m_drCalcViewWork->shadowBegin(unknown60);
     unknown50 |= 1;
   }
 }
 
 bool DrPixlShadowObj::renderEnd() {
   if (unknown50 & 1) {
-    grlib::CGLibGPUCache::depthInvalidate(*unknown40->unknown120);
+    grlib::CGLibGPUCache::depthInvalidate(*m_mdoShdPxlWrkTex->unknown120);
     DrAPGxType::endShadow();
-    unknown178->unknown580->shadowEnd();
+    m_drMan->m_drCalcMan->shadowEnd();
     return true;
   }
   return false;

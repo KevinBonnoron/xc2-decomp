@@ -16,7 +16,7 @@ namespace ml {
 
 DevFont::DevFont(const char *name, WorkObj *parent) : DevBase(name, parent, 0x200) {}
 
-FontLayer::FontLayer() : unknown08(DevFont::createLayer(this)) {}
+FontLayer::FontLayer() : m_devFontLayer(DevFont::createLayer(this)) {}
 
 bool DevFont::isInitialized() {
   DevFont *font = get();
@@ -37,7 +37,7 @@ DevFontLayer *DevFont::createLayer(const FontLayer *layer) {
     return nullptr;
   }
   DevFontLayer *fontLayer = WorkUtil::createWork<DevFontLayer>("DevFontLayer", font, false);
-  fontLayer->unknown1c0 = layer;
+  fontLayer->m_fontLayer = layer;
   return fontLayer;
 }
 
@@ -67,11 +67,11 @@ DevFontLayer *DevFont::getFontLayer(const FontLayer *layer) {
     if (fontLayer == nullptr) {
       continue;
     }
-    if (fontLayer->unknown1c0 == layer) {
+    if (fontLayer->m_fontLayer == layer) {
       return fontLayer;
     }
   }
-  return layer->unknown08;
+  return layer->m_devFontLayer;
 }
 
 const DevFontLayer *DevFont::getFontLayer(const FontLayer *layer) const {
@@ -80,7 +80,7 @@ const DevFontLayer *DevFont::getFontLayer(const FontLayer *layer) const {
     if (fontLayer == nullptr) {
       continue;
     }
-    if (fontLayer->unknown1c0 == layer) {
+    if (fontLayer->m_fontLayer == layer) {
       return fontLayer;
     }
   }

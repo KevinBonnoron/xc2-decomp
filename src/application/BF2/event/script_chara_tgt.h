@@ -15,7 +15,7 @@ public:
 
 private:
   bool unknown08;    // Inferred role: prev tar; original member name unknown.
-  TarAxis unknown10; // Inferred role: prev axis; original member name unknown.
+  TarAxis m_tarAxis; // Inferred role: prev axis; original member name unknown.
 };
 
 static_assert(sizeof(ScriptCharaTgt) == 0x30, "");

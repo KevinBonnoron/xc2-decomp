@@ -42,7 +42,7 @@ namespace gf {
 
 GfMenuObjZoneMap::GfMenuObjZoneMap(u32 handle)
     : GfMenuObject(handle), unknown28(nullptr), unknown30(nullptr), unknown38(nullptr), unknown40(1.0f), unknown48(nullptr), unknown50(nullptr), unknown70(false), unknown98(nullptr), unknown3100(0),
-      unknown3124(false), unknown3125(false), unknown3128(nullptr), unknown3130(this), unknown33c0(false), unknown33c8(nullptr), unknown33d0(0) {
+      unknown3124(false), unknown3125(false), m_menuCallContext(nullptr), unknown3130(this), unknown33c0(false), unknown33c8(nullptr), unknown33d0(0) {
   unknown58.setAllocator(getAllocator(ALLOCATOR_UNKNOWN_0));
 }
 
@@ -56,7 +56,7 @@ GfMenuObjZoneMap::~GfMenuObjZoneMap() {
   mm::mtl::safeRelease(unknown48);
   mm::mtl::safeRelease(unknown50);
   mm::mtl::safeRelease(unknown98);
-  mm::mtl::safeRelease(unknown3128);
+  mm::mtl::safeRelease(m_menuCallContext);
 }
 
 void GfMenuObjZoneMap::finalize() {
@@ -66,13 +66,13 @@ void GfMenuObjZoneMap::finalize() {
     unknown70 = false;
     unknown74.clear();
   }
-  GfFieldGimmick::get()->unknownf4c0.dispose();
+  GfFieldGimmick::get()->m_gmkLocatorAtlas.dispose();
   GfMenuObject::finalize();
 }
 
 void GfMenuObjZoneMap::update() {
   unknown3130.unknown003();
-  GfFieldGimmick::get()->unknownf4c0.update(0.0f);
+  GfFieldGimmick::get()->m_gmkLocatorAtlas.update(0.0f);
   GfMenuObject::update();
 }
 
@@ -359,7 +359,7 @@ void GfMenuObjZoneMap::closeIconTable(ui::UIObjectAcc &, mm::mtl::FixedArray<mm:
 }
 
 u32 GfMenuObjZoneMap::getFloor() {
-  if (!unknown28->unknown79) {
+  if (!unknown28->m_groupMode) {
     return unknown28->getContents(unknown28->getIndex(false)).unknown00;
   }
   u16 image = unknown48->getContents(unknown48->getIndex(false)).unknown00;
@@ -373,7 +373,7 @@ bool GfMenuObjZoneMap::seqTexDelete() {
     unknown98->clear();
     closeIconTable(main, unknown0a0);
     ui::UIStreamManager::get()->deleteImage(unknown74, main.searchChild("LAY_floor"));
-    GfFieldGimmick::get()->unknownf4c0.dispose();
+    GfFieldGimmick::get()->m_gmkLocatorAtlas.dispose();
     mm::mtl::safeRelease(unknown38);
     unknown70 = false;
   }
@@ -430,11 +430,11 @@ void GfMenuObjZoneMap::MainListener::reciveEvent(const ui::EventData &event, u32
     break;
   case 8:
     if (event.unknown0c == 9) {
-      unknown20->unknown3100++;
-      if (unknown20->unknown3100 > 8) {
-        unknown20->unknown3100 = 0;
+      m_menuObjZoneMap->unknown3100++;
+      if (m_menuObjZoneMap->unknown3100 > 8) {
+        m_menuObjZoneMap->unknown3100 = 0;
       }
-      setDispIconNode(acc, unknown20->unknown3100);
+      setDispIconNode(acc, m_menuObjZoneMap->unknown3100);
     } else if (event.unknown0c == 10) {
       unknown158(acc.searchChild("LAY_helpmenu"), GfMenuTypes::unknown003_260, 0, 0.0f);
     }
@@ -456,18 +456,18 @@ void GfMenuObjZoneMap::HelpListener::reciveEvent(const ui::EventData &event, u32
   switch (event.unknown00) {
   case 1:
     setupHelp(acc);
-    unknown20->unknown3125 = false;
+    m_menuObjZoneMap->unknown3125 = false;
     acc.setDisp(false);
     break;
   case GfMenuTypes::unknown003_260:
-    if (!unknown20->unknown3125) {
+    if (!m_menuObjZoneMap->unknown3125) {
       int ctrl = GfMenuObjUtil::setCommonFadeIn(handle, 1, 0);
       GfMenuObject::hookCtrlEvent(handle, ctrl);
-      unknown20->unknown3125 = true;
+      m_menuObjZoneMap->unknown3125 = true;
     } else {
       int ctrl = GfMenuObjUtil::setCommonFadeOut(handle, 2, 0);
       GfMenuObject::hookCtrlEvent(handle, ctrl);
-      unknown20->unknown3125 = false;
+      m_menuObjZoneMap->unknown3125 = false;
     }
     break;
   default:
@@ -477,49 +477,49 @@ void GfMenuObjZoneMap::HelpListener::reciveEvent(const ui::EventData &event, u32
 }
 
 void GfMenuObjZoneMap::MapSelectListener::reciveEvent(const ui::EventData &event, u32 handle) {
-  ui::UIObjectAcc owner(unknown20->unknown18);
+  ui::UIObjectAcc owner(m_menuObjZoneMap->unknown18);
   ui::UIObjectAcc acc(handle);
   switch (event.unknown00) {
   case 1:
-    setupMapSelect(acc, unknown20->unknown28);
-    GfMenuObject::setupInputSelection(handle, 0, unknown20->unknown28->getSize());
+    setupMapSelect(acc, m_menuObjZoneMap->unknown28);
+    GfMenuObject::setupInputSelection(handle, 0, m_menuObjZoneMap->unknown28->getSize());
     GfMenuObject::enableInput(handle);
     return;
   case 6: {
     u32 index = event.unknown08;
-    if (unknown20->unknown28->getSize() != 0) {
-      unknown20->unknown28->setIndex(index);
-      u32 map = unknown20->unknown28->getContents(index).unknown00;
-      refreshMapSelect(acc, unknown20->unknown28, unknown20->unknown30, map);
+    if (m_menuObjZoneMap->unknown28->getSize() != 0) {
+      m_menuObjZoneMap->unknown28->setIndex(index);
+      u32 map = m_menuObjZoneMap->unknown28->getContents(index).unknown00;
+      refreshMapSelect(acc, m_menuObjZoneMap->unknown28, m_menuObjZoneMap->unknown30, map);
       return;
     }
     break;
   }
   case 8:
     if (event.unknown0c == 1) {
-      if (unknown20->unknown28->getSize() != 0) {
-        u8 *bdat = unknown20->unknown33c8;
+      if (m_menuObjZoneMap->unknown28->getSize() != 0) {
+        u8 *bdat = m_menuObjZoneMap->unknown33c8;
         u32 top = Bdat::getIdTop(bdat);
         u32 count = Bdat::getIdCount(bdat);
-        unknown20->unknown48->clear();
+        m_menuObjZoneMap->unknown48->clear();
         for (u32 i = 0; i < count; i++) {
           Bdat::uVal group = Bdat::getVal(bdat, "menuGroup", top + i);
           if (Bdat::getVal(bdat, "MAPJUMPID", top + i).valueU16 != 0) {
-            if (group.valueU16 == unknown20->unknown28->getContents(unknown20->unknown28->getIndex(false)).unknown00) {
+            if (group.valueU16 == m_menuObjZoneMap->unknown28->getContents(m_menuObjZoneMap->unknown28->getIndex(false)).unknown00) {
               MenuZoneMapInfo info;
               info.unknown00 = top + i;
               info.unknown04 = Bdat::getVal(bdat, "MSGID", top + i).valueU16;
-              unknown20->unknown48->addContents(info);
+              m_menuObjZoneMap->unknown48->addContents(info);
             }
           }
         }
-        if (unknown20->unknown58.size() != 0) {
-          unknown20->unknown58.destroy();
-          unknown20->unknown58.setAllocator(getAllocator(ALLOCATOR_UNKNOWN_0));
+        if (m_menuObjZoneMap->unknown58.size() != 0) {
+          m_menuObjZoneMap->unknown58.destroy();
+          m_menuObjZoneMap->unknown58.setAllocator(getAllocator(ALLOCATOR_UNKNOWN_0));
         }
-        if (unknown20->unknown48->getSize() != 0) {
-          unknown20->unknown58.reserve(unknown20->unknown48->getSize());
-          unknown20->unknown58.fill(MapJumpInfo());
+        if (m_menuObjZoneMap->unknown48->getSize() != 0) {
+          m_menuObjZoneMap->unknown58.reserve(m_menuObjZoneMap->unknown48->getSize());
+          m_menuObjZoneMap->unknown58.fill(MapJumpInfo());
         }
         unknown164(owner.searchChild("LAY_zonemap"), GfMenuTypes::unknown003_258);
         unknown163(owner.searchChild("LAY_point_sellect"), GfMenuTypes::unknown003_258, 0);

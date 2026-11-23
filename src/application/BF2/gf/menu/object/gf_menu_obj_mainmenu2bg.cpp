@@ -145,20 +145,20 @@ void GfMenuObjMainMenu2BG::MainListener::reciveEvent(const ui::EventData &event,
     acc.setDisp(false);
     break;
   case 3:
-    if (event.unknown08 == 1 && unknown20->unknown24 != 0) {
-      GfMenuObject::addResultCallContext(unknown20->unknown24, 1, 0);
-      unknown20->unknown24 = 0;
+    if (event.unknown08 == 1 && m_menuObjMainMenu2BG->unknown24 != 0) {
+      GfMenuObject::addResultCallContext(m_menuObjMainMenu2BG->unknown24, 1, 0);
+      m_menuObjMainMenu2BG->unknown24 = 0;
     }
     break;
   case 0x101: {
     s16 screenWidth = GfScreenW();
     u64 slot = event.unknown10_u64;
     u32 offset = event.unknown08;
-    unknown20->unknown24 = slot >> 32;
+    m_menuObjMainMenu2BG->unknown24 = slot >> 32;
     u32 count = static_cast<u32>(slot);
     mm::Rect<s16> rect;
-    for (u32 i = 0; i < unknown20->unknown28->getSize(); i++) {
-      ui::UIObjectAcc object(unknown20->unknown28->getObject(i));
+    for (u32 i = 0; i < m_menuObjMainMenu2BG->unknown28->getSize(); i++) {
+      ui::UIObjectAcc object(m_menuObjMainMenu2BG->unknown28->getObject(i));
       object.getRect(rect, 2);
       u32 shift = (rect.width - screenWidth) / (count - 1);
       GfMenuObjUtil::CtrlParam param;

@@ -17,14 +17,14 @@ public:
 
   class Param {
   public:
-    Param(const CmdParam &param, s32 frame) : unknown08(param), unknown118(frame) {}
+    Param(const CmdParam &param, s32 frame) : m_cmdParam(param), unknown118(frame) {}
     virtual ~Param() {}
-    const CmdVariable &val(size_t index) const { return unknown08.val(index); }
+    const CmdVariable &val(size_t index) const { return m_cmdParam.val(index); }
     s32 getFrame() const { return unknown118; }
 
   private:
-    CmdParam unknown08; // Inferred role: param; original member name unknown.
-    s32 unknown118;     // Inferred role: frame; original member name unknown.
+    CmdParam m_cmdParam; // Inferred role: param; original member name unknown.
+    s32 unknown118;      // Inferred role: frame; original member name unknown.
   };
 
   virtual ~ICmd() {}

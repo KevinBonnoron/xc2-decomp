@@ -38,7 +38,7 @@ private:
   f32 unknown328;                     // Inferred role: life; original member name unknown.
   f32 unknown32c;                     // Inferred role: fade in; original member name unknown.
   f32 unknown330;                     // Inferred role: fade out; original member name unknown.
-  ShakerUpdater unknown338;           // Inferred role: updater; original member name unknown.
+  ShakerUpdater m_shakerUpdater;      // Inferred role: updater; original member name unknown.
 };
 
 static_assert(sizeof(Shaker) == 0xc90, "");

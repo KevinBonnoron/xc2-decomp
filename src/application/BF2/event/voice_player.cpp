@@ -21,7 +21,7 @@ const f32 VoicePlayer::TO_FR = 30.0f;
 static constexpr int STALL_UNKNOWN_19 = 19; // Inferred role: stall count that pauses a voice; original name unknown.
 static constexpr int STALL_UNKNOWN_20 = 20; // Inferred role: stall count that resumes a voice; original name unknown.
 
-VoicePlayer::VoicePlayer() : unknown08(0), unknown46c(0), unknown470(0.0f), unknown4b8(0), unknown4c0(nullptr) {}
+VoicePlayer::VoicePlayer() : unknown08(0), unknown46c(0), unknown470(0.0f), unknown4b8(0), m_iVoiceEvent(nullptr) {}
 
 void VoicePlayer::clear() {
   stop(10.0f);
@@ -58,8 +58,8 @@ void VoicePlayer::update() {
   if (unknown4b8 != 0) {
     if ((unknown08 & (FLAG_UNKNOWN_1 | FLAG_UNKNOWN_2)) == 0 && !fw::SoundManager::get()->isPreparing(unknown4b8)) {
       bool isPlaying = fw::SoundManager::get()->isPlaying(unknown4b8);
-      if (unknown4c0 != nullptr) {
-        unknown4c0->OnVoicePlay(unknown474.c_str(), isPlaying);
+      if (m_iVoiceEvent != nullptr) {
+        m_iVoiceEvent->OnVoicePlay(unknown474.c_str(), isPlaying);
       }
       if (isPlaying) {
         unknown08 |= FLAG_UNKNOWN_1;
@@ -267,13 +267,13 @@ bool VoicePlayer::play(const char *path, f32 delay, IVoiceEvent *event) {
   if (isPause) {
     fw::SoundManager::get()->pause(unknown4b8, true, 0.0f);
   }
-  this->unknown4c0 = event;
+  this->m_iVoiceEvent = event;
   return unknown4b8 != 0;
 }
 
 void VoicePlayer::clr() {
   unknown474 = "";
-  unknown4c0 = nullptr;
+  m_iVoiceEvent = nullptr;
   unknown470 = 0.0f;
   unknown08 &= ~(FLAG_UNKNOWN_0 | FLAG_UNKNOWN_1 | FLAG_UNKNOWN_2);
 }

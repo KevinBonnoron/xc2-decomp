@@ -5,19 +5,19 @@ namespace gf {
 
 struct QuestData {
   QuestData() = default;
-  QuestData(QuestID quest) : unknown00(quest) {}
+  QuestData(QuestID quest) : m_questID(quest) {}
 
   QuestData &operator=(const QuestData &other) {
-    unknown00.unknown00 = other.unknown00.unknown00;
-    unknown00.unknown02 = other.unknown00.unknown02;
+    m_questID.unknown00 = other.m_questID.unknown00;
+    m_questID.unknown02 = other.m_questID.unknown02;
     return *this;
   }
 
-  operator QuestID() const { return unknown00; }
+  operator QuestID() const { return m_questID; }
 
-  bool operator==(const QuestData &other) const { return unknown00.unknown00 == other.unknown00.unknown00 && unknown00.unknown02 == other.unknown00.unknown02; }
+  bool operator==(const QuestData &other) const { return m_questID.unknown00 == other.m_questID.unknown00 && m_questID.unknown02 == other.m_questID.unknown02; }
 
-  QuestID unknown00; // Inferred role: quest; original member name unknown.
+  QuestID m_questID; // Inferred role: quest; original member name unknown.
 };
 
 static_assert(sizeof(QuestData) == 4, "");

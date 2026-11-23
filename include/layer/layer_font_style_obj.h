@@ -34,20 +34,20 @@ public:
   static const f32 RUBY_SCALE;
 
   const void *unknown20; // Inferred role: first value of the style info; original member name unknown.
-  u32 unknown28;         // Inferred role: style data max; original member name unknown.
+  u32 m_styleDataMax;    // Inferred role: style data max; named after the game accessor layer::LayerAccFontStyle::getStyleDataMax.
   u8 _2c[0x30 - 0x2c];
-  const LyrFontStyleData *unknown30; // Inferred role: style data table; original member name unknown.
-  LayerFontManager *unknown38;       // Inferred role: font manager; original member name unknown.
-  f32 unknown40;                     // Inferred role: ruby scale; original member name unknown.
+  const LyrFontStyleData *m_lyrFontStyleData; // Inferred role: style data table; original member name unknown.
+  LayerFontManager *m_layerFontManager;       // Inferred role: font manager; original member name unknown.
+  f32 m_rubyScale;                            // Inferred role: ruby scale; named after the game accessor layer::LayerAccFontStyle::getRubyScale.
   u8 _44[0x48 - 0x44];
-  mm::mtl::Vector<LayerStrInfo> *unknown48; // Inferred role: color info; original member name unknown.
-  mm::mtl::Vector<LayerStrInfo> *unknown50; // Inferred role: icon info; original member name unknown.
+  mm::mtl::Vector<LayerStrInfo> *m_colorInfo; // Inferred role: color info; named after the game accessor layer::LayerAccFontStyle::getColorInfo.
+  mm::mtl::Vector<LayerStrInfo> *m_iconInfo;  // Inferred role: icon info; named after the game accessor layer::LayerAccFontStyle::getIconInfo.
 };
 
 static_assert(offsetof(LayerFontStyleObj, unknown20) == 0x20, "");
-static_assert(offsetof(LayerFontStyleObj, unknown28) == 0x28, "");
-static_assert(offsetof(LayerFontStyleObj, unknown30) == 0x30, "");
-static_assert(offsetof(LayerFontStyleObj, unknown40) == 0x40, "");
-static_assert(offsetof(LayerFontStyleObj, unknown48) == 0x48, "");
+static_assert(offsetof(LayerFontStyleObj, m_styleDataMax) == 0x28, "");
+static_assert(offsetof(LayerFontStyleObj, m_lyrFontStyleData) == 0x30, "");
+static_assert(offsetof(LayerFontStyleObj, m_rubyScale) == 0x40, "");
+static_assert(offsetof(LayerFontStyleObj, m_colorInfo) == 0x48, "");
 
 } // namespace layer

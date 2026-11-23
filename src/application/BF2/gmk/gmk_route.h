@@ -57,7 +57,7 @@ public:
   void debugDraw(bool isSelected) const;
   void debugDrawRoute(const mm::Col4 &color) const;
 
-  const Data *getData() const { return static_cast<const Data *>(unknown20.unknown08); }
+  const Data *getData() const { return static_cast<const Data *>(m_createInfo.unknown08); }
 
   u8 _48[0x50 - 0x48];
 };
@@ -94,13 +94,13 @@ public:
   GmkRoutePoint() : unknown48(nullptr) {}
   ~GmkRoutePoint() override { dispose(); }
   GmkType getGmkType() const override { return GMK_TYPE; }
-  bool isValid() const override { return unknown08.unknown00 != nullptr && unknown20.unknown08 != nullptr; }
+  bool isValid() const override { return m_createBaseInfo.m_ownerGmkEnemyList != nullptr && m_createInfo.unknown08 != nullptr; }
   void create(const CreateInfo &info) override;
   void dispose() override;
   void debugDraw() const override;
   void debugUpdateMmf() override;
 
-  const Data *getData() const { return static_cast<const Data *>(unknown20.unknown08); }
+  const Data *getData() const { return static_cast<const Data *>(m_createInfo.unknown08); }
 
   void *unknown48; // Inferred role: cleared by the constructor; original member name unknown.
 };

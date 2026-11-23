@@ -45,20 +45,20 @@ ModelObj::ModelObj(const char *path, bool isPriority, u32 id)
 ModelObj::ModelObj(const char *path, const DESC &desc, bool isPriority, u32 id)
     : unknown08(0), unknown0c(KIND_UNKNOWN_1), unknown10(0), unknown14(0), unknown18(path), unknown5c(id), unknown118(nullptr), unknown120(gf::unknown020), unknown128(nullptr), unknown130(-1),
       unknown134(0) {
-  unknown60 = desc;
+  m_DESC = desc;
   if (isPriority) {
     unknown08 |= FLAG_UNKNOWN_0;
   } else {
     unknown08 &= ~FLAG_UNKNOWN_0;
   }
-  setupModel(unknown60);
+  setupModel(m_DESC);
 }
 
 ModelObj::ModelObj(MODEL_TYPE type, u32 modelId, const OPTION &option, bool isPriority, u32 id)
     : unknown0c(KIND_UNKNOWN_2), unknown10(type), unknown14(modelId), unknown5c(id), unknown118(nullptr), unknown120(gf::unknown020), unknown128(nullptr), unknown130(-1), unknown134(0) {
   unknown08 = isPriority;
-  unknown110 = option;
-  setupModel(type, modelId, unknown110);
+  m_OPTION = option;
+  setupModel(type, modelId, m_OPTION);
 }
 
 ModelObj::~ModelObj() {
@@ -141,16 +141,16 @@ bool ModelObj::isSame(const char *path, const DESC &desc, bool isPriority, u32 i
   if (__builtin_strcmp(this->unknown18.c_str(), path) != 0) {
     return false;
   }
-  if (__builtin_strcmp(unknown60.unknown00.c_str(), desc.unknown00.c_str()) != 0) {
+  if (__builtin_strcmp(m_DESC.unknown00.c_str(), desc.unknown00.c_str()) != 0) {
     return false;
   }
-  if (unknown60.unknown48 != desc.unknown48 || unknown60.unknown50 != desc.unknown50) {
+  if (m_DESC.unknown48 != desc.unknown48 || m_DESC.unknown50 != desc.unknown50) {
     return false;
   }
-  if (__builtin_strcmp(unknown60.unknown58.c_str(), desc.unknown58.c_str()) != 0) {
+  if (__builtin_strcmp(m_DESC.unknown58.c_str(), desc.unknown58.c_str()) != 0) {
     return false;
   }
-  if (unknown60.unknowna0 != desc.unknowna0 || unknown60.unknowna8 != desc.unknowna8) {
+  if (m_DESC.unknowna0 != desc.unknowna0 || m_DESC.unknowna8 != desc.unknowna8) {
     return false;
   }
   if (((unknown08 & FLAG_UNKNOWN_0) != 0) != isPriority) {
@@ -166,7 +166,7 @@ bool ModelObj::isSame(MODEL_TYPE type, u32 modelId, const OPTION &option, bool i
   if (unknown10 != type || unknown14 != modelId) {
     return false;
   }
-  if (unknown110.unknown00 != option.unknown00 || unknown110.unknown04 != option.unknown04 || unknown110.unknown05 != option.unknown05) {
+  if (m_OPTION.unknown00 != option.unknown00 || m_OPTION.unknown04 != option.unknown04 || m_OPTION.unknown05 != option.unknown05) {
     return false;
   }
   if (((unknown08 & FLAG_UNKNOWN_0) != 0) != isPriority) {
@@ -211,19 +211,19 @@ bool ModelObj::isSame() {
 void ModelObj::OnResEvent(const PARAM &param) {
   if (__builtin_strcmp(param.path, mm::mtl::Singleton<Extend>::getPtr()->mdo(unknown18.c_str())) == 0) {
     if (param.result == RES_RESULT_TYPE_UNKNOWN_3) {
-      unknown60.unknown00 = mm::mtl::Singleton<Extend>::getPtr()->mdo(unknown18.c_str());
-      unknown60.unknown48 = param.adr;
-      unknown60.unknown50 = param.size;
+      m_DESC.unknown00 = mm::mtl::Singleton<Extend>::getPtr()->mdo(unknown18.c_str());
+      m_DESC.unknown48 = param.adr;
+      m_DESC.unknown50 = param.size;
     }
     unknown08 &= ~FLAG_UNKNOWN_2;
   } else if (__builtin_strcmp(param.path, mm::mtl::Singleton<Extend>::getPtr()->arc(unknown18.c_str())) == 0) {
-    unknown60.unknown58 = mm::mtl::Singleton<Extend>::getPtr()->arc(unknown18.c_str());
-    unknown60.unknowna0 = param.adr;
-    unknown60.unknowna8 = param.size;
+    m_DESC.unknown58 = mm::mtl::Singleton<Extend>::getPtr()->arc(unknown18.c_str());
+    m_DESC.unknowna0 = param.adr;
+    m_DESC.unknowna8 = param.size;
     unknown08 &= ~FLAG_UNKNOWN_3;
   }
-  if ((unknown08 & (FLAG_UNKNOWN_2 | FLAG_UNKNOWN_3)) == 0 && unknown60.unknown48 != nullptr) {
-    setupModel(unknown60);
+  if ((unknown08 & (FLAG_UNKNOWN_2 | FLAG_UNKNOWN_3)) == 0 && m_DESC.unknown48 != nullptr) {
+    setupModel(m_DESC);
   }
 }
 

@@ -35,8 +35,22 @@ bool GfDebugSave::loadSavedTime(RealTime &realTime, SAVESLOT slot) {
     param.unknown00 = path.c_str();
     ml::DevFileTh::readFileBlock(param, nullptr, nullptr);
   }
-  realTime = _gfdsv::s_tempSav.unknown08;
+  realTime = _gfdsv::s_tempSav.m_realTime;
   return _gfdsv::s_tempSav.unknown00 == SAVE_UNKNOWN_237915;
+}
+
+// 1.0.0: 0x71002cf75c. The DVD root without its last two path components, followed by "/debug_save/".
+void GfDebugUtil::getSaveDataPath(mm::mtl::FixStr<256> &path) {
+  path = ml::DevFileTh::getDvdRoot();
+  int pos = path.unknown004('/');
+  if (pos != -1) {
+    path.erase(pos, -1);
+  }
+  pos = path.unknown004('/');
+  if (pos != -1) {
+    path.erase(pos, -1);
+  }
+  path += "/debug_save/";
 }
 
 } // namespace gf

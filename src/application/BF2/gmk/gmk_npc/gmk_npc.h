@@ -24,7 +24,7 @@ class GmkNpcIdInfo;
 
 class AGmkNpc : public mm::mtl::IntrusiveListNode<AGmkNpc> {
 public:
-  AGmkNpc() : unknown18(nullptr) {}
+  AGmkNpc() : m_gmkNpcIdInfo(nullptr) {}
   virtual ~AGmkNpc() {}
   virtual bool isPopCondMatched() const = 0;
   virtual bool isDepopCondMatched() const = 0;
@@ -38,10 +38,10 @@ public:
   virtual void validateDisp() const = 0;
   virtual void debugUpdate(f32 deltaTime);
 
-  GmkNpcIdInfo *unknown18; // Inferred role: shared NPC instance information; original member name unknown.
+  GmkNpcIdInfo *m_gmkNpcIdInfo; // Inferred role: shared NPC instance information; original member name unknown.
 };
 
-static_assert(offsetof(AGmkNpc, unknown18) == 0x18, "");
+static_assert(offsetof(AGmkNpc, m_gmkNpcIdInfo) == 0x18, "");
 static_assert(sizeof(AGmkNpc) == 0x20, "");
 
 class GmkNpc : public AGmkBase, public AGmkNpc {
@@ -52,14 +52,14 @@ public:
     bool isPopCommonCondMatched(const AGmkBase &gmk) const;
     void debugDraw(const AGmkBase &gmk) const;
 
-    u16 unknown00;              // Inferred role: condition; original member name unknown.
-    u16 unknown02;              // Inferred role: group; original member name unknown.
-    u16 unknown04;              // Inferred role: battle reaction; original member name unknown.
-    ScenarioFlagCond unknown06; // Inferred role: scenario flag; original member name unknown.
-    QuestFlagCond unknown0a;    // Inferred role: quest flag; original member name unknown.
-    TimeCond unknown10;         // Inferred role: time cond; original member name unknown.
-    DistHvCond unknown20;       // Inferred role: pop dist; original member name unknown.
-    DistHvCond unknown28;       // Inferred role: depop dist; original member name unknown.
+    u16 unknown00;                       // Inferred role: condition; original member name unknown.
+    u16 unknown02;                       // Inferred role: group; original member name unknown.
+    u16 unknown04;                       // Inferred role: battle reaction; original member name unknown.
+    ScenarioFlagCond m_scenarioFlagCond; // Inferred role: scenario flag; original member name unknown.
+    QuestFlagCond m_questFlagCond;       // Inferred role: quest flag; original member name unknown.
+    TimeCond m_timeCond;                 // Inferred role: time cond; original member name unknown.
+    DistHvCond unknown20;                // Inferred role: pop dist; original member name unknown.
+    DistHvCond unknown28;                // Inferred role: depop dist; original member name unknown.
   };
 
   static const GmkType GMK_TYPE = GMK_TYPE_NPC; // Inferred name; shared by every gimmick class for the TGmkList templates.
@@ -74,7 +74,7 @@ public:
   bool isPopDistCondMatched() const override;
   bool isDepopDistCondMatched() const override;
   u8 *getBindedBdatFp() const override;
-  int getBindedBdatId() const override { return AGmkBase::unknown20.unknown18; }
+  int getBindedBdatId() const override { return AGmkBase::m_createInfo.unknown18; }
   bool findPopPosRot(mm::Vec3 &position, mm::Vec3 &rotation) const override;
   void bindToGameObj(gf::GF_OBJ_HANDLE *handle) const override;
   void unbindToGameObj(gf::GF_OBJ_HANDLE *handle) const override { AGmkBase::unbindToGameObj(handle); }
@@ -83,7 +83,7 @@ public:
   void onGobEvent(gf::IGfObjListener::OBJEVT event, gf::GF_OBJ_HANDLE *handle) override;
   void debugUpdate(f32 deltaTime) override {}
 
-  const BdatInfo *getBdatInfo() const { return reinterpret_cast<const BdatInfo *>(AGmkBase::unknown20.unknown10); }
+  const BdatInfo *getBdatInfo() const { return reinterpret_cast<const BdatInfo *>(AGmkBase::m_createInfo.unknown10); }
 
   mutable bool unknown68; // Inferred role: display enabled; original member name unknown.
 };

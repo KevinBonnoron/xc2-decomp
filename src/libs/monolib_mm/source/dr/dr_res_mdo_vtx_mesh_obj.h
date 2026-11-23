@@ -33,20 +33,20 @@ public:
   void releaseWork();
   bool isRender() const;
 
-  grlib::CGLibVtxVertex *unknown00;       // Inferred role: vertex; original member name unknown.
-  grlib::CGLibOneUniformBlock *unknown08; // Inferred role: uniform block; original member name unknown.
-  grlib::CGLibOneUniformBlock unknown10;  // Inferred role: uniform block; original member name unknown.
-  grlib::CGLibDblUniformBlock unknown38;  // Inferred role: uniform block; original member name unknown.
-  bool unknown70;                         // Inferred role: vertex was activated; original member name unknown.
-  u32 unknown74;                          // Inferred role: flags; original member name unknown.
-  void *unknown78;                        // Inferred role: work memory; original member name unknown.
-  u32 unknown80;                          // Inferred role: vertex count; original member name unknown.
-  u32 unknown84;                          // Inferred role: capacity of the work memory; original member name unknown.
-  u32 unknown88;                          // Inferred role: start index of the entries of unknown78; original member name unknown.
-  s32 unknown8c;                          // Inferred role: render count; original member name unknown.
-  u32 unknown90;                          // Inferred role: cleared by the constructor; original member name unknown.
-  s32 unknown94;                          // Inferred role: render count; original member name unknown.
-  f32 unknown98;                          // Inferred role: elapsed time accumulated by update; original member name unknown.
+  grlib::CGLibVtxVertex *unknown00;                   // Inferred role: vertex; original member name unknown.
+  grlib::CGLibOneUniformBlock *unknown08;             // Inferred role: uniform block; original member name unknown.
+  grlib::CGLibOneUniformBlock unknown10;              // Inferred role: uniform block; original member name unknown.
+  grlib::CGLibDblUniformBlock m_cGLibDblUniformBlock; // Inferred role: uniform block; original member name unknown.
+  bool unknown70;                                     // Inferred role: vertex was activated; original member name unknown.
+  u32 unknown74;                                      // Inferred role: flags; original member name unknown.
+  void *unknown78;                                    // Inferred role: work memory; original member name unknown.
+  u32 unknown80;                                      // Inferred role: vertex count; original member name unknown.
+  u32 unknown84;                                      // Inferred role: capacity of the work memory; original member name unknown.
+  u32 unknown88;                                      // Inferred role: start index of the entries of unknown78; original member name unknown.
+  s32 unknown8c;                                      // Inferred role: render count; original member name unknown.
+  u32 unknown90;                                      // Inferred role: cleared by the constructor; original member name unknown.
+  s32 unknown94;                                      // Inferred role: render count; original member name unknown.
+  f32 unknown98;                                      // Inferred role: elapsed time accumulated by update; original member name unknown.
   u8 _9c[0xa0 - 0x9c];
   mm::Mat44 unknowna0; // Inferred role: matrix; original member name unknown.
   mm::Vec3 unknowne0;  // Inferred role: init vector; original member name unknown.
@@ -68,7 +68,7 @@ static_assert(offsetof(DrResMdoVtxMeshObj, unknown100) == 0x100, "");
 static_assert(offsetof(DrResMdoVtxMeshObj, unknown114) == 0x114, "");
 static_assert(offsetof(DrResMdoVtxMeshObj, unknown12c) == 0x12c, "");
 static_assert(offsetof(DrResMdoVtxMeshObj, unknown10) == 0x10, "");
-static_assert(offsetof(DrResMdoVtxMeshObj, unknown38) == 0x38, "");
+static_assert(offsetof(DrResMdoVtxMeshObj, m_cGLibDblUniformBlock) == 0x38, "");
 static_assert(offsetof(DrResMdoVtxMeshObj, unknown74) == 0x74, "");
 static_assert(offsetof(DrResMdoVtxMeshObj, unknown78) == 0x78, "");
 static_assert(offsetof(DrResMdoVtxMeshObj, unknown80) == 0x80, "");

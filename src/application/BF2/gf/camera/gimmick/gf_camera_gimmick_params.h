@@ -27,11 +27,11 @@ public:
   static mm::mtl::FixStr<128> getPath(const char *name);
 
   u32 m_size;
-  const Param *unknown10; // Inferred role: parameter array inside the loaded data; original member name unknown.
+  const Param *m_param; // Inferred role: parameter array inside the loaded data; original member name unknown.
 };
 
 static_assert(offsetof(GimmickCameraParams, m_size) == 0x08, "");
-static_assert(offsetof(GimmickCameraParams, unknown10) == 0x10, "");
+static_assert(offsetof(GimmickCameraParams, m_param) == 0x10, "");
 static_assert(sizeof(GimmickCameraParams) == 0x18, "");
 static_assert(sizeof(GimmickCameraParams::Param) == 0x2c, "");
 

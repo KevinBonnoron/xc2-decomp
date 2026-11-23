@@ -33,9 +33,9 @@ public:
   bool isManual() const { return (unknown08 & FLAG_UNKNOWN_3) != 0; }
 
 private:
-  u32 unknown08;                // Inferred role: flags; original member name unknown.
-  gf::GF_OBJ_HANDLE *unknown10; // Inferred role: handle; original member name unknown.
-  CharaPlayFacial *unknown18;   // Role and original member name unknown.
+  u32 unknown08;                      // Inferred role: flags; original member name unknown.
+  gf::GF_OBJ_HANDLE *unknown10;       // Inferred role: handle; original member name unknown.
+  CharaPlayFacial *m_charaPlayFacial; // Role and original member name unknown.
   u8 _20[0x28 - 0x20];
   f32 unknown28; // Role and original member name unknown.
   u8 _2c[0x38 - 0x2c];
@@ -61,7 +61,7 @@ private:
 };
 
 struct CharaPlayTalkLayout {
-  static_assert(offsetof(CharaPlayTalk, unknown18) == 0x18, "");
+  static_assert(offsetof(CharaPlayTalk, m_charaPlayFacial) == 0x18, "");
   static_assert(offsetof(CharaPlayTalk, unknown28) == 0x28, "");
   static_assert(offsetof(CharaPlayTalk, unknown38) == 0x38, "");
   static_assert(offsetof(CharaPlayTalk, unknown40) == 0x40, "");

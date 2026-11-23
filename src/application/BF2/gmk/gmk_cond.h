@@ -156,14 +156,14 @@ public:
 
   void create(const CreateInfo &info) {
     dispose();
-    unknown00 = info;
+    m_createInfo = info;
     unknown20 = true;
   }
 
-  void dispose() { unknown00 = CreateInfo(); }
+  void dispose() { m_createInfo = CreateInfo(); }
 
-  CreateInfo unknown00; // Inferred role: create info; original member name unknown.
-  bool unknown20;       // Inferred role: created; original member name unknown.
+  CreateInfo m_createInfo; // Inferred role: create info; original member name unknown.
+  bool unknown20;          // Inferred role: created; original member name unknown.
 };
 
 static_assert(sizeof(PopPosSafeCond::CreateInfo) == 0x20, "");

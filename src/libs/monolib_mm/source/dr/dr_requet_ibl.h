@@ -28,12 +28,12 @@ public:
   int getVersion() const;
 
   u8 _00[0x18 - 0x00];
-  DrLightObjGlobalIBL *unknown18; // Inferred role: light; original member name unknown.
-  u64 unknown20;                  // Inferred role: request id (light address); original member name unknown.
-  u8 *unknown28;                  // Inferred role: request state; original member name unknown.
+  DrLightObjGlobalIBL *m_drLightObjGlobalIBL; // Inferred role: light; original member name unknown.
+  u64 unknown20;                              // Inferred role: request id (light address); original member name unknown.
+  u8 *unknown28;                              // Inferred role: request state; original member name unknown.
 };
 
-static_assert(offsetof(DrRequetIBL, unknown18) == 0x18, "");
+static_assert(offsetof(DrRequetIBL, m_drLightObjGlobalIBL) == 0x18, "");
 static_assert(offsetof(DrRequetIBL, unknown20) == 0x20, "");
 static_assert(offsetof(DrRequetIBL, unknown28) == 0x28, "");
 static_assert(sizeof(DrRequetIBL) == 0x30, "");

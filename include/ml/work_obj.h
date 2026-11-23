@@ -62,7 +62,7 @@ public:
   int unknown4c;                                     // Inferred role: state; original member name unknown.
   u32 unknown50;                                     // Inferred role: wid; original member name unknown.
   mtl::ALLOC_HANDLE unknown54;                       // Inferred role: mem; original member name unknown.
-  WorkObj *unknown58;                                // Inferred role: parent; original member name unknown.
+  WorkObj *m_workObj;                                // Inferred role: parent; original member name unknown.
   reslist<WorkObj *> unknown60;                      // Inferred role: children; original member name unknown.
   u32 unknowna0;                                     // Inferred role: flags; original member name unknown.
   MsgParam<8> unknowna8;                             // Inferred role: msg; original member name unknown.
@@ -74,7 +74,7 @@ public:
 };
 
 static_assert(offsetof(WorkObj, unknown4c) == 0x4c, "");
-static_assert(offsetof(WorkObj, unknown58) == 0x58, "");
+static_assert(offsetof(WorkObj, m_workObj) == 0x58, "");
 static_assert(offsetof(WorkObj, unknown60) == 0x60, "");
 static_assert(offsetof(WorkObj, unknowna0) == 0xa0, "");
 static_assert(offsetof(WorkObj, unknowna8) == 0xa8, "");

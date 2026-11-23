@@ -175,11 +175,11 @@ void GfGameSpeed::updateFrameSpeed(const fw::UpdateInfo &info) {
     }
     isInterval = true;
   }
-  if (unknown14[GF_SPEED_UNKNOWN_4].unknown08 || unknown14[GF_SPEED_UNKNOWN_3].unknown08 || unknown14[GF_SPEED_UNKNOWN_1].unknown08 || isInterval) {
-    unknown14[GF_SPEED_UNKNOWN_4].unknown08 = false;
-    unknown14[GF_SPEED_UNKNOWN_3].unknown08 = false;
-    unknown14[GF_SPEED_UNKNOWN_1].unknown08 = false;
-    unknown14[GF_SPEED_UNKNOWN_1].unknown04 = unknown14[GF_SPEED_UNKNOWN_1].unknown00;
+  if (unknown14[GF_SPEED_UNKNOWN_4].m_applySpeed || unknown14[GF_SPEED_UNKNOWN_3].m_applySpeed || unknown14[GF_SPEED_UNKNOWN_1].m_applySpeed || isInterval) {
+    unknown14[GF_SPEED_UNKNOWN_4].m_applySpeed = false;
+    unknown14[GF_SPEED_UNKNOWN_3].m_applySpeed = false;
+    unknown14[GF_SPEED_UNKNOWN_1].m_applySpeed = false;
+    unknown14[GF_SPEED_UNKNOWN_1].m_speed = unknown14[GF_SPEED_UNKNOWN_1].unknown00;
     const f32 &speed4 = isInterval ? unknown0c : unknown14[GF_SPEED_UNKNOWN_3].unknown00;
     f32 speed = speed4 * unknown68[GF_SPEED_UNKNOWN_3].unknown00 * unknown14[GF_SPEED_UNKNOWN_1].unknown00;
     if (speed <= 0.0f) {
@@ -191,48 +191,48 @@ void GfGameSpeed::updateFrameSpeed(const fw::UpdateInfo &info) {
       speedLayer1 = unknown021;
     }
     fw::Framework::setLayerUpdateSpeed(0, speed);
-    unknown14[GF_SPEED_UNKNOWN_2].unknown04 = speed;
+    unknown14[GF_SPEED_UNKNOWN_2].m_speed = speed;
     fw::Framework::setLayerUpdateSpeed(4, speed);
-    unknown14[GF_SPEED_UNKNOWN_3].unknown04 = speed;
+    unknown14[GF_SPEED_UNKNOWN_3].m_speed = speed;
     fw::Framework::setLayerUpdateSpeed(5, speed);
     fw::Framework::setLayerUpdateSpeed(6, speed);
     fw::Framework::setLayerUpdateSpeed(1, speedLayer1);
-    unknown14[GF_SPEED_UNKNOWN_4].unknown04 = speed;
+    unknown14[GF_SPEED_UNKNOWN_4].m_speed = speed;
     fw::Framework::setLayerUpdateSpeed(2, speedLayer1);
     fw::Framework::setLayerUpdateSpeed(3, speedLayer1);
   }
-  if (unknown14[GF_SPEED_UNKNOWN_5].unknown08) {
+  if (unknown14[GF_SPEED_UNKNOWN_5].m_applySpeed) {
     f32 speed = unknown14[GF_SPEED_UNKNOWN_5].unknown00 * unknown68[GF_SPEED_UNKNOWN_5].unknown00;
-    unknown14[GF_SPEED_UNKNOWN_5].unknown08 = false;
+    unknown14[GF_SPEED_UNKNOWN_5].m_applySpeed = false;
     fw::Framework::setLayerUpdateSpeed(7, speed);
-    unknown14[GF_SPEED_UNKNOWN_5].unknown04 = speed;
+    unknown14[GF_SPEED_UNKNOWN_5].m_speed = speed;
     fw::Framework::setLayerUpdateSpeed(8, speed);
     fw::Framework::setLayerUpdateSpeed(9, speed);
   }
-  if (unknown14[GF_SPEED_UNKNOWN_6].unknown08) {
+  if (unknown14[GF_SPEED_UNKNOWN_6].m_applySpeed) {
     f32 speed = unknown14[GF_SPEED_UNKNOWN_6].unknown00 * unknown68[GF_SPEED_UNKNOWN_6].unknown00;
     if (speed <= 0.0f) {
       speed = unknown021;
     }
-    unknown14[GF_SPEED_UNKNOWN_6].unknown08 = false;
+    unknown14[GF_SPEED_UNKNOWN_6].m_applySpeed = false;
     fw::Framework::setLayerUpdateSpeed(10, speed);
-    unknown14[GF_SPEED_UNKNOWN_6].unknown04 = speed;
+    unknown14[GF_SPEED_UNKNOWN_6].m_speed = speed;
     fw::Framework::setLayerUpdateSpeed(11, speed);
     fw::Framework::setLayerUpdateSpeed(12, speed);
   }
-  if (unknown14[GF_SPEED_UNKNOWN_2].unknown08) {
+  if (unknown14[GF_SPEED_UNKNOWN_2].m_applySpeed) {
     f32 speed = unknown14[GF_SPEED_UNKNOWN_2].unknown00 * unknown68[GF_SPEED_UNKNOWN_2].unknown00 * unknown14[GF_SPEED_UNKNOWN_1].unknown00;
     if (speed <= 0.0f) {
       speed = unknown021;
     }
-    unknown14[GF_SPEED_UNKNOWN_2].unknown08 = false;
+    unknown14[GF_SPEED_UNKNOWN_2].m_applySpeed = false;
     fw::Framework::setLayerUpdateSpeed(0, speed);
-    unknown14[GF_SPEED_UNKNOWN_2].unknown04 = speed;
+    unknown14[GF_SPEED_UNKNOWN_2].m_speed = speed;
   }
-  if (unknown14[GF_SPEED_UNKNOWN_0].unknown08) {
-    unknown14[GF_SPEED_UNKNOWN_0].unknown04 = unknown14[GF_SPEED_UNKNOWN_0].unknown00;
-    unknown14[GF_SPEED_UNKNOWN_0].unknown08 = false;
-    f32 speed = unknown14[GF_SPEED_UNKNOWN_0].unknown04;
+  if (unknown14[GF_SPEED_UNKNOWN_0].m_applySpeed) {
+    unknown14[GF_SPEED_UNKNOWN_0].m_speed = unknown14[GF_SPEED_UNKNOWN_0].unknown00;
+    unknown14[GF_SPEED_UNKNOWN_0].m_applySpeed = false;
+    f32 speed = unknown14[GF_SPEED_UNKNOWN_0].m_speed;
     if (speed <= 0.0f) {
       speed = unknown021;
     }
@@ -278,7 +278,7 @@ void GfGameSpeed::setSpeed(GF_SPEED type, f32 speed) {
   f32 value = speed < 0.0f ? 1.0f : speed;
   if (unknown14[type].unknown00 != value) {
     unknown14[type].unknown00 = value;
-    unknown14[type].unknown08 = true;
+    unknown14[type].m_applySpeed = true;
   }
 }
 
@@ -299,7 +299,7 @@ f32 GfGameSpeed::getLayerSpeed(u32 layer) {
   return 1.0f;
 }
 
-f32 GfGameSpeed::getSpeed(GF_SPEED type) { return unknown14[type].unknown04; }
+f32 GfGameSpeed::getSpeed(GF_SPEED type) { return unknown14[type].m_speed; }
 
 f32 GfGameSpeed::getOriginalLayerSpeed(u32 layer) {
   GfGameSpeed *gameSpeed = get();
@@ -336,31 +336,31 @@ f32 GfGameSpeed::getPlaySpeed() {
   return 0.0f;
 }
 
-bool GfGameSpeed::isApplySpeed(GF_SPEED type) { return unknown14[type].unknown08; }
+bool GfGameSpeed::isApplySpeed(GF_SPEED type) { return unknown14[type].m_applySpeed; }
 
 f32 GfGameSpeed::getSpeedSalvage(GF_SPEED type) { return unknown68[type].unknown00; }
 
 void GfGameSpeed::setSalvageSpeed(f32 speed) {
   GfGameSpeed *gameSpeed = get();
   gameSpeed->unknown68[GF_SPEED_UNKNOWN_3].unknown00 = speed;
-  gameSpeed->unknown14[GF_SPEED_UNKNOWN_3].unknown08 = true;
+  gameSpeed->unknown14[GF_SPEED_UNKNOWN_3].m_applySpeed = true;
   gameSpeed->unknown68[GF_SPEED_UNKNOWN_5].unknown00 = speed;
-  gameSpeed->unknown14[GF_SPEED_UNKNOWN_5].unknown08 = true;
+  gameSpeed->unknown14[GF_SPEED_UNKNOWN_5].m_applySpeed = true;
 }
 
 void GfGameSpeed::setSalvageCharacterSpeed(f32 speed) {
   GfGameSpeed *gameSpeed = get();
   gameSpeed->unknown68[GF_SPEED_UNKNOWN_5].unknown00 = speed;
-  gameSpeed->unknown14[GF_SPEED_UNKNOWN_5].unknown08 = true;
+  gameSpeed->unknown14[GF_SPEED_UNKNOWN_5].m_applySpeed = true;
 }
 
 void GfGameEnv::clear() {
   GfGameEnv *gameEnv = get();
-  gameEnv->unknown08 = false;
-  gameEnv->unknown09 = false;
+  gameEnv->m_mapjump = false;
+  gameEnv->m_mapjumpBlackout = false;
   gameEnv->unknown0a = false;
-  gameEnv->unknown0c = 0;
-  gameEnv->unknown10 = 0;
+  gameEnv->m_mapID = 0;
+  gameEnv->m_mapJumpID = 0;
   gameEnv->unknown14 = 0.0f;
   gameEnv->unknown168 = 1;
   gameEnv->unknown240 = 1;
@@ -383,20 +383,20 @@ GfGameEnv::~GfGameEnv() {}
 
 bool GfGameEnv::isStopEnemySearch() { return get()->unknown14 > 0.0f; }
 
-bool GfGameEnv::isMapjumpBlackout() { return get()->unknown09; }
+bool GfGameEnv::isMapjumpBlackout() { return get()->m_mapjumpBlackout; }
 
-bool GfGameEnv::isMapjump() { return get()->unknown08; }
+bool GfGameEnv::isMapjump() { return get()->m_mapjump; }
 
 bool GfGameEnv::isMapjumpWithSaveData() { return get() != nullptr && get()->unknown0a; }
 
-u32 GfGameEnv::getMapJumpID() { return get()->unknown10; }
+u32 GfGameEnv::getMapJumpID() { return get()->m_mapJumpID; }
 
-u32 GfGameEnv::getMapID() { return get()->unknown0c; }
+u32 GfGameEnv::getMapID() { return get()->m_mapID; }
 
 void GfGameEnv::setMapID(u32 mapJump, u32 map) {
   GfGameEnv *gameEnv = get();
-  gameEnv->unknown0c = map;
-  gameEnv->unknown10 = mapJump;
+  gameEnv->m_mapID = map;
+  gameEnv->m_mapJumpID = mapJump;
 }
 
 CFILTER_HANDLE GfGameEnv::createColorFilter(const ColorFilter &filter) {
@@ -524,18 +524,18 @@ void GfGameEnv::gevMapjump(GEV event, const MapjumpCallbackInfo &info) {
   GfGameEnv *gameEnv = get();
   switch (event) {
   case GEV_UNKNOWN_1:
-    gameEnv->unknown08 = true;
+    gameEnv->m_mapjump = true;
     gameEnv->unknown0a = info.unknown0c;
     break;
   case GEV_UNKNOWN_2:
-    gameEnv->unknown09 = true;
+    gameEnv->m_mapjumpBlackout = true;
     break;
   case GEV_UNKNOWN_5:
     gameEnv->unknown14 = info.unknown10 == MAPJUMP_UNKNOWN_1 ? 0.0f : unknown022;
     break;
   case GEV_UNKNOWN_6:
-    gameEnv->unknown08 = false;
-    gameEnv->unknown09 = false;
+    gameEnv->m_mapjump = false;
+    gameEnv->m_mapjumpBlackout = false;
     gameEnv->unknown0a = false;
     if (!GfGameManager::isEvent(false)) {
       nn::oe::DisableScreenShot();
@@ -557,7 +557,7 @@ void GfGameEnv::gevGameState(GF_STATE, GF_STATE state) {
 
 void GfGameEnv::update(const fw::UpdateInfo &info) {
   GfGameEnv *gameEnv = get();
-  if (!gameEnv->unknown08 && gameEnv->unknown14 > 0.0f) {
+  if (!gameEnv->m_mapjump && gameEnv->unknown14 > 0.0f) {
     gameEnv->unknown14 -= info.unknown04;
     if (gameEnv->unknown14 < 0.0f) {
       gameEnv->unknown14 = 0.0f;

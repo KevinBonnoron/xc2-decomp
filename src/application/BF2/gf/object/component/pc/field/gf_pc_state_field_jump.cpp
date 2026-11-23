@@ -32,7 +32,7 @@ void StateFieldJump::enter(GfComBehaviorPc *behavior, ai::State *previous) {
   unknown18 = 0.0f;
   unknown20 = 0.0f;
   unknown1c = false;
-  if (previous != nullptr && previous->unknown08 == STATE_ID_UNKNOWN_54) {
+  if (previous != nullptr && previous->m_state == STATE_ID_UNKNOWN_54) {
     unknown1c = true;
   }
 
@@ -41,7 +41,7 @@ void StateFieldJump::enter(GfComBehaviorPc *behavior, ai::State *previous) {
 }
 
 void StateFieldJump::leave(GfComBehaviorPc *behavior, ai::State *next) {
-  if (next == nullptr || next->unknown08 == STATE_ID_UNKNOWN_13 || next->unknown08 == STATE_ID_UNKNOWN_15) {
+  if (next == nullptr || next->m_state == STATE_ID_UNKNOWN_13 || next->m_state == STATE_ID_UNKNOWN_15) {
     return;
   }
   StateUtilField::notifyJumpEnd(*behavior);

@@ -26,14 +26,14 @@ public:
 
   u32 unknown18; // Inferred role: depth request; original member name unknown.
   u8 _1c[0x20 - 0x1c];
-  DrPixlRenderTarget *unknown20; // Inferred role: depth render target; original member name unknown.
-  f32 unknown28;                 // Role and original member name unknown; the constructor stores 0.0f at 0x28 and 0.1f at 0x2c in one 64 bit store; render loads it as a float.
-  f32 unknown2c;                 // Role and original member name unknown; render loads it as a float.
-  f32 unknown30;                 // Role and original member name unknown; the constructor stores 0.2f; render loads it as a float.
+  DrPixlRenderTarget *m_drPixlRenderTarget; // Inferred role: depth render target; original member name unknown.
+  f32 unknown28;                            // Role and original member name unknown; the constructor stores 0.0f at 0x28 and 0.1f at 0x2c in one 64 bit store; render loads it as a float.
+  f32 unknown2c;                            // Role and original member name unknown; render loads it as a float.
+  f32 unknown30;                            // Role and original member name unknown; the constructor stores 0.2f; render loads it as a float.
 };
 
-static_assert(offsetof(DrPixlPostObjRainDrop, unknown00) == 0x00, "");
-static_assert(offsetof(DrPixlPostObjRainDrop, unknown20) == 0x20, "");
+static_assert(offsetof(DrPixlPostObjRainDrop, m_drMan) == 0x00, "");
+static_assert(offsetof(DrPixlPostObjRainDrop, m_drPixlRenderTarget) == 0x20, "");
 static_assert(offsetof(DrPixlPostObjRainDrop, unknown28) == 0x28, "");
 static_assert(offsetof(DrPixlPostObjRainDrop, unknown30) == 0x30, "");
 

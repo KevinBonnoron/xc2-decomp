@@ -181,20 +181,20 @@ public:
   const u8 *unknown10;       // Inferred role: resource key; original member name unknown.
   s32 unknown18;             // Inferred role: ref count; original member name unknown.
   u8 *m_buffer;
-  const unknown055 *unknown28;       // Inferred role: header; original member name unknown.
-  const unknown049 *unknown30;       // Inferred role: etc infos; original member name unknown.
-  const unknown050 *unknown38;       // Inferred role: mof blend infos; original member name unknown.
-  const unknown053 *unknown40;       // Inferred role: weight info; original member name unknown.
-  u16 unknown48;                     // Inferred role: vertex num; original member name unknown.
-  u16 unknown4a;                     // Inferred role: index num; original member name unknown.
-  u16 unknown4c;                     // Inferred role: etc vertex num; original member name unknown.
-  s16 unknown4e;                     // Inferred role: bind vertex; original member name unknown.
-  grlib::CGLibVtxVertex *unknown50;  // Inferred role: vertices; original member name unknown.
-  grlib::CGLibVtxIndex *unknown58;   // Inferred role: indices; original member name unknown.
-  grlib::CGLibVtxVertex *unknown60;  // Inferred role: etc vertices; original member name unknown.
-  grlib::CGLibVtlMemPool *unknown68; // Inferred role: mem pool; original member name unknown.
-  unknown056 *unknown70;             // Inferred role: uniform vertex; original member name unknown.
-  DrCalcStmListObj *unknown78;       // Inferred role: stm list; original member name unknown.
+  const unknown055 *unknown28;          // Inferred role: header; original member name unknown.
+  const unknown049 *unknown30;          // Inferred role: etc infos; original member name unknown.
+  const unknown050 *unknown38;          // Inferred role: mof blend infos; original member name unknown.
+  const unknown053 *unknown40;          // Inferred role: weight info; original member name unknown.
+  u16 unknown48;                        // Inferred role: vertex num; original member name unknown.
+  u16 unknown4a;                        // Inferred role: index num; original member name unknown.
+  u16 unknown4c;                        // Inferred role: etc vertex num; original member name unknown.
+  s16 unknown4e;                        // Inferred role: bind vertex; original member name unknown.
+  grlib::CGLibVtxVertex *unknown50;     // Inferred role: vertices; original member name unknown.
+  grlib::CGLibVtxIndex *m_resIndexObj;  // Inferred role: indices; named after the game accessor ml::DrResMdoVertex::getResIndexObj.
+  grlib::CGLibVtxVertex *unknown60;     // Inferred role: etc vertices; original member name unknown.
+  grlib::CGLibVtlMemPool *unknown68;    // Inferred role: mem pool; original member name unknown.
+  unknown056 *unknown70;                // Inferred role: uniform vertex; original member name unknown.
+  DrCalcStmListObj *m_drCalcStmListObj; // Inferred role: stm list; original member name unknown.
 };
 
 static_assert(offsetof(DrResMdoVertex, unknown18) == 0x18, "");
@@ -202,7 +202,7 @@ static_assert(offsetof(DrResMdoVertex, unknown28) == 0x28, "");
 static_assert(offsetof(DrResMdoVertex, unknown48) == 0x48, "");
 static_assert(offsetof(DrResMdoVertex, unknown4e) == 0x4e, "");
 static_assert(offsetof(DrResMdoVertex, unknown50) == 0x50, "");
-static_assert(offsetof(DrResMdoVertex, unknown78) == 0x78, "");
+static_assert(offsetof(DrResMdoVertex, m_drCalcStmListObj) == 0x78, "");
 static_assert(sizeof(DrResMdoVertex) == 0x80, "");
 
 inline void DrResMdoVertex::changeMemVertex(const u8 *resource) {
@@ -220,7 +220,7 @@ inline void DrResMdoVertex::changeMemVertex(const u8 *resource) {
   }
   const unknown047 *indexInfos = reinterpret_cast<const unknown047 *>(reinterpret_cast<const u8 *>(unknown28) + header->unknown08);
   for (int i = 0; i < unknown4a; i++) {
-    unknown58[i].resetIndexBuff(unknown68, indexInfos[i].unknown00);
+    m_resIndexObj[i].resetIndexBuff(unknown68, indexInfos[i].unknown00);
   }
   if (header->unknown34 != 0) {
     const unknown052 *uniformInfo = reinterpret_cast<const unknown052 *>(reinterpret_cast<const u8 *>(unknown28) + header->unknown34);

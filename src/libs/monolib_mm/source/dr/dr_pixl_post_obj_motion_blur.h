@@ -30,12 +30,12 @@ public:
   void lastRender();
   void calcVelocityBlur();
 
-  f32 unknown18;                         // Inferred role: unknown, only cleared by the constructor; original member name unknown.
-  f32 unknown1c;                         // Inferred role: unknown, only cleared by the constructor; original member name unknown.
-  grlib::CGLibRenderTarget *unknown20;   // Inferred role: render target; original member name unknown.
-  grlib::CGLibRenderTarget *unknown28;   // Inferred role: velocity map; original member name unknown.
-  grlib::CGLibRenderTarget *unknown30;   // Inferred role: render target; original member name unknown.
-  grlib::CGLibDblUniformBlock unknown38; // Inferred role: uniform block; original member name unknown.
+  f32 unknown18;                                      // Inferred role: unknown, only cleared by the constructor; original member name unknown.
+  f32 unknown1c;                                      // Inferred role: unknown, only cleared by the constructor; original member name unknown.
+  grlib::CGLibRenderTarget *unknown20;                // Inferred role: render target; original member name unknown.
+  grlib::CGLibRenderTarget *unknown28;                // Inferred role: velocity map; original member name unknown.
+  grlib::CGLibRenderTarget *unknown30;                // Inferred role: render target; original member name unknown.
+  grlib::CGLibDblUniformBlock m_cGLibDblUniformBlock; // Inferred role: uniform block; original member name unknown.
 };
 
 static_assert(offsetof(DrPixlPostObjMotionBlur, unknown18) == 0x18, "");
@@ -43,6 +43,6 @@ static_assert(offsetof(DrPixlPostObjMotionBlur, unknown1c) == 0x1c, "");
 static_assert(offsetof(DrPixlPostObjMotionBlur, unknown20) == 0x20, "");
 static_assert(offsetof(DrPixlPostObjMotionBlur, unknown28) == 0x28, "");
 static_assert(offsetof(DrPixlPostObjMotionBlur, unknown30) == 0x30, "");
-static_assert(offsetof(DrPixlPostObjMotionBlur, unknown38) == 0x38, "");
+static_assert(offsetof(DrPixlPostObjMotionBlur, m_cGLibDblUniformBlock) == 0x38, "");
 
 } // namespace ml

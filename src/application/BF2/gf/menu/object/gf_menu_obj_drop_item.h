@@ -16,12 +16,12 @@ public:
 
   class ListListener : public ui::UIObjectListener {
   public:
-    ListListener(GfMenuObjDropItem *owner) : _0c(), unknown20(owner) {}
+    ListListener(GfMenuObjDropItem *owner) : _0c(), m_menuObjDropItem(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
     u8 _1c[0x20 - 0x1c];
-    GfMenuObjDropItem *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjDropItem *m_menuObjDropItem; // Inferred role: owner; original member name unknown.
   };
 
   GfMenuObjDropItem(u32 handle);
@@ -37,7 +37,7 @@ public:
 };
 
 static_assert(sizeof(GfMenuObjDropItem::DropItemInfo) == 0x10, "");
-static_assert(offsetof(GfMenuObjDropItem::ListListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjDropItem::ListListener, m_menuObjDropItem) == 0x20, "");
 static_assert(sizeof(GfMenuObjDropItem::ListListener) == 0x28, "");
 
 } // namespace gf

@@ -233,13 +233,13 @@ const char *PadManager::getPadFilterName(int padNo) {
   return "none";
 }
 
-void PadManager::setARXThreshold(int padNo, f32 threshold) { get()->unknown80[padNo].unknown2c = threshold; }
+void PadManager::setARXThreshold(int padNo, f32 threshold) { get()->unknown80[padNo].m_aRXThreshold = threshold; }
 
-void PadManager::setARYThreshold(int padNo, f32 threshold) { get()->unknown80[padNo].unknown30 = threshold; }
+void PadManager::setARYThreshold(int padNo, f32 threshold) { get()->unknown80[padNo].m_aRYThreshold = threshold; }
 
-void PadManager::setALXThreshold(int padNo, f32 threshold) { get()->unknown80[padNo].unknown34 = threshold; }
+void PadManager::setALXThreshold(int padNo, f32 threshold) { get()->unknown80[padNo].m_aLXThreshold = threshold; }
 
-void PadManager::setALYThreshold(int padNo, f32 threshold) { get()->unknown80[padNo].unknown38 = threshold; }
+void PadManager::setALYThreshold(int padNo, f32 threshold) { get()->unknown80[padNo].m_aLYThreshold = threshold; }
 
 void PadManager::setEnable(int padNo, bool isEnable) { get()->unknown3650.set(padNo, isEnable); }
 
@@ -282,9 +282,50 @@ bool PadManager::isDebugDraw() {
 void PadManager::setConfigData(int padNo, const PadConfigData &data) {
   PadManager *manager = get();
   if (manager != nullptr) {
-    manager->unknown3200[padNo] = data;
+    manager->m_padConfigData[padNo] = data;
   }
 }
+
+// File order: getConfigData comes before detail::getButtonParam, as in the game (0x71001947a0, then 0x7100194888). The function-local statics of both
+// are placed in definition order (the guards of `identity` and of the button table at 0x710125d190 and 0x710125d198), and in the other order
+// neither function matches.
+const PadConfigData &PadManager::getConfigData(int padNo) {
+  PadManager *manager = get();
+  if (manager == nullptr) {
+    static PadConfigData identity;
+    return identity;
+  }
+
+  return manager->m_padConfigData[padNo];
+}
+
+namespace detail {
+
+// Inferred role: button name and the id it stands for in a pad config file; original type name unknown.
+struct unknown001 {
+  unknown001() : unknown00(""), unknown08(0) {}
+  unknown001(const char *name, int id) : unknown00(name), unknown08(id) {}
+
+  const char *unknown00; // Inferred role: name; original member name unknown.
+  int unknown08;         // Inferred role: id (negative for the inverted stick axis); original member name unknown.
+};
+
+const unknown001 &getButtonParam(const mm::mtl::FixStr<128> &name) {
+  static const unknown001 params[] = {{"BUTTON_LU", 1},  {"BUTTON_LD", 3},    {"BUTTON_LR", 2},     {"BUTTON_LL", 4},      {"BUTTON_L1", 12}, {"BUTTON_L2", 13},
+                                      {"BUTTON_L3", 14}, {"BUTTON_RU", 5},    {"BUTTON_RD", 7},     {"BUTTON_RR", 6},      {"BUTTON_RL", 8},  {"BUTTON_R1", 9},
+                                      {"BUTTON_R2", 10}, {"BUTTON_R3", 11},   {"BUTTON_START", 15}, {"BUTTON_SELECT", 16}, {"ANALOG_LX", 17}, {"-ANALOG_LX", -17},
+                                      {"ANALOG_LY", 18}, {"-ANALOG_LY", -18}, {"ANALOG_RX", 19},    {"-ANALOG_RX", -19},   {"ANALOG_RY", 20}, {"-ANALOG_RY", -20}};
+  for (size_t i = 0; i < 24; i++) {
+    if (strcmp(name.c_str(), params[i].unknown00) == 0) {
+      return params[i];
+    }
+  }
+
+  static const unknown001 none;
+  return none;
+}
+
+} // namespace detail
 
 void PadManager::updateControlPadNo(int padNo) {
   int userPadNo = ml::DevPad::getUserSelectPadID();

@@ -50,16 +50,16 @@ public:
     UNKNOWN001_UNKNOWN_6 = 1 << 6,
   };
 
-  IMemAllocator *unknown00; // Inferred role: allocator of the region; original member name unknown.
-  void *unknown08;          // Inferred role: start of the memory; original member name unknown.
-  size_t unknown10;         // Inferred role: size of the memory; original member name unknown.
+  IMemAllocator *m_iMemAllocator; // Inferred role: allocator of the region; original member name unknown.
+  void *unknown08;                // Inferred role: start of the memory; original member name unknown.
+  size_t unknown10;               // Inferred role: size of the memory; original member name unknown.
   size_t m_allocs;
   mm::mtl::FixStr<64> m_name;
   u8 _64[0x68 - 0x64];
   ALLOC_HANDLE unknown68; // Inferred role: handle of the region; original member name unknown.
   u64 m_topAdr;
   ALLOC_HANDLE m_parent;
-  ml::CriticalSectionNC unknown80; // Inferred role: lock of the region; original member name unknown.
+  ml::CriticalSectionNC m_criticalSectionNC; // Inferred role: lock of the region; original member name unknown.
   size_t m_blockSize;
   u32 unknownb0;                                   // Inferred role: flags; original member name unknown.
   mm::mtl::FixedList<ALLOC_HANDLE, 128> unknownb4; // Inferred role: handles of the child regions; original member name unknown.
@@ -69,7 +69,7 @@ static_assert(offsetof(MemManager::Region, m_name) == 0x20, "");
 static_assert(offsetof(MemManager::Region, unknown68) == 0x68, "");
 static_assert(offsetof(MemManager::Region, m_topAdr) == 0x70, "");
 static_assert(offsetof(MemManager::Region, m_parent) == 0x78, "");
-static_assert(offsetof(MemManager::Region, unknown80) == 0x80, "");
+static_assert(offsetof(MemManager::Region, m_criticalSectionNC) == 0x80, "");
 static_assert(offsetof(MemManager::Region, m_blockSize) == 0xa8, "");
 static_assert(offsetof(MemManager::Region, unknownb4) == 0xb4, "");
 static_assert(sizeof(MemManager::Region) == 0x548, "");

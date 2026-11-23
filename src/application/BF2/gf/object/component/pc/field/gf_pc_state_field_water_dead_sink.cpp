@@ -18,7 +18,7 @@ namespace pc {
 void StateFieldWaterDeadSink::enter(GfComBehaviorPc *behavior, ai::State *previous) {
   unknown18 = 0.0f;
   GfComPropertyPc *property = behavior->unknown08->getComponent<GfComPropertyPc>();
-  const WaterCommonParam *param = property->unknown310.unknown002();
+  const WaterCommonParam *param = property->m_propertyField.unknown002();
   property->unknown90 = property->unknown90 < -param->waterDeadVelMin ? property->unknown90 : -param->waterDeadVelMin;
 }
 
@@ -26,7 +26,7 @@ void StateFieldWaterDeadSink::leave(GfComBehaviorPc *behavior, ai::State *next) 
 
 void StateFieldWaterDeadSink::update(GfComBehaviorPc *behavior, const fw::UpdateInfo &info) {
   GfComPropertyPc *property = behavior->getProperty();
-  const fw::ParamList *list = property->unknown310.unknown08.operator->();
+  const fw::ParamList *list = property->m_propertyField.unknown08.operator->();
   const fw::ParamList::unknown005 *entry = list->unknown0c > 9 ? &list->unknown10[9] : nullptr;
   const WaterCommonParam *param = entry != nullptr ? static_cast<const WaterCommonParam *>(entry->param) : nullptr;
   unknown18 += info.unknown04;

@@ -41,7 +41,7 @@ WorkRootParam &WorkRootParam::operator=(const WorkRootParam &other) {
   unknown20 = other.unknown20;
   unknown28 = other.unknown28;
   unknown30 = other.unknown30;
-  unknown00 = other.unknown00;
+  m_productMem = other.m_productMem;
   unknown38 = other.unknown38;
   return *this;
 }
@@ -78,7 +78,7 @@ bool WorkRoot::isWinDestroy() { return false; }
 
 void WorkRoot::reqShutdown() {}
 
-bool WorkRoot::isProductMem() { return _wroot::s_inParam.unknown00; }
+bool WorkRoot::isProductMem() { return _wroot::s_inParam.m_productMem; }
 
 mtl::ALLOC_HANDLE WorkRoot::getMemFG() { return WorkRootMem::getMemFG(); }
 

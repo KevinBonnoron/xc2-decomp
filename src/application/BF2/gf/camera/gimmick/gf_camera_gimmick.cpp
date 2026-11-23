@@ -16,10 +16,10 @@ enum CAMERA_PRIO : int;
 namespace gf {
 
 void GimmickCamera::updateParams() {
-  mm::Vec3 target = unknown171(unknownc0.x, unknownc0.y, 0.0f);
-  target += unknownb0;
+  mm::Vec3 target = unknown171(m_rot.x, m_rot.y, 0.0f);
+  target += m_pos;
   m_fov = unknownd0;
-  setLookAt(unknownb0, target, unknownc0.z);
+  setLookAt(m_pos, target, m_rot.z);
 }
 
 static constexpr fw::CAMERA_PRIO CAMERA_PRIO_UNKNOWN_55 = static_cast<fw::CAMERA_PRIO>(55); // Inferred role: camera prio gimmick; original name unknown.
@@ -108,20 +108,20 @@ void GimmickCamera::setHandle(GF_OBJ_HANDLE *handle) {
 }
 
 void GimmickCamera::setLookLock(const mm::Vec3 &position) {
-  unknown10154 = true;
+  m_lookUnlock = true;
   unknown10160 = position;
-  mm::Vec3 delta = unknown10160 - unknownb0;
+  mm::Vec3 delta = unknown10160 - m_pos;
   f32 distance = sqrtf(delta.x * delta.x + delta.y * delta.y + delta.z * delta.z);
   if (distance <= 1.0f) {
     distance = 1.0f;
   }
-  mm::Vec3 direction = unknown10160 - unknownb0;
+  mm::Vec3 direction = unknown10160 - m_pos;
   mm::Vec3 reference = mm::Vec3::unitZ;
-  unknownc0.x = getPitch(direction, reference);
-  unknownc0.y = getYaw(direction, reference);
-  mm::Quat quat = unknown169(unknownc0.x, unknownc0.y, 0.0f);
+  m_rot.x = getPitch(direction, reference);
+  m_rot.y = getYaw(direction, reference);
+  mm::Quat quat = unknown169(m_rot.x, m_rot.y, 0.0f);
   mm::Vec3 offset = mm::Vec3::unitZ * distance;
-  unknownb0 = unknown10160 + quat.rotate(mm::Vec3(-offset.x, -offset.y, -offset.z));
+  m_pos = unknown10160 + quat.rotate(mm::Vec3(-offset.x, -offset.y, -offset.z));
 }
 
 void GimmickCamera::add(const Param &param) {
@@ -141,28 +141,28 @@ bool GimmickCamera::isPlayEnd() const {
 }
 
 void GimmickCamera::calcSpeedTypeLinearSpacing(const Param &from, const Param &to, f32 time, mm::Vec3 &position, mm::Vec3 &rotation, f32 &fov) {
-  f32 rate = unknown10104 / from.unknown30;
+  f32 rate = m_frame / from.unknown30;
   position = from.unknown00 + (to.unknown00 - from.unknown00) * rate;
   rotation = from.unknown10 + (to.unknown10 - from.unknown10) * rate;
   fov = from.unknown20 + (to.unknown20 - from.unknown20) * rate;
 }
 
 void GimmickCamera::calcSpeedTypeSlowOut(const Param &from, const Param &to, f32 time, mm::Vec3 &position, mm::Vec3 &rotation, f32 &fov) {
-  f32 rate = slowOut(unknown10104 / from.unknown30);
+  f32 rate = slowOut(m_frame / from.unknown30);
   position = from.unknown00 + (to.unknown00 - from.unknown00) * rate;
   rotation = from.unknown10 + (to.unknown10 - from.unknown10) * rate;
   fov = from.unknown20 + (to.unknown20 - from.unknown20) * rate;
 }
 
 void GimmickCamera::calcSpeedTypeFastOut(const Param &from, const Param &to, f32 time, mm::Vec3 &position, mm::Vec3 &rotation, f32 &fov) {
-  f32 rate = fastOut(unknown10104 / from.unknown30);
+  f32 rate = fastOut(m_frame / from.unknown30);
   position = from.unknown00 + (to.unknown00 - from.unknown00) * rate;
   rotation = from.unknown10 + (to.unknown10 - from.unknown10) * rate;
   fov = from.unknown20 + (to.unknown20 - from.unknown20) * rate;
 }
 
 void GimmickCamera::calcSpeedTypeFastInFastOut(const Param &from, const Param &to, f32 time, mm::Vec3 &position, mm::Vec3 &rotation, f32 &fov) {
-  f32 rate = fastInFastOut(unknown10104 / from.unknown30);
+  f32 rate = fastInFastOut(m_frame / from.unknown30);
   position = from.unknown00 + (to.unknown00 - from.unknown00) * rate;
   rotation = from.unknown10 + (to.unknown10 - from.unknown10) * rate;
   fov = from.unknown20 + (to.unknown20 - from.unknown20) * rate;
@@ -174,18 +174,18 @@ void GimmickCamera::play() {
   if (!unknown100f8 && !unknown00e0.empty()) {
     unknown100f8 = true;
     unknown100f9 = true;
-    unknown10100 = 0;
-    unknown10104 = 0.0f;
+    m_index = 0;
+    m_frame = 0.0f;
     Param first = unknown00e0.front();
-    unknownb0 = first.unknown00;
-    unknownc0 = first.unknown10;
+    m_pos = first.unknown00;
+    m_rot = first.unknown10;
     unknownd0 = first.unknown20;
   }
 }
 
 void GimmickCamera::update(const fw::UpdateInfo &info) {
   if (unknown10130 != nullptr) {
-    if (unknown100fa) {
+    if (m_auto) {
       play();
     }
     unknown10130 = nullptr;
@@ -196,35 +196,35 @@ void GimmickCamera::update(const fw::UpdateInfo &info) {
   updateParams();
 }
 
-void GimmickCamera::setAuto(bool isAuto) { unknown100fa = isAuto; }
+void GimmickCamera::setAuto(bool isAuto) { m_auto = isAuto; }
 
-void GimmickCamera::setCollision(bool isCollision) { unknown100fb = isCollision; }
+void GimmickCamera::setCollision(bool isCollision) { m_collision = isCollision; }
 
-void GimmickCamera::setSpeedFlag(bool isEnable) { unknown100fc = isEnable; }
+void GimmickCamera::setSpeedFlag(bool isEnable) { m_speedFlag = isEnable; }
 
-void GimmickCamera::setPause(bool isPause) { unknown100fd = isPause; }
+void GimmickCamera::setPause(bool isPause) { m_pause = isPause; }
 
-bool GimmickCamera::isPause() const { return unknown100fd; }
+bool GimmickCamera::isPause() const { return m_pause; }
 
-void GimmickCamera::setNearClip(f32 nearClip) { unknown30 = nearClip; }
+void GimmickCamera::setNearClip(f32 nearClip) { m_nearClip = nearClip; }
 
-void GimmickCamera::setFarClip(f32 farClip) { unknown34 = farClip; }
+void GimmickCamera::setFarClip(f32 farClip) { m_farClip = farClip; }
 
-void GimmickCamera::setLookUnlock() { unknown10154 = false; }
+void GimmickCamera::setLookUnlock() { m_lookUnlock = false; }
 
-const mm::Vec3 &GimmickCamera::getPos() const { return unknownb0; }
+const mm::Vec3 &GimmickCamera::getPos() const { return m_pos; }
 
 void GimmickCamera::setPos(const mm::Vec3 &position) {
   if (!unknown100f8) {
-    unknownb0 = position;
+    m_pos = position;
   }
 }
 
-const mm::Vec3 &GimmickCamera::getRot() const { return unknownc0; }
+const mm::Vec3 &GimmickCamera::getRot() const { return m_rot; }
 
 void GimmickCamera::setRot(const mm::Vec3 &rotation) {
   if (!unknown100f8) {
-    unknownc0 = rotation;
+    m_rot = rotation;
   }
 }
 
@@ -266,13 +266,13 @@ mm::Vec3 GimmickCamera::calcAxisRotatePosition(const mm::Vec3 &from, const mm::V
   return center + direction * radius;
 }
 
-const s32 &GimmickCamera::getIndex() const { return unknown10100; }
+const s32 &GimmickCamera::getIndex() const { return m_index; }
 
-const f32 &GimmickCamera::getFrame() const { return unknown10104; }
+const f32 &GimmickCamera::getFrame() const { return m_frame; }
 
-const f32 &GimmickCamera::getSpeed() const { return unknown10108; }
+const f32 &GimmickCamera::getSpeed() const { return m_speed; }
 
-const f32 &GimmickCamera::getControlSpeed() const { return unknown10138; }
+const f32 &GimmickCamera::getControlSpeed() const { return m_controlSpeed; }
 
 void GimmickCamera::clear() {
   if (!unknown100f8) {

@@ -28,13 +28,13 @@ public:
     bool isPopCondMatched() const;
     void validateDisp() const;
 
-    u16 unknown00;              // Inferred role: item id; original member name unknown.
-    u16 unknown02;              // Inferred role: condition; original member name unknown.
-    u16 unknown04;              // Inferred role: quest id; original member name unknown.
-    ScenarioFlagCond unknown06; // Inferred role: scenario flag; original member name unknown.
-    QuestFlagCond unknown0a;    // Inferred role: quest flag; original member name unknown.
-    TimeCond unknown10;         // Inferred role: time cond; original member name unknown.
-    WeatherCond unknown20;      // Inferred role: weather cond; original member name unknown.
+    u16 unknown00;                       // Inferred role: item id; original member name unknown.
+    u16 unknown02;                       // Inferred role: condition; original member name unknown.
+    u16 unknown04;                       // Inferred role: quest id; original member name unknown.
+    ScenarioFlagCond m_scenarioFlagCond; // Inferred role: scenario flag; original member name unknown.
+    QuestFlagCond m_questFlagCond;       // Inferred role: quest flag; original member name unknown.
+    TimeCond m_timeCond;                 // Inferred role: time cond; original member name unknown.
+    WeatherCond m_weatherCond;           // Inferred role: weather cond; original member name unknown.
   };
 
   static const GmkType GMK_TYPE = GMK_TYPE_PRECIOUS; // Inferred name; shared by every gimmick class for the TGmkList templates.
@@ -61,13 +61,13 @@ public:
   void debugDraw() const override;
   void onGobEvent(gf::IGfObjListener::OBJEVT event, gf::GF_OBJ_HANDLE *handle) override;
 
-  const BdatInfo *getBdatInfo() const { return reinterpret_cast<const BdatInfo *>(unknown20.unknown10); }
+  const BdatInfo *getBdatInfo() const { return reinterpret_cast<const BdatInfo *>(m_createInfo.unknown10); }
 
   gf::GF_OBJ_HANDLE *unknown58; // Inferred role: gob instance handle; original member name unknown.
   u32 unknown60;                // Inferred role: effect handle; original member name unknown.
   u8 _64[0x68 - 0x64];
   gf::GfMenuCallContext *unknown68; // Inferred role: menu icon; original member name unknown.
-  DistCond unknown70;               // Inferred role: pop dist; original member name unknown.
+  DistCond m_distCond;              // Inferred role: pop dist; original member name unknown.
   mutable bool unknown74;           // Inferred role: visible; original member name unknown.
 };
 
@@ -75,7 +75,7 @@ static_assert(sizeof(GmkPrecious::BdatInfo) == 0x30, "");
 static_assert(offsetof(GmkPrecious, unknown58) == 0x58, "");
 static_assert(offsetof(GmkPrecious, unknown60) == 0x60, "");
 static_assert(offsetof(GmkPrecious, unknown68) == 0x68, "");
-static_assert(offsetof(GmkPrecious, unknown70) == 0x70, "");
+static_assert(offsetof(GmkPrecious, m_distCond) == 0x70, "");
 static_assert(offsetof(GmkPrecious, unknown74) == 0x74, "");
 static_assert(sizeof(GmkPrecious) == 0x78, "");
 

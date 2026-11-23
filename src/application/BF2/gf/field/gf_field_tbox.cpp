@@ -33,7 +33,8 @@ enum SoundCategory : int;
 namespace gf {
 
 GfFieldTbox::GfFieldTbox(const GfSetupParam &param)
-    : unknown08(0.0f), unknown0c(0.0f), unknown10(false), unknown11(false), unknown12(false), unknown18(unknown020), unknown20(-1), unknown24(false), unknown28(nullptr), unknown38(0.0f), unknown40() {
+    : unknown08(0.0f), unknown0c(0.0f), unknown10(false), unknown11(false), unknown12(false), m_GF_OBJ_HANDLE(unknown020), unknown20(-1), unknown24(false), unknown28(nullptr), unknown38(0.0f),
+      m_dropitemEmitter() {
   create(param);
 }
 
@@ -41,7 +42,7 @@ void GfFieldTbox::create(const GfSetupParam &) { unknown10 = true; }
 
 GfFieldTbox::~GfFieldTbox() {}
 
-bool GfFieldTbox::isDropitemsEmitted() const { return unknown40.m_dropitemsEmitted; }
+bool GfFieldTbox::isDropitemsEmitted() const { return m_dropitemEmitter.m_dropitemsEmitted; }
 
 void GfFieldTbox::gevMapjump(GEV event, const MapjumpCallbackInfo &) {
   if (event == GEV_UNKNOWN_1) {
@@ -51,32 +52,32 @@ void GfFieldTbox::gevMapjump(GEV event, const MapjumpCallbackInfo &) {
 
 void GfFieldTbox::end() {
   unknown38 = 0.0f;
-  unknown40.dispose();
+  m_dropitemEmitter.dispose();
   unknown20 = -1;
   unknown24 = false;
   unknown28 = nullptr;
-  unknown18 = unknown020;
+  m_GF_OBJ_HANDLE = unknown020;
 }
 
 void GfFieldTbox::dispose() {
   unknown38 = 0.0f;
-  unknown40.dispose();
+  m_dropitemEmitter.dispose();
   unknown24 = false;
   unknown20 = -1;
   unknown28 = nullptr;
-  unknown18 = unknown020;
+  m_GF_OBJ_HANDLE = unknown020;
   if (unknown10) {
     unknown10 = false;
   }
 }
 
-void GfFieldTbox::createDropitemEmitter(const GfDropitemEmitter::CreateInfo &info) { unknown40.create(info); }
+void GfFieldTbox::createDropitemEmitter(const GfDropitemEmitter::CreateInfo &info) { m_dropitemEmitter.create(info); }
 
 void GfFieldTbox::update(f32 deltaTime) {
   if (unknown28) {
     (this->*unknown28)(deltaTime);
   }
-  unknown40.update(deltaTime);
+  m_dropitemEmitter.update(deltaTime);
 }
 
 void GfFieldTbox::build(const GfSetupParam &param) { new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) GfFieldTbox(param); }
@@ -95,19 +96,19 @@ void GfFieldTbox::update(const fw::UpdateInfo &info) {
 
 void GfFieldTbox::start(GF_OBJ_HANDLE *handle) {
   unknown38 = 0.0f;
-  unknown40.dispose();
+  m_dropitemEmitter.dispose();
   unknown24 = false;
   unknown28 = nullptr;
   unknown20 = -1;
   unknown11 = false;
   unknown12 = false;
-  unknown18 = handle;
+  m_GF_OBJ_HANDLE = handle;
   gmk::AGmkBase *gmk = gmk::getBindedGmkInst(handle);
   if (gmk != nullptr) {
     gmk::GmkType type = gmk->getGmkType();
     if (type == gmk::GMK_TYPE_TBOX) {
       gmk::GmkTbox *tbox = static_cast<gmk::GmkTbox *>(gmk);
-      unknown20 = Bdat::getValCheck(tbox->getBindedBdatFp(), "RSC_ID", tbox->unknown20.unknown18, gmk::BDAT_TYPE_UNKNOWN_2) & 0xffff;
+      unknown20 = Bdat::getValCheck(tbox->getBindedBdatFp(), "RSC_ID", tbox->m_createInfo.unknown18, gmk::BDAT_TYPE_UNKNOWN_2) & 0xffff;
       unknown24 = tbox->getBdatInfo()->unknown02 && tbox->getProgress() == gmk::GmkTbox::PROGRESS_UNKNOWN_0;
     } else if (type == gmk::GMK_TYPE_SALVAGE_LOCATOR) {
       unknown20 = Bdat::getValCheck(GfDataBdat::getFP(BDAT_FLD_SALVAGE_ITEM_SET), "RSC_ID", static_cast<gmk::GmkSalvageLocator *>(gmk)->unknowne8, gmk::BDAT_TYPE_UNKNOWN_2) & 0xffff;
@@ -139,7 +140,7 @@ void GfFieldTbox::seqWaitUIEnd(f32) {
 }
 
 void GfFieldTbox::seqWaitOpenFieldTbox(f32 deltaTime) {
-  gmk::AGmkBase *gmk = gmk::getBindedGmkInst(unknown18);
+  gmk::AGmkBase *gmk = gmk::getBindedGmkInst(m_GF_OBJ_HANDLE);
   if (gmk == nullptr) {
     end();
     return;
@@ -149,13 +150,13 @@ void GfFieldTbox::seqWaitOpenFieldTbox(f32 deltaTime) {
     return;
   }
   unknown38 = 0.0f;
-  GfObjAcc acc(unknown18);
+  GfObjAcc acc(m_GF_OBJ_HANDLE);
   GfComAsm *comAsm = acc.getObj()->getComponent<GfComAsm>();
   if (comAsm != nullptr) {
     comAsm->execCmd(unknown24 ? "C_excavation" : "C_open", ANIM_LAYER_UNKNOWN_0);
     fw::SoundManager::get()->playSe("se006", nullptr, 1.0f, static_cast<fw::SoundCategory>(0));
     if (unknown24) {
-      GfObjAcc tboxAcc(unknown18);
+      GfObjAcc tboxAcc(m_GF_OBJ_HANDLE);
       tboxAcc.setAlphaNormal(1.0f);
       GfComBehaviorGmk *behavior = tboxAcc.getObj()->getComponent<GfComBehaviorGmk>();
       if (behavior != nullptr) {
@@ -169,7 +170,7 @@ void GfFieldTbox::seqWaitOpenFieldTbox(f32 deltaTime) {
   }
   if (!unknown24) {
     GfDropitemEmitter::CreateInfo info;
-    GfObjAcc tboxAcc(unknown18);
+    GfObjAcc tboxAcc(m_GF_OBJ_HANDLE);
     info.unknown00 = tboxAcc.getObj()->getComponent<GfComTransform>()->getPosition();
     const mm::Mat44 &matrix = tboxAcc.getObj()->getComponent<GfComTransform>()->unknown001()->getSyncedWorldMatrix();
     info.unknown10 = atan2f(matrix.rows[2][0], matrix.rows[2][2]);
@@ -182,7 +183,7 @@ void GfFieldTbox::seqWaitOpenFieldTbox(f32 deltaTime) {
         info.unknown14 = 1.5707964f;
       }
       info.unknown28 = tbox->getBindedBdatFp();
-      info.unknown30 = tbox->unknown20.unknown18;
+      info.unknown30 = tbox->m_createInfo.unknown18;
       if (tbox->getBdatInfo()->unknown05) {
         tbox->unknown58 = 0.0f;
         tbox->unknown54 = 5.0f;
@@ -199,11 +200,11 @@ void GfFieldTbox::seqWaitOpenFieldTbox(f32 deltaTime) {
     info.unknown18 += gmk::toBdatF32(Bdat::getValCheck(bdat, "box_distance", unknown20, gmk::BDAT_TYPE_UNKNOWN_8));
     info.unknown20 = gmk::toBdatF32(Bdat::getValCheck(bdat, "initWaitTime", unknown20, gmk::BDAT_TYPE_UNKNOWN_8));
     info.unknown24 = gmk::toBdatF32(Bdat::getValCheck(bdat, "initWaitTimeRand", unknown20, gmk::BDAT_TYPE_UNKNOWN_8));
-    unknown40.create(info);
-    gmk::AGmkBase *tbox = gmk::getBindedGmkInst(unknown18);
+    m_dropitemEmitter.create(info);
+    gmk::AGmkBase *tbox = gmk::getBindedGmkInst(m_GF_OBJ_HANDLE);
     if (tbox != nullptr) {
       gmk::GmkType type = tbox->getGmkType();
-      u32 gimmick = tbox->unknown20.unknown18;
+      u32 gimmick = tbox->m_createInfo.unknown18;
       if (GfQuestUtil::getGimmickTaskEndCheck(type, gimmick) == 0) {
         SCOM_QUEST_GIMMICK::createTresure(gimmick, info.unknown20);
       }
@@ -213,7 +214,7 @@ void GfFieldTbox::seqWaitOpenFieldTbox(f32 deltaTime) {
 }
 
 void GfFieldTbox::seqWaitDigEnd(f32) {
-  GfObjAcc acc(unknown18);
+  GfObjAcc acc(m_GF_OBJ_HANDLE);
   GfObj *obj = acc.getObj();
   if (obj != nullptr) {
     GfComAsm *comAsm = obj->getComponent<GfComAsm>();
@@ -223,10 +224,10 @@ void GfFieldTbox::seqWaitDigEnd(f32) {
         return;
       }
     }
-    gmk::GmkTbox *tbox = static_cast<gmk::GmkTbox *>(gmk::getBindedGmkInst(unknown18));
+    gmk::GmkTbox *tbox = static_cast<gmk::GmkTbox *>(gmk::getBindedGmkInst(m_GF_OBJ_HANDLE));
     if (tbox != nullptr) {
       tbox->setTargetable(true);
-      GfObjAcc tboxAcc(unknown18);
+      GfObjAcc tboxAcc(m_GF_OBJ_HANDLE);
       GfComBehaviorGmk *behavior = tboxAcc.getObj()->getComponent<GfComBehaviorGmk>();
       if (behavior != nullptr) {
         behavior->createMenuObj();
@@ -239,7 +240,7 @@ void GfFieldTbox::seqWaitDigEnd(f32) {
 }
 
 void GfFieldTbox::seqWaitDropBegin(f32) {
-  if (!unknown40.m_dropitemsEmitted) {
+  if (!m_dropitemEmitter.m_dropitemsEmitted) {
     return;
   }
   unknown001(1, 0.0f);

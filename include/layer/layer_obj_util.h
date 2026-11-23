@@ -46,22 +46,22 @@ static_assert(offsetof(LayerBasePos, unknown18) == 0x18, "");
 static_assert(sizeof(LayerBasePos) == 0x1c, "");
 
 struct LayerResRenderInfo {
-  f32 unknown00; // Inferred role: scale x; original member name unknown.
-  f32 unknown04; // Inferred role: scale y; original member name unknown.
-  f32 unknown08; // Inferred role: width; original member name unknown.
-  f32 unknown0c; // Inferred role: height; original member name unknown.
-  s16 unknown10; // Inferred role: pixel x; original member name unknown.
-  s16 unknown12; // Inferred role: pixel y; original member name unknown.
-  s16 unknown14; // Inferred role: pixel width; original member name unknown.
-  s16 unknown16; // Inferred role: pixel height; original member name unknown.
-  u8 unknown18;  // Inferred role: center type, index of LayerObjUtil::s_CallMdl; original member name unknown.
+  f32 unknown00;     // Inferred role: scale x; original member name unknown.
+  f32 unknown04;     // Inferred role: scale y; original member name unknown.
+  f32 unknown08;     // Inferred role: width; original member name unknown.
+  f32 unknown0c;     // Inferred role: height; original member name unknown.
+  s16 m_pixelX;      // Inferred role: pixel x; named after the game accessor layer::LayerAccObjBase::getPixelX.
+  s16 m_pixelY;      // Inferred role: pixel y; named after the game accessor layer::LayerAccObjBase::getPixelY.
+  s16 m_pixelWidth;  // Inferred role: pixel width; named after the game accessor layer::LayerAccObjBase::getPixelWidth.
+  s16 m_pixelHeight; // Inferred role: pixel height; named after the game accessor layer::LayerAccObjBase::getPixelHeight.
+  u8 m_centerType;   // Inferred role: center type, index of LayerObjUtil::s_CallMdl; named after the game accessor layer::LayerAccObjBase::getCenterType.
 };
 
 static_assert(offsetof(LayerResRenderInfo, unknown00) == 0x00, "");
 static_assert(offsetof(LayerResRenderInfo, unknown04) == 0x04, "");
 static_assert(offsetof(LayerResRenderInfo, unknown08) == 0x08, "");
-static_assert(offsetof(LayerResRenderInfo, unknown16) == 0x16, "");
-static_assert(offsetof(LayerResRenderInfo, unknown18) == 0x18, "");
+static_assert(offsetof(LayerResRenderInfo, m_pixelHeight) == 0x16, "");
+static_assert(offsetof(LayerResRenderInfo, m_centerType) == 0x18, "");
 static_assert(sizeof(LayerResRenderInfo) == 0x1c, "");
 
 // Evidence: LayerObjUtil::calcDispInfo raises 0x00 and 0x04 and lowers 0x08 and 0x0c to the screen corners of an object;

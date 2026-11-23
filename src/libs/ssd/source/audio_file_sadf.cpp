@@ -4,12 +4,12 @@
 namespace ssd {
 
 Result AudioFileSadf::Open(IoStreamBase *stream) {
-  unknown08 = stream;
+  m_ioStreamBase = stream;
   return static_cast<Result>(0);
 }
 
 Result AudioFileSadf::Close() {
-  unknown08 = nullptr;
+  m_ioStreamBase = nullptr;
   return static_cast<Result>(0);
 }
 

@@ -18,7 +18,7 @@ void GfMoveFallControler::createReflection(fw::Reflection *reflection, const cha
 }
 
 void GfMoveFallControler::update(const fw::UpdateInfo &info, Packet &packet) {
-  const Param *param = packet.unknown08.get<Param>();
+  const Param *param = packet.m_paramAdapter.get<Param>();
   f32 speed = packet.unknown00 - info.unknown04 * param->accel;
   f32 speedMin = -param->speedMax;
   packet.unknown00 = speed > speedMin ? speed : speedMin;

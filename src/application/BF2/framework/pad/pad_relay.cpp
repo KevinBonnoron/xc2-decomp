@@ -49,9 +49,9 @@ void PadRelay::update() {
 
 void PadRelay::updateAction(const PadResEvent &event) {
   for (u32 i = 0; i < event.unknown20; i++) {
-    const ResActionInfo &info = event.unknown18[i];
+    const ResActionInfo &info = event.m_resActionInfo[i];
     for (u32 j = 0; j < info.unknown10; j++) {
-      if (checkAction(info.unknown08[j])) {
+      if (checkAction(info.m_resAction[j])) {
         invokeAction(info);
         break;
       }
@@ -61,7 +61,7 @@ void PadRelay::updateAction(const PadResEvent &event) {
 
 void PadRelay::updateAxis(const PadResEvent &event) {
   for (u32 i = 0; i < event.unknown30; i++) {
-    invokeAxis(event.unknown28[i]);
+    invokeAxis(event.m_resAxisInfo[i]);
   }
 }
 

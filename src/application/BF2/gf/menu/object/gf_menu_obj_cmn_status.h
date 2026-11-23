@@ -16,16 +16,16 @@ class GfMenuObjCmnStatus : public GfMenuObject {
 public:
   class MainListener : public ui::UIObjectListener {
   public:
-    MainListener(GfMenuObjCmnStatus *owner) : _0c(), unknown20(owner) {}
+    MainListener(GfMenuObjCmnStatus *owner) : _0c(), m_menuObjCmnStatus(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
-    GfMenuObjCmnStatus *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjCmnStatus *m_menuObjCmnStatus; // Inferred role: owner; original member name unknown.
   };
 
   class CharStatusListener : public ui::UIObjectListener {
   public:
-    CharStatusListener(GfMenuObjCmnStatus *owner) : unknown0c(0), unknown10(0), unknown14(0), unknown18(0), unknown20(owner) {}
+    CharStatusListener(GfMenuObjCmnStatus *owner) : unknown0c(0), unknown10(0), unknown14(0), unknown18(0), m_menuObjCmnStatus(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     int unknown0c; // Inferred role: shown flag; original member name unknown.
@@ -33,7 +33,7 @@ public:
     u32 unknown14; // Inferred role: side the status slides from; original member name unknown.
     int unknown18; // Inferred role: no selected page flag; original member name unknown.
     u8 _1c[0x20 - 0x1c];
-    GfMenuObjCmnStatus *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjCmnStatus *m_menuObjCmnStatus; // Inferred role: owner; original member name unknown.
   };
 
   GfMenuObjCmnStatus(u32 handle);
@@ -61,13 +61,13 @@ public:
   ui::UICtrlRadarGraph *unknown38;   // Inferred role: status graph; original member name unknown.
 };
 
-static_assert(offsetof(GfMenuObjCmnStatus::MainListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjCmnStatus::MainListener, m_menuObjCmnStatus) == 0x20, "");
 static_assert(sizeof(GfMenuObjCmnStatus::MainListener) == 0x28, "");
 static_assert(offsetof(GfMenuObjCmnStatus::CharStatusListener, unknown0c) == 0x0c, "");
 static_assert(offsetof(GfMenuObjCmnStatus::CharStatusListener, unknown10) == 0x10, "");
 static_assert(offsetof(GfMenuObjCmnStatus::CharStatusListener, unknown14) == 0x14, "");
 static_assert(offsetof(GfMenuObjCmnStatus::CharStatusListener, unknown18) == 0x18, "");
-static_assert(offsetof(GfMenuObjCmnStatus::CharStatusListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjCmnStatus::CharStatusListener, m_menuObjCmnStatus) == 0x20, "");
 static_assert(sizeof(GfMenuObjCmnStatus::CharStatusListener) == 0x28, "");
 static_assert(offsetof(GfMenuObjCmnStatus, unknown28) == 0x28, "");
 static_assert(offsetof(GfMenuObjCmnStatus, unknown38) == 0x38, "");

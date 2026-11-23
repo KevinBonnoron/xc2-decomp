@@ -59,7 +59,7 @@ public:
   bool unknown64;                                                                  // Inferred role: placement enabled; original member name unknown.
   bool unknown65;                                                                  // Inferred role: unknown; original member name unknown.
   u8 _66[0x68 - 0x66];
-  IKGroundInterface *unknown68; // Inferred role: ground interface; original member name unknown.
+  IKGroundInterface *m_iKGroundInterface; // Inferred role: ground interface; original member name unknown.
 };
 
 static_assert(offsetof(PlacementGroundSolver::Description, unknown04) == 0x4, "");
@@ -70,7 +70,7 @@ static_assert(offsetof(PlacementGroundSolver, unknown58) == 0x58, "");
 static_assert(offsetof(PlacementGroundSolver, unknown5c) == 0x5c, "");
 static_assert(offsetof(PlacementGroundSolver, unknown60) == 0x60, "");
 static_assert(offsetof(PlacementGroundSolver, unknown64) == 0x64, "");
-static_assert(offsetof(PlacementGroundSolver, unknown68) == 0x68, "");
+static_assert(offsetof(PlacementGroundSolver, m_iKGroundInterface) == 0x68, "");
 static_assert(sizeof(PlacementGroundSolver) == 0x70, "");
 
 } // namespace fw

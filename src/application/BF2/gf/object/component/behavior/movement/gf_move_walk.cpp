@@ -19,7 +19,7 @@ void GfMoveWalkControler::createReflection(fw::Reflection *reflection, const cha
 }
 
 void GfMoveWalkControler::enter(Packet &packet) {
-  const Param *param = packet.unknown18.get<Param>();
+  const Param *param = packet.m_paramAdapter.get<Param>();
   packet.unknown00 = packet.unknown30 * param->velocity * packet.unknown40;
 }
 

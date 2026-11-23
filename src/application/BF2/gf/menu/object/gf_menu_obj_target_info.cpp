@@ -267,8 +267,8 @@ void GfMenuObjTargetInfo::openOther(GfMenuCallContext *context, const OpenOtherP
     symbolParam.unknown38 = param.unknown38;
     symbolParam.unknown40 = param.unknown48;
     symbolParam.unknown48 = param.unknown50;
-    symbolParam.unknown00 = param.unknown00;
-    symbolParam.unknown10 = param.unknown10;
+    symbolParam.m_GF_OBJ_HANDLE = param.m_GF_OBJ_HANDLE;
+    symbolParam.m_menuOffset = param.m_menuOffset;
     symbolParam.unknown4c = param.unknown40;
     openSymbol(context, symbolParam);
     return;
@@ -280,8 +280,8 @@ void GfMenuObjTargetInfo::openOther(GfMenuCallContext *context, const OpenOtherP
       {
         ui::UIObjectAcc acc(main.unknown10);
         if (acc.isValid()) {
-          GfMenuPosAdapter::create(acc.unknown10, param.unknown00, &param.unknown10)->setPosOffsMode(1);
-          GfMenuGfObjAdapter *adapter = GfMenuGfObjAdapter::create(acc.unknown10, 3, param.unknown00, true);
+          GfMenuPosAdapter::create(acc.unknown10, param.m_GF_OBJ_HANDLE, &param.m_menuOffset)->setPosOffsMode(1);
+          GfMenuGfObjAdapter *adapter = GfMenuGfObjAdapter::create(acc.unknown10, 3, param.m_GF_OBJ_HANDLE, true);
           adapter->setDispFadeMode(0.25f);
           adapter->setDispSuspendMode(true);
         }
@@ -289,24 +289,24 @@ void GfMenuObjTargetInfo::openOther(GfMenuCallContext *context, const OpenOtherP
       {
         ui::UIObjectAcc info(main.searchChild("LAY_other_info"));
         if (info.isValid()) {
-          GfMenuGfObjAdapter::create(info.unknown10, 2, param.unknown00, true)->setDispFadeMode(0.25f);
+          GfMenuGfObjAdapter::create(info.unknown10, 2, param.m_GF_OBJ_HANDLE, true)->setDispFadeMode(0.25f);
         }
         ui::UIObjectAcc base(main.searchChild("IMG_other_base"));
         if (base.isValid()) {
-          GfMenuGfObjAdapter *adapter = GfMenuGfObjAdapter::create(base.unknown10, 2, param.unknown00, true);
+          GfMenuGfObjAdapter *adapter = GfMenuGfObjAdapter::create(base.unknown10, 2, param.m_GF_OBJ_HANDLE, true);
           adapter->setDispReverseMode(true);
           adapter->setDispFadeMode(0.25f);
         }
         ui::UIObjectAcc active(main.searchChild("IMG_other_active"));
         if (active.isValid()) {
-          GfMenuGfObjAdapter::create(active.unknown10, 6, param.unknown00, true)->setDispReverseMode(true);
+          GfMenuGfObjAdapter::create(active.unknown10, 6, param.m_GF_OBJ_HANDLE, true)->setDispReverseMode(true);
           {
             ui::UIObjectAcc name(main.unknown10, "TXT_other_name");
             GfMenuObjUtil::createSyncPlugin(name.unknown10, active.unknown10, 0x20);
           }
           ui::UIObjectAcc access(main.searchChild("IMG_other_access"));
           if (access.isValid()) {
-            GfMenuGfObjAdapter::create(access.unknown10, 6, param.unknown00, true);
+            GfMenuGfObjAdapter::create(access.unknown10, 6, param.m_GF_OBJ_HANDLE, true);
             GfMenuObjUtil::createSyncPlugin(access.unknown10, active.unknown10, 1);
             ui::UIObjectAcc name(main.unknown10, "TXT_other_name_access");
             GfMenuObjUtil::createSyncPlugin(name.unknown10, access.unknown10, 0x20);
@@ -334,7 +334,7 @@ void GfMenuObjTargetInfo::openOther(GfMenuCallContext *context, const OpenOtherP
       {
         ui::UIObjectAcc icon(main.searchChild("IMG_other_icon"));
         if (icon.isValid()) {
-          GfMenuGfObjAdapter::create(icon.unknown10, 4, param.unknown00, true);
+          GfMenuGfObjAdapter::create(icon.unknown10, 4, param.m_GF_OBJ_HANDLE, true);
         }
       }
       startOpen(root.unknown10, main.unknown10, 0, 0);
@@ -352,37 +352,37 @@ void GfMenuObjTargetInfo::openEnemy(GfMenuCallContext *context, const OpenEnemyP
         {
           ui::UIObjectAcc ene(main.searchChild("LAY_ene"));
           if (ene.isValid()) {
-            GfMenuPosAdapter::create(ene.unknown10, param.unknown00, &param.unknown10)->setPosOffsMode(1);
-            GfMenuGfObjAdapter *adapter = GfMenuGfObjAdapter::create(ene.unknown10, 2, param.unknown00, true);
+            GfMenuPosAdapter::create(ene.unknown10, param.m_GF_OBJ_HANDLE, &param.m_menuOffset)->setPosOffsMode(1);
+            GfMenuGfObjAdapter *adapter = GfMenuGfObjAdapter::create(ene.unknown10, 2, param.m_GF_OBJ_HANDLE, true);
             adapter->setDispFadeMode(0.25f);
             adapter->setDispSuspendMode(true);
-            GfMenuGfObjAdapter *bgAdapter = GfMenuGfObjAdapter::create(ene.searchChild("IMG_ene_bg"), 5, param.unknown00, true);
+            GfMenuGfObjAdapter *bgAdapter = GfMenuGfObjAdapter::create(ene.searchChild("IMG_ene_bg"), 5, param.m_GF_OBJ_HANDLE, true);
             bgAdapter->setDispReverseMode(true);
             bgAdapter->setDispAlphaMode(true);
           }
         }
         {
           ui::UIObjectAcc bg(main.searchChild("IMG_ene_bg"));
-          GfMenuGfObjAdapter::create(bg.unknown10, 0x20, param.unknown00, false);
+          GfMenuGfObjAdapter::create(bg.unknown10, 0x20, param.m_GF_OBJ_HANDLE, false);
         }
         {
           ui::UIObjectAcc gauge(main.searchChild("IMG_hpgauge"));
           if (gauge.isValid()) {
-            GfMenuGfObjAdapter::create(gauge.unknown10, 0, param.unknown00, true);
+            GfMenuGfObjAdapter::create(gauge.unknown10, 0, param.m_GF_OBJ_HANDLE, true);
             gauge.setExtType(1);
           }
         }
         {
           ui::UIObjectAcc scout(main.searchChild("IMG_scout"));
           if (scout.isValid()) {
-            GfMenuGfObjAdapter::create(scout.unknown10, 0x21, param.unknown00, true);
+            GfMenuGfObjAdapter::create(scout.unknown10, 0x21, param.m_GF_OBJ_HANDLE, true);
           }
         }
         {
           ui::UIObjectAcc level(main.searchChild("TXT_ene_lvnum"));
           if (level.isValid()) {
             GfMenuObjUtil::createDockPlugin(main.searchChild("TXT_ene_lvtitle"), level.unknown10, 0, mm::Pnt<s16>(-2, 0), 0);
-            GfMenuGfObjAdapter::create(main.searchChild("TXT_ene_lvnum"), 7, param.unknown00, true);
+            GfMenuGfObjAdapter::create(main.searchChild("TXT_ene_lvnum"), 7, param.m_GF_OBJ_HANDLE, true);
           }
         }
         {
@@ -395,7 +395,7 @@ void GfMenuObjTargetInfo::openEnemy(GfMenuCallContext *context, const OpenEnemyP
           }
           ui::UIObjectAcc icon(main.searchChild("IMG_infoicon"));
           if (icon.isValid()) {
-            GfMenuGfObjAdapter::create(icon.unknown10, 4, param.unknown00, true)->setDispFadeMode(0.25f);
+            GfMenuGfObjAdapter::create(icon.unknown10, 4, param.m_GF_OBJ_HANDLE, true)->setDispFadeMode(0.25f);
           }
         }
         startOpen(root.unknown10, main.unknown10, 0, 0);
@@ -413,8 +413,8 @@ void GfMenuObjTargetInfo::openSymbol(GfMenuCallContext *context, const OpenSymbo
       {
         ui::UIObjectAcc acc(main.unknown10);
         if (acc.isValid()) {
-          GfMenuPosAdapter::create(acc.unknown10, param.unknown00, &param.unknown10)->setPosOffsMode(1);
-          GfMenuGfObjAdapter *adapter = GfMenuGfObjAdapter::create(acc.unknown10, 3, param.unknown00, true);
+          GfMenuPosAdapter::create(acc.unknown10, param.m_GF_OBJ_HANDLE, &param.m_menuOffset)->setPosOffsMode(1);
+          GfMenuGfObjAdapter *adapter = GfMenuGfObjAdapter::create(acc.unknown10, 3, param.m_GF_OBJ_HANDLE, true);
           adapter->setDispFadeMode(0.25f);
           adapter->setDispSuspendMode(true);
         }
@@ -422,24 +422,24 @@ void GfMenuObjTargetInfo::openSymbol(GfMenuCallContext *context, const OpenSymbo
       {
         ui::UIObjectAcc info(main.searchChild("LAY_symbol_info"));
         if (info.isValid()) {
-          GfMenuGfObjAdapter::create(info.unknown10, 2, param.unknown00, true)->setDispFadeMode(0.25f);
+          GfMenuGfObjAdapter::create(info.unknown10, 2, param.m_GF_OBJ_HANDLE, true)->setDispFadeMode(0.25f);
         }
         ui::UIObjectAcc base(main.searchChild("IMG_symbol_base"));
         if (base.isValid()) {
-          GfMenuGfObjAdapter *adapter = GfMenuGfObjAdapter::create(base.unknown10, 2, param.unknown00, true);
+          GfMenuGfObjAdapter *adapter = GfMenuGfObjAdapter::create(base.unknown10, 2, param.m_GF_OBJ_HANDLE, true);
           adapter->setDispReverseMode(true);
           adapter->setDispFadeMode(0.25f);
         }
         ui::UIObjectAcc active(main.searchChild("IMG_symbol_active"));
         if (active.isValid()) {
-          GfMenuGfObjAdapter::create(active.unknown10, 6, param.unknown00, true)->setDispReverseMode(true);
+          GfMenuGfObjAdapter::create(active.unknown10, 6, param.m_GF_OBJ_HANDLE, true)->setDispReverseMode(true);
           {
             ui::UIObjectAcc name(main.unknown10, "TXT_symbol_name");
             GfMenuObjUtil::createSyncPlugin(name.unknown10, active.unknown10, 0x20);
           }
           ui::UIObjectAcc access(main.searchChild("IMG_symbol_access"));
           if (access.isValid()) {
-            GfMenuGfObjAdapter::create(access.unknown10, 6, param.unknown00, true);
+            GfMenuGfObjAdapter::create(access.unknown10, 6, param.m_GF_OBJ_HANDLE, true);
             GfMenuObjUtil::createSyncPlugin(access.unknown10, active.unknown10, 1);
             ui::UIObjectAcc name(main.unknown10, "TXT_symbol_name_access");
             GfMenuObjUtil::createSyncPlugin(name.unknown10, access.unknown10, 0x20);

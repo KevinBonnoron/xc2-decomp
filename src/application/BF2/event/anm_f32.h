@@ -20,12 +20,12 @@ public:
   CV_TYPE getCv(size_t index) const;
   f32 getValue(size_t index) const;
   void setValue(size_t index, f32 value);
-  f32 getValue() const { return unknown108; }
+  f32 getValue() const { return m_value; }
 
 private:
   mm::mtl::FixedVector<f32, KEY_UNKNOWN_16> unknown78;     // Inferred role: values; original member name unknown.
   mm::mtl::FixedVector<CV_TYPE, KEY_UNKNOWN_16> unknownc0; // Inferred role: cvs; original member name unknown.
-  f32 unknown108;                                          // Inferred role: value; original member name unknown.
+  f32 m_value;                                             // Inferred role: value; named after the game accessor event::AnmF32::getValue.
 };
 
 static_assert(sizeof(AnmF32) == 0x110, "");

@@ -16,22 +16,22 @@ class GfMenuObjHanaSubmenu : public GfMenuObject {
 public:
   class MainListener : public ui::UIObjectListener {
   public:
-    MainListener(GfMenuObjHanaSubmenu *owner) : _0c(), unknown20(owner) {}
+    MainListener(GfMenuObjHanaSubmenu *owner) : _0c(), m_menuObjHanaSubmenu(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
     u8 _1c[0x20 - 0x1c];
-    GfMenuObjHanaSubmenu *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjHanaSubmenu *m_menuObjHanaSubmenu; // Inferred role: owner; original member name unknown.
   };
 
   class SubmenuListener : public ui::UIObjectListener {
   public:
-    SubmenuListener(GfMenuObjHanaSubmenu *owner) : _0c(), unknown20(owner) {}
+    SubmenuListener(GfMenuObjHanaSubmenu *owner) : _0c(), m_menuObjHanaSubmenu(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
     u8 _1c[0x20 - 0x1c];
-    GfMenuObjHanaSubmenu *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjHanaSubmenu *m_menuObjHanaSubmenu; // Inferred role: owner; original member name unknown.
   };
 
   GfMenuObjHanaSubmenu(u32 handle);
@@ -55,9 +55,9 @@ public:
   u8 _3c[0x40 - 0x3c];               // The game allocates 0x40 bytes for the object; no function touches the tail.
 };
 
-static_assert(offsetof(GfMenuObjHanaSubmenu::MainListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjHanaSubmenu::MainListener, m_menuObjHanaSubmenu) == 0x20, "");
 static_assert(sizeof(GfMenuObjHanaSubmenu::MainListener) == 0x28, "");
-static_assert(offsetof(GfMenuObjHanaSubmenu::SubmenuListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjHanaSubmenu::SubmenuListener, m_menuObjHanaSubmenu) == 0x20, "");
 static_assert(sizeof(GfMenuObjHanaSubmenu::SubmenuListener) == 0x28, "");
 static_assert(offsetof(GfMenuObjHanaSubmenu, unknown28) == 0x28, "");
 static_assert(offsetof(GfMenuObjHanaSubmenu, unknown30) == 0x30, "");

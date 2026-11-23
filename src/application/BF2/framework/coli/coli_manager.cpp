@@ -10,19 +10,19 @@
 
 namespace fw {
 
-ColiManager::Impl::Impl(mm::mtl::IAllocator *allocator, u32 capacity) : unknown18(nullptr), unknown20(nullptr), unknown28(1), unknown30(allocator) {
-  unknown38.reserve(allocator, capacity);
-  unknown38.setRange(1, HANDLE_ID_UNKNOWN_2147483647, HANDLE_ID_UNKNOWN_2147483647);
+ColiManager::Impl::Impl(mm::mtl::IAllocator *allocator, u32 capacity) : m_groundObject(nullptr), m_interface(nullptr), unknown28(1), unknown30(allocator) {
+  m_pointerMap.reserve(allocator, capacity);
+  m_pointerMap.setRange(1, HANDLE_ID_UNKNOWN_2147483647, HANDLE_ID_UNKNOWN_2147483647);
   initializeContact();
 }
 
 void ColiManager::Impl::initializeContact() { unknown70.clear(); }
 
 bool ColiManager::Impl::initialize() {
-  if (unknown20 == nullptr) {
+  if (m_interface == nullptr) {
     // __LINE__ of the game: it is the line argument of the operator new.
 #line 248
-    unknown20 = new (Framework::getAllocator(), 16, __FILE__, __LINE__) idcoli::IDColiManager(Framework::get()->unknown58, FrameworkMemory::getMem(5), 0x80000);
+    m_interface = new (Framework::getAllocator(), 16, __FILE__, __LINE__) idcoli::IDColiManager(Framework::get()->unknown58, FrameworkMemory::getMem(5), 0x80000);
   }
 
   return true;
@@ -31,10 +31,10 @@ bool ColiManager::Impl::initialize() {
 bool ColiManager::Impl::finalize() {
   destroyContactTable();
   updateRelease();
-  unknown18 = nullptr;
-  if (unknown20 != nullptr) {
-    delete unknown20;
-    unknown20 = nullptr;
+  m_groundObject = nullptr;
+  if (m_interface != nullptr) {
+    delete m_interface;
+    m_interface = nullptr;
   }
 
   return true;
@@ -53,8 +53,8 @@ void ColiManager::Impl::updateRelease() {
 }
 
 void ColiManager::Impl::update() {
-  if (unknown20 != nullptr) {
-    unknown20->update();
+  if (m_interface != nullptr) {
+    m_interface->update();
     unknown28++;
     updateContact();
     sendContactEvent();
@@ -73,7 +73,7 @@ void ColiManager::Impl::updateContact() {
       continue;
     }
 
-    mm::mtl::List<ContactParam> *contacts = getContactList(object->unknownf0.unknown08);
+    mm::mtl::List<ContactParam> *contacts = getContactList(object->m_coliObjUserData.unknown08);
     if (object->getRefCount() == 1) {
       if (contacts != nullptr) {
         for (mm::mtl::List<ContactParam>::iterator contact = contacts->begin(); contact != contacts->end(); ++contact) {
@@ -109,10 +109,10 @@ void ColiManager::Impl::updateContact() {
 void ColiManager::Impl::sendContactEvent() {
   for (ContactTable::iterator it = unknown70.begin(); it != unknown70.end(); ++it) {
     mm::mtl::List<ContactParam> *contacts = it->unknown08;
-    ColiObject *object = static_cast<ColiObject *>(unknown38.getPtr(it->unknown00));
+    ColiObject *object = static_cast<ColiObject *>(m_pointerMap.getPtr(it->unknown00));
     for (mm::mtl::List<ContactParam>::iterator contact = contacts->begin(); contact != contacts->end();) {
       ContactParam &param = *contact;
-      ColiObject *other = static_cast<ColiObject *>(unknown38.getPtr(param.unknown34));
+      ColiObject *other = static_cast<ColiObject *>(m_pointerMap.getPtr(param.unknown34));
       if (other == nullptr) {
         contact = contacts->erase(contact);
         continue;
@@ -175,14 +175,14 @@ void ColiManager::Impl::postUpdate() {
     it->postUpdate();
   }
 
-  if (unknown20 != nullptr) {
-    unknown20->consistentUpdate();
+  if (m_interface != nullptr) {
+    m_interface->consistentUpdate();
   }
 }
 
 void ColiManager::Impl::tail() {
-  if (unknown20 != nullptr) {
-    unknown20->tail();
+  if (m_interface != nullptr) {
+    m_interface->tail();
   }
 }
 
@@ -209,11 +209,11 @@ mm::mtl::List<ColiManager::Impl::ContactParam> *ColiManager::Impl::getContactLis
 }
 
 ColiObject *ColiManager::Impl::getObject(u32 handle, bool isCheck) const {
-  if (isCheck && !unknown38.isValid(handle)) {
+  if (isCheck && !m_pointerMap.isValid(handle)) {
     return nullptr;
   }
 
-  return static_cast<ColiObject *>(unknown38.getPtr(handle));
+  return static_cast<ColiObject *>(m_pointerMap.getPtr(handle));
 }
 
 bool ColiManager::Impl::isContactList(mm::mtl::List<ContactParam> &contacts, u32 handle) {
@@ -227,7 +227,7 @@ bool ColiManager::Impl::isContactList(mm::mtl::List<ContactParam> &contacts, u32
 }
 
 void ColiManager::Impl::sendRemoveEvent(u32 handle) {
-  ColiObject *object = static_cast<ColiObject *>(unknown38.getPtr(handle));
+  ColiObject *object = static_cast<ColiObject *>(m_pointerMap.getPtr(handle));
   if (object == nullptr) {
     return;
   }
@@ -236,7 +236,7 @@ void ColiManager::Impl::sendRemoveEvent(u32 handle) {
     mm::mtl::List<ContactParam> *contacts = it->unknown08;
     if (it->unknown00 == handle) {
       for (mm::mtl::List<ContactParam>::iterator contact = contacts->begin(); contact != contacts->end(); ++contact) {
-        ColiObject *other = static_cast<ColiObject *>(unknown38.getPtr((*contact).unknown34));
+        ColiObject *other = static_cast<ColiObject *>(m_pointerMap.getPtr((*contact).unknown34));
         IColiEventListener::LeaveInfo leaveInfo = {object, other};
         IColiEventListener::LeaveInfo otherLeaveInfo = {other, object};
         if (((*contact).unknown38 & CONTACT_FLAG_UNKNOWN_0) != 0) {
@@ -247,7 +247,7 @@ void ColiManager::Impl::sendRemoveEvent(u32 handle) {
       return;
     }
 
-    ColiObject *owner = static_cast<ColiObject *>(unknown38.getPtr(it->unknown00));
+    ColiObject *owner = static_cast<ColiObject *>(m_pointerMap.getPtr(it->unknown00));
     for (mm::mtl::List<ContactParam>::iterator contact = contacts->begin(); contact != contacts->end();) {
       if ((*contact).unknown34 == handle) {
         IColiEventListener::LeaveInfo leaveInfo = {owner, object};
@@ -262,14 +262,14 @@ void ColiManager::Impl::sendRemoveEvent(u32 handle) {
   }
 }
 
-bool ColiManager::Impl::isValidObject(u32 handle) { return unknown38.isValid(handle); }
+bool ColiManager::Impl::isValidObject(u32 handle) { return m_pointerMap.isValid(handle); }
 
 void ColiManager::Impl::registObject(ColiObject *object) {
-  object->setHandle(unknown38.regist(object) | HANDLE_FLAG_UNKNOWN_31);
+  object->setHandle(m_pointerMap.regist(object) | HANDLE_FLAG_UNKNOWN_31);
   object->addRef();
   unknown00.push_back(object);
   if (object->isGrand()) {
-    unknown18 = object;
+    m_groundObject = object;
   }
 
   if (object->isChar()) {
@@ -277,13 +277,13 @@ void ColiManager::Impl::registObject(ColiObject *object) {
 #line 771
     mm::mtl::List<ContactParam> *contacts = new (unknown30, 16, __FILE__, __LINE__) mm::mtl::List<ContactParam>(unknown30);
     contacts->reserve(CONTACT_LIST_RESERVE_UNKNOWN_8);
-    unknown70.push_back(ListParam(object->unknownf0.unknown08, contacts));
+    unknown70.push_back(ListParam(object->m_coliObjUserData.unknown08, contacts));
   }
 }
 
 void ColiManager::Impl::removeObject(ColiObject *object) {
   for (ContactTable::iterator it = unknown70.begin(); it != unknown70.end(); ++it) {
-    if (it->unknown00 == object->unknownf0.unknown08) {
+    if (it->unknown00 == object->m_coliObjUserData.unknown08) {
       mm::mtl::List<ContactParam> *contacts = it->unknown08;
       unknown70.erase(it);
       contacts->clear();
@@ -292,41 +292,41 @@ void ColiManager::Impl::removeObject(ColiObject *object) {
     }
   }
 
-  if (object->unknownf0.unknown08 != 0) {
-    unknown38.remove(object->unknownf0.unknown08);
+  if (object->m_coliObjUserData.unknown08 != 0) {
+    m_pointerMap.remove(object->m_coliObjUserData.unknown08);
   }
 
   unknown00.erase(object);
-  if (unknown18 == object) {
-    unknown18 = nullptr;
+  if (m_groundObject == object) {
+    m_groundObject = nullptr;
   }
 }
 
-void ColiManager::Impl::cleanupObject(ColiObject *object) { sendRemoveEvent(object->unknownf0.unknown08); }
+void ColiManager::Impl::cleanupObject(ColiObject *object) { sendRemoveEvent(object->m_coliObjUserData.unknown08); }
 
 void ColiManager::Impl::openDebugWindow() {
-  if (unknown20 != nullptr) {
-    unknown20->openDebugWindow(Framework::get()->unknown50);
+  if (m_interface != nullptr) {
+    m_interface->openDebugWindow(Framework::get()->unknown50);
   }
 }
 
 bool ColiManager::Impl::isGblId(u32 id) {
-  if (unknown20 == nullptr) {
+  if (m_interface == nullptr) {
     return false;
   }
 
-  return unknown20->isGblId(id) == 0;
+  return m_interface->isGblId(id) == 0;
 }
 
 void ColiManager::Impl::setGblId(u32 id, bool isGlobal) {
-  if (unknown20 != nullptr) {
-    unknown20->setGblId(id, isGlobal);
+  if (m_interface != nullptr) {
+    m_interface->setGblId(id, isGlobal);
   }
 }
 
 void *ColiManager::Impl::getGblIdTbl() {
-  if (unknown20 != nullptr) {
-    return unknown20->getGblIdTbl();
+  if (m_interface != nullptr) {
+    return m_interface->getGblIdTbl();
   }
 
   return nullptr;
@@ -374,16 +374,16 @@ void ColiManager::removeObject(ColiObject *object) { unknown18->removeObject(obj
 
 void ColiManager::cleanupObject(ColiObject *object) { unknown18->cleanupObject(object); }
 
-const idcoli::IDColiManager *ColiManager::getInterface() const { return unknown18->unknown20; }
+const idcoli::IDColiManager *ColiManager::getInterface() const { return unknown18->m_interface; }
 
-idcoli::IDColiManager *ColiManager::getInterface() { return unknown18->unknown20; }
+idcoli::IDColiManager *ColiManager::getInterface() { return unknown18->m_interface; }
 
 void ColiManager::openDebugWindow() { unknown18->openDebugWindow(); }
 
-ColiObject *ColiManager::getGroundObject() { return unknown18->unknown18; }
+ColiObject *ColiManager::getGroundObject() { return unknown18->m_groundObject; }
 
 ColiObject *ColiManager::getObject(u32 handle) const {
-  const PointerMap &objectMap = unknown18->unknown38;
+  const PointerMap &objectMap = unknown18->m_pointerMap;
   if (objectMap.isValid(handle)) {
     return static_cast<ColiObject *>(objectMap.getPtr(handle));
   }

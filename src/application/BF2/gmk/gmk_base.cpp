@@ -9,33 +9,33 @@
 
 namespace gmk {
 
-AGmkBase::AGmkBase() : unknown08(), _40() {}
+AGmkBase::AGmkBase() : m_createBaseInfo(), _40() {}
 
 void AGmkBase::disposeBase() {
-  unknown08.unknown00 = nullptr;
-  unknown08.unknown08 = nullptr;
-  unknown08.unknown10 = nullptr;
+  m_createBaseInfo.m_ownerGmkEnemyList = nullptr;
+  m_createBaseInfo.m_xform = nullptr;
+  m_createBaseInfo.unknown10 = nullptr;
 }
 
-u8 *AGmkBase::getBindedBdatFp() const { return unknown08.unknown00->getBindedBdatFp(); }
+u8 *AGmkBase::getBindedBdatFp() const { return m_createBaseInfo.m_ownerGmkEnemyList->getBindedBdatFp(); }
 
 bool AGmkBase::canCreateGameEntity() const {
-  const GmkSet *set = unknown08.unknown00->getCreateInfo().unknown08;
+  const GmkSet *set = m_createBaseInfo.m_ownerGmkEnemyList->getCreateInfo().m_gmkSet;
   if (set == nullptr) {
     return true;
   }
-  return !set->unknown10.unknown24;
+  return !set->m_createInfo.unknown24;
 }
 
 f32 AGmkBase::getYSnapRayLength() const {
-  switch (unknown08.unknown10->unknown0c) {
+  switch (m_createBaseInfo.unknown10->unknown0c) {
   case SHAPE_TYPE_UNKNOWN_1:
   case SHAPE_TYPE_UNKNOWN_3:
-    return unknown08.unknown08->unknown20.y;
+    return m_createBaseInfo.m_xform->unknown20.y;
   case SHAPE_TYPE_UNKNOWN_2:
-    return unknown08.unknown08->unknown20.x;
+    return m_createBaseInfo.m_xform->unknown20.x;
   case SHAPE_TYPE_UNKNOWN_4:
-    return unknown08.unknown08->unknown20.x + unknown08.unknown08->unknown20.y;
+    return m_createBaseInfo.m_xform->unknown20.x + m_createBaseInfo.m_xform->unknown20.y;
   default:
     return 1.0f;
   }
@@ -45,7 +45,7 @@ bool AGmkBase::getYSnapPosInShape(mm::Vec3 &position) const {
   fw::ColiCheckConfig config;
   mm::Vec3 shapePosition;
   getPositionInShape(shapePosition, false);
-  shapePosition.y += unknown08.unknown08->unknown20.y * 0.5f;
+  shapePosition.y += m_createBaseInfo.m_xform->unknown20.y * 0.5f;
   config.unknown08 = 0.0f;
   config.unknown0c = 0.0f;
   config.unknown14 = true;
@@ -53,7 +53,7 @@ bool AGmkBase::getYSnapPosInShape(mm::Vec3 &position) const {
   config.unknown10 = 2;
   config.unknown04 = 0x80000020;
   config.unknown00 = 9;
-  return getYSnapPos(position, shapePosition, unknown08.unknown08->unknown20.y, config);
+  return getYSnapPos(position, shapePosition, m_createBaseInfo.m_xform->unknown20.y, config);
 }
 
 bool AGmkBase::getPositionAppliedYSnap(mm::Vec3 &result, const mm::Vec3 &position, bool isXformY) const {
@@ -61,7 +61,7 @@ bool AGmkBase::getPositionAppliedYSnap(mm::Vec3 &result, const mm::Vec3 &positio
   fw::ColiCheckConfig config;
   mm::Vec3 start;
   start.x = position.x;
-  start.y = halfLength + (isXformY ? unknown08.unknown08->unknown00 : position).y;
+  start.y = halfLength + (isXformY ? m_createBaseInfo.m_xform->unknown00 : position).y;
   start.z = position.z;
   config.unknown08 = 0.0f;
   config.unknown0c = 0.0f;
@@ -73,7 +73,7 @@ bool AGmkBase::getPositionAppliedYSnap(mm::Vec3 &result, const mm::Vec3 &positio
   return getYSnapPos(result, start, halfLength + halfLength, config);
 }
 
-void AGmkBase::createBase(const CreateBaseInfo &info) { unknown08 = info; }
+void AGmkBase::createBase(const CreateBaseInfo &info) { m_createBaseInfo = info; }
 
 void AGmkBase::bindToGameObj(gf::GF_OBJ_HANDLE *handle) const {
   gf::GfObjAcc acc(handle);
@@ -92,7 +92,7 @@ void AGmkBase::unbindToGameObj(gf::GF_OBJ_HANDLE *handle) const {
 
 int AGmkBase::findBdatRowIndex() const {
   u8 *bdat = getBindedBdatFp();
-  const char *name = unknown08.unknown10->unknown00;
+  const char *name = m_createBaseInfo.unknown10->unknown00;
   if (name[0] == '\0') {
     return -1;
   }

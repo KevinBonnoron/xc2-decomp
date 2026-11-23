@@ -100,11 +100,11 @@ public:
 
   // Inferred role: voice play result log entry; original type name unknown.
   struct unknown001 {
-    GF_OBJ_HANDLE *unknown00;     // Inferred role: object handle; original member name unknown.
-    u32 unknown08;                // Inferred role: object type; original member name unknown.
-    u32 unknown0c;                // Inferred role: object id; original member name unknown.
-    GAME_VOICE_HANDLE *unknown10; // Inferred role: voice handle; original member name unknown.
-    CV_RESULT unknown18;          // Inferred role: result; original member name unknown.
+    GF_OBJ_HANDLE *unknown00;               // Inferred role: object handle; original member name unknown.
+    u32 unknown08;                          // Inferred role: object type; original member name unknown.
+    u32 unknown0c;                          // Inferred role: object id; original member name unknown.
+    GAME_VOICE_HANDLE *m_GAME_VOICE_HANDLE; // Inferred role: voice handle; original member name unknown.
+    CV_RESULT unknown18;                    // Inferred role: result; original member name unknown.
   };
 
   GfGameVoice(const GfSetupParam &param);

@@ -26,10 +26,10 @@ public:
   void renderColorBackground(const mm::Vec4 &color);
   void renderBackgroundCube();
 
-  DrMan *unknown00;            // Inferred role: dr man; original member name unknown.
-  DrResUseQueryObj *unknown08; // Inferred role: occlusion query; original member name unknown.
-  f32 unknown10;               // Inferred role: sky visibility; original member name unknown.
-  s32 unknown14;               // Inferred role: visibility reset frames; original member name unknown.
+  DrMan *m_drMan;                       // Inferred role: dr man; original member name unknown.
+  DrResUseQueryObj *m_drResUseQueryObj; // Inferred role: occlusion query; original member name unknown.
+  f32 unknown10;                        // Inferred role: sky visibility; original member name unknown.
+  s32 unknown14;                        // Inferred role: visibility reset frames; original member name unknown.
   u8 _18[0x20 - 0x18];
   mm::Vec3 unknown20; // Inferred role: set by the constructor only; original member name unknown.
   mm::Vec3 unknown30; // Inferred role: set by the constructor only; original member name unknown.
@@ -38,8 +38,8 @@ public:
   s32 unknown48;      // Inferred role: set by the constructor only; original member name unknown.
 };
 
-static_assert(offsetof(DrPixlSkyDome, unknown00) == 0x00, "");
-static_assert(offsetof(DrPixlSkyDome, unknown08) == 0x08, "");
+static_assert(offsetof(DrPixlSkyDome, m_drMan) == 0x00, "");
+static_assert(offsetof(DrPixlSkyDome, m_drResUseQueryObj) == 0x08, "");
 static_assert(offsetof(DrPixlSkyDome, unknown10) == 0x10, "");
 static_assert(offsetof(DrPixlSkyDome, unknown14) == 0x14, "");
 static_assert(offsetof(DrPixlSkyDome, unknown20) == 0x20, "");

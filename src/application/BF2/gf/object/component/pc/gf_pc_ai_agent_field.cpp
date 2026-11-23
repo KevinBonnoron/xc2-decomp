@@ -40,68 +40,68 @@ void AIAgentField::setup(GfComPropertyPc &property) {
   unknown00 = fw::NaviManager::get()->createObject();
   unknown88 = fw::ParamManager::get()->unknown408[16];
   mm::mtl::IAllocator *allocator = fw::Allocator::getProcAllocator();
-  unknown08.beginSetup(20, allocator);
-  unknown08.unknown003<BlackBoardField>();
-  unknown08.createComposite<ai::ParallelNode>(0, "root_sequence", 3);
-  unknown08.createTask<TaskFieldSensor>(1, "sensor_task");
-  unknown08.createComposite<ai::SelectorNode>(2, "check_warp_selector", 3);
-  unknown08.createTask<TaskFieldCheckWarp>(3, "check_warp_task");
-  unknown08.createTask<TaskFieldCheckWarpBattleWaterDead>(4, "check_warp_water_dead_task");
-  unknown08.createTask<TaskFieldCheckWarpFallDead>(5, "check_warp_fall_dead_task");
-  unknown08.createComposite<ai::SelectorNode>(6, "move_selector", 6);
-  unknown08.createTask<TaskFieldJump>(14, "jump_task");
-  unknown08.createComposite<ai::SequenceNode>(15, "follow_sequence", 2);
-  unknown08.createTask<TaskFieldFollowTarget>(16, "follow_target_task");
+  m_behaviorTree.beginSetup(20, allocator);
+  m_behaviorTree.unknown003<BlackBoardField>();
+  m_behaviorTree.createComposite<ai::ParallelNode>(0, "root_sequence", 3);
+  m_behaviorTree.createTask<TaskFieldSensor>(1, "sensor_task");
+  m_behaviorTree.createComposite<ai::SelectorNode>(2, "check_warp_selector", 3);
+  m_behaviorTree.createTask<TaskFieldCheckWarp>(3, "check_warp_task");
+  m_behaviorTree.createTask<TaskFieldCheckWarpBattleWaterDead>(4, "check_warp_water_dead_task");
+  m_behaviorTree.createTask<TaskFieldCheckWarpFallDead>(5, "check_warp_fall_dead_task");
+  m_behaviorTree.createComposite<ai::SelectorNode>(6, "move_selector", 6);
+  m_behaviorTree.createTask<TaskFieldJump>(14, "jump_task");
+  m_behaviorTree.createComposite<ai::SequenceNode>(15, "follow_sequence", 2);
+  m_behaviorTree.createTask<TaskFieldFollowTarget>(16, "follow_target_task");
   GfGamePlayerFormation *formation = GfGamePlayerFormation::get();
   if (formation->unknown1a0[property.unknown38].unknown10) {
-    unknown08.createTask<TaskFieldFollowMainPc>(17, "follow_task");
-    unknown08.createComposite<ai::SelectorNode>(7, "wall_selector", 5);
-    unknown08.createTask<TaskFieldWallFall>(8, "fall_wall_task");
-    unknown08.createTask<TaskFieldWallJumpWait>(9, "wall_jump_wait_task");
-    unknown08.createTask<TaskFieldWallPrepare>(10, "prepare_wall_task");
-    unknown08.createTask<TaskFieldWallEscape>(11, "escape_wall_task");
-    unknown08.createTask<TaskFieldWallFollow>(12, "follow_wall_task");
-    unknown08.createTask<TaskFieldIdleTurn>(18, "idle_turn_task");
-    unknown08.createTask<TaskFieldIdle>(19, "idle_task");
-    unknown08.endSetup();
-    unknown08.attachRoot(0);
-    unknown08.attachComposite(0, 1, 0);
-    unknown08.attachComposite(0, 2, 1);
-    unknown08.attachComposite(2, 3, 0);
-    unknown08.attachComposite(2, 4, 1);
-    unknown08.attachComposite(2, 5, 2);
-    unknown08.attachComposite(0, 6, 2);
-    unknown08.attachComposite(6, 7, 0);
-    unknown08.attachComposite(7, 8, 0);
-    unknown08.attachComposite(7, 10, 1);
-    unknown08.attachComposite(7, 9, 2);
-    unknown08.attachComposite(7, 11, 3);
-    unknown08.attachComposite(7, 12, 4);
+    m_behaviorTree.createTask<TaskFieldFollowMainPc>(17, "follow_task");
+    m_behaviorTree.createComposite<ai::SelectorNode>(7, "wall_selector", 5);
+    m_behaviorTree.createTask<TaskFieldWallFall>(8, "fall_wall_task");
+    m_behaviorTree.createTask<TaskFieldWallJumpWait>(9, "wall_jump_wait_task");
+    m_behaviorTree.createTask<TaskFieldWallPrepare>(10, "prepare_wall_task");
+    m_behaviorTree.createTask<TaskFieldWallEscape>(11, "escape_wall_task");
+    m_behaviorTree.createTask<TaskFieldWallFollow>(12, "follow_wall_task");
+    m_behaviorTree.createTask<TaskFieldIdleTurn>(18, "idle_turn_task");
+    m_behaviorTree.createTask<TaskFieldIdle>(19, "idle_task");
+    m_behaviorTree.endSetup();
+    m_behaviorTree.attachRoot(0);
+    m_behaviorTree.attachComposite(0, 1, 0);
+    m_behaviorTree.attachComposite(0, 2, 1);
+    m_behaviorTree.attachComposite(2, 3, 0);
+    m_behaviorTree.attachComposite(2, 4, 1);
+    m_behaviorTree.attachComposite(2, 5, 2);
+    m_behaviorTree.attachComposite(0, 6, 2);
+    m_behaviorTree.attachComposite(6, 7, 0);
+    m_behaviorTree.attachComposite(7, 8, 0);
+    m_behaviorTree.attachComposite(7, 10, 1);
+    m_behaviorTree.attachComposite(7, 9, 2);
+    m_behaviorTree.attachComposite(7, 11, 3);
+    m_behaviorTree.attachComposite(7, 12, 4);
   } else {
-    unknown08.createTask<TaskFieldFollowBuddyPc>(17, "follow_task");
-    unknown08.createTask<TaskFieldRetreat>(13, "retreat_task");
-    unknown08.createTask<TaskFieldIdleTurn>(18, "idle_turn_task");
-    unknown08.createTask<TaskFieldIdle>(19, "idle_task");
-    unknown08.endSetup();
-    unknown08.attachRoot(0);
-    unknown08.attachComposite(0, 1, 0);
-    unknown08.attachComposite(0, 2, 1);
-    unknown08.attachComposite(2, 3, 0);
-    unknown08.attachComposite(2, 4, 1);
-    unknown08.attachComposite(2, 5, 2);
-    unknown08.attachComposite(0, 6, 2);
-    unknown08.attachComposite(6, 13, 2);
+    m_behaviorTree.createTask<TaskFieldFollowBuddyPc>(17, "follow_task");
+    m_behaviorTree.createTask<TaskFieldRetreat>(13, "retreat_task");
+    m_behaviorTree.createTask<TaskFieldIdleTurn>(18, "idle_turn_task");
+    m_behaviorTree.createTask<TaskFieldIdle>(19, "idle_task");
+    m_behaviorTree.endSetup();
+    m_behaviorTree.attachRoot(0);
+    m_behaviorTree.attachComposite(0, 1, 0);
+    m_behaviorTree.attachComposite(0, 2, 1);
+    m_behaviorTree.attachComposite(2, 3, 0);
+    m_behaviorTree.attachComposite(2, 4, 1);
+    m_behaviorTree.attachComposite(2, 5, 2);
+    m_behaviorTree.attachComposite(0, 6, 2);
+    m_behaviorTree.attachComposite(6, 13, 2);
   }
-  unknown08.attachComposite(6, 14, 1);
-  unknown08.attachComposite(6, 15, 3);
-  unknown08.attachComposite(15, 16, 0);
-  unknown08.attachComposite(15, 17, 1);
-  unknown08.attachComposite(6, 18, 4);
-  unknown08.attachComposite(6, 19, 5);
+  m_behaviorTree.attachComposite(6, 14, 1);
+  m_behaviorTree.attachComposite(6, 15, 3);
+  m_behaviorTree.attachComposite(15, 16, 0);
+  m_behaviorTree.attachComposite(15, 17, 1);
+  m_behaviorTree.attachComposite(6, 18, 4);
+  m_behaviorTree.attachComposite(6, 19, 5);
 }
 
 void AIAgentField::cleanup(GfComPropertyPc &property) {
-  unknown08.cleanup();
+  m_behaviorTree.cleanup();
   fw::NaviManager *manager = fw::NaviManager::get();
   navi::NvmshAcObj *object = unknown00;
   if (manager != nullptr && object != nullptr) {
@@ -126,15 +126,15 @@ void AIAgentField::update(const fw::UpdateInfo &info, GfComPropertyPc &property)
   property.unknown60.unknown00 = 0.0f;
   property.unknown60.unknown04 = 0.0f;
   property.unknown60.unknown08.clear();
-  BlackBoardField *blackBoard = unknown08.unknown001<BlackBoardField>();
-  blackBoard->unknown08 = &property;
+  BlackBoardField *blackBoard = m_behaviorTree.unknown001<BlackBoardField>();
+  blackBoard->m_comPropertyPc = &property;
   blackBoard->unknown10 = unknown00;
   blackBoard->unknown18 = &info;
   GfGamePlayerFormation *formation = GfGamePlayerFormation::get();
   u32 leaderId = formation->unknown1a0[property.unknown38].unknown00;
   bool isLeaderMoving = false;
   if (leaderId != PLAYER_ID_UNKNOWN_4294967295) {
-    GfObj *obj = GfObjUtil::getObj(formation->unknown1a0[leaderId].unknown08);
+    GfObj *obj = GfObjUtil::getObj(formation->unknown1a0[leaderId].m_playerHandle);
     if (obj != nullptr) {
       GfComPropertyPc *leader = obj->getComponent<GfComPropertyPc>();
       if (leader != nullptr) {
@@ -162,15 +162,15 @@ void AIAgentField::update(const fw::UpdateInfo &info, GfComPropertyPc &property)
       blackBoard->unknown1f0 = property.unknown160.unknown00;
     }
   }
-  unknown08.execute();
+  m_behaviorTree.execute();
   blackBoard->unknown10 = nullptr;
   blackBoard->unknown18 = nullptr;
-  blackBoard->unknown08 = nullptr;
+  blackBoard->m_comPropertyPc = nullptr;
 }
 
 bool AIAgentField::recieveMessage(GfComPropertyPc &property, fw::MessageObject *sender, fw::Message &message) {
-  BlackBoardField *blackBoard = unknown08.unknown001<BlackBoardField>();
-  blackBoard->unknown08 = &property;
+  BlackBoardField *blackBoard = m_behaviorTree.unknown001<BlackBoardField>();
+  blackBoard->m_comPropertyPc = &property;
   blackBoard->unknown10 = unknown00;
   blackBoard->unknown18 = nullptr;
   bool result = false;
@@ -198,24 +198,24 @@ bool AIAgentField::recieveMessage(GfComPropertyPc &property, fw::MessageObject *
   }
   blackBoard->unknown10 = nullptr;
   blackBoard->unknown18 = nullptr;
-  blackBoard->unknown08 = nullptr;
+  blackBoard->m_comPropertyPc = nullptr;
   return result;
 }
 
 void AIAgentField::procMsgPcFieldNotifyWall(fw::MessageObject *sender, MsgPcFieldNotifyWall &message) {
-  BlackBoardField *blackBoard = unknown08.unknown001<BlackBoardField>();
+  BlackBoardField *blackBoard = m_behaviorTree.unknown001<BlackBoardField>();
   switch (message.unknown50) {
   case 0:
     blackBoard->unknown200.set(5, false);
     blackBoard->unknown200.set(4, true);
-    if (!blackBoard->unknown08->unknown310.unknown10_4) {
+    if (!blackBoard->m_comPropertyPc->m_propertyField.unknown10_4) {
       blackBoard->unknown70 = message.unknown10;
-      blackBoard->unknown60 = message.unknown30.unknown00;
+      blackBoard->unknown60 = message.m_transform.unknown00;
     }
     break;
   case 1:
     blackBoard->unknown200.set(4, false);
-    blackBoard->unknown90 = message.unknown30.unknown00;
+    blackBoard->unknown90 = message.m_transform.unknown00;
     blackBoard->unknowna0.clear();
     break;
   case 2:
@@ -227,16 +227,16 @@ void AIAgentField::procMsgPcFieldNotifyWall(fw::MessageObject *sender, MsgPcFiel
     if (blackBoard->unknowna0.full()) {
       blackBoard->unknowna0.pop_back();
     }
-    blackBoard->unknowna0.unknown001(message.unknown30);
+    blackBoard->unknowna0.unknown001(message.m_transform);
     break;
   }
 }
 
 void AIAgentField::procMsgPcFieldHighJump(fw::MessageObject *sender, MsgPcFieldNotifyHighJump &message) {
-  BlackBoardField *blackBoard = unknown08.unknown001<BlackBoardField>();
-  GfComPropertyPc *property = blackBoard->unknown08;
-  if (property->unknown310.unknown10_2) {
-    const MsgPcFieldNotifyBigJump *info = message.unknown08;
+  BlackBoardField *blackBoard = m_behaviorTree.unknown001<BlackBoardField>();
+  GfComPropertyPc *property = blackBoard->m_comPropertyPc;
+  if (property->m_propertyField.unknown10_2) {
+    const MsgPcFieldNotifyBigJump *info = message.m_msgPcFieldNotifyBigJump;
     fw::Transform transform;
     transform.unknown00 = info->unknown10;
     f32 angle = info->unknown20 * 0.5f;
@@ -245,7 +245,7 @@ void AIAgentField::procMsgPcFieldHighJump(fw::MessageObject *sender, MsgPcFieldN
     MsgPcFieldNotifyBigJump bigJump;
     bigJump = *info;
     formation->calcTargetTransform(transform, property->unknown38, &bigJump.unknown10);
-    property->unknown310.setBigJumpInfo(&bigJump);
+    property->m_propertyField.setBigJumpInfo(&bigJump);
     const fw::ParamList *paramList = unknown88.operator->();
     const ForceWarpAiParam *param = paramList->unknown0c > 6 ? static_cast<const ForceWarpAiParam *>(paramList->unknown10[6].param) : nullptr;
     blackBoard->unknown200.set(6);
@@ -254,11 +254,11 @@ void AIAgentField::procMsgPcFieldHighJump(fw::MessageObject *sender, MsgPcFieldN
 }
 
 void AIAgentField::procMsgPcFieldNotifyWaterWarp(fw::MessageObject *sender, MsgPcFieldNotifyWaterWarp &message) {
-  BlackBoardField *blackBoard = unknown08.unknown001<BlackBoardField>();
-  GfComPropertyPc *property = blackBoard->unknown08;
-  GfPropertyField &field = property->unknown310;
+  BlackBoardField *blackBoard = m_behaviorTree.unknown001<BlackBoardField>();
+  GfComPropertyPc *property = blackBoard->m_comPropertyPc;
+  GfPropertyField &field = property->m_propertyField;
   if (property->unknown110_5) {
-    const MsgPcFieldNotifyWarp *info = message.unknown08;
+    const MsgPcFieldNotifyWarp *info = message.m_msgPcFieldNotifyWarp;
     fw::Transform transform;
     transform.unknown00 = info->unknown10;
     f32 angle = info->unknown20 * 0.5f;
@@ -276,11 +276,11 @@ void AIAgentField::procMsgPcFieldNotifyWaterWarp(fw::MessageObject *sender, MsgP
 }
 
 void AIAgentField::procMsgPcFieldNotifyWaterWarpBuddy(fw::MessageObject *sender, MsgPcFieldNotifyWaterWarpBuddy &message) {
-  BlackBoardField *blackBoard = unknown08.unknown001<BlackBoardField>();
-  GfComPropertyPc *property = blackBoard->unknown08;
-  GfPropertyField &field = property->unknown310;
+  BlackBoardField *blackBoard = m_behaviorTree.unknown001<BlackBoardField>();
+  GfComPropertyPc *property = blackBoard->m_comPropertyPc;
+  GfPropertyField &field = property->m_propertyField;
   if (property->unknown110_5) {
-    const MsgPcFieldNotifyWarp *info = message.unknown08;
+    const MsgPcFieldNotifyWarp *info = message.m_msgPcFieldNotifyWarp;
     fw::Transform transform;
     transform.unknown00 = info->unknown10;
     f32 angle = info->unknown20 * 0.5f;
@@ -298,9 +298,9 @@ void AIAgentField::procMsgPcFieldNotifyWaterWarpBuddy(fw::MessageObject *sender,
 }
 
 void AIAgentField::procMsgPcFieldNotifyWallJumpStart(fw::MessageObject *sender, MsgPcFieldNotifyWallJumpStart &message) {
-  BlackBoardField *blackBoard = unknown08.unknown001<BlackBoardField>();
-  if (blackBoard->unknown08->unknown310.unknown10_4) {
-    blackBoard->unknown08->unknown310.setWallJump(message.unknown08);
+  BlackBoardField *blackBoard = m_behaviorTree.unknown001<BlackBoardField>();
+  if (blackBoard->m_comPropertyPc->m_propertyField.unknown10_4) {
+    blackBoard->m_comPropertyPc->m_propertyField.setWallJump(message.m_msgPcFieldNotifyWallJump);
     blackBoard->unknown200.set(8);
   }
 }

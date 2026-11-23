@@ -46,11 +46,11 @@ public:
     void setSpeed(f32 speed);
     void changeLayer(u32 oldLayer, u32 newLayer);
 
-    GfComModel *unknown00;              // Inferred role: model; original member name unknown.
-    anm::Control *unknown08;            // Inferred role: control; original member name unknown.
-    fw::AnimControlUpdater unknown10;   // Inferred role: updater; original member name unknown.
-    fw::AnimSinglePoseSamper unknown30; // Inferred role: pose sampler; original member name unknown.
-    f32 unknown68;                      // Inferred role: play back time; original member name unknown.
+    GfComModel *m_comModel;                          // Inferred role: model; original member name unknown.
+    anm::Control *unknown08;                         // Inferred role: control; original member name unknown.
+    fw::AnimControlUpdater m_animControlUpdater;     // Inferred role: updater; original member name unknown.
+    fw::AnimSinglePoseSamper m_animSinglePoseSamper; // Inferred role: pose sampler; original member name unknown.
+    f32 unknown68;                                   // Inferred role: play back time; original member name unknown.
   };
 
   GfComPackAnim();
@@ -65,17 +65,17 @@ public:
   void changeLayer(u32 oldLayer, u32 newLayer) override;
   const mm::mtl::RTTI *getRTTI() const override;
 
-  Mot unknown10;                                                  // Inferred role: mot; original member name unknown.
+  Mot m_mot;                                                      // Inferred role: mot; original member name unknown.
   mm::mtl::FixedVector<arc::CArcData *, ARC_UNKNOWN_8> unknown80; // Inferred role: arcs; original member name unknown.
   bool unknownc8;                                                 // Inferred role: local space; original member name unknown.
 };
 
 static_assert(offsetof(GfComPackAnim::SetupInfo, unknown48) == 0x48, "");
 static_assert(offsetof(GfComPackAnim::SetupInfo, unknown50) == 0x50, "");
-static_assert(offsetof(GfComPackAnim::Mot, unknown10) == 0x10, "");
-static_assert(offsetof(GfComPackAnim::Mot, unknown30) == 0x30, "");
+static_assert(offsetof(GfComPackAnim::Mot, m_animControlUpdater) == 0x10, "");
+static_assert(offsetof(GfComPackAnim::Mot, m_animSinglePoseSamper) == 0x30, "");
 static_assert(offsetof(GfComPackAnim::Mot, unknown68) == 0x68, "");
-static_assert(offsetof(GfComPackAnim, unknown10) == 0x10, "");
+static_assert(offsetof(GfComPackAnim, m_mot) == 0x10, "");
 static_assert(offsetof(GfComPackAnim, unknown80) == 0x80, "");
 static_assert(offsetof(GfComPackAnim, unknownc8) == 0xc8, "");
 

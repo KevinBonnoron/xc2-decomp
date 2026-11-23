@@ -156,10 +156,10 @@ void GfMenuObjMinimap2::MainListener::reciveEvent(const ui::EventData &event, u3
     unknown0c = 0;
     unknown10 = unknown004;
     GfMenuObject::disableInput(acc.unknown10);
-    GfMenuObjMinimap2::createIconTable(acc, unknown20->unknown28);
-    acc.getLayoutRect("mini_map", unknown20->unknown230);
+    GfMenuObjMinimap2::createIconTable(acc, m_menuObjMinimap2->unknown28);
+    acc.getLayoutRect("mini_map", m_menuObjMinimap2->unknown230);
     ui::UIObjectAcc dummy(acc.unknown10, "IMG_dummy");
-    dummy.getRect(unknown20->unknown238, 0);
+    dummy.getRect(m_menuObjMinimap2->unknown238, 0);
     break;
   }
   case 3:
@@ -202,7 +202,7 @@ void GfMenuObjMinimap2::MainListener::reciveEvent(const ui::EventData &event, u3
         acc.setDispChild(false, "LAY_icon_base");
         ui::UIObjectAcc center(acc.unknown10, "IMG_map_image_center");
         GfMenuObjUtil::setDockPos(center.unknown10, acc.searchChild("IMG_map_center"), 0, true);
-        acc.getLayoutRect("mini_map2", unknown20->unknown230);
+        acc.getLayoutRect("mini_map2", m_menuObjMinimap2->unknown230);
         mode = 1;
       } else if (mode == 1) {
         acc.setDispChild(true, "IMG_map_frame");
@@ -215,11 +215,11 @@ void GfMenuObjMinimap2::MainListener::reciveEvent(const ui::EventData &event, u3
         acc.setDispChild(false, "LAY_icon_base");
         ui::UIObjectAcc center(acc.unknown10, "IMG_map_image_center");
         GfMenuObjUtil::setDockPos(center.unknown10, acc.searchChild("IMG_map_frame"), 0, true);
-        acc.getLayoutRect("mini_map", unknown20->unknown230);
+        acc.getLayoutRect("mini_map", m_menuObjMinimap2->unknown230);
         mode = 0;
       }
       unknown10.unknown04 = mode;
-      unknown20->unknown240 = mode;
+      m_menuObjMinimap2->unknown240 = mode;
       ui::UIObjectAcc map(acc.unknown10, "LAY_map_image");
       if (mode == 1) {
         mm::Vec2 scale(2.0f, 2.0f);
@@ -228,7 +228,7 @@ void GfMenuObjMinimap2::MainListener::reciveEvent(const ui::EventData &event, u3
         mm::Vec2 scale(1.0f, 1.0f);
         map.setScale(scale);
       }
-      unknown20->refreshMapPosition();
+      m_menuObjMinimap2->refreshMapPosition();
     }
     break;
   default:

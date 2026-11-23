@@ -37,13 +37,13 @@ public:
 
   void copyName(const mm::mtl::FixStr<128> &name) { this->unknown30 = name; }
 
-  mtl::ALLOC_HANDLE unknown0c;    // Inferred role: handle; original member name unknown.
-  mm::mtl::IAllocator *unknown10; // Inferred role: allocator; original member name unknown.
-  u32 unknown18;                  // Inferred role: hash; original member name unknown.
-  u32 unknown1c;                  // Inferred role: size; original member name unknown.
-  void *unknown20;                // Inferred role: data; original member name unknown.
-  u64 unknown28;                  // Inferred role: time stamp; original member name unknown.
-  mm::mtl::FixStr<128> unknown30; // Inferred role: name; original member name unknown.
+  mtl::ALLOC_HANDLE m_ALLOC_HANDLE; // Inferred role: handle; original member name unknown.
+  mm::mtl::IAllocator *unknown10;   // Inferred role: allocator; original member name unknown.
+  u32 unknown18;                    // Inferred role: hash; original member name unknown.
+  u32 unknown1c;                    // Inferred role: size; original member name unknown.
+  void *unknown20;                  // Inferred role: data; original member name unknown.
+  u64 unknown28;                    // Inferred role: time stamp; original member name unknown.
+  mm::mtl::FixStr<128> unknown30;   // Inferred role: name; original member name unknown.
 };
 
 static_assert(offsetof(AssetData, unknown10) == 0x10, "");

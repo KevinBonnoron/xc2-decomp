@@ -30,7 +30,7 @@ public:
   };
 
   struct unknown002 {
-    s32 unknown00; // Inferred role: cell type (0 int, 1 float, 2 invalid, 3 string); original member name unknown.
+    s32 m_type; // Inferred role: cell type (0 int, 1 float, 2 invalid, 3 string); named after the game accessor csvb::CCsvbData::GetType.
     unknown003 unknown08;
   };
 

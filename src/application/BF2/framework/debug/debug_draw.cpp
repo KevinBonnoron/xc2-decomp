@@ -24,7 +24,7 @@ void initCommandLauncherReciever(skt::ICommandCallback *callback) {
   skt::PortRegistInfo info;
   info.unknown00 = 30000;
   info.unknown04 = CL_CONNECT_NAME;
-  info.unknownb0 = callback;
+  info.m_iCommandCallback = callback;
   info.unknownc4 = ',';
   info.unknownbc = 0;
   CommandManager::openServer(info);

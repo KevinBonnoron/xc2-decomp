@@ -38,7 +38,7 @@ struct GfSetupParam;
 class GfFieldGimmick : public mm::mtl::PtrSingleton<GfFieldGimmick>, public IGfObjListener, public IGfEvent {
 public:
   // Inferred role: state of the gimmick pop wait of event::EnvManager; original type name unknown. The GfFieldGimmick
-  // destructor clears unknown00 between the destructions of unknownf4c0 and unknownf480.
+  // destructor clears unknown00 between the destructions of m_gmkLocatorAtlas and m_gmkCtrlVolSeManager.
   struct unknown001 {
     unknown001() : unknown00(false), unknown01(false), unknown02(false), unknown04(0.0f) {}
     ~unknown001() { unknown00 = false; }
@@ -78,18 +78,18 @@ private:
   friend bool gmk::isMapJumpingWithSaveData();
 
   u8 _18[0x20 - 0x18];
-  gmk::GmkManager unknown20;                // Inferred role: gimmick manager; original member name unknown.
-  gmk::GmkAccManager unknownf3b0;           // Inferred role: acc manager; original member name unknown.
-  gmk::GmkDoorPhantomManager unknownf3e8;   // Inferred role: door phantom manager; original member name unknown.
-  gmk::GmkDmgPhantomManager unknownf418;    // Inferred role: damage phantom manager; original member name unknown.
-  gmk::GmkAntiBladeAreaManager unknownf458; // Inferred role: anti blade area manager; original member name unknown.
-  gmk::GmkCtrlVolSeManager unknownf480;     // Inferred role: ctrl vol se manager; original member name unknown.
-  bool unknownf4a8;                         // Inferred role: initialized; original member name unknown.
-  unknown001 unknownf4ac;                   // Inferred role: gimmick pop wait; original member name unknown.
-  GfGmkLocatorAtlas unknownf4c0;            // Inferred role: gimmick locator atlas; original member name unknown.
-  GfMobSlotManager unknownf910;             // Inferred role: mob slot manager; original member name unknown.
-  bool unknownfe40;                         // Inferred role: map jumping with save data; original member name unknown.
-  bool unknownfe41;                         // Inferred role: player point savable; original member name unknown.
+  gmk::GmkManager m_gmkManager;                           // Inferred role: gimmick manager; original member name unknown.
+  gmk::GmkAccManager m_gmkAccManager;                     // Inferred role: acc manager; original member name unknown.
+  gmk::GmkDoorPhantomManager m_gmkDoorPhantomManager;     // Inferred role: door phantom manager; original member name unknown.
+  gmk::GmkDmgPhantomManager m_gmkDmgPhantomManager;       // Inferred role: damage phantom manager; original member name unknown.
+  gmk::GmkAntiBladeAreaManager m_gmkAntiBladeAreaManager; // Inferred role: anti blade area manager; original member name unknown.
+  gmk::GmkCtrlVolSeManager m_gmkCtrlVolSeManager;         // Inferred role: ctrl vol se manager; original member name unknown.
+  bool unknownf4a8;                                       // Inferred role: initialized; original member name unknown.
+  unknown001 unknownf4ac;                                 // Inferred role: gimmick pop wait; original member name unknown.
+  GfGmkLocatorAtlas m_gmkLocatorAtlas;                    // Inferred role: gimmick locator atlas; original member name unknown.
+  GfMobSlotManager m_mobSlotManager;                      // Inferred role: mob slot manager; original member name unknown.
+  bool unknownfe40;                                       // Inferred role: map jumping with save data; original member name unknown.
+  bool unknownfe41;                                       // Inferred role: player point savable; original member name unknown.
 
   friend struct GfFieldGimmickLayout;
 };
@@ -97,16 +97,16 @@ private:
 struct GfFieldGimmickLayout {
   static_assert(offsetof(GfFieldGimmick::unknown001, unknown04) == 0x04, "");
   static_assert(offsetof(GfFieldGimmick, _18) == 0x18, "");
-  static_assert(offsetof(GfFieldGimmick, unknown20) == 0x20, "");
-  static_assert(offsetof(GfFieldGimmick, unknownf3b0) == 0xf3b0, "");
-  static_assert(offsetof(GfFieldGimmick, unknownf3e8) == 0xf3e8, "");
-  static_assert(offsetof(GfFieldGimmick, unknownf418) == 0xf418, "");
-  static_assert(offsetof(GfFieldGimmick, unknownf458) == 0xf458, "");
-  static_assert(offsetof(GfFieldGimmick, unknownf480) == 0xf480, "");
+  static_assert(offsetof(GfFieldGimmick, m_gmkManager) == 0x20, "");
+  static_assert(offsetof(GfFieldGimmick, m_gmkAccManager) == 0xf3b0, "");
+  static_assert(offsetof(GfFieldGimmick, m_gmkDoorPhantomManager) == 0xf3e8, "");
+  static_assert(offsetof(GfFieldGimmick, m_gmkDmgPhantomManager) == 0xf418, "");
+  static_assert(offsetof(GfFieldGimmick, m_gmkAntiBladeAreaManager) == 0xf458, "");
+  static_assert(offsetof(GfFieldGimmick, m_gmkCtrlVolSeManager) == 0xf480, "");
   static_assert(offsetof(GfFieldGimmick, unknownf4a8) == 0xf4a8, "");
   static_assert(offsetof(GfFieldGimmick, unknownf4ac) == 0xf4ac, "");
-  static_assert(offsetof(GfFieldGimmick, unknownf4c0) == 0xf4c0, "");
-  static_assert(offsetof(GfFieldGimmick, unknownf910) == 0xf910, "");
+  static_assert(offsetof(GfFieldGimmick, m_gmkLocatorAtlas) == 0xf4c0, "");
+  static_assert(offsetof(GfFieldGimmick, m_mobSlotManager) == 0xf910, "");
   static_assert(offsetof(GfFieldGimmick, unknownfe40) == 0xfe40, "");
   static_assert(offsetof(GfFieldGimmick, unknownfe41) == 0xfe41, "");
   static_assert(sizeof(GfFieldGimmick) == 0xfe50, "");

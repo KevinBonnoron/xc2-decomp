@@ -17,15 +17,15 @@ LayerObjLayout::LayerObjLayout() {
   memset(&unknown2a0, 0, sizeof(unknown2a0));
   unknown2a0.unknown10.unknown08 = 1.0f;
   unknown2a0.unknown10.unknown0c = 1.0f;
-  unknown2a0.unknown20 = 0;
+  unknown2a0.m_autoAnchorMode = 0;
   unknown3f8 = nullptr;
   unknown3f0 = nullptr;
 }
 
 void LayerObjLayout::workLayoutRelease() {
-  if (unknown2a0.unknown30 != nullptr) {
-    delete unknown2a0.unknown30;
-    unknown2a0.unknown30 = nullptr;
+  if (unknown2a0.m_layerSortMan != nullptr) {
+    delete unknown2a0.m_layerSortMan;
+    unknown2a0.m_layerSortMan = nullptr;
   }
   if (unknown2a0.unknown70[0].unknown18 != nullptr) {
     delete unknown2a0.unknown70[0].unknown18;
@@ -43,21 +43,21 @@ void LayerObjLayout::workLayoutRelease() {
     delete unknown2a0.unknown118.unknown18;
     unknown2a0.unknown118.unknown18 = nullptr;
   }
-  if (unknown2a0.unknown70[0].unknown20 != nullptr) {
-    delete unknown2a0.unknown70[0].unknown20;
-    unknown2a0.unknown70[0].unknown20 = nullptr;
+  if (unknown2a0.unknown70[0].m_layerObjTopTexObj != nullptr) {
+    delete unknown2a0.unknown70[0].m_layerObjTopTexObj;
+    unknown2a0.unknown70[0].m_layerObjTopTexObj = nullptr;
   }
-  if (unknown2a0.unknown70[1].unknown20 != nullptr) {
-    delete unknown2a0.unknown70[1].unknown20;
-    unknown2a0.unknown70[1].unknown20 = nullptr;
+  if (unknown2a0.unknown70[1].m_layerObjTopTexObj != nullptr) {
+    delete unknown2a0.unknown70[1].m_layerObjTopTexObj;
+    unknown2a0.unknown70[1].m_layerObjTopTexObj = nullptr;
   }
-  if (unknown2a0.unknowne0.unknown20 != nullptr) {
-    delete unknown2a0.unknowne0.unknown20;
-    unknown2a0.unknowne0.unknown20 = nullptr;
+  if (unknown2a0.unknowne0.m_layerObjTopTexObj != nullptr) {
+    delete unknown2a0.unknowne0.m_layerObjTopTexObj;
+    unknown2a0.unknowne0.m_layerObjTopTexObj = nullptr;
   }
-  if (unknown2a0.unknown118.unknown20 != nullptr) {
-    delete unknown2a0.unknown118.unknown20;
-    unknown2a0.unknown118.unknown20 = nullptr;
+  if (unknown2a0.unknown118.m_layerObjTopTexObj != nullptr) {
+    delete unknown2a0.unknown118.m_layerObjTopTexObj;
+    unknown2a0.unknown118.m_layerObjTopTexObj = nullptr;
   }
   if (unknown3f0 != nullptr) {
     delete unknown3f0;
@@ -72,14 +72,14 @@ void LayerObjLayout::workLayoutRelease() {
 void LayerObjLayout::updatePriTbl() {
   if (!(getStateFlags(LayerManager::s_nDebIdx) & 0x800)) {
     if (unknown2a0.unknown24[LayerManager::s_nDebIdx] != 0) {
-      if (unknown2a0.unknown30 != nullptr) {
-        delete unknown2a0.unknown30;
-        unknown2a0.unknown30 = nullptr;
+      if (unknown2a0.m_layerSortMan != nullptr) {
+        delete unknown2a0.m_layerSortMan;
+        unknown2a0.m_layerSortMan = nullptr;
       }
       u16 num = unknown2a0.unknown24[LayerManager::s_nDebIdx];
       LayerSortMan *sortMan = new (LayerManager::get()->unknown28) LayerSortMan(LayerManager::get(), num, 0);
       unknown2a0.unknown24[LayerManager::s_nDebIdx] = 0;
-      unknown2a0.unknown30 = sortMan;
+      unknown2a0.m_layerSortMan = sortMan;
       unknown2a0.unknown28 = num;
     }
 
@@ -88,9 +88,9 @@ void LayerObjLayout::updatePriTbl() {
         delete unknown2a0.unknowne0.unknown18;
         unknown2a0.unknowne0.unknown18 = nullptr;
       }
-      if (unknown2a0.unknowne0.unknown20 != nullptr) {
-        delete unknown2a0.unknowne0.unknown20;
-        unknown2a0.unknowne0.unknown20 = nullptr;
+      if (unknown2a0.unknowne0.m_layerObjTopTexObj != nullptr) {
+        delete unknown2a0.unknowne0.m_layerObjTopTexObj;
+        unknown2a0.unknowne0.m_layerObjTopTexObj = nullptr;
       }
       memset(&unknown2a0.unknowne0, 0, sizeof(unknown2a0.unknowne0));
     }
@@ -107,7 +107,7 @@ void LayerObjLayout::updatePriTbl() {
       u32 height = unknown2a0.unknown118.unknown04.unknown0c;
       unknown2a0.unknown118.unknown00 |= 0x4;
       renderTarget->setTextureInfo(width, height, GRL_SURFACE_FORMAT_RGBA16F, false, 0);
-      unknown2a0.unknown118.unknown20 = static_cast<LayerObjTopTexObj *>(LayerObjManager::createStaticTexObj(*unknown2a0.unknown118.unknown18->unknown70));
+      unknown2a0.unknown118.m_layerObjTopTexObj = static_cast<LayerObjTopTexObj *>(LayerObjManager::createStaticTexObj(*unknown2a0.unknown118.unknown18->unknown70));
       memset(&unknown2a0.unknown70[LayerManager::s_nDebIdx], 0, sizeof(unknown001));
     }
 
@@ -116,9 +116,9 @@ void LayerObjLayout::updatePriTbl() {
       memset(&unknown2a0.unknown118, 0, sizeof(unknown2a0.unknown118));
     }
   } else {
-    if (unknown2a0.unknown30 != nullptr) {
-      delete unknown2a0.unknown30;
-      unknown2a0.unknown30 = nullptr;
+    if (unknown2a0.m_layerSortMan != nullptr) {
+      delete unknown2a0.m_layerSortMan;
+      unknown2a0.m_layerSortMan = nullptr;
     }
     unknown2a0.unknown24[LayerManager::s_nDebIdx] = 0;
     unknown2a0.unknown28 = 0;

@@ -34,7 +34,7 @@ void DrResMdoSeamParmRead::setStockInstMap(int index, DrResMdoSeamWrkInst *work)
   u64 count = unknown5d2;
   if (count < 8) {
     unknown5d2 = unknown5d2 + 1;
-    unknown80[count].unknown00 = work;
+    unknown80[count].m_drResMdoSeamWrkInst = work;
     unknown80[count].unknown08 = index;
     unknown80[count].unknown0a = 2;
   }
@@ -95,7 +95,7 @@ void DrResMdoSeamParmRead::begin(wkSeamReadPacDataInf *packet) {
   unknown5f4 = 0xffff;
   unknown5f0 = 0xffff;
   unknown5ec = 0xffff;
-  unknown630 = packet;
+  m_wkSeamReadPacDataInf = packet;
   memset(packet->unknown08, 0, packet->unknown00);
   unknown40 = 0;
   unknown62c = 0;
@@ -107,7 +107,7 @@ void DrResMdoSeamParmRead::resetTexture() { unknown5e2 = 0; }
 void DrResMdoSeamParmRead::resetHeightLvTexture() { unknown5e8 = 0; }
 
 void DrResMdoSeamParmRead::setStockVertex(f32 level, int index) {
-  unknown630->unknown08[index >> 5] |= 1 << (index & 0x1f);
+  m_wkSeamReadPacDataInf->unknown08[index >> 5] |= 1 << (index & 0x1f);
   if (unknown5ea < index) {
     unknown5ea = index;
   }
@@ -117,7 +117,7 @@ void DrResMdoSeamParmRead::setStockVertex(f32 level, int index) {
 }
 
 void DrResMdoSeamParmRead::setStockTexture(f32 level, int index) {
-  unknown630->unknown10[index >> 5] |= 1 << (index & 0x1f);
+  m_wkSeamReadPacDataInf->unknown10[index >> 5] |= 1 << (index & 0x1f);
   if (unknown5ee < index) {
     unknown5ee = index;
   }
@@ -126,9 +126,38 @@ void DrResMdoSeamParmRead::setStockTexture(f32 level, int index) {
   }
 }
 
+// The game adds the entry through the old count (add x8, x0, w8, uxtw #2 at 0x7100879304, before the count store at 0x7100879308): the reference taken with the post-increment gives this;
+// the entry written before or after a separate `unknown5e2++` statement takes one more instruction (21 against 20, tried).
+void DrResMdoSeamParmRead::setStockTexList(int index) {
+  if (unknown5e2 < 8) {
+    for (s32 i = 0; i < unknown5e2; i++) {
+      if (unknown32c[i].unknown00 == index) {
+        return;
+      }
+    }
+    unknown002 &entry = unknown32c[unknown5e2++];
+    entry.unknown00 = index;
+    entry.unknown02 = 9;
+  }
+}
+
+// Same shape as setStockTexList (0x710087931c).
+void DrResMdoSeamParmRead::setStockHeightTexture(int index) {
+  if (unknown5e8 < 3) {
+    for (s32 i = 0; i < unknown5e8; i++) {
+      if (unknown320[i].unknown02 == 8 && unknown320[i].unknown00 == index) {
+        return;
+      }
+    }
+    unknown002 &entry = unknown320[unknown5e8++];
+    entry.unknown00 = index;
+    entry.unknown02 = 8;
+  }
+}
+
 bool DrResMdoSeamParmRead::isReadInfo(const _wkSeamReadWait &wait) {
   for (s32 i = 0; i < unknown618; i++) {
-    if (unknown610[i].unknown1e == wait.unknown0a && unknown610[i].unknown18 == wait.unknown08) {
+    if (m_wkSeamReadCall[i].unknown1e == wait.unknown0a && m_wkSeamReadCall[i].unknown18 == wait.unknown08) {
       return false;
     }
   }
@@ -137,12 +166,12 @@ bool DrResMdoSeamParmRead::isReadInfo(const _wkSeamReadWait &wait) {
 
 bool DrResMdoSeamParmRead::isReadAllInfo(const _wkSeamReadWait &wait) {
   for (s32 i = 0; i < unknown618; i++) {
-    if (unknown610[i].unknown1e == wait.unknown0a && unknown610[i].unknown18 == wait.unknown08) {
+    if (m_wkSeamReadCall[i].unknown1e == wait.unknown0a && m_wkSeamReadCall[i].unknown18 == wait.unknown08) {
       return false;
     }
   }
   for (s32 i = 0; i < unknown628; i++) {
-    if (unknown620[i].unknown0a == wait.unknown0a && unknown620[i].unknown08 == wait.unknown08) {
+    if (m_wkSeamReadWait[i].unknown0a == wait.unknown0a && m_wkSeamReadWait[i].unknown08 == wait.unknown08) {
       return false;
     }
   }
@@ -150,7 +179,7 @@ bool DrResMdoSeamParmRead::isReadAllInfo(const _wkSeamReadWait &wait) {
 }
 
 void DrResMdoSeamParmRead::setStockBaseVertex(int index, DrResMdoSeamWrkBase *work) {
-  unknown630->unknown18[index >> 5] |= 1 << (index & 0x1f);
+  m_wkSeamReadPacDataInf->unknown18[index >> 5] |= 1 << (index & 0x1f);
   if (unknown5f2 < index) {
     unknown5f2 = index;
   }
@@ -178,7 +207,7 @@ void DrResMdoSeamParmRead::setStockBaseVertex(int index, DrResMdoSeamWrkBase *wo
 }
 
 void DrResMdoSeamParmRead::setStockInstPos(int index, DrResMdoSeamWrkInst *work) {
-  unknown630->unknown20[index >> 5] |= 1 << (index & 0x1f);
+  m_wkSeamReadPacDataInf->unknown20[index >> 5] |= 1 << (index & 0x1f);
   if (unknown5f6 < index) {
     unknown5f6 = index;
   }
@@ -206,7 +235,7 @@ void DrResMdoSeamParmRead::setStockInstPos(int index, DrResMdoSeamWrkInst *work)
 }
 
 void DrResMdoSeamParmRead::setStockMpfPoli(int index, DrResMdoSeamWrkMpf *work) {
-  unknown630->unknown28[index >> 5] |= 1 << (index & 0x1f);
+  m_wkSeamReadPacDataInf->unknown28[index >> 5] |= 1 << (index & 0x1f);
   if (unknown5fa < index) {
     unknown5fa = index;
   }
@@ -234,7 +263,7 @@ void DrResMdoSeamParmRead::setStockMpfPoli(int index, DrResMdoSeamWrkMpf *work) 
 }
 
 void DrResMdoSeamParmRead::setStockMpfInst(int index, DrResMdoSeamWrkMpf *work) {
-  unknown630->unknown30[index >> 5] |= 1 << (index & 0x1f);
+  m_wkSeamReadPacDataInf->unknown30[index >> 5] |= 1 << (index & 0x1f);
   if (unknown5fe < index) {
     unknown5fe = index;
   }

@@ -56,14 +56,14 @@ static void unknown001(GF_OBJ_HANDLE *handle, GF_ASSET_HANDLE *asset, const GfIn
   GFOBJ_INFO *info = GfObjManager::getObjInfo(handle);
   if (info != nullptr) {
     info->unknown02 = param.unknown24;
-    info->unknown10 = asset;
+    info->m_GF_ASSET_HANDLE = asset;
     info->unknown88 = param.unknown38;
     if (GfObjManager::get() != nullptr && param.unknown38 != unknown020) {
       GfObjManager::get()->addFollowObj(handle);
     }
     AssetPackInfo *packInfo = GfAssetManager::getAssetPackInfo(asset);
     if (packInfo != nullptr) {
-      packInfo->unknown2d8 = handle;
+      packInfo->m_GF_OBJ_HANDLE = handle;
     }
   }
 }
@@ -81,8 +81,8 @@ void GfObjFactory::destroyObj(GF_OBJ_HANDLE *handle) { GfObjUtil::destroy(handle
 
 bool GfObjFactory::destroyObjHandle(GF_OBJ_HANDLE *handle) {
   GFOBJ_INFO *info = GfObjManager::getObjInfo(handle);
-  GfAssetManager::destroy(info->unknown10);
-  info->unknown10 = unknown018;
+  GfAssetManager::destroy(info->m_GF_ASSET_HANDLE);
+  info->m_GF_ASSET_HANDLE = unknown018;
   if (GfObjManager::get() != nullptr) {
     GfObjManager::get()->callGfObjListener(IGfObjListener::OBJEVT_UNKNOWN_4, handle);
   }
@@ -116,7 +116,7 @@ bool checkSoundTriggerPlayer(GfComSound *sound, const fw::ResSoundTriggerInfo &i
     GfEnvProperty *env = static_cast<GfObj *>(sound->unknown08)->getComponent<GfComProperty>()->unknown28.get();
     const GfEnvProperty::unknown002 *ground = env->unknown004(GfEnvProperty::GROUND_INDEX_UNKNOWN_0);
     if ((env->unknown2d0 & 1) && ground != nullptr) {
-      return !(ground->unknown00.y <= env->unknown280.unknown00.x);
+      return !(ground->unknown00.y <= env->unknown280.unknown00);
     }
   }
   return true;
@@ -261,7 +261,7 @@ GF_OBJ_HANDLE *GfObjFactory::createGmkMapObj(const CBdatWrapper &bdat, int id) {
   GfInitParamGimmick param;
   param.m_bladeID = resource & 0xffff;
   param.unknown48 = GIMMICK_TYPE_UNKNOWN_0;
-  param.unknown18 = &mapObjList;
+  param.m_cBdatWrapper = &mapObjList;
   param.unknown44 = bdat.getValCheck("Priority", id, gmk::BDAT_TYPE_UNKNOWN_1) & 0xff;
   param.unknown90 = reinterpret_cast<void *>(bdat.getValCheck("name", id, gmk::BDAT_TYPE_UNKNOWN_7));
   param.unknown98 = Bdat::getFlagVal(mapObjList.unknown00, "flag", resource & 0xffff, "BigObj") != 0;
@@ -282,7 +282,7 @@ GF_OBJ_HANDLE *GfObjFactory::createGmkTbox(const CBdatWrapper &bdat, int id) {
   u32 resource = bdat.getValCheck("RSC_ID", id, gmk::BDAT_TYPE_UNKNOWN_2);
   GfInitParamGimmick param;
   param.m_bladeID = resource & 0xffff;
-  param.unknown18 = &tboxList;
+  param.m_cBdatWrapper = &tboxList;
   param.unknown48 = GIMMICK_TYPE_UNKNOWN_1;
   return createMapObj(param);
 }
@@ -351,7 +351,7 @@ GF_OBJ_HANDLE *GfObjFactory::createGmkBlade(const CBdatWrapper &bdat, int id, in
   CBdatWrapper npcList(GfDataNpc::getRscBdatFp(blade));
   GfInitParamNpc param;
   param.m_bladeID = blade;
-  param.unknown18 = &npcList;
+  param.m_cBdatWrapper = &npcList;
   param.unknown90 = true;
   param.unknown98 = reinterpret_cast<const char *>(bdat.getValCheck("name", id, gmk::BDAT_TYPE_UNKNOWN_7));
   GF_OBJ_HANDLE *handle = createNpc(param);
@@ -370,7 +370,7 @@ GF_OBJ_HANDLE *GfObjFactory::createGmkMob(int id, u16 param2, u16 param3, u16 pa
   CBdatWrapper bdat(GfDataBdat::getFP(BDAT_RSC_MOB_LIST));
   GfInitParamMob param;
   param.m_bladeID = id;
-  param.unknown18 = &bdat;
+  param.m_cBdatWrapper = &bdat;
   param.unknown90 = param2;
   param.unknown92 = param3;
   param.unknown94 = param4;
@@ -406,7 +406,7 @@ GF_OBJ_HANDLE *GfObjFactory::createGmkEnemy(int id, s8 levelOffset, u16 priority
   param.GfInitParam::m_bladeID = resource & 0xffff;
   param.unknown44 = priority;
   param.unknownae = levelOffset;
-  param.unknown18 = &enemyList;
+  param.m_cBdatWrapper = &enemyList;
   param.unknown98 = paramId & 0xffff;
   param.m_enArrangeID = id;
   u16 clamped = level < 1000 ? level : 999;
@@ -465,7 +465,7 @@ GF_OBJ_HANDLE *GfObjFactory::createExtraModel(GfInitParamExtra &param) {
   if (handle != unknown020) {
     unknown001(handle, asset, param);
   }
-  u16 mountIndex = param.unknown90.getMountIndex();
+  u16 mountIndex = param.m_append.getMountIndex();
   if (handle != unknown020) {
     GFOBJ_INFO *info = GfObjManager::getObjInfo(handle);
     if (info != nullptr) {
@@ -493,7 +493,7 @@ GF_OBJ_HANDLE *GfObjFactory::createBelonging(GfInitParamBelonging &param) {
   if (handle != unknown020) {
     unknown001(handle, asset, param);
   }
-  u16 mountIndex = param.unknown90.getMountIndex();
+  u16 mountIndex = param.m_append.getMountIndex();
   if (handle != unknown020) {
     GFOBJ_INFO *info = GfObjManager::getObjInfo(handle);
     if (info != nullptr) {
@@ -505,7 +505,7 @@ GF_OBJ_HANDLE *GfObjFactory::createBelonging(GfInitParamBelonging &param) {
   if (!param.unknown120) {
     GfAppendUtil::setupBelonging(handle, param.unknown118, param.unknown11a, param.unknown11c, param.unknown11e);
   } else {
-    GfAppendUtil::setupBelongingForDriver(handle, *param.unknown128);
+    GfAppendUtil::setupBelongingForDriver(handle, *param.m_initParamDriver);
   }
   GfObjUtil::addDebugName(handle);
   manager->callGfObjListener(IGfObjListener::OBJEVT_UNKNOWN_1, handle);
@@ -525,7 +525,7 @@ GF_OBJ_HANDLE *GfObjFactory::createEnWeapon(GfInitParamEnWeapon &param) {
   if (handle != unknown020) {
     unknown001(handle, asset, param);
   }
-  u16 mountIndex = param.unknown98.getMountIndex();
+  u16 mountIndex = param.m_append.getMountIndex();
   if (handle != unknown020) {
     GFOBJ_INFO *info = GfObjManager::getObjInfo(handle);
     if (info != nullptr) {
@@ -537,7 +537,7 @@ GF_OBJ_HANDLE *GfObjFactory::createEnWeapon(GfInitParamEnWeapon &param) {
   if (param.isEvent() || (param.unknown08 >= unknown030_10 && param.unknown08 <= unknown030_13)) {
     GfAppendUtil::setupEventActEnemy(param.unknown130, handle, param.getEnArrangeID());
   } else {
-    GfAppendUtil::setupEnemy(param.unknown130, handle, param.getEnArrangeID(), param.unknown128);
+    GfAppendUtil::setupEnemy(param.unknown130, handle, param.getEnArrangeID(), param.m_GF_OBJ_HANDLE);
   }
   GfObjUtil::addDebugName(handle);
   manager->callGfObjListener(IGfObjListener::OBJEVT_UNKNOWN_1, handle);

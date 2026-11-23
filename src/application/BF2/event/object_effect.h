@@ -52,9 +52,9 @@ public:
   void setMount(IAttachActor *mount, const char *bone, const mm::Vec3 &offset, bool isRotate, ATTACH_TYPE type);
   size_t getEffCount() const;
 
-  EffectObj *getEffectObj() const { return unknown68; }
-  const PosAxis &getPosAxis() const { return unknown70; }
-  const RotAxis &getRotAxis() const { return unknown90; }
+  EffectObj *getEffectObj() const { return m_effectObj; }
+  const PosAxis &getPosAxis() const { return m_posAxis; }
+  const RotAxis &getRotAxis() const { return m_rotAxis; }
 
 private:
   void resetAttach() {
@@ -68,9 +68,9 @@ private:
     unknown150.clear();
   }
 
-  EffectObj *unknown68;    // Inferred role: effect object; original member name unknown.
-  PosAxis unknown70;       // Inferred role: pos axis; original member name unknown.
-  RotAxis unknown90;       // Inferred role: rot axis; original member name unknown.
+  EffectObj *m_effectObj;  // Inferred role: effect object; original member name unknown.
+  PosAxis m_posAxis;       // Inferred role: pos axis; original member name unknown.
+  RotAxis m_rotAxis;       // Inferred role: rot axis; original member name unknown.
   IAttachActor *unknownb0; // Inferred role: caster; original member name unknown.
   u8 _b8[0xc0 - 0xb8];
   IAttachActor *unknownc0;        // Inferred role: mount; original member name unknown.

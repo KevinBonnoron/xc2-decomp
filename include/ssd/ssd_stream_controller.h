@@ -30,9 +30,9 @@ public:
   u64 SizeToReadPosition(u64 size);
   u32 PlayTimeToPosition(f32 time);
 
-  WaveSource unknown18; // Inferred role: wave source; original member name unknown.
-  int unknowne8;        // Inferred role: stream id; original member name unknown.
-  bool unknownec;       // Inferred role: stream thread registered; original member name unknown.
+  WaveSource m_waveSource; // Inferred role: wave source; original member name unknown.
+  int unknowne8;           // Inferred role: stream id; original member name unknown.
+  bool unknownec;          // Inferred role: stream thread registered; original member name unknown.
   u8 _ed[0xee - 0xed];
   bool unknownee; // Inferred role: close request; original member name unknown.
   bool unknownef; // Inferred role: initialized; original member name unknown.
@@ -46,10 +46,10 @@ public:
   bool unknownf7; // Inferred role: set position pending; original member name unknown.
   u32 unknownf8;  // Inferred role: state; original member name unknown.
   u8 _fc[0x100 - 0xfc];
-  FileStream unknown100;                                                     // Inferred role: file stream; original member name unknown.
+  FileStream m_fileStream;                                                   // Inferred role: file stream; original member name unknown.
   Result (StreamBuffer::*unknown138)(const void *data, u64 size, bool mark); // Inferred role: pending read function; original member name unknown.
   void (StreamController::*unknown148)();                                    // Inferred role: pending callback; original member name unknown.
-  StreamBuffer unknown158;                                                   // Inferred role: stream buffer; original member name unknown.
+  StreamBuffer m_streamBuffer;                                               // Inferred role: stream buffer; original member name unknown.
   nn::codec::OpusDecoder unknown188;                                         // Inferred role: opus decoder; original member name unknown.
   void *unknown1b8;                                                          // Inferred role: allocated buffer; original member name unknown.
   u32 *unknown1c0;                                                           // Inferred role: frame position table; original member name unknown.
@@ -74,7 +74,7 @@ public:
   int unknown24c; // Inferred role: loop count; original member name unknown.
   int unknown250; // Inferred role: remain loop count; original member name unknown.
   u8 _254[0x258 - 0x254];
-  MemoryBuffer unknown258; // Inferred role: read buffer; original member name unknown.
+  MemoryBuffer m_memoryBuffer; // Inferred role: read buffer; original member name unknown.
 };
 
 static_assert(sizeof(StreamController) == 0x278, "");
@@ -94,9 +94,9 @@ static_assert(offsetof(StreamController, unknown210) == 0x210, "");
 static_assert(offsetof(StreamController, unknown228) == 0x228, "");
 static_assert(offsetof(StreamController, unknown230) == 0x230, "");
 static_assert(offsetof(StreamController, unknown24c) == 0x24c, "");
-static_assert(offsetof(StreamController, unknown100) == 0x100, "");
-static_assert(offsetof(StreamController, unknown158) == 0x158, "");
-static_assert(offsetof(StreamController, unknown258) == 0x258, "");
+static_assert(offsetof(StreamController, m_fileStream) == 0x100, "");
+static_assert(offsetof(StreamController, m_streamBuffer) == 0x158, "");
+static_assert(offsetof(StreamController, m_memoryBuffer) == 0x258, "");
 static_assert(offsetof(StreamController, unknown1e0) == 0x1e0, "");
 static_assert(offsetof(StreamController, unknown208) == 0x208, "");
 static_assert(offsetof(StreamController, unknown218) == 0x218, "");

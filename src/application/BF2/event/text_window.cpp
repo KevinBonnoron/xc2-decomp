@@ -90,7 +90,7 @@ void TextWindow::write(const char *text, const char *name, u8 *bdat, u32 textId,
     gf::GfMenuObjBalloon::OpenParam param;
     param.unknown00 = bdat;
     param.unknown08 = textId;
-    param.unknown20 = handle;
+    param.m_GF_OBJ_HANDLE = handle;
     if (handle != gf::unknown020) {
       gf::DataParamAcc paramAcc(handle);
       switch (paramAcc.getObjType()) {
@@ -109,7 +109,7 @@ void TextWindow::write(const char *text, const char *name, u8 *bdat, u32 textId,
       }
     }
     gf::DataParamAcc paramAcc(handle);
-    gf::GfMenuBdat::getMenuOffset(paramAcc.getMenuOffset(), param.unknown30);
+    gf::GfMenuBdat::getMenuOffset(paramAcc.getMenuOffset(), param.m_menuOffset);
     gf::GfMenuObjBalloon::openEvent(unknown220, param);
   } else {
     gf::GfMenuObjBalloon::NextParam param;

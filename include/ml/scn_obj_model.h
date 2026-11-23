@@ -18,7 +18,7 @@ class WinProc;
 class ScnObjModel : public ScnObj {
 public:
   struct RENDER_INFO {
-    AttrTransform unknown00; // Inferred role: transform; original member name unknown.
+    AttrTransform m_trans; // Inferred role: transform; named after the game accessor ml::ScnObjModel::getTrans.
   };
 
   struct RENDER_OFFSET_INFO {
@@ -50,29 +50,29 @@ public:
   ~ScnObjModel() override {}
   const char *getName() const override { return m_name.c_str(); }
 
-  virtual void setPos(const mm::Vec3 &position) { unknown20.m_back->unknown00.unknown00 = position; }
+  virtual void setPos(const mm::Vec3 &position) { unknown20.m_back->m_trans.unknown00 = position; }
 
   virtual void setPosWarp(const mm::Vec3 &position) {
-    unknown20.m_back->unknown00.unknown00 = position;
+    unknown20.m_back->m_trans.unknown00 = position;
     unknown34c |= FLAG_UNKNOWN_4;
   }
 
-  virtual void addPos(const mm::Vec3 &position) { unknown20.m_back->unknown00.unknown00 += position; }
-  virtual void setRot(const mm::Vec3 &rotation) { unknown20.m_back->unknown00.unknownf0 = rotation; }
-  virtual void addRot(const mm::Vec3 &rotation) { unknown20.m_back->unknown00.unknownf0 += rotation; }
+  virtual void addPos(const mm::Vec3 &position) { unknown20.m_back->m_trans.unknown00 += position; }
+  virtual void setRot(const mm::Vec3 &rotation) { unknown20.m_back->m_trans.unknownf0 = rotation; }
+  virtual void addRot(const mm::Vec3 &rotation) { unknown20.m_back->m_trans.unknownf0 += rotation; }
 
   virtual void addRot(const mm::Quat &rotation) {
-    AttrTransform &transform = unknown20.m_back->unknown00;
+    AttrTransform &transform = unknown20.m_back->m_trans;
     transform.unknown110 = rotation;
     transform.unknown130 |= AttrTransform::FLAG_UNKNOWN_1;
   }
 
-  virtual void setScl(const mm::Vec3 &scale) { unknown20.m_back->unknown00.unknown20 = scale; }
+  virtual void setScl(const mm::Vec3 &scale) { unknown20.m_back->m_trans.unknown20 = scale; }
 
   virtual void addScl(const mm::Vec3 &scale);
 
   virtual void setMat(const mm::Mat44 &matrix) {
-    AttrTransform &transform = unknown20.m_back->unknown00;
+    AttrTransform &transform = unknown20.m_back->m_trans;
     transform.unknown30 = matrix;
     transform.unknown130 |= AttrTransform::FLAG_UNKNOWN_0;
   }

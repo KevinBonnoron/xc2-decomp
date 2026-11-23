@@ -9,7 +9,7 @@
 
 namespace ml {
 
-DrIBLMan::DrIBLMan(DrMan *man, int index) : unknown00(man), unknown08(index), unknown910(nullptr) {}
+DrIBLMan::DrIBLMan(DrMan *man, int index) : m_drMan(man), unknown08(index), m_drIBLObj(nullptr) {}
 
 DrIBLMan::~DrIBLMan() {
   for (mm::mtl::FixedList<DrIBLObj *, 32>::iterator it = unknown10.begin(); it != unknown10.end(); ++it) {
@@ -38,7 +38,7 @@ void DrIBLMan::update() {
   for (mm::mtl::FixedList<DrIBLObj *, 32>::iterator it = unknown250[DrMan::s_nDblIdx].begin(); it != unknown250[DrMan::s_nDblIdx].end(); ++it) {
     DrIBLObj *obj = *it;
     if ((obj->unknown58 & 2) == 0) {
-      obj->initialize(unknown00);
+      obj->initialize(m_drMan);
     }
     unknown10.push_back(obj);
   }
@@ -52,21 +52,21 @@ void DrIBLMan::update() {
       ++it;
     }
   }
-  unknown910 = nullptr;
+  m_drIBLObj = nullptr;
   for (mm::mtl::FixedList<DrIBLObj *, 32>::iterator it = unknown10.begin(); it != unknown10.end(); ++it) {
     DrIBLObj *obj = *it;
     if ((obj->unknown58 & 1) != 0) {
       obj->update();
       if (obj->hasValidIBL() && obj->unknown5c != 0) {
-        if (unknown910 == nullptr || unknown910->getPriority() < obj->getPriority()) {
-          unknown910 = obj;
+        if (m_drIBLObj == nullptr || m_drIBLObj->getPriority() < obj->getPriority()) {
+          m_drIBLObj = obj;
         }
       }
     }
   }
 }
 
-bool DrIBLMan::isValid() const { return unknown910 != nullptr; }
+bool DrIBLMan::isValid() const { return m_drIBLObj != nullptr; }
 
 void DrIBLMan::releaseObj(DrIBLObj *obj) { obj->unknown58 |= 2; }
 
@@ -77,15 +77,15 @@ DrIBLObj *DrIBLMan::createObj(const void *data) {
 }
 
 grlib::CGLibTextureBuffer *DrIBLMan::getAlbedoTexture() const {
-  if (unknown910 != nullptr) {
-    return unknown910->getAlbedoTexture();
+  if (m_drIBLObj != nullptr) {
+    return m_drIBLObj->getAlbedoTexture();
   }
   return nullptr;
 }
 
 grlib::CGLibTextureBuffer *DrIBLMan::getNormalTexture() const {
-  if (unknown910 != nullptr) {
-    return unknown910->getNormalTexture();
+  if (m_drIBLObj != nullptr) {
+    return m_drIBLObj->getNormalTexture();
   }
   return nullptr;
 }

@@ -15,9 +15,9 @@ public:
   ~DrPixlRenderVolume();
   void setTextureInfo(f32 width, f32 height, f32 depth, GrlSurfaceFormat format, bool isResArea, u32 resArea);
 
-  DrMan *unknown90; // Inferred role: DrMan owner; original member name unknown.
+  DrMan *m_drMan; // Inferred role: DrMan owner; original member name unknown.
 };
 
-static_assert(offsetof(DrPixlRenderVolume, unknown90) == 0x90, "");
+static_assert(offsetof(DrPixlRenderVolume, m_drMan) == 0x90, "");
 
 } // namespace ml

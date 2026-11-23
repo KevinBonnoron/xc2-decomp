@@ -7,7 +7,7 @@ template bool TGmkList<GmkTargetPoint, GmkTargetPoint::BdatInfo, 1414547284u, 1u
 
 GmkType GmkTargetPoint::getGmkType() const { return GMK_TYPE; }
 
-bool GmkTargetPoint::isValid() const { return unknown08.unknown00 != nullptr && unknown20.unknown08 != nullptr; }
+bool GmkTargetPoint::isValid() const { return m_createBaseInfo.m_ownerGmkEnemyList != nullptr && m_createInfo.unknown08 != nullptr; }
 
 } // namespace gmk
 

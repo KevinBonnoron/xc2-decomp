@@ -26,20 +26,20 @@ namespace gf {
 // Inferred role: call id of the pouch layouts; original name unknown.
 constexpr u32 CALL_UNKNOWN_89 = 89;
 
-GfMenuObjPouch::GfMenuObjPouch(u32 handle) : GfMenuObject(handle), unknown28(nullptr), unknown30(nullptr), unknown38(nullptr), unknown40(nullptr), unknown48(0), unknown4c(0) {}
+GfMenuObjPouch::GfMenuObjPouch(u32 handle) : GfMenuObject(handle), m_menuItemList(nullptr), unknown30(nullptr), unknown38(nullptr), m_menuCallContext(nullptr), unknown48(0), unknown4c(0) {}
 
 GfMenuObjPouch::~GfMenuObjPouch() {
-  mm::mtl::safeRelease(unknown28);
+  mm::mtl::safeRelease(m_menuItemList);
   mm::mtl::safeRelease(unknown30);
   mm::mtl::safeRelease(unknown38);
-  mm::mtl::safeRelease(unknown40);
+  mm::mtl::safeRelease(m_menuCallContext);
   unknown50 = nullptr;
 }
 
 void GfMenuObjPouch::initialize() {
   ui::UIObjectAcc acc(unknown18);
-  unknown40 = GfMenuCallContext::create();
-  unknown28 = GfMenuItemList::create();
+  m_menuCallContext = GfMenuCallContext::create();
+  m_menuItemList = GfMenuItemList::create();
   unknown50 = GfMenuReferenceItem::unknown001();
   u32 main = acc.searchChild("LAY_main");
 // __LINE__ must be 110 as in the original file: it is the line argument of operator new.
@@ -110,7 +110,7 @@ void GfMenuObjPouch::updateItemList(GfMenuItemList *list) {
   setup.unknown28 = true;
   setup.unknown29 = true;
   setup.unknown14 = ItemType::ITEM_TYPE_UNKNOWN_10;
-  setup.unknown00.unknown08 = 10;
+  setup.m_setupParam.unknown08 = 10;
   list->setupFromBox(setup);
 }
 
@@ -165,16 +165,16 @@ void GfMenuObjPouch::MainListener::reciveEvent(const ui::EventData &event, u32 h
 
 void GfMenuObjPouch::DescriptionListener::reciveEvent(const ui::EventData &event, u32 handle) {
   ui::UIObjectAcc acc(handle);
-  ui::UIObjectAcc owner(unknown20->unknown18);
+  ui::UIObjectAcc owner(m_menuObjPouch->unknown18);
   if (event.unknown00 == 1) {
-    setupDescription(acc, unknown20->unknown50);
+    setupDescription(acc, m_menuObjPouch->unknown50);
   }
   ui::UIObjectListener::reciveEvent(event, handle);
 }
 
 void GfMenuObjPouch::PouchListener::reciveEvent(const ui::EventData &event, u32 handle) {
   ui::UIObjectAcc acc(handle);
-  ui::UIObjectAcc owner(unknown20->unknown18);
+  ui::UIObjectAcc owner(m_menuObjPouch->unknown18);
   switch (event.unknown00) {
   case 1: {
     GfMenuObjUtil::CursorParam param;
@@ -182,32 +182,32 @@ void GfMenuObjPouch::PouchListener::reciveEvent(const ui::EventData &event, u32 
     param.unknown04 = acc.searchChild("IMG_pouch_cursor");
     param.unknown1a = 1;
     param.unknown08 = "LAY_pouch_slot@%02d";
-    param.unknown20.unknown18 = 5;
-    unknown20->unknown38 = GfMenuObjUtil::createCursor(param);
+    param.m_cursorSetting.unknown18 = 5;
+    m_menuObjPouch->unknown38 = GfMenuObjUtil::createCursor(param);
     GfMenuObject::disableInput(handle);
     break;
   }
   case 6: {
     u32 index = event.unknown08;
-    if (unknown20->unknown38->inputChange(index)) {
-      unknown20->unknown48 = index;
+    if (m_menuObjPouch->unknown38->inputChange(index)) {
+      m_menuObjPouch->unknown48 = index;
       u16 item = GfPouchUtil::getPouch(0, index).unknown04;
-      MenuItemInfo &info = unknown20->unknown50.get()->unknown0c;
+      MenuItemInfo &info = m_menuObjPouch->unknown50.get()->m_menuItemInfo;
       info.unknown00 = ItemType::ITEM_TYPE_UNKNOWN_10;
       info.unknown04 = item;
       info.unknown08 = 1;
-      info.unknown0c = 0;
+      info.m_itemHandle = 0;
     }
     break;
   }
   case 8:
     switch (event.unknown0c) {
     case 1:
-      if (unknown20->unknown28->getSize() == 0) {
-        unknown20->unknown40->reset();
-        unknown20->unknown4c = 0x15;
-        GfMenuObjCommonText::open(unknown20->unknown40, unknown20->unknown4c, 0);
-        GfMenuObject::setCallContextEventHandler(unknown20->unknown40, handle);
+      if (m_menuObjPouch->m_menuItemList->getSize() == 0) {
+        m_menuObjPouch->m_menuCallContext->reset();
+        m_menuObjPouch->unknown4c = 0x15;
+        GfMenuObjCommonText::open(m_menuObjPouch->m_menuCallContext, m_menuObjPouch->unknown4c, 0);
+        GfMenuObject::setCallContextEventHandler(m_menuObjPouch->m_menuCallContext, handle);
         GfMenuObject::disableInput(handle);
       } else {
         unknown164(handle, GfMenuTypes::unknown003_34);
@@ -220,8 +220,8 @@ void GfMenuObjPouch::PouchListener::reciveEvent(const ui::EventData &event, u32 
     }
     break;
   case GfMenuTypes::unknown003_33:
-    unknown20->unknown38->open(0);
-    GfMenuObject::setupInputSelection(handle, unknown20->unknown48, 3);
+    m_menuObjPouch->unknown38->open(0);
+    GfMenuObject::setupInputSelection(handle, m_menuObjPouch->unknown48, 3);
     GfMenuObject::enableInput(handle);
     GfMenuObjOperationInfo::open(handle, 0, 0, 0);
     break;
@@ -229,7 +229,7 @@ void GfMenuObjPouch::PouchListener::reciveEvent(const ui::EventData &event, u32 
     GfMenuObject::disableInput(handle);
     break;
   case 0x41:
-    if (unknown20->unknown40 != nullptr && unknown20->unknown40->unknown0c == event.unknown08 && unknown20->unknown4c == 0x15) {
+    if (m_menuObjPouch->m_menuCallContext != nullptr && m_menuObjPouch->m_menuCallContext->unknown0c == event.unknown08 && m_menuObjPouch->unknown4c == 0x15) {
       GfMenuObject::enableInput(handle);
     }
     break;

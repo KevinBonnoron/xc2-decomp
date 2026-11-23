@@ -619,6 +619,8 @@ void efWng(const char *format, ...) {
   ParticleManager::s_pOutputWarnStringFunc(s_messageBuffer);
 }
 
+void CusAssert() { asm volatile(".inst 0xe7ffdefe"); }
+
 u32 Utility::conv_rgba(mm::Vec3 *color, f32 alpha) {
   f32 red = color->x;
   f32 green = color->y;

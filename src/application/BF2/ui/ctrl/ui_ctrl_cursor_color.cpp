@@ -11,7 +11,7 @@ UICtrlCursorColor::UICtrlCursorColor(u32 object) : UICtrlObject(object), unknown
 
 UICtrlCursorColor::~UICtrlCursorColor() { mm::mtl::safeRelease(unknown50); }
 
-UICtrlObject *UICtrlCursorColor::create(u32 object, const CursorSetting &setting, UISelectObjList *list) {
+UICtrlCursorColor *UICtrlCursorColor::create(u32 object, const CursorSetting &setting, UISelectObjList *list) {
   if (list == nullptr) {
     return nullptr;
   }
@@ -40,6 +40,8 @@ void UICtrlCursorColor::setIndex(u32 index) {
     unknown50->setIndex(index);
   }
 }
+
+void UICtrlCursorColor::setDisp(bool disp) { inputChange(disp ? unknown50->getIndex(false) : unknown50->getSize() + 1); }
 
 void UICtrlCursorColor::update(const fw::UpdateInfo &info) {
   if (unknown50 != nullptr && unknown50->getSize() != 0) {

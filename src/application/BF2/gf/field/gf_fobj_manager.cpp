@@ -21,26 +21,27 @@ constexpr int WILDCARD_FOBJ_SE_UNKNOWN_68 = 68; // Inferred role: wildcard fobj 
 constexpr int WILDCARD_FOBJ_SE_UNKNOWN_69 = 69; // Inferred role: wildcard fobj se max row; original name unknown.
 
 GfFobjManager::GfFobjManager(const GfSetupParam &param)
-    : unknown9058(false), unknown9060(nullptr), unknown9068(nullptr), unknown9070(nullptr), unknown9078(true), unknown907c(0.0f), unknown9080(false), unknown9088(nullptr), unknown90d0(nullptr) {
+    : unknown9058(false), m_dropitemParams(nullptr), unknown9068(nullptr), unknown9070(nullptr), unknown9078(true), unknown907c(0.0f), unknown9080(false), m_fobjGottenEffectManager(nullptr),
+      m_fobjSeManager(nullptr) {
   initialize(param);
   GfObjManager::addListener(this, OBJEVT_UNKNOWN_0);
 }
 
 void GfFobjManager::initialize(const GfSetupParam &) {
   GfEvent::addEventCallback(this);
-  if (unknown9060 != nullptr) {
-    delete unknown9060;
-    unknown9060 = nullptr;
+  if (m_dropitemParams != nullptr) {
+    delete m_dropitemParams;
+    m_dropitemParams = nullptr;
   }
-  unknown9060 = new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) GfDropitemParams();
+  m_dropitemParams = new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) GfDropitemParams();
   GfFobjGottenEffectManager::CreateInfo effectInfo;
   effectInfo.unknown00 = GOTTEN_EFFECT_UNKNOWN_32;
-  unknown9088.create(effectInfo);
+  m_fobjGottenEffectManager.create(effectInfo);
   u8 *bdat = GfDataBdat::getFP(BDAT_FLD_WILDCARD_DATA);
   GfFobjSeManager::CreateInfo seInfo;
   seInfo.unknown00 = Bdat::getValCheck(bdat, 0, WILDCARD_FOBJ_SE_UNKNOWN_68, gmk::BDAT_TYPE_UNKNOWN_8).valueF32;
   seInfo.unknown04 = Bdat::getValCheck(bdat, 1, WILDCARD_FOBJ_SE_UNKNOWN_69, gmk::BDAT_TYPE_UNKNOWN_2).valueU16;
-  unknown90d0.create(seInfo);
+  m_fobjSeManager.create(seInfo);
   unknown9058 = true;
 }
 
@@ -55,20 +56,20 @@ void GfFobjManager::destroy() {
 }
 
 void GfFobjManager::finalize() {
-  unknown90d0.dispose();
-  unknown9088.dispose();
+  m_fobjSeManager.dispose();
+  m_fobjGottenEffectManager.dispose();
   for (auto it = unknown18.begin(); it != unknown18.end(); ++it) {
-    GfObjUtil::destroy((*it)->unknown10);
+    GfObjUtil::destroy((*it)->m_GF_OBJ_HANDLE);
   }
   for (auto it = unknown4838.begin(); it != unknown4838.end(); ++it) {
-    GfObjUtil::destroy((*it)->unknown10);
+    GfObjUtil::destroy((*it)->m_GF_OBJ_HANDLE);
   }
   while (unknown18.size() != 0 || unknown4838.size() != 0) {
     GfSleep(1);
   }
-  if (unknown9060 != nullptr) {
-    delete unknown9060;
-    unknown9060 = nullptr;
+  if (m_dropitemParams != nullptr) {
+    delete m_dropitemParams;
+    m_dropitemParams = nullptr;
   }
   GfEvent::removeEventCallback(this);
   unknown9058 = false;
@@ -96,18 +97,18 @@ void GfFobjManager::update(const fw::UpdateInfo &info) {
         (*it)->update(info);
       }
     }
-    if (manager->unknown9060 != nullptr) {
-      manager->unknown9060->update();
+    if (manager->m_dropitemParams != nullptr) {
+      manager->m_dropitemParams->update();
     }
-    manager->unknown9088.update(info.unknown04);
-    manager->unknown90d0.update(info.unknown04);
+    manager->m_fobjGottenEffectManager.update(info.unknown04);
+    manager->m_fobjSeManager.update(info.unknown04);
   }
 }
 
 GfDropitemParams *GfFobjManager::getDropitemParams() {
   GfFobjManager *manager = get();
   if (manager != nullptr) {
-    return manager->unknown9060;
+    return manager->m_dropitemParams;
   }
   return nullptr;
 }
@@ -117,8 +118,8 @@ void GfFobjManager::debugRecreateBdat_dropitem() {
   if (manager != nullptr) {
     manager->unknown9070 = nullptr;
     manager->unknown9068 = nullptr;
-    if (manager->unknown9060 != nullptr) {
-      manager->unknown9060->dispose();
+    if (manager->m_dropitemParams != nullptr) {
+      manager->m_dropitemParams->dispose();
     }
   }
 }
@@ -128,9 +129,9 @@ void GfFobjManager::listenerGfObj(OBJEVT event, GF_OBJ_HANDLE *handle, u32 objec
     if (event == OBJEVT_UNKNOWN_2) {
       for (auto it = unknown18.begin(); it != unknown18.end(); ++it) {
         GfFobjDropitem *dropitem = *it;
-        if (dropitem->unknown10 == handle) {
+        if (dropitem->m_GF_OBJ_HANDLE == handle) {
           if (unknown4838.size() == ITEM_UNKNOWN_1024) {
-            GF_OBJ_HANDLE *oldest = unknown4838.front()->unknown10;
+            GF_OBJ_HANDLE *oldest = unknown4838.front()->m_GF_OBJ_HANDLE;
             GfObjUtil::destroy(oldest);
             leaveGameField(oldest);
           }
@@ -148,7 +149,7 @@ void GfFobjManager::listenerGfObj(OBJEVT event, GF_OBJ_HANDLE *handle, u32 objec
 
 void GfFobjManager::leaveGameField(GF_OBJ_HANDLE *handle) {
   for (auto it = unknown18.begin(); it != unknown18.end(); ++it) {
-    if ((*it)->unknown10 == handle) {
+    if ((*it)->m_GF_OBJ_HANDLE == handle) {
       (*it)->destroy();
       if (*it != nullptr) {
         delete *it;
@@ -159,7 +160,7 @@ void GfFobjManager::leaveGameField(GF_OBJ_HANDLE *handle) {
     }
   }
   for (auto it = unknown4838.begin(); it != unknown4838.end(); ++it) {
-    if ((*it)->unknown10 == handle) {
+    if ((*it)->m_GF_OBJ_HANDLE == handle) {
       (*it)->destroy();
       if (*it != nullptr) {
         delete *it;
@@ -174,7 +175,7 @@ void GfFobjManager::leaveGameField(GF_OBJ_HANDLE *handle) {
 void GfFobjManager::registFiledObj(GfFobjDropitem *dropitem) {
   GfFobjManager *manager = get();
   if (manager->unknown18.size() == ITEM_UNKNOWN_1024) {
-    GF_OBJ_HANDLE *oldest = manager->unknown18.front()->unknown10;
+    GF_OBJ_HANDLE *oldest = manager->unknown18.front()->m_GF_OBJ_HANDLE;
     GfObjUtil::destroy(oldest);
     manager->leaveGameField(oldest);
   }
@@ -193,10 +194,10 @@ bool GfFobjManager::isExistObj() {
 void GfFobjManager::destroyObj() {
   GfFobjManager *manager = get();
   for (auto it = manager->unknown18.begin(); it != manager->unknown18.end(); ++it) {
-    GfObjUtil::destroy((*it)->unknown10);
+    GfObjUtil::destroy((*it)->m_GF_OBJ_HANDLE);
   }
   for (auto it = manager->unknown4838.begin(); it != manager->unknown4838.end(); ++it) {
-    GfObjUtil::destroy((*it)->unknown10);
+    GfObjUtil::destroy((*it)->m_GF_OBJ_HANDLE);
   }
 }
 

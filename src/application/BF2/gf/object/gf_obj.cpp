@@ -94,13 +94,13 @@ void GfObjLayerSpeed::initialize() {
 void GfObjLayerSpeed::finalize() {}
 
 void GfObjLayerSpeed::reqApplyModelLayerSpeed(u32 layer, f32 speed) {
-  s_info[layer].unknown00 = true;
-  s_info[layer].unknown04 = speed;
+  s_info[layer].m_request = true;
+  s_info[layer].m_speed = speed;
 }
 
-bool GfObjLayerSpeed::isRequest(u32 layer) { return s_info[layer].unknown00; }
+bool GfObjLayerSpeed::isRequest(u32 layer) { return s_info[layer].m_request; }
 
-f32 GfObjLayerSpeed::getSpeed(u32 layer) { return s_info[layer].unknown04; }
+f32 GfObjLayerSpeed::getSpeed(u32 layer) { return s_info[layer].m_speed; }
 
 void GfObjLayerSpeed::cleanup() {
   for (u32 layer = 0; layer < fw::Framework::LAYER_UNKNOWN_32; layer++) {

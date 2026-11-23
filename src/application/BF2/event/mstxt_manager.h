@@ -29,7 +29,7 @@ public:
 
 private:
   mm::mtl::FixedVector<MstxtRes *, RES_UNKNOWN_16> unknown10; // Inferred role: res list; original member name unknown.
-  MstxtRes *unknown98;                                        // Inferred role: current res; original member name unknown.
+  MstxtRes *m_mstxtRes;                                       // Inferred role: current res; original member name unknown.
 };
 
 static_assert(sizeof(MstxtManager) == 0xa0, "");

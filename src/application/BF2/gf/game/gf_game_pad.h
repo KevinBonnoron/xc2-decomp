@@ -48,8 +48,8 @@ public:
 private:
   bool unknown10;                                        // Inferred role: initialized; original member name unknown.
   bool unknown11;                                        // Inferred role: event pause; original member name unknown.
-  fw::PadRelay unknown18;                                // Inferred role: pad relay; original member name unknown.
-  fw::PadData unknown50;                                 // Inferred role: pad data; original member name unknown.
+  fw::PadRelay m_padRelay;                               // Inferred role: pad relay; original member name unknown.
+  fw::PadData m_padData;                                 // Inferred role: pad data; original member name unknown.
   mm::mtl::FixedVector<DWPAD, PAD_UNKNOWN_64> unknown98; // Inferred role: interrupt pads; original member name unknown.
   u8 unknown1a0;                                         // Inferred role: emergency escape frame; original member name unknown.
 };

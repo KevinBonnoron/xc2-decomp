@@ -25,7 +25,7 @@ void CharaPlayHead::play(int type, f32 life, bool isBlendIn, bool isBlendOut) {
       blendIn = type2blend(type);
     }
     f32 blendOut = type2blend(type);
-    unknown18->easeIn(gf::ANIM_LAYER_UNKNOWN_2, stat, blendIn, weight, 1.0f, CV_TYPE_UNKNOWN_2, WEIGHT_LAYER_UNKNOWN_0);
+    m_charaWeightPlayer->easeIn(gf::ANIM_LAYER_UNKNOWN_2, stat, blendIn, weight, 1.0f, CV_TYPE_UNKNOWN_2, WEIGHT_LAYER_UNKNOWN_0);
     unknown20 = type;
     unknown24 = life;
     unknown28 = name;
@@ -53,7 +53,7 @@ void CharaPlayHead::idle() {
     if (!mm::mtl::Singleton<SkipManager>::getPtr()->isSkip() && blendOutFlag != 0) {
       blend = type2blend(unknown20);
     }
-    unknown18->easeOut(gf::ANIM_LAYER_UNKNOWN_2, stat, blend, CV_TYPE_UNKNOWN_2, WEIGHT_LAYER_UNKNOWN_0);
+    m_charaWeightPlayer->easeOut(gf::ANIM_LAYER_UNKNOWN_2, stat, blend, CV_TYPE_UNKNOWN_2, WEIGHT_LAYER_UNKNOWN_0);
     unknown20 = 0;
     unknown24 = -1.0f;
     unknown28 = "";

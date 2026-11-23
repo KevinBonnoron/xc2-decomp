@@ -70,7 +70,7 @@ public:
   void viewThicknessRenderFirst();
   void viewThicknessRenderSecond();
 
-  DrMan *unknown00;          // Inferred role: dr man; original member name unknown.
+  DrMan *m_drMan;            // Inferred role: dr man; original member name unknown.
   DrMdoZSortObj **unknown08; // Inferred role: first objects per chain; original member name unknown.
   DrMdoZSortObj **unknown10; // Inferred role: last objects per chain; original member name unknown.
   u32 *unknown18;            // Inferred role: used chain bits; original member name unknown.

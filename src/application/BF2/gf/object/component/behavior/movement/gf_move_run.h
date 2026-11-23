@@ -25,16 +25,16 @@ public:
   };
 
   struct Packet {
-    Packet() : unknown00(mm::Vec3::zero), unknown10(0.0f), unknown18(), unknown20(0.0f), unknown30(mm::Vec3::zero), unknown40(mm::Vec3::zero), unknown50(1.0f), unknown54(0.0f) {}
+    Packet() : unknown00(mm::Vec3::zero), unknown10(0.0f), m_paramAdapter(), unknown20(0.0f), unknown30(mm::Vec3::zero), unknown40(mm::Vec3::zero), unknown50(1.0f), unknown54(0.0f) {}
 
-    mm::Vec3 unknown00;         // Inferred role: velocity; original member name unknown.
-    f32 unknown10;              // Inferred role: angular velocity; original member name unknown.
-    fw::ParamAdapter unknown18; // Inferred role: run param; original member name unknown.
-    f32 unknown20;              // Inferred role: input power; original member name unknown.
-    mm::Vec3 unknown30;         // Inferred role: input direction; original member name unknown.
-    mm::Vec3 unknown40;         // Inferred role: current direction; original member name unknown.
-    f32 unknown50;              // Inferred role: speed ratio; original member name unknown.
-    f32 unknown54;              // Inferred role: speed offset; original member name unknown.
+    mm::Vec3 unknown00;              // Inferred role: velocity; original member name unknown.
+    f32 unknown10;                   // Inferred role: angular velocity; original member name unknown.
+    fw::ParamAdapter m_paramAdapter; // Inferred role: run param; original member name unknown.
+    f32 unknown20;                   // Inferred role: input power; original member name unknown.
+    mm::Vec3 unknown30;              // Inferred role: input direction; original member name unknown.
+    mm::Vec3 unknown40;              // Inferred role: current direction; original member name unknown.
+    f32 unknown50;                   // Inferred role: speed ratio; original member name unknown.
+    f32 unknown54;                   // Inferred role: speed offset; original member name unknown.
   };
 
   static void createReflection(fw::Reflection *reflection, const char *name, u32 index);
@@ -51,7 +51,7 @@ static_assert(offsetof(GfMoveRunControler::Param, angularVelMin) == 0x10, "");
 static_assert(offsetof(GfMoveRunControler::Param, angularVelMax) == 0x14, "");
 static_assert(sizeof(GfMoveRunControler::Param) == 0x18, "");
 static_assert(offsetof(GfMoveRunControler::Packet, unknown10) == 0x10, "");
-static_assert(offsetof(GfMoveRunControler::Packet, unknown18) == 0x18, "");
+static_assert(offsetof(GfMoveRunControler::Packet, m_paramAdapter) == 0x18, "");
 static_assert(offsetof(GfMoveRunControler::Packet, unknown20) == 0x20, "");
 static_assert(offsetof(GfMoveRunControler::Packet, unknown30) == 0x30, "");
 static_assert(offsetof(GfMoveRunControler::Packet, unknown40) == 0x40, "");

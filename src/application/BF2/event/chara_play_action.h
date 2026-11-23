@@ -82,10 +82,10 @@ public:
   f32 getLastFrame() const { return (unknown08 & FLAG_UNKNOWN_2) != 0 ? unknown34 : 9999.0f; }
 
 private:
-  u32 unknown08;                // Inferred role: flags; original member name unknown.
-  gf::GF_OBJ_HANDLE *unknown10; // Inferred role: handle; original member name unknown.
-  gf::GfEvtModel *unknown18;    // Inferred role: model; original member name unknown.
-  CharaDysUpdater *unknown20;   // Inferred role: dys; original member name unknown.
+  u32 unknown08;                      // Inferred role: flags; original member name unknown.
+  gf::GF_OBJ_HANDLE *unknown10;       // Inferred role: handle; original member name unknown.
+  gf::GfEvtModel *unknown18;          // Inferred role: model; original member name unknown.
+  CharaDysUpdater *m_charaDysUpdater; // Inferred role: dys; original member name unknown.
   u8 _28[0x30 - 0x28];
   int unknown30;         // Inferred role: type; original member name unknown.
   f32 unknown34;         // Inferred role: life; original member name unknown.

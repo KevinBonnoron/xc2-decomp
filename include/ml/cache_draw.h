@@ -625,14 +625,14 @@ public:
   bool add(const mm::Vec3 &first, const mm::Vec3 &second);
   bool add(const mm::Vec3 &position);
 
-  unknown003 unknown08[2];       // Inferred role: command buffers, indexed by frame parity; original member name unknown.
-  mtl::ALLOC_HANDLE unknown6048; // Inferred role: memory handle; original member name unknown.
+  unknown003 unknown08[2];          // Inferred role: command buffers, indexed by frame parity; original member name unknown.
+  mtl::ALLOC_HANDLE m_ALLOC_HANDLE; // Inferred role: memory handle; original member name unknown.
   int m_currentPrio;
   u32 m_cacheDrawWID;
   f32 unknown6054; // Inferred role: font scale x; original member name unknown.
   f32 unknown6058; // Inferred role: font scale y; original member name unknown.
   u8 _605c[0x6060 - 0x605c];
-  CriticalSectionNC *unknown6060; // Inferred role: recording lock; original member name unknown.
+  CriticalSectionNC *m_criticalSectionNC; // Inferred role: recording lock; original member name unknown.
   bool m_forceRenderQueue;
   int m_suspendSwap;
   bool unknown6070; // Inferred role: z write; original member name unknown.
@@ -703,8 +703,8 @@ static_assert(offsetof(CacheDraw, unknown6070) == 0x6070, "");
 static_assert(sizeof(CacheDraw::unknown002) == 0x18, "");
 static_assert(offsetof(CacheDraw::unknown003, unknown3018) == 0x3018, "");
 static_assert(sizeof(CacheDraw::unknown003) == 0x3020, "");
-static_assert(offsetof(CacheDraw, unknown6048) == 0x6048, "");
-static_assert(offsetof(CacheDraw, unknown6060) == 0x6060, "");
+static_assert(offsetof(CacheDraw, m_ALLOC_HANDLE) == 0x6048, "");
+static_assert(offsetof(CacheDraw, m_criticalSectionNC) == 0x6060, "");
 static_assert(offsetof(CacheDraw, m_forceRenderQueue) == 0x6068, "");
 static_assert(offsetof(CacheDraw, m_suspendSwap) == 0x606c, "");
 static_assert(sizeof(CacheDraw) == 0x6078, "");
@@ -894,8 +894,8 @@ public:
   s32 unknown1fc;                        // Inferred role: unknown, -1 when unused; original member name unknown.
   u32 unknown200;                        // Inferred role: unknown, cleared by the constructor; original member name unknown.
   u8 _204[0x208 - 0x204];
-  u64 unknown208;        // Inferred role: unknown, cleared by the constructor; original member name unknown.
-  CacheDraw *unknown210; // Inferred role: recorded draw commands; original member name unknown.
+  u64 unknown208;         // Inferred role: unknown, cleared by the constructor; original member name unknown.
+  CacheDraw *m_cacheDraw; // Inferred role: recorded draw commands; original member name unknown.
   bool m_forceRenderQueue;
 };
 
@@ -914,7 +914,7 @@ static_assert(offsetof(DebDraw, unknown188) == 0x188, "");
 static_assert(offsetof(DebDraw, unknown1b8) == 0x1b8, "");
 static_assert(offsetof(DebDraw, unknown1f8) == 0x1f8, "");
 static_assert(offsetof(DebDraw, unknown208) == 0x208, "");
-static_assert(offsetof(DebDraw, unknown210) == 0x210, "");
+static_assert(offsetof(DebDraw, m_cacheDraw) == 0x210, "");
 static_assert(offsetof(DebDraw, m_forceRenderQueue) == 0x218, "");
 static_assert(sizeof(DebDraw) == 0x220, "");
 static_assert(sizeof(DebDraw::PRM_DATA) == 0x10, "");

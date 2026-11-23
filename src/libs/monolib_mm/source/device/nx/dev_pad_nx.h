@@ -42,10 +42,10 @@ public:
       u8 _15[0x18 - 0x15];
       u32 unknown18; // Inferred role: pad style; original member name unknown.
       u8 _1c[0x60 - 0x1c];
-      PadVibrationInfo unknown60; // Inferred role: vibration requested by playVibration; original member name unknown.
-      f32 unknown78;              // Inferred role: vibration time; original member name unknown.
-      bool unknown7c;             // Inferred role: vibration playing; original member name unknown.
-      bool unknown7d;             // Inferred role: vibration initialized; original member name unknown.
+      PadVibrationInfo m_padVibrationInfo; // Inferred role: vibration requested by playVibration; original member name unknown.
+      f32 unknown78;                       // Inferred role: vibration time; original member name unknown.
+      bool unknown7c;                      // Inferred role: vibration playing; original member name unknown.
+      bool unknown7d;                      // Inferred role: vibration initialized; original member name unknown.
       u8 _7e[0x110 - 0x7e];
       nn::hid::VibrationNodeConnection unknown110; // Inferred role: left vibration connection; original member name unknown.
       nn::hid::VibrationNodeConnection unknown148; // Inferred role: right vibration connection; original member name unknown.
@@ -99,7 +99,7 @@ static_assert(offsetof(DevPadNx::Impl::PadData, unknown04) == 0x04, "");
 static_assert(offsetof(DevPadNx::Impl::PadData, unknown10) == 0x10, "");
 static_assert(offsetof(DevPadNx::Impl::PadData, unknown14) == 0x14, "");
 static_assert(offsetof(DevPadNx::Impl::PadData, unknown18) == 0x18, "");
-static_assert(offsetof(DevPadNx::Impl::PadData, unknown60) == 0x60, "");
+static_assert(offsetof(DevPadNx::Impl::PadData, m_padVibrationInfo) == 0x60, "");
 static_assert(offsetof(DevPadNx::Impl::PadData, unknown78) == 0x78, "");
 static_assert(offsetof(DevPadNx::Impl::PadData, unknown7c) == 0x7c, "");
 static_assert(offsetof(DevPadNx::Impl::PadData, unknown110) == 0x110, "");

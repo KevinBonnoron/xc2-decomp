@@ -42,12 +42,12 @@ struct unknown002 {
   LogTimeStamp::Type m_logTimeStampType;
   u32 m_errorLogFlag;
   u32 m_warningLogFlag;
-  u32 unknown0c;        // Inferred role: unused log flag set by Init; original member name unknown.
-  unknown001 unknown10; // Inferred role: message method; original member name unknown.
+  u32 unknown0c;              // Inferred role: unused log flag set by Init; original member name unknown.
+  unknown001 m_messageMethod; // Inferred role: message method; named after the game accessor ssd::Debug::SetMessageMethod.
 };
 
 static_assert(offsetof(unknown002, m_errorLogFlag) == 0x4, "");
-static_assert(offsetof(unknown002, unknown10) == 0x10, "");
+static_assert(offsetof(unknown002, m_messageMethod) == 0x10, "");
 
 extern unknown002 log_;
 

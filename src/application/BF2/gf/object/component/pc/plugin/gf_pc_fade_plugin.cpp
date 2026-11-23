@@ -24,7 +24,7 @@ FadePlugin::~FadePlugin() {}
 
 bool FadePlugin::setup(GfComBehaviorPc &behavior) {
   GfComPropertyPc *property = mm::mtl::dynamicCast<GfComPropertyPc>(behavior.unknown08->unknown38[GfComProperty::COMPONENT_INDEX]);
-  const fw::ParamList *paramList = property->unknown310.unknown08.operator->();
+  const fw::ParamList *paramList = property->m_propertyField.unknown08.operator->();
   unknown18 = paramList->unknown0c > PC_UNKNOWN_18 ? &paramList->unknown10[PC_UNKNOWN_18] : nullptr;
   return true;
 }

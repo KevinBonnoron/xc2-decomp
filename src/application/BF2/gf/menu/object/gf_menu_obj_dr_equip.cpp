@@ -28,10 +28,10 @@ namespace gf {
 constexpr u32 unknown001 = 0x7b;
 
 GfMenuObjDrEquip::GfMenuObjDrEquip(u32 handle)
-    : GfMenuObject(handle), unknown24(0), unknown28(nullptr), unknown30(nullptr), unknown38(nullptr), unknown40(nullptr), unknown48(nullptr), unknown50(this), unknown2e0(-1) {}
+    : GfMenuObject(handle), unknown24(0), m_menuItemList(nullptr), unknown30(nullptr), unknown38(nullptr), unknown40(nullptr), unknown48(nullptr), unknown50(this), unknown2e0(-1) {}
 
 GfMenuObjDrEquip::~GfMenuObjDrEquip() {
-  mm::mtl::safeRelease(unknown28);
+  mm::mtl::safeRelease(m_menuItemList);
   mm::mtl::safeRelease(unknown30);
   mm::mtl::safeRelease(unknown38);
   mm::mtl::safeRelease(unknown40);
@@ -83,33 +83,33 @@ void GfMenuObjDrEquip::initialize() {
     if (unknown30->getSize() != 0) {
       GfMenuItemList::ItemBoxSetup setup;
       mm::mtl::FixStr<32> name;
-      unknown28 = GfMenuItemList::create();
-      if (unknown28 != nullptr) {
+      m_menuItemList = GfMenuItemList::create();
+      if (m_menuItemList != nullptr) {
         setup.unknown14 = ItemType::ITEM_TYPE_UNKNOWN_2;
-        setup.unknown00.unknown08 = unknown30->getSize();
-        unknown28->setupFromBox(setup);
+        setup.m_setupParam.unknown08 = unknown30->getSize();
+        m_menuItemList->setupFromBox(setup);
       }
       for (u32 i = 0; i < unknown30->getSize(); i++) {
         name.format("TXT_item_name@%02d", i + 1);
-        GfMenuItemAdapter::createFromList(item.searchChild(name.c_str()), 0, unknown28, i, false);
+        GfMenuItemAdapter::createFromList(item.searchChild(name.c_str()), 0, m_menuItemList, i, false);
         name.format("LAY_item@%02d", i + 1);
-        GfMenuItemAdapter::createFromList(item.searchChild(name.c_str()), 8, unknown28, i, true);
+        GfMenuItemAdapter::createFromList(item.searchChild(name.c_str()), 8, m_menuItemList, i, true);
       }
     }
-    if (unknown28->getSize() != 0) {
+    if (m_menuItemList->getSize() != 0) {
       ui::UICtrlCursorSelect::CursorSetting setting;
       setting.unknown18 = 1;
       setting.setType(0);
       setting.unknown1a = -8;
       unknown38 = ui::UICtrlCursorSelect::create(item.searchChild("IMG_item_cursor"), setting, unknown30);
       if (unknown38 != nullptr) {
-        setupInputSelectionFromList(item.unknown10, *unknown28);
+        setupInputSelectionFromList(item.unknown10, *m_menuItemList);
       }
       unknown2e8 = GfMenuReferenceItem::unknown001();
       GfMenuItemAdapter::createFromReference(item.searchChild("TXT_item_detail_count_num"), 3, unknown2e8.get(), false);
       GfMenuItemAdapter::createFromReference(item.searchChild("TXT_item_detail_count_max"), 4, unknown2e8.get(), false);
       GfMenuItemAdapter::createFromReference(item.searchChild("IMG_item_detail_rare_icon"), 7, unknown2e8.get(), false);
-      GfMenuObjUtil::createVScrollBarPlugin(item.searchChild("IMG_item_list_scroll_bar"), unknown28, "IMG_item_list_scroll_base", true);
+      GfMenuObjUtil::createVScrollBarPlugin(item.searchChild("IMG_item_list_scroll_bar"), m_menuItemList, "IMG_item_list_scroll_base", true);
     }
   }
   {
@@ -183,44 +183,44 @@ void GfMenuObjDrEquip::MainListener::reciveEvent(const ui::EventData &event, u32
   ui::UIObjectAcc acc(handle);
   switch (event.unknown00) {
   case 1:
-    unknown20->unknown50.unknown002(&GfMenuObjDrEquip::seqStartOpen);
-    unknown20->unknown50.unknown002(&GfMenuObjDrEquip::seqAppearPhase1);
-    unknown20->unknown50.unknown002(&GfMenuObjDrEquip::seqEndOpen);
+    m_menuObjDrEquip->unknown50.unknown002(&GfMenuObjDrEquip::seqStartOpen);
+    m_menuObjDrEquip->unknown50.unknown002(&GfMenuObjDrEquip::seqAppearPhase1);
+    m_menuObjDrEquip->unknown50.unknown002(&GfMenuObjDrEquip::seqEndOpen);
     break;
   case 2:
-    unknown20->unknown50.unknown002(&GfMenuObjDrEquip::seqStartClose);
-    unknown20->unknown50.unknown002(&GfMenuObjDrEquip::seqLeavePhase1);
-    unknown20->unknown50.unknown002(&GfMenuObjDrEquip::seqEndClose);
+    m_menuObjDrEquip->unknown50.unknown002(&GfMenuObjDrEquip::seqStartClose);
+    m_menuObjDrEquip->unknown50.unknown002(&GfMenuObjDrEquip::seqLeavePhase1);
+    m_menuObjDrEquip->unknown50.unknown002(&GfMenuObjDrEquip::seqEndClose);
     break;
   case 8: {
     int result = event.unknown0c;
-    u32 driver = GfMenuReference::getReferenceDriverID(unknown20->unknown24);
+    u32 driver = GfMenuReference::getReferenceDriverID(m_menuObjDrEquip->unknown24);
     if (result == 2) {
       GfMenuObject::returnFSSubLayer(acc.unknown10, 2);
     } else if (result == 9) {
       if (GfDataDriver::getEquipAcce(driver, 0) != 0) {
-        if (unknown20->unknown48 == nullptr) {
-          unknown20->unknown48 = GfMenuCallContext::create();
+        if (m_menuObjDrEquip->unknown48 == nullptr) {
+          m_menuObjDrEquip->unknown48 = GfMenuCallContext::create();
         }
-        unknown20->unknown48->reset();
-        GfMenuObjCommonText::open(unknown20->unknown48, 0x18, 0);
-        GfMenuObject::setCallContextEventHandler(unknown20->unknown48, acc.unknown10);
-        unknown20->suspendInput();
+        m_menuObjDrEquip->unknown48->reset();
+        GfMenuObjCommonText::open(m_menuObjDrEquip->unknown48, 0x18, 0);
+        GfMenuObject::setCallContextEventHandler(m_menuObjDrEquip->unknown48, acc.unknown10);
+        m_menuObjDrEquip->suspendInput();
       }
     }
     break;
   }
   case 0x41:
-    if (unknown20->unknown48->unknown0c == event.unknown08) {
+    if (m_menuObjDrEquip->unknown48->unknown0c == event.unknown08) {
       if (event.unknown10_u16 == 0) {
-        u32 driver = GfMenuReference::getReferenceDriverID(unknown20->unknown24);
+        u32 driver = GfMenuReference::getReferenceDriverID(m_menuObjDrEquip->unknown24);
         // The game keeps the bounds asserts of this read (vector.h lines 0x152 and 0x153) but never uses the item: the accessory is unequipped with the constant 0
         // (ruling 2026-11-13 #5: statement without effect that the game holds).
-        unknown20->unknown28->getContents(unknown20->unknown28->getIndex(false));
+        m_menuObjDrEquip->m_menuItemList->getContents(m_menuObjDrEquip->m_menuItemList->getIndex(false));
         GfItemHandle item(0);
         GfEquipUtil::equipDriverAcce(driver, 0, 0, item);
       }
-      unknown20->resumeInput();
+      m_menuObjDrEquip->resumeInput();
     }
     break;
   default:

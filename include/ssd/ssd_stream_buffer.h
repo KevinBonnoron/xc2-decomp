@@ -33,8 +33,8 @@ public:
   Result InData32(const void *buffer, u64 size, bool isMark);
   Result InData64(const void *buffer, u64 size, bool isMark);
 
-  Allocator *unknown08; // Inferred role: allocator; original member name unknown.
-  u8 *unknown10;        // Inferred role: buffer; original member name unknown.
+  Allocator *m_allocator; // Inferred role: allocator; original member name unknown.
+  u8 *unknown10;          // Inferred role: buffer; original member name unknown.
   u32 m_bufferSize;
   u32 m_dataSize;
   u32 unknown20;  // Inferred role: write position; original member name unknown.
@@ -44,7 +44,7 @@ public:
   u8 _2d[0x30 - 0x2d];
 };
 
-static_assert(offsetof(StreamBuffer, unknown08) == 0x8, "");
+static_assert(offsetof(StreamBuffer, m_allocator) == 0x8, "");
 static_assert(offsetof(StreamBuffer, m_bufferSize) == 0x18, "");
 static_assert(offsetof(StreamBuffer, unknown24) == 0x24, "");
 static_assert(offsetof(StreamBuffer, unknown28) == 0x28, "");

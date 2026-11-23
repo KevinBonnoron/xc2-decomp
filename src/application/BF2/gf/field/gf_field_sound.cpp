@@ -40,7 +40,7 @@ static const fw::SoundCategory unknown002[9] = {CATEGORY_VOICE, CATEGORY_BATTLE,
 static const fw::SoundCategory unknown003[7] = {CATEGORY_FIELD, CATEGORY_GIMMICK, CATEGORY_ENV, CATEGORY_CH_SE, CATEGORY_CH_SE_NS, CATEGORY_ENE_VO, CATEGORY_NAREVO};
 
 GfFieldSound::GfFieldSound(const GfSetupParam &param)
-    : unknown08(false), unknown10(nullptr), unknown18(nullptr), unknown20(nullptr), m_commonPack(nullptr), unknown30(nullptr), m_mapPack(nullptr), unknown108(unknown019), unknown110(unknown019),
+    : unknown08(false), m_fieldBgm(nullptr), m_fieldMapSe(nullptr), unknown20(nullptr), m_commonPack(nullptr), unknown30(nullptr), m_mapPack(nullptr), unknown108(unknown019), unknown110(unknown019),
       unknown118(unknown019) {
   initialize(param);
 }
@@ -60,9 +60,9 @@ void GfFieldSound::initialize(const GfSetupParam &) {
   }
 // __LINE__ of the first operator new call is 0x92 in the game.
 #line 146
-  unknown10 = new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) GfFieldBgm();
+  m_fieldBgm = new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) GfFieldBgm();
 #line 149
-  unknown18 = new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) GfFieldMapSe();
+  m_fieldMapSe = new (getAllocator(ALLOCATOR_UNKNOWN_1), __FILE__, __LINE__, 8) GfFieldMapSe();
   createCommonSound();
   unknown08 = true;
 }
@@ -76,13 +76,13 @@ void GfFieldSound::destroy() {
 }
 
 void GfFieldSound::finalize() {
-  if (unknown18 != nullptr) {
-    delete unknown18;
-    unknown18 = nullptr;
+  if (m_fieldMapSe != nullptr) {
+    delete m_fieldMapSe;
+    m_fieldMapSe = nullptr;
   }
-  if (unknown10 != nullptr) {
-    delete unknown10;
-    unknown10 = nullptr;
+  if (m_fieldBgm != nullptr) {
+    delete m_fieldBgm;
+    m_fieldBgm = nullptr;
   }
   m_commonPack = nullptr;
   m_mapPack = nullptr;
@@ -133,44 +133,44 @@ void GfFieldSound::getMapSeFile(mm::mtl::FixStr<128> &path, const char *name) {
 }
 
 void GfFieldSound::update(const fw::UpdateInfo &info) {
-  if (unknown10 != nullptr) {
-    unknown10->update(info);
+  if (m_fieldBgm != nullptr) {
+    m_fieldBgm->update(info);
   }
-  if (unknown18 != nullptr) {
-    unknown18->update(info);
+  if (m_fieldMapSe != nullptr) {
+    m_fieldMapSe->update(info);
   }
 }
 
 void GfFieldSound::postUpdate(const fw::UpdateInfo &info) {
-  if (unknown18 != nullptr) {
-    unknown18->postUpdate(info);
+  if (m_fieldMapSe != nullptr) {
+    m_fieldMapSe->postUpdate(info);
   }
 }
 
 void GfFieldSound::clear() {
-  if (unknown10 != nullptr) {
-    unknown10->destroy();
+  if (m_fieldBgm != nullptr) {
+    m_fieldBgm->destroy();
   }
-  if (unknown18 != nullptr) {
-    unknown18->destroy();
+  if (m_fieldMapSe != nullptr) {
+    m_fieldMapSe->destroy();
   }
 }
 
 void GfFieldSound::gevGameMapModel(GF_OBJ_HANDLE *handle, bool isEnter) {
-  if (unknown18 != nullptr) {
-    unknown18->gevGameMapModel(handle, isEnter);
+  if (m_fieldMapSe != nullptr) {
+    m_fieldMapSe->gevGameMapModel(handle, isEnter);
   }
 }
 
 void GfFieldSound::gevPlayEvent(GEV event, u32 value) {
-  if (unknown10 != nullptr) {
-    unknown10->gevPlayEvent(event, value);
+  if (m_fieldBgm != nullptr) {
+    m_fieldBgm->gevPlayEvent(event, value);
   }
 }
 
 void GfFieldSound::gevBattleEnd() {
-  if (unknown10 != nullptr) {
-    unknown10->gevBattleEnd();
+  if (m_fieldBgm != nullptr) {
+    m_fieldBgm->gevBattleEnd();
   }
 }
 
@@ -181,11 +181,11 @@ void GfFieldSound::gevMapjump(GEV event, const MapjumpCallbackInfo &info) {
 }
 
 void GfFieldSound::gevPause(u32 resumeBits, u32 pauseBits) {
-  if (unknown10 != nullptr) {
-    unknown10->gevPause(resumeBits, pauseBits);
+  if (m_fieldBgm != nullptr) {
+    m_fieldBgm->gevPause(resumeBits, pauseBits);
   }
-  if (unknown18 != nullptr) {
-    unknown18->gevPause(resumeBits, pauseBits);
+  if (m_fieldMapSe != nullptr) {
+    m_fieldMapSe->gevPause(resumeBits, pauseBits);
   }
 }
 

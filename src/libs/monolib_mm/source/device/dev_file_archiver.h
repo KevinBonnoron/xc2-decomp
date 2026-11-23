@@ -65,9 +65,9 @@ public:
   bool getFileInfo(MEDIA media, const char *path, FileInfoResult &result) const;
 
   u8 _08[0x0c - 0x08];
-  mtl::ALLOC_HANDLE unknown0c;    // Inferred role: memory of the archives; original member name unknown.
-  unknown003 unknown10[8];        // Inferred role: archives per media; original member name unknown.
-  DevFileDicAllocator unknown490; // Inferred role: allocator of the dictionaries; original member name unknown.
+  mtl::ALLOC_HANDLE m_ALLOC_HANDLE;          // Inferred role: memory of the archives; original member name unknown.
+  unknown003 unknown10[8];                   // Inferred role: archives per media; original member name unknown.
+  DevFileDicAllocator m_devFileDicAllocator; // Inferred role: allocator of the dictionaries; original member name unknown.
 };
 
 static_assert(offsetof(DevFileArchiver::unknown001, unknown08) == 0x08, "");
@@ -85,9 +85,9 @@ static_assert(sizeof(DevFileArchiver::unknown003) == 0x90, "");
 static_assert(offsetof(DevFileArchiver::FileInfoResult, unknown04) == 0x04, "");
 static_assert(offsetof(DevFileArchiver::FileInfoResult, unknown88) == 0x88, "");
 static_assert(sizeof(DevFileArchiver::FileInfoResult) == 0xa0, "");
-static_assert(offsetof(DevFileArchiver, unknown0c) == 0x0c, "");
+static_assert(offsetof(DevFileArchiver, m_ALLOC_HANDLE) == 0x0c, "");
 static_assert(offsetof(DevFileArchiver, unknown10) == 0x10, "");
-static_assert(offsetof(DevFileArchiver, unknown490) == 0x490, "");
+static_assert(offsetof(DevFileArchiver, m_devFileDicAllocator) == 0x490, "");
 static_assert(sizeof(DevFileArchiver) == 0x498, "");
 
 } // namespace ml

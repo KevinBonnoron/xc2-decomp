@@ -19,50 +19,50 @@
 
 namespace ml {
 
-DrShdLgtMan::DrShdLgtMan(DrMan *drMan) : unknown00(drMan), unknown08(nullptr), m_hybridLight(nullptr), unknown60(nullptr) {
-  unknown10 = new (unknown00->unknown0c) grlib::CGLibShdListBase<DrShdLgtObj>();
-  unknown30.setLgtVertexParam();
+DrShdLgtMan::DrShdLgtMan(DrMan *drMan) : m_drMan(drMan), m_fileResTh(nullptr), m_hybridLight(nullptr), m_drShdLgtClustered(nullptr) {
+  unknown10 = new (m_drMan->unknown0c) grlib::CGLibShdListBase<DrShdLgtObj>();
+  m_drResFetch.setLgtVertexParam();
   releaseLightShader();
   reloadShader(0);
   m_hybridLight = new (drMan->unknown0c) DrShdLgtHybrid(drMan);
-  unknown58 = new (drMan->unknown0c) DrShdLgtGlobalIBL(drMan);
-  unknown60 = new (drMan->unknown0c) DrShdLgtClustered(drMan, true);
+  m_drShdLgtGlobalIBL = new (drMan->unknown0c) DrShdLgtGlobalIBL(drMan);
+  m_drShdLgtClustered = new (drMan->unknown0c) DrShdLgtClustered(drMan, true);
 }
 
 void DrShdLgtMan::releaseLightShader() {
   unknown10->release();
-  if (unknown08 != nullptr) {
-    unknown08->Release();
-    unknown08 = nullptr;
+  if (m_fileResTh != nullptr) {
+    m_fileResTh->Release();
+    m_fileResTh = nullptr;
   }
 }
 
 void DrShdLgtMan::reloadShader(int) {
   Scn *scn = Scn::get();
   if (scn != nullptr) {
-    unknown08 = scn->allocEntryRes("/monolib/shader/shd_lgt.wishp");
+    m_fileResTh = scn->allocEntryRes("/monolib/shader/shd_lgt.wishp");
   }
-  if (unknown08 == nullptr) {
-    unknown08 = new (WorkUtil::getWorkMem()) FileResTh();
-    unknown08->loadBlock(unknown00->unknown1c, "/monolib/shader/shd_lgt.wishp", 0x1000, 0);
+  if (m_fileResTh == nullptr) {
+    m_fileResTh = new (WorkUtil::getWorkMem()) FileResTh();
+    m_fileResTh->loadBlock(m_drMan->unknown1c, "/monolib/shader/shd_lgt.wishp", 0x1000, 0);
   }
   createLightShader();
 }
 
 DrShdLgtMan::~DrShdLgtMan() {
   releaseLightShader();
-  unknown30.clearWork();
+  m_drResFetch.clearWork();
   if (m_hybridLight != nullptr) {
     delete m_hybridLight;
     m_hybridLight = nullptr;
   }
-  if (unknown58 != nullptr) {
-    delete unknown58;
-    unknown58 = nullptr;
+  if (m_drShdLgtGlobalIBL != nullptr) {
+    delete m_drShdLgtGlobalIBL;
+    m_drShdLgtGlobalIBL = nullptr;
   }
-  if (unknown60 != nullptr) {
-    delete unknown60;
-    unknown60 = nullptr;
+  if (m_drShdLgtClustered != nullptr) {
+    delete m_drShdLgtClustered;
+    m_drShdLgtClustered = nullptr;
   }
   if (unknown10 != nullptr) {
     delete unknown10;
@@ -81,18 +81,18 @@ void DrShdLgtMan::renderBegin() {
   unknown40 = 1;
 }
 
-void DrShdLgtMan::beforeUpdateCate(int viewNum) { unknown58->update(viewNum); }
+void DrShdLgtMan::beforeUpdateCate(int viewNum) { m_drShdLgtGlobalIBL->update(viewNum); }
 
 void DrShdLgtMan::resetColorBuff(int index) {
-  DrShdLgtGlobalIBL *globalIBL = unknown58;
+  DrShdLgtGlobalIBL *globalIBL = m_drShdLgtGlobalIBL;
   if (globalIBL != nullptr) {
     globalIBL->resetColorBuff(index);
   }
 }
 
-void DrShdLgtMan::setupLocalIBLShader(DrShdLgtObj *obj) { grlib::CGLibCtlShader::setShader(*obj, unknown30); }
+void DrShdLgtMan::setupLocalIBLShader(DrShdLgtObj *obj) { grlib::CGLibCtlShader::setShader(*obj, m_drResFetch); }
 
-void DrShdLgtMan::setupGlobalIBLShader(DrShdLgtObj *obj) { grlib::CGLibCtlShader::setShader(*obj, unknown30); }
+void DrShdLgtMan::setupGlobalIBLShader(DrShdLgtObj *obj) { grlib::CGLibCtlShader::setShader(*obj, m_drResFetch); }
 
 DrShdLgtObj *DrShdLgtMan::getGlobalIBLShader(GIBL_SHADER_TYPE type) { return &unknown18[1][type]; }
 
@@ -100,37 +100,37 @@ DrShdLgtObj *DrShdLgtMan::getComputeShader(COMP_SHADER_TYPE type) { return &unkn
 
 void DrShdLgtMan::stockBegin() {
   m_hybridLight->stockBegin();
-  unknown60->stockBegin();
+  m_drShdLgtClustered->stockBegin();
 }
 
 void DrShdLgtMan::stockEnd() {
   m_hybridLight->stockEnd();
-  unknown60->stockEnd();
+  m_drShdLgtClustered->stockEnd();
 }
 
 void DrShdLgtMan::updateCate(int cate) {
   m_hybridLight->update();
-  unknown60->update();
+  m_drShdLgtClustered->update();
 }
 
 void DrShdLgtMan::setupCate(int cate) {
   m_hybridLight->setupCate(cate);
-  unknown60->setupCate(cate);
+  m_drShdLgtClustered->setupCate(cate);
 }
 
 void DrShdLgtMan::addViewInfo(int cate) {
   m_hybridLight->addViewInfo(cate);
-  unknown60->addViewInfo(cate);
+  m_drShdLgtClustered->addViewInfo(cate);
 }
 
 void DrShdLgtMan::delViewInfo(int cate) {
   m_hybridLight->delViewInfo(cate);
-  unknown60->delViewInfo(cate);
-  unknown58->delViewInfo(cate);
+  m_drShdLgtClustered->delViewInfo(cate);
+  m_drShdLgtGlobalIBL->delViewInfo(cate);
 }
 
 bool DrShdLgtMan::createLightShader() {
-  if (unknown10->createPacShader(unknown08->unknownc8, 0x3f3, true)) {
+  if (unknown10->createPacShader(m_fileResTh->m_glassBreakage, 0x3f3, true)) {
     for (s32 i = 0; i < unknown10->unknown54; i++) {
       unknown18[i] = unknown10->unknown004(i);
     }
@@ -144,7 +144,7 @@ void DrShdLgtMan::setupLgtBuff() {
     unknown48 = 0;
     DrAPGxType::setupCullingOff();
     DrAPGxType::setupBlend(7);
-    unknown00->unknown78->selectLightRenderTarget();
+    m_drMan->m_drPixlMan->selectLightRenderTarget();
   }
 }
 

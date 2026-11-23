@@ -1,8 +1,10 @@
 #include "gmk/gmk_map_gimmick.h"
 
 #include "bdat.h"
+#include "framework/effect/effect_manager.h"
 #include "gf/data/gf_bdat_wrapper.h"
 #include "gf/data/gf_game_flag.h"
+#include "gf/field/gf_field_lod.h"
 #include "gf/game/gf_game_cond.h"
 #include "gf/game/sequential_play/gf_play_factory.h"
 #include "gf/object/gf_obj_factory.h"
@@ -12,7 +14,9 @@
 #include "gf/object/gf_obj_util.h"
 #include "gmk/gmk_bdat.h"
 #include "gmk/gmk_list_impl.h" // IWYU pragma: keep
+#include "gmk/gmk_set.h"
 #include "mm_mtl/vector.h"
+#include "scn/scn_obj_acc.h"
 
 namespace gmk {
 
@@ -20,9 +24,9 @@ template bool TGmkList<GmkMapGimmick, GmkMapGimmick::BdatInfo, 1196441933u, 2u, 
 
 void GmkMapGimmick::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &gmk) {
   u16 popTime = bdat.getValCheck("popTime", id, BDAT_TYPE_UNKNOWN_3);
-  unknown08.unknown08 = popTime;
-  unknown18.unknown08 = bdat.getValCheck("popWeather", id, BDAT_TYPE_UNKNOWN_1);
-  unknown28 = BootedGmkCond(bdat, id, nullptr);
+  m_timeCond.unknown08 = popTime;
+  m_weatherCond.unknown08 = bdat.getValCheck("popWeather", id, BDAT_TYPE_UNKNOWN_1);
+  m_bootedGmkCond = BootedGmkCond(bdat, id, nullptr);
   unknown00 = bdat.getValCheck("Condition", id, BDAT_TYPE_UNKNOWN_2);
   unknown02 = bdat.getValCheck("nameRadius", id, BDAT_TYPE_UNKNOWN_2);
   unknown04 = bdat.getValCheck("mapobjID", id, BDAT_TYPE_UNKNOWN_2);
@@ -30,13 +34,13 @@ void GmkMapGimmick::BdatInfo::create(CBdatWrapper bdat, int id, const AGmkBase &
 }
 
 bool GmkMapGimmick::BdatInfo::isPopCondMatched() const {
-  if (unknown08.isEnable() && !unknown08.isMatch()) {
+  if (m_timeCond.isEnable() && !m_timeCond.isMatch()) {
     return false;
   }
-  if (unknown18.isEnable() && !unknown18.isMatch()) {
+  if (m_weatherCond.isEnable() && !m_weatherCond.isMatch()) {
     return false;
   }
-  if (unknown28.isEnable() && !unknown28.isMatch()) {
+  if (m_bootedGmkCond.isEnable() && !m_bootedGmkCond.isMatch()) {
     return false;
   }
   if (unknown00 != 0 && !gf::GfGameCond::isGameCond(unknown00)) {
@@ -72,9 +76,9 @@ void GmkMapGimmick::createGobInst() {
   }
   disposeGobInst();
   CBdatWrapper bdat = {getBindedBdatFp()};
-  unknown60 = gf::GfObjFactory::createGmkMapGimmick(bdat, unknown20.unknown18);
+  unknown60 = gf::GfObjFactory::createGmkMapGimmick(bdat, m_createInfo.unknown18);
   gf::GfObjSetupGimmick *setup = gf::GfObjUtil::getObjSetup<gf::GfObjSetupGimmick>(unknown60);
-  unknown003(setup, unknown08.unknown08);
+  unknown003(setup, m_createBaseInfo.m_xform);
   unknown002(unknown60, !unknowna8);
   if (getBdatInfo()->unknown06) {
     setup->unknown6c |= 8;
@@ -92,6 +96,42 @@ void GmkMapGimmick::disposeGobInst() {
     unknown60 = gf::unknown020;
   }
 }
+
+bool GmkMapGimmick::validateEffectWithoutLodControl(int lodId, bool isDisp) const {
+  const GmkSet *set = m_createBaseInfo.m_ownerGmkEnemyList->getCreateInfo().m_gmkSet;
+  if (set != nullptr && set->m_createInfo.unknown24) {
+    return false;
+  }
+  m_fieldLodEffect.createAsset(lodId);
+  if (!m_fieldLodEffect.unknown2a) {
+    return false;
+  }
+  if (m_fieldLodEffect.getAsset(gf::FIELD_LOD_STATE_UNKNOWN_0) == nullptr) {
+    return false;
+  }
+  if (isDisp) {
+    // Ruling 1 (2026-11-13): the local places the second getAsset call (0x710060eb18) before the manager is fetched (0x710060eb1c);
+    // the nested form isLoop(getAsset(...)) compiles to 88 instructions against the game's 87.
+    void *asset = m_fieldLodEffect.getAsset(gf::FIELD_LOD_STATE_UNKNOWN_0);
+    if (!fw::EffectManager::get()->isLoop(asset)) {
+      return false;
+    }
+  }
+  gf::GfFieldLod *lod = gf::GfFieldLod::get();
+  if (lod->m_fieldLodColiAnim.m_createInfo.unknown00 != nullptr && lod->m_fieldLodColiAnim.m_createInfo.m_fieldLod != nullptr) {
+    u16 partsId = lod->unknown08[lodId - lod->unknown808];
+    ml::ScnObjAccSeamPos seamPos(lod->m_fieldLodColiAnim.m_createInfo.unknown00);
+    int max = seamPos.getMax();
+    for (int i = 0; i < max; i++) {
+      ml::ScnObjAccPartsPos partsPos = seamPos.getObj(i);
+      if (partsId == partsPos.getID() && m_fieldLodEffect.unknown2c == 0) {
+        m_fieldLodEffect.createInst(gf::FIELD_LOD_STATE_UNKNOWN_0, partsPos, false);
+      }
+    }
+  }
+  return true;
+}
+
 void GmkMapGimmick::onGobEvent(gf::IGfObjListener::OBJEVT event, gf::GF_OBJ_HANDLE *handle) {
   AGmkBase::onGobEvent(event, handle);
   if (event == gf::IGfObjListener::OBJEVT_UNKNOWN_3) {
@@ -107,7 +147,7 @@ void GmkMapGimmick::debugDraw() const {
   cond.isMatch(0);
 }
 
-int GmkMapGimmick::getGameFlagId() const { return unknown20.unknown18 + 0xab66; }
+int GmkMapGimmick::getGameFlagId() const { return m_createInfo.unknown18 + 0xab66; }
 bool GmkMapGimmick::isNotSolved() const {
   GameFlagCond cond(1, getGameFlagId());
   return cond.isMatch(0);
@@ -138,7 +178,7 @@ bool GmkMapGimmick::canPopGobInst() const {
     return false;
   }
   if (unknown48 > 0.0f) {
-    if (!DistCond::isMatch(unknown48, unknown08.unknown08->unknown00)) {
+    if (!DistCond::isMatch(unknown48, m_createBaseInfo.m_xform->unknown00)) {
       return false;
     }
   }
@@ -155,7 +195,7 @@ bool GmkMapGimmick::canDepopGobInst() const {
   if (!getBdatInfo()->isPopCondMatched()) {
     return true;
   }
-  if (unknown48 > 0.0f && !DistCond::isMatch(unknown48, unknown08.unknown08->unknown00)) {
+  if (unknown48 > 0.0f && !DistCond::isMatch(unknown48, m_createBaseInfo.m_xform->unknown00)) {
     return true;
   }
   return false;

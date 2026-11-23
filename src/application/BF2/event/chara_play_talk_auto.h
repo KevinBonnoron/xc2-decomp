@@ -32,7 +32,7 @@ public:
 private:
   mm::mtl::unknown027<FLAG_UNKNOWN_32> unknown08; // Inferred role: flags; original member name unknown.
   gf::GF_OBJ_HANDLE *unknown10;                   // Inferred role: handle; original member name unknown.
-  CharaPlayAction *unknown18;                     // Inferred role: action; original member name unknown.
+  CharaPlayAction *m_charaPlayAction;             // Inferred role: action; original member name unknown.
   f32 unknown20;                                  // Inferred role: life; original member name unknown.
 };
 

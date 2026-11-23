@@ -38,7 +38,7 @@ public:
   bool unknown72;                                  // Inferred role: reset requested; original member name unknown.
   mm::mtl::Delegate<void()> unknown78;             // Inferred role: pre update callback; original member name unknown.
   f32 unknown98;                                   // Inferred role: speed; original member name unknown.
-  DynamicsDrawer *unknowna0;                       // Inferred role: drawer; original member name unknown.
+  DynamicsDrawer *m_dynamicsDrawer;                // Inferred role: drawer; original member name unknown.
 };
 
 static_assert(offsetof(DynamicsUpdater, unknown18) == 0x18, "");
@@ -46,7 +46,7 @@ static_assert(offsetof(DynamicsUpdater, unknown30) == 0x30, "");
 static_assert(offsetof(DynamicsUpdater, unknown70) == 0x70, "");
 static_assert(offsetof(DynamicsUpdater, unknown78) == 0x78, "");
 static_assert(offsetof(DynamicsUpdater, unknown98) == 0x98, "");
-static_assert(offsetof(DynamicsUpdater, unknowna0) == 0xa0, "");
+static_assert(offsetof(DynamicsUpdater, m_dynamicsDrawer) == 0xa0, "");
 
 class DynamicsColObjUpdater : public DynamicsColObjUpdaterInterface {
 public:

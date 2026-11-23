@@ -69,9 +69,9 @@ class GfSelectBlade {
 public:
   // Inferred role: member; original type name unknown.
   struct unknown005 {
-    u8 unknown00;    // Inferred role: current index; original member name unknown.
-    u8 unknown01[2]; // Inferred role: change indices; original member name unknown.
-    u8 unknown03[3]; // Inferred role: default indices; original member name unknown.
+    u8 unknown00;                     // Inferred role: current index; original member name unknown.
+    u8 m_changeBladeIndexForDebug[2]; // Inferred role: change indices; named after the game accessor gf::GfSelectBlade::getChangeBladeIndexForDebug.
+    u8 m_defBladeIndexForDebug[3];    // Inferred role: default indices; named after the game accessor gf::GfSelectBlade::getDefBladeIndexForDebug.
   };
 
   static void setupBattleStart(u32 partyId);
@@ -201,10 +201,10 @@ public:
 private:
   mm::mtl::FixedArray<GfMemberInfo, 3> unknown10; // Inferred role: members; original member name unknown.
   bool unknownd0;                                 // Inferred role: initialized; original member name unknown.
-  GfSelectBlade unknownd4;                        // Inferred role: select blade; original member name unknown.
+  GfSelectBlade m_selectBlade;                    // Inferred role: select blade; original member name unknown.
   u32 unknownf4;                                  // Inferred role: ready frame; original member name unknown.
   bool unknownf8;                                 // Inferred role: ready lost; original member name unknown.
-  GF_OBJ_HANDLE *unknown100;                      // Inferred role: leader; original member name unknown.
+  GF_OBJ_HANDLE *m_GF_OBJ_HANDLE;                 // Inferred role: leader; original member name unknown.
   PARTYOBJ_STATE unknown108[3];                   // Inferred role: party object states; original member name unknown.
 };
 

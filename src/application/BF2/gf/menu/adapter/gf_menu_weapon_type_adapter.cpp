@@ -43,12 +43,12 @@ static GfMenuWeaponTypeAdapter::TypeInfo TYPE_INFOS[] = {
 };
 
 GfMenuWeaponTypeAdapter::GfMenuWeaponTypeAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways)
-    : GfMenuAdapter(plugin, false, isUpdateAlways), unknown50(nullptr), unknown58(0), unknown5c(0), unknown60(0), unknown64(0) {}
+    : GfMenuAdapter(plugin, false, isUpdateAlways), m_iConverter(nullptr), unknown58(0), unknown5c(0), unknown60(0), unknown64(0) {}
 
 GfMenuWeaponTypeAdapter::~GfMenuWeaponTypeAdapter() {
-  if (unknown50 != nullptr) {
-    delete unknown50;
-    unknown50 = nullptr;
+  if (m_iConverter != nullptr) {
+    delete m_iConverter;
+    m_iConverter = nullptr;
   }
 }
 
@@ -348,24 +348,24 @@ bool GfMenuWeaponTypeAdapter::update_ArtsReleseLv() {
 GfMenuWeaponTypeAdapter *GfMenuWeaponTypeAdapter::createFromCoverter(u32 handle, u32 type, IConverter *converter, bool isUpdateAlways) {
   GfMenuWeaponTypeAdapter *adapter = create(handle, type, converter->getDriverId(), converter->getWpnType(), converter->getArtsIndex(), isUpdateAlways);
   if (adapter != nullptr) {
-    adapter->unknown50 = converter;
+    adapter->m_iConverter = converter;
   }
   return adapter;
 }
 
 void GfMenuWeaponTypeAdapter::update(const fw::UpdateInfo &info) {
-  if (unknown50 != nullptr) {
-    u32 driver = unknown50->getDriverId();
+  if (m_iConverter != nullptr) {
+    u32 driver = m_iConverter->getDriverId();
     if (unknown58 != driver) {
       unknown58 = driver;
       setChange();
     }
-    u32 weaponType = unknown50->getWpnType();
+    u32 weaponType = m_iConverter->getWpnType();
     if (unknown5c != weaponType) {
       unknown5c = weaponType;
       setChange();
     }
-    u32 artsIndex = unknown50->getArtsIndex();
+    u32 artsIndex = m_iConverter->getArtsIndex();
     if (unknown60 != artsIndex) {
       unknown60 = artsIndex;
       setChange();

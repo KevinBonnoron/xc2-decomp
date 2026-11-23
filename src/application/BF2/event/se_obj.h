@@ -45,7 +45,7 @@ private:
   }
 
   u32 unknown08;                 // Inferred role: flags; original member name unknown.
-  gf::SoundHandle unknown0c;     // Inferred role: handle; original member name unknown.
+  gf::SoundHandle m_soundHandle; // Inferred role: handle; original member name unknown.
   mm::mtl::FixStr<64> unknown14; // Inferred role: name; original member name unknown.
   f32 unknown58;                 // Inferred role: play frame; original member name unknown.
   f32 unknown5c;                 // Inferred role: life; original member name unknown.

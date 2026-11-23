@@ -47,14 +47,14 @@ public:
   virtual const char *getAssetName() const;
   u64 getAssetTimeStamp() const;
 
-  State unknownb0;        // Inferred role: state; original member name unknown.
-  bool unknownb4;         // Inferred role: safe; original member name unknown.
-  AssetLoader *unknownb8; // Inferred role: loader; original member name unknown.
-  AssetData *unknownc0;   // Inferred role: asset; original member name unknown.
+  State unknownb0;            // Inferred role: state; original member name unknown.
+  bool unknownb4;             // Inferred role: safe; original member name unknown.
+  AssetLoader *m_assetLoader; // Inferred role: loader; original member name unknown.
+  AssetData *m_assetData;     // Inferred role: asset; original member name unknown.
 };
 
 static_assert(offsetof(CommonResource, unknownb0) == 0xb0, "");
-static_assert(offsetof(CommonResource, unknownb8) == 0xb8, "");
+static_assert(offsetof(CommonResource, m_assetLoader) == 0xb8, "");
 static_assert(sizeof(CommonResource) == 0xc8, "");
 
 } // namespace fw

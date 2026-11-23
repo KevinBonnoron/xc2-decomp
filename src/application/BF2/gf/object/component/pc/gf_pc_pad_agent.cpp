@@ -27,20 +27,20 @@ void registerAsmCallback(GF_OBJ_HANDLE *handle, anm::ResASM *resAsm, fw::EffectR
 PadAgent::PadAgent(u32 padNo) : unknown08(padNo) {}
 
 void PadAgent::setup(GfComPropertyPc &property) {
-  unknown10.setup(unknown08, property);
-  unknown90.setup(unknown08, property);
+  m_padBattle.setup(unknown08, property);
+  m_padField.setup(unknown08, property);
 }
 
 void PadAgent::cleanup(GfComPropertyPc &property) {
-  unknown10.cleanup(property);
-  unknown90.cleanup(property);
+  m_padBattle.cleanup(property);
+  m_padField.cleanup(property);
 }
 
 void PadAgent::update(const fw::UpdateInfo &info, GfComPropertyPc &property) {
   property.unknown6c = property.unknown60;
   property.unknown60.unknown08.clear();
-  unknown10.update(info, property);
-  unknown90.update(info, property);
+  m_padBattle.update(info, property);
+  m_padField.update(info, property);
 }
 
 const mm::mtl::RTTI *PadAgent::getRTTI() const { return &m_rtti; }

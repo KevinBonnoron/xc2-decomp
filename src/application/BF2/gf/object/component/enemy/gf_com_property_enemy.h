@@ -30,14 +30,14 @@ public:
   f32 getChestHeight() const;
 
   u8 _38[0x40 - 0x38];
-  enemy::GfEnemyBattleProperty unknown40; // Inferred role: battle property; original member name unknown.
-  mm::Vec3 unknown60;                     // Inferred role: position; original member name unknown.
-  mm::Quat unknown70;                     // Inferred role: rotation; original member name unknown.
-  mm::Vec3 unknown80;                     // Inferred role: position of the previous flush; original member name unknown.
-  mm::Quat unknown90;                     // Inferred role: rotation of the previous flush; original member name unknown.
+  enemy::GfEnemyBattleProperty m_battleProperty; // Inferred role: battle property; named after the game accessor gf::enemy::StateBattleBase::GetBattleProperty.
+  mm::Vec3 unknown60;                            // Inferred role: position; original member name unknown.
+  mm::Quat unknown70;                            // Inferred role: rotation; original member name unknown.
+  mm::Vec3 unknown80;                            // Inferred role: position of the previous flush; original member name unknown.
+  mm::Quat unknown90;                            // Inferred role: rotation of the previous flush; original member name unknown.
 };
 
-static_assert(offsetof(GfComPropertyEnemy, unknown40) == 0x40, "");
+static_assert(offsetof(GfComPropertyEnemy, m_battleProperty) == 0x40, "");
 static_assert(offsetof(GfComPropertyEnemy, unknown60) == 0x60, "");
 static_assert(offsetof(GfComPropertyEnemy, unknown70) == 0x70, "");
 static_assert(offsetof(GfComPropertyEnemy, unknown80) == 0x80, "");

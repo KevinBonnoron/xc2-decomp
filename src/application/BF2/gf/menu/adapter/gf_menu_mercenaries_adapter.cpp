@@ -48,15 +48,15 @@ static GfMenuMercenariesAdapter::TypeInfo TYPE_INFOS[] = {
 };
 
 GfMenuMercenariesAdapter::GfMenuMercenariesAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways)
-    : GfMenuAdapter(plugin, false, isUpdateAlways), unknown50(nullptr), unknown58(0), unknown5a(0), unknown60(nullptr), unknown68(nullptr) {}
+    : GfMenuAdapter(plugin, false, isUpdateAlways), m_iConverter(nullptr), unknown58(0), unknown5a(0), m_menuBladeList(nullptr), m_menuFieldSkillList(nullptr) {}
 
 GfMenuMercenariesAdapter::~GfMenuMercenariesAdapter() {
-  if (unknown50 != nullptr) {
-    delete unknown50;
-    unknown50 = nullptr;
+  if (m_iConverter != nullptr) {
+    delete m_iConverter;
+    m_iConverter = nullptr;
   }
-  mm::mtl::safeRelease(unknown60);
-  mm::mtl::safeRelease(unknown68);
+  mm::mtl::safeRelease(m_menuBladeList);
+  mm::mtl::safeRelease(m_menuFieldSkillList);
 }
 
 GfMenuMercenariesAdapter *GfMenuMercenariesAdapter::create(u32 handle, u32 type, u32 teamId, bool isUpdateAlways) {
@@ -232,10 +232,10 @@ bool GfMenuMercenariesAdapter::update_TeamMisComplete() {
 
 bool GfMenuMercenariesAdapter::update_TeamStrength() {
   int power;
-  if (unknown60 != nullptr) {
+  if (m_menuBladeList != nullptr) {
     power = 0;
-    for (u16 i = 0; i < unknown60->getSize(); i++) {
-      power += GfDataBlade::getBladePower(unknown60->getContents(i).unknown00);
+    for (u16 i = 0; i < m_menuBladeList->getSize(); i++) {
+      power += GfDataBlade::getBladePower(m_menuBladeList->getContents(i).unknown00);
     }
   } else {
     if (!GfDataMercenaries::isValidTeamID(unknown58)) {
@@ -249,10 +249,10 @@ bool GfMenuMercenariesAdapter::update_TeamStrength() {
 
 bool GfMenuMercenariesAdapter::update_TeamMale() {
   int count;
-  if (unknown60 != nullptr) {
+  if (m_menuBladeList != nullptr) {
     count = 0;
-    for (u16 i = 0; i < unknown60->getSize(); i++) {
-      count += GfDataBlade::isMale(unknown60->getContents(i).unknown00);
+    for (u16 i = 0; i < m_menuBladeList->getSize(); i++) {
+      count += GfDataBlade::isMale(m_menuBladeList->getContents(i).unknown00);
     }
   } else {
     if (!GfDataMercenaries::isValidTeamID(unknown58)) {
@@ -266,10 +266,10 @@ bool GfMenuMercenariesAdapter::update_TeamMale() {
 
 bool GfMenuMercenariesAdapter::update_TeamFemale() {
   int count;
-  if (unknown60 != nullptr) {
+  if (m_menuBladeList != nullptr) {
     count = 0;
-    for (u16 i = 0; i < unknown60->getSize(); i++) {
-      count += GfDataBlade::isFemale(unknown60->getContents(i).unknown00);
+    for (u16 i = 0; i < m_menuBladeList->getSize(); i++) {
+      count += GfDataBlade::isFemale(m_menuBladeList->getContents(i).unknown00);
     }
   } else {
     if (!GfDataMercenaries::isValidTeamID(unknown58)) {
@@ -283,10 +283,10 @@ bool GfMenuMercenariesAdapter::update_TeamFemale() {
 
 bool GfMenuMercenariesAdapter::update_TeamAnimal() {
   int count;
-  if (unknown60 != nullptr) {
+  if (m_menuBladeList != nullptr) {
     count = 0;
-    for (u16 i = 0; i < unknown60->getSize(); i++) {
-      count += GfDataBlade::isAnimal(unknown60->getContents(i).unknown00);
+    for (u16 i = 0; i < m_menuBladeList->getSize(); i++) {
+      count += GfDataBlade::isAnimal(m_menuBladeList->getContents(i).unknown00);
     }
   } else {
     if (!GfDataMercenaries::isValidTeamID(unknown58)) {
@@ -299,10 +299,10 @@ bool GfMenuMercenariesAdapter::update_TeamAnimal() {
 }
 
 bool GfMenuMercenariesAdapter::update_TeamStrengthDiffIcon() {
-  if (unknown60 != nullptr) {
+  if (m_menuBladeList != nullptr) {
     u32 power = 0;
-    for (u16 i = 0; i < unknown60->getSize(); i++) {
-      power += GfDataBlade::getBladePower(unknown60->getContents(i).unknown00);
+    for (u16 i = 0; i < m_menuBladeList->getSize(); i++) {
+      power += GfDataBlade::getBladePower(m_menuBladeList->getContents(i).unknown00);
     }
     if (GfDataMercenaries::isValidTeamID(unknown58)) {
       u32 teamPower = GfDataMercenaries::getTeamPower(unknown58);
@@ -316,7 +316,7 @@ bool GfMenuMercenariesAdapter::update_TeamStrengthDiffIcon() {
 }
 
 bool GfMenuMercenariesAdapter::update_TeamFieldSkillDiffIcon() {
-  if (unknown68 != nullptr && GfDataMercenaries::isValidTeamID(unknown58)) {
+  if (m_menuFieldSkillList != nullptr && GfDataMercenaries::isValidTeamID(unknown58)) {
     unknown120 *team = GfDataMercenaries::getTeamMember(unknown58);
     if (team != nullptr) {
       GfMenuFieldSkillList *list = GfMenuFieldSkillList::create();
@@ -328,12 +328,12 @@ bool GfMenuMercenariesAdapter::update_TeamFieldSkillDiffIcon() {
         }
         u32 icon = 0;
         for (u16 i = 0; i < list->getSize(); i++) {
-          if (unknown68->getContents(unknown70).unknown00 == list->getContents(i).unknown00) {
-            if (unknown68->getContents(unknown70).unknown02 == list->getContents(i).unknown02) {
+          if (m_menuFieldSkillList->getContents(unknown70).unknown00 == list->getContents(i).unknown00) {
+            if (m_menuFieldSkillList->getContents(unknown70).unknown02 == list->getContents(i).unknown02) {
               list->release();
               return false;
             }
-            icon = unknown68->getContents(unknown70).unknown02 <= list->getContents(i).unknown02;
+            icon = m_menuFieldSkillList->getContents(unknown70).unknown02 <= list->getContents(i).unknown02;
             break;
           }
         }
@@ -347,14 +347,14 @@ bool GfMenuMercenariesAdapter::update_TeamFieldSkillDiffIcon() {
 }
 
 bool GfMenuMercenariesAdapter::update_TeamNameRes() {
-  if (unknown60 == nullptr) {
+  if (m_menuBladeList == nullptr) {
     return false;
   }
-  u32 offset = unknown60->getRowOffset();
+  u32 offset = m_menuBladeList->getRowOffset();
   u32 index = unknown70 + offset;
   switch (GfMenuReference::getReferenceNumber(0)) {
   case 0: {
-    DataParamAcc acc(OBJECT_TYPE_PC, GfDataParty::getPartyMember(index)->unknown00, GIMMICK_TYPE_UNKNOWN_0);
+    DataParamAcc acc(OBJECT_TYPE_PC, GfDataParty::getPartyMember(index)->m_driver, GIMMICK_TYPE_UNKNOWN_0);
     if (!acc.isValid()) {
       return false;
     }
@@ -373,8 +373,8 @@ bool GfMenuMercenariesAdapter::update_TeamNameRes() {
 }
 
 bool GfMenuMercenariesAdapter::update_TeamIconRes() {
-  if (unknown60 != nullptr) {
-    u32 offset = unknown60->getRowOffset();
+  if (m_menuBladeList != nullptr) {
+    u32 offset = m_menuBladeList->getRowOffset();
     u32 index = unknown70;
     int referenceNumber = GfMenuReference::getReferenceNumber(0);
     if (referenceNumber == 2) {
@@ -391,11 +391,11 @@ bool GfMenuMercenariesAdapter::update_TeamIconRes() {
 }
 
 bool GfMenuMercenariesAdapter::update_TeamIconResFace() {
-  if (unknown60 != nullptr) {
-    u32 offset = unknown60->getRowOffset();
+  if (m_menuBladeList != nullptr) {
+    u32 offset = m_menuBladeList->getRowOffset();
     u32 index = unknown70;
     if (GfMenuReference::getReferenceNumber(0) == 0) {
-      DataParamAcc acc(OBJECT_TYPE_PC, GfDataParty::getPartyMember(index + offset)->unknown00, GIMMICK_TYPE_UNKNOWN_0);
+      DataParamAcc acc(OBJECT_TYPE_PC, GfDataParty::getPartyMember(index + offset)->m_driver, GIMMICK_TYPE_UNKNOWN_0);
       if (acc.isValid()) {
         setNumber(GfMenuBdat::getIconImageIndex(acc.getIconData()));
         return true;
@@ -410,7 +410,7 @@ bool GfMenuMercenariesAdapter::update_TeamDispNum1() { return GfDataMercenaries:
 GfMenuMercenariesAdapter *GfMenuMercenariesAdapter::createFromCoverter(u32 handle, u32 type, IConverter *converter, bool isUpdateAlways) {
   GfMenuMercenariesAdapter *adapter = create(handle, type, converter->getTeamId(), isUpdateAlways);
   if (adapter != nullptr) {
-    adapter->unknown50 = converter;
+    adapter->m_iConverter = converter;
   }
   return adapter;
 }
@@ -421,7 +421,7 @@ GfMenuMercenariesAdapter *GfMenuMercenariesAdapter::createFromReferenceTeam(u32 
   ReferenceTeamConverter *converter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) ReferenceTeamConverter();
   GfMenuMercenariesAdapter *adapter = create(handle, type, GfMenuReference::getReferenceTeamID(), isUpdateAlways);
   if (adapter != nullptr) {
-    adapter->unknown50 = converter;
+    adapter->m_iConverter = converter;
   }
   return adapter;
 }
@@ -432,9 +432,9 @@ GfMenuMercenariesAdapter *GfMenuMercenariesAdapter::createFromReferenceTeamBlade
   ReferenceTeamConverter *converter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) ReferenceTeamConverter();
   GfMenuMercenariesAdapter *adapter = create(handle, type, GfMenuReference::getReferenceTeamID(), isUpdateAlways);
   if (adapter != nullptr) {
-    adapter->unknown50 = converter;
+    adapter->m_iConverter = converter;
     list->addRef();
-    adapter->unknown60 = list;
+    adapter->m_menuBladeList = list;
   }
   return adapter;
 }
@@ -445,9 +445,9 @@ GfMenuMercenariesAdapter *GfMenuMercenariesAdapter::createFromReferenceTeamField
   ReferenceTeamConverter *converter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) ReferenceTeamConverter();
   GfMenuMercenariesAdapter *adapter = create(handle, type, GfMenuReference::getReferenceTeamID(), isUpdateAlways);
   if (adapter != nullptr) {
-    adapter->unknown50 = converter;
+    adapter->m_iConverter = converter;
     list->addRef();
-    adapter->unknown68 = list;
+    adapter->m_menuFieldSkillList = list;
     adapter->unknown70 = index;
   }
   return adapter;
@@ -457,7 +457,7 @@ GfMenuMercenariesAdapter *GfMenuMercenariesAdapter::createFromBladeList(u32 hand
   GfMenuMercenariesAdapter *adapter = create(handle, type, 0, isUpdateAlways);
   if (adapter != nullptr) {
     list->addRef();
-    adapter->unknown60 = list;
+    adapter->m_menuBladeList = list;
     adapter->unknown70 = index;
   }
   return adapter;
@@ -474,14 +474,14 @@ GfMenuMercenariesAdapter *GfMenuMercenariesAdapter::createFromReferenceBlade(u32
   }
   GfMenuMercenariesAdapter *adapter = create(handle, type, teamId, isUpdateAlways);
   if (adapter != nullptr) {
-    adapter->unknown50 = converter;
+    adapter->m_iConverter = converter;
   }
   return adapter;
 }
 
 void GfMenuMercenariesAdapter::update(const fw::UpdateInfo &info) {
-  if (unknown50 != nullptr) {
-    u32 newTeamId = unknown50->getTeamId();
+  if (m_iConverter != nullptr) {
+    u32 newTeamId = m_iConverter->getTeamId();
     if (unknown58 != newTeamId) {
       unknown58 = newTeamId;
       setChange();
@@ -492,10 +492,10 @@ void GfMenuMercenariesAdapter::update(const fw::UpdateInfo &info) {
     unknown5a = newMission;
     setChange();
   }
-  if (unknown60 != nullptr && (unknown60->contentsChanged || unknown60->unknown30)) {
+  if (m_menuBladeList != nullptr && (m_menuBladeList->contentsChanged || m_menuBladeList->unknown30)) {
     setChange();
   }
-  if (unknown68 != nullptr && (unknown68->contentsChanged || unknown68->unknown30)) {
+  if (m_menuFieldSkillList != nullptr && (m_menuFieldSkillList->contentsChanged || m_menuFieldSkillList->unknown30)) {
     setChange();
   }
   if (unknown30.isValid() && (unknown20 & (FLAG_UNKNOWN_0 | FLAG_UNKNOWN_1)) != 0) {

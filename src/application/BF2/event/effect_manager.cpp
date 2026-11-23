@@ -12,8 +12,8 @@
 namespace event {
 
 fw::EffectPack *EffectManager::getResPack() const {
-  if (unknowna0 != nullptr) {
-    return unknowna0->getResPack();
+  if (m_event != nullptr) {
+    return m_event->getResPack();
   }
   return nullptr;
 }
@@ -26,7 +26,7 @@ u32 EffectManager::getOffscrID() const { return m_offscrID; }
 
 bool EffectManager::isReplaceMode() const { return (unknown10 & FLAG_UNKNOWN_2) != 0; }
 
-EffectManager::EffectManager() : unknown10(0), unknown14(0), unknowna0(nullptr), m_offscrID(0), unknownac(0) {}
+EffectManager::EffectManager() : unknown10(0), unknown14(0), m_event(nullptr), m_offscrID(0), unknownac(0) {}
 
 void EffectManager::clear() {
   for (size_t i = 0; i < unknown18.size(); i++) {
@@ -37,7 +37,7 @@ void EffectManager::clear() {
   }
   unknown18.clear();
   unknown10 = 0;
-  unknowna0 = nullptr;
+  m_event = nullptr;
   m_offscrID = 0;
   unknownac = 0;
 }
@@ -67,7 +67,7 @@ bool EffectManager::isLoading() const {
   return false;
 }
 
-void EffectManager::setEvent(const char *name) { unknowna0 = searchRes(name); }
+void EffectManager::setEvent(const char *name) { m_event = searchRes(name); }
 
 void EffectManager::setStreamMode(bool isStreamMode) { setFlag(FLAG_UNKNOWN_0, isStreamMode); }
 

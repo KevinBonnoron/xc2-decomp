@@ -2,7 +2,7 @@
 
 namespace event {
 
-CpuManager::CpuManager() : unknown10(0), m_frame(0.0f), unknown18(0.0f), unknown1c(0.0f), unknown20(0.0f) { unknown28.start(); }
+CpuManager::CpuManager() : unknown10(0), m_frame(0.0f), unknown18(0.0f), unknown1c(0.0f), unknown20(0.0f) { m_timeCount.start(); }
 
 void CpuManager::init() {
   unknown10 = 0;
@@ -23,7 +23,7 @@ void CpuManager::update() {
   }
 }
 
-f32 CpuManager::calcCpuFrame() const { return static_cast<int>(unknown28.getSecLap() * 30.0f); }
+f32 CpuManager::calcCpuFrame() const { return static_cast<int>(m_timeCount.getSecLap() * 30.0f); }
 
 void CpuManager::tailAlways() {
   if (isRunning()) {

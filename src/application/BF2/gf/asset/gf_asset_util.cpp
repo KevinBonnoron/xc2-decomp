@@ -52,7 +52,7 @@ void GfAssetUtil::destroyAsset(const mm::mtl::FixedVector<GF_SLOT_HANDLE *, 88> 
 GF_OBJ_HANDLE *GfAssetUtil::getObjHandle(GF_ASSET_HANDLE *handle) {
   AssetPackInfo *info = GfAssetManager::getAssetPackInfo(handle);
   if (info != nullptr) {
-    return info->unknown2d8;
+    return info->m_GF_OBJ_HANDLE;
   }
   return unknown020;
 }

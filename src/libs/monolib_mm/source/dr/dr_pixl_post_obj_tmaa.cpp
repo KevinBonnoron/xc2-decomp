@@ -22,8 +22,8 @@ template <typename T> inline void unknown001(T *&object) {
 DrPixlPostObjTMAA::DrPixlPostObjTMAA(DrMan *drMan, DrPixlMan *pixlMan, DrPixlPostMan *postMan) : DrPixlPostObj(drMan, pixlMan, postMan) {
   unknown18 = 0;
   for (int i = 0; i < 2; i++) {
-    unknown20[i] = new (unknown00->unknown0c) DrPixlRenderTarget(unknown00);
-    m_bloomTexture[i] = new (unknown00->unknown0c) DrPixlRenderTarget(unknown00);
+    unknown20[i] = new (m_drMan->unknown0c) DrPixlRenderTarget(m_drMan);
+    m_bloomTexture[i] = new (m_drMan->unknown0c) DrPixlRenderTarget(m_drMan);
   }
   unknown18 |= 1;
 }
@@ -36,7 +36,7 @@ DrPixlPostObjTMAA::~DrPixlPostObjTMAA() {
 }
 
 void DrPixlPostObjTMAA::releaseColorBuff() {
-  DrPixlPostParm *postParm = unknown00->unknown120[unknown00->unknown1c98];
+  DrPixlPostParm *postParm = m_drMan->unknown120[m_drMan->unknown1c98];
   if (postParm->unknownfe4 == 3) {
     unknown20[0]->releaseTexture();
     m_bloomTexture[0]->releaseTexture();
@@ -50,7 +50,7 @@ void DrPixlPostObjTMAA::releaseColorBuff() {
 }
 
 void DrPixlPostObjTMAA::render() {
-  DrPixlPostParm *postParm = unknown00->unknown120[unknown00->unknown1c98];
+  DrPixlPostParm *postParm = m_drMan->unknown120[m_drMan->unknown1c98];
   if (postParm->getTMAAOn()) {
     if ((unknown18 & 2) != 0) {
       for (s32 i = 0; i < 2; i++) {
@@ -61,7 +61,7 @@ void DrPixlPostObjTMAA::render() {
     }
     if (postParm->unknown158) {
       unknown18 |= 1;
-      unknown00->unknown120[unknown00->unknown1c98]->unknown158 = false;
+      m_drMan->unknown120[m_drMan->unknown1c98]->unknown158 = false;
     }
     if ((unknown18 & 1) != 0) {
       unknown18 &= ~4;

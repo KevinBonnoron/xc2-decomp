@@ -122,14 +122,14 @@ public:
 
   static COLITEST s_pColiTest[5];
 
-  DrEnvColiObj *unknown00;              // Inferred role: previous object; original member name unknown.
-  DrEnvColiObj *unknown08;              // Inferred role: next object; original member name unknown.
-  const u8 *unknown10;                  // Inferred role: env coli data; original member name unknown.
-  const unknown005 *unknown18;          // Inferred role: primitives; original member name unknown.
-  const EnvColiListTreeData *unknown20; // Inferred role: collision tree; original member name unknown.
-  mm::Vec3 (*unknown28)[3];             // Inferred role: primitive work (axes or center); original member name unknown.
-  DrMan *unknown30;                     // Inferred role: dr man; original member name unknown.
-  u32 unknown38;                        // Inferred role: state flags; original member name unknown.
+  DrEnvColiObj *unknown00;                          // Inferred role: previous object; original member name unknown.
+  DrEnvColiObj *unknown08;                          // Inferred role: next object; original member name unknown.
+  const u8 *unknown10;                              // Inferred role: env coli data; original member name unknown.
+  const unknown005 *unknown18;                      // Inferred role: primitives; original member name unknown.
+  const EnvColiListTreeData *m_envColiListTreeData; // Inferred role: collision tree; original member name unknown.
+  mm::Vec3 (*unknown28)[3];                         // Inferred role: primitive work (axes or center); original member name unknown.
+  DrMan *m_drMan;                                   // Inferred role: dr man; original member name unknown.
+  u32 unknown38;                                    // Inferred role: state flags; original member name unknown.
 };
 
 static_assert(offsetof(DrEnvColiObj::unknown005, unknown06) == 0x06, "");
@@ -140,9 +140,9 @@ static_assert(offsetof(DrEnvColiObj::unknown005, unknown16) == 0x16, "");
 static_assert(sizeof(DrEnvColiObj::unknown005) == 0x20, "");
 static_assert(offsetof(DrEnvColiObj, unknown10) == 0x10, "");
 static_assert(offsetof(DrEnvColiObj, unknown18) == 0x18, "");
-static_assert(offsetof(DrEnvColiObj, unknown20) == 0x20, "");
+static_assert(offsetof(DrEnvColiObj, m_envColiListTreeData) == 0x20, "");
 static_assert(offsetof(DrEnvColiObj, unknown28) == 0x28, "");
-static_assert(offsetof(DrEnvColiObj, unknown30) == 0x30, "");
+static_assert(offsetof(DrEnvColiObj, m_drMan) == 0x30, "");
 static_assert(offsetof(DrEnvColiObj, unknown38) == 0x38, "");
 
 } // namespace ml

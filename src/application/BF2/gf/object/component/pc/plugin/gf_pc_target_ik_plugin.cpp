@@ -2,12 +2,14 @@
 
 #include <math.h>
 
+#include "framework/ik/ik_look_solver.h"
 #include "framework/ik/ik_solver.h"
 #include "framework/object/updatable_object.h"
 #include "fw/fw_transform.h"
 #include "fw/fw_update_info.h"
 #include "gf/object/component/animation/gf_com_asm.h"
 #include "gf/object/component/behavior/gf_com_behavior.h"
+#include "gf/object/component/gf_com_ik.h"
 #include "gf/object/component/pc/gf_com_property_pc.h"
 #include "gf/object/component/property/gf_com_property.h"
 #include "gf/object/gf_obj.h"
@@ -20,16 +22,30 @@
 namespace gf {
 namespace pc {
 
+constexpr u32 PC_UNKNOWN_4 = 4; // Inferred role: pc param target ik; original name unknown.
+
 constexpr f32 unknown018 = 0.000001f; // Inferred role: epsilon; original name unknown.
 
-TargetIKPlugin::TargetIKPlugin() : unknown10(unknown020), unknown20(nullptr), unknown30(mm::Vec3::unitZ), unknown40(1.0f), unknown44(1.0f) {}
+TargetIKPlugin::TargetIKPlugin() : m_GF_OBJ_HANDLE(unknown020), unknown20(nullptr), unknown30(mm::Vec3::unitZ), unknown40(1.0f), unknown44(1.0f) {}
 
 TargetIKPlugin::~TargetIKPlugin() {}
+
+bool TargetIKPlugin::setup(GfComBehaviorPc &behavior) {
+  const GfComIK *ik = behavior.unknown08->getComponent<GfComIK>();
+  fw::LookIkSolver *solver = ik->unknown003<fw::LookIkSolver>(unknown002_3);
+  if (solver == nullptr) {
+    return false;
+  }
+  unknown18 = solver;
+  mm::mtl::IntrusivePtr<fw::ParamList> paramList = fw::ParamManager::get()->unknown408[5];
+  unknown20 = paramList->unknown0c > PC_UNKNOWN_4 ? &paramList->unknown10[PC_UNKNOWN_4] : nullptr;
+  return true;
+}
 
 void TargetIKPlugin::cleanup(GfComBehaviorPc &) { unknown18 = nullptr; }
 
 void TargetIKPlugin::update(GfComBehaviorPc &behavior, const fw::UpdateInfo &info) {
-  if (unknown10 == unknown020) {
+  if (m_GF_OBJ_HANDLE == unknown020) {
     return;
   }
 
@@ -44,7 +60,7 @@ void TargetIKPlugin::update(GfComBehaviorPc &behavior, const fw::UpdateInfo &inf
     unknown18->setTargetDownRatio(unknown44);
   }
 
-  GfObj *obj = GfObjUtil::getObj(unknown10);
+  GfObj *obj = GfObjUtil::getObj(m_GF_OBJ_HANDLE);
   if (obj != nullptr) {
     MsgPcGetLookPoint message;
     if (static_cast<GfObj *>(behavior.unknown08)->sendMessage(obj, message) && message.unknown20) {
@@ -86,13 +102,13 @@ bool TargetIKPlugin::isActiveRange(GfComPropertyPc &property, const mm::Vec3 &ta
 }
 
 void TargetIKPlugin::procMsgGameChangeTarget(fw::MessageObject *object, MsgGameChangeTarget &message) {
-  if (message.unknown08 != unknown020) {
+  if (message.m_GF_OBJ_HANDLE != unknown020) {
     const unknown001 *param = getParam();
     if (unknown18.get() != nullptr) {
       unknown18->startTargetFade(param->unknown04);
     }
   }
-  unknown10 = message.unknown08;
+  m_GF_OBJ_HANDLE = message.m_GF_OBJ_HANDLE;
 }
 
 void TargetIKPlugin::onActivate() {

@@ -45,14 +45,14 @@ inline FileResTh *unknown003(const DrIniSys *self, const char *path) {
     }
   }
   FileResTh *res = new (WorkUtil::getWorkMem()) FileResTh();
-  res->loadBlock(self->unknown00->unknown1c, path, 0x1000, 0);
+  res->loadBlock(self->m_drMan->unknown1c, path, 0x1000, 0);
   return res;
 }
 
 } // namespace
 
 DrIniSys::DrIniSys(DrMan *drMan)
-    : unknown00(drMan), unknown878(nullptr), unknown880(nullptr), m_updateMirrorBallPos(true), unknown890(nullptr), unknown898(nullptr), unknown8a0(nullptr), m_IBLEnvTexturePath(DUMMY_CUBEMAP_FILE),
+    : m_drMan(drMan), unknown878(nullptr), m_scnObjModel(nullptr), m_updateMirrorBallPos(true), unknown890(nullptr), unknown898(nullptr), unknown8a0(nullptr), m_IBLEnvTexturePath(DUMMY_CUBEMAP_FILE),
       unknown1b88(nullptr) {
   memset(unknown08, 0, sizeof(unknown08));
   m_IBLEnvTexturePath.format("%sshader/%s.witex", "/monolib/", DUMMY_CUBEMAP_FILE);
@@ -147,7 +147,7 @@ void DrIniSys::setDefTexture(int index, void *data, int size) { grlib::CGLibText
 void DrIniSys::loadRainDropTexture() {
   loadTextureImpl(13, RAIN_DROP_FILE);
   loadTextureImpl(14, RAIN_DROP_DEPTH_FILE);
-  DrPixlPostObjRainDrop *rainDrop = unknown00->unknown78->unknown10[0].unknown180->unknowna0;
+  DrPixlPostObjRainDrop *rainDrop = m_drMan->m_drPixlMan->unknown10[0].m_drPixlPostMan->m_drPixlPostObjRainDrop;
   if (rainDrop != nullptr) {
     rainDrop->requestUseLoadedDepth();
   }
@@ -166,7 +166,7 @@ void DrIniSys::loadToonRimTexture() {
     unknown08[6] = nullptr;
   }
   unknown08[6] = readTextureMapFile(TOON_RIM_FILE);
-  setDefTexture(6, unknown08[6]->unknownc8, unknown08[6]->unknownd0);
+  setDefTexture(6, unknown08[6]->m_glassBreakage, unknown08[6]->unknownd0);
 }
 
 void DrIniSys::loadVolumeTexture() { unknown001(this); }
@@ -177,22 +177,22 @@ void DrIniSys::loadIBLEnvTexture() {
     return;
   }
   FileResTh *res = new (WorkUtil::getWorkMem()) FileResTh();
-  if (res->loadBlock(unknown00->unknown1c, m_IBLEnvTexturePath.c_str(), 0x1000, 0)) {
+  if (res->loadBlock(m_drMan->unknown1c, m_IBLEnvTexturePath.c_str(), 0x1000, 0)) {
     if (unknown08[12] != nullptr) {
       unknown08[12]->Release();
       unknown08[12] = nullptr;
     }
     unknown08[12] = res;
-    setCubeTexture(12, res->unknownc8, res->unknownd0);
+    setCubeTexture(12, res->m_glassBreakage, res->unknownd0);
   }
 }
 
 void DrIniSys::loadWetnessCSVBFile() {
   if (unknown1b88 == nullptr) {
-    unknown1b88 = new (unknown00->unknown1c) csvb::CCsvbData();
+    unknown1b88 = new (m_drMan->unknown1c) csvb::CCsvbData();
   }
   snprintf(unknown015, sizeof(unknown015), "/monolib/shader/%s.bin", WETNESS_CSVB_FILE);
-  unknown1b88->Load(unknown00->unknown1c, unknown015);
+  unknown1b88->Load(m_drMan->unknown1c, unknown015);
 }
 
 void DrIniSys::loadFilterLutTexture() {
@@ -203,7 +203,7 @@ void DrIniSys::loadFilterLutTexture() {
     unknown8a0 = nullptr;
   }
   unknown8a0 = res;
-  unknown00->unknown98->setFilterData(res->unknownc8);
+  m_drMan->m_drResFilterData->setFilterData(res->m_glassBreakage);
 }
 
 void DrIniSys::loadGlassBreakage() {
@@ -222,7 +222,7 @@ void DrIniSys::loadTextureImpl(u32 index, const char *name) {
     unknown08[index] = nullptr;
   }
   unknown08[index] = readTextureMapFile(name);
-  setDefTexture(index, unknown08[index]->unknownc8, unknown08[index]->unknownd0);
+  setDefTexture(index, unknown08[index]->m_glassBreakage, unknown08[index]->unknownd0);
 }
 
 void DrIniSys::loadFlagWaveTexture() {
@@ -240,7 +240,7 @@ void DrIniSys::reloadToonRimTexture() {
     unknown08[6] = nullptr;
   }
   unknown08[6] = readTextureMapFile(TOON_RIM_FILE);
-  setDefTexture(6, unknown08[6]->unknownc8, unknown08[6]->unknownd0);
+  setDefTexture(6, unknown08[6]->m_glassBreakage, unknown08[6]->unknownd0);
 }
 
 void DrIniSys::reloadVolumeTexture() { unknown001(this); }
@@ -248,18 +248,18 @@ void DrIniSys::reloadVolumeTexture() { unknown001(this); }
 void DrIniSys::reloadIBLEnvTexture() { loadIBLEnvTexture(); }
 
 bool DrIniSys::getDispMirrorBall() const {
-  if (unknown880 == nullptr) {
+  if (m_scnObjModel == nullptr) {
     return false;
   }
-  return unknown880->isDisp();
+  return m_scnObjModel->isDisp();
 }
 
 void DrIniSys::setDispMirrorBall(bool isDisp) {
-  if (isDisp && unknown880 == nullptr) {
+  if (isDisp && m_scnObjModel == nullptr) {
     loadMirrorBallModel();
   }
-  if (unknown880 != nullptr) {
-    unknown880->setDisp(isDisp);
+  if (m_scnObjModel != nullptr) {
+    m_scnObjModel->setDisp(isDisp);
   }
 }
 
@@ -269,15 +269,15 @@ void DrIniSys::loadMirrorBallModel() {
   if (res == nullptr) {
     return;
   }
-  if (unknown880 != nullptr) {
-    unknown880->setDelete();
+  if (m_scnObjModel != nullptr) {
+    m_scnObjModel->setDelete();
   }
   if (unknown878 != nullptr) {
     unknown878->Release();
     unknown878 = nullptr;
   }
   unknown878 = res;
-  unknown880 = Scn::get()->createMdl(res->unknownc8, unknown015, 0);
+  m_scnObjModel = Scn::get()->createMdl(res->m_glassBreakage, unknown015, 0);
 }
 
 bool DrIniSys::getUpdateMirrorBallPos() const { return m_updateMirrorBallPos; }
@@ -285,14 +285,14 @@ bool DrIniSys::getUpdateMirrorBallPos() const { return m_updateMirrorBallPos; }
 void DrIniSys::setUpdateMirrorBallPos(bool isUpdate) { m_updateMirrorBallPos = isUpdate; }
 
 void DrIniSys::dispMirrorBallPerformanceMDL(WinProc *proc) {
-  if (unknown880 != nullptr) {
-    unknown880->dispDebugWindow(true, unknown880->getName(), proc);
+  if (m_scnObjModel != nullptr) {
+    m_scnObjModel->dispDebugWindow(true, m_scnObjModel->getName(), proc);
   }
 }
 
 void DrIniSys::setMirrorBallPosition(const mm::Vec3 &position) {
-  if (unknown880 != nullptr && m_updateMirrorBallPos) {
-    unknown880->setPos(position);
+  if (m_scnObjModel != nullptr && m_updateMirrorBallPos) {
+    m_scnObjModel->setPos(position);
   }
 }
 
@@ -306,7 +306,7 @@ void DrIniSys::setStrWork(char *dst, const char *src) {
 FileResTh *DrIniSys::readWorkFile(const char *name) {
   snprintf(unknown015, sizeof(unknown015), "monolib/shader/%s.wilut", name);
   FileResTh *res = new (WorkUtil::getWorkMem()) FileResTh();
-  res->loadBlock(unknown00->unknown1c, unknown015, 0x1000, 0);
+  res->loadBlock(m_drMan->unknown1c, unknown015, 0x1000, 0);
   return res;
 }
 
@@ -325,7 +325,7 @@ void DrIniSys::getWetnessSetting(u16 index, WetSetting &setting) const {
     setting.unknown00 = false;
     setting.unknown04 = 0;
     setting.unknown08 = 0;
-    setting.unknown0c = unknown970.unknown109c;
+    setting.unknown0c = m_drPixlPostParm.unknown109c;
   } else {
     if (index != 0 && index >= unknown1b88->GetRowCount()) {
       index = 0;
@@ -333,10 +333,10 @@ void DrIniSys::getWetnessSetting(u16 index, WetSetting &setting) const {
     setting.unknown00 = unknown1b88->GetInt(index, 0) == 1;
     setting.unknown04 = unknown1b88->GetInt(index, 1);
     setting.unknown08 = unknown1b88->GetInt(index, 2);
-    setting.unknown0c = unknown1b88->GetColumCount(index) >= 4 ? unknown1b88->GetFloat(index, 3) : unknown970.unknown109c;
+    setting.unknown0c = unknown1b88->GetColumCount(index) >= 4 ? unknown1b88->GetFloat(index, 3) : m_drPixlPostParm.unknown109c;
   }
 }
 
-DrIniSys::unknown004 *DrIniSys::getGlassBreakage() const { return static_cast<unknown004 *>(unknown898->unknownc8); }
+DrIniSys::unknown004 *DrIniSys::getGlassBreakage() const { return static_cast<unknown004 *>(unknown898->m_glassBreakage); }
 
 } // namespace ml

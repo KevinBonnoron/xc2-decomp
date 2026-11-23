@@ -51,7 +51,7 @@ void StateFieldLand::update(GfComBehaviorPc *behavior, const fw::UpdateInfo &inf
       return;
     }
 
-    if (property->unknown60.unknown08.test(INPUT_ID_UNKNOWN_2) && property->unknown310.unknown12_1 && StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_JUMP)) {
+    if (property->unknown60.unknown08.test(INPUT_ID_UNKNOWN_2) && property->m_propertyField.unknown12_1 && StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_JUMP)) {
       property->unknownc0 = 0.0f;
       reqState(STATE_ID_UNKNOWN_12);
       return;

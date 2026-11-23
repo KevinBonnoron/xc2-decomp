@@ -76,9 +76,9 @@ bool LayerActDef::actcmd_animicon(const u8 *&cmd) {
 }
 
 bool LayerActDef::actcmd_animdef(const u8 *&cmd) {
-  s32 count = reinterpret_cast<const unknown007 *>(unknownb8)->unknown28;
+  s32 count = reinterpret_cast<const unknown007 *>(m_resData)->unknown28;
   for (s32 i = 0; i < count; i++) {
-    unknown2b0[i].unknown00 = 0.0f;
+    unknown2b0[i].m_second = 0.0f;
     unknown2b0[i].unknown04 = 0;
   }
   unknown298->unknown80 = unknown298->unknown00->unknown18;
@@ -93,11 +93,11 @@ bool LayerActDef::actcmd_animfrm(const u8 *&cmd) {
     const unknown006 *data = reinterpret_cast<const unknown006 *>(cmd);
     unknown298->unknown84 = data->unknown04;
     unknown298->unknown80 = data->unknown06;
-    unknown2b0->unknown00 = unknown298->unknown84;
+    unknown2b0->m_second = unknown298->unknown84;
   }
-  unknown2b0->unknown00 = unknown298->unknown84 + unknown250->unknown14 * unknown298->unknown00->unknown1c;
+  unknown2b0->m_second = unknown298->unknown84 + unknown250->unknown14 * unknown298->unknown00->unknown1c;
   cmd += 8;
-  if (unknown298->unknown80 <= unknown2b0->unknown00) {
+  if (unknown298->unknown80 <= unknown2b0->m_second) {
     return false;
   }
   return true;

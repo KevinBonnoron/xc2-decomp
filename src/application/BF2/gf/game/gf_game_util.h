@@ -43,11 +43,11 @@ enum unknown064 {
 class GfGameUtil {
 public:
   struct ExecTurnCmdInfo {
-    GF_OBJ_HANDLE *unknown00; // Inferred role: handle; original member name unknown.
-    f32 unknown08;            // Inferred role: target rotation; original member name unknown.
-    f32 unknown0c;            // Inferred role: turn time; original member name unknown.
-    f32 unknown10;            // Inferred role: turn speed; original member name unknown.
-    f32 unknown14;            // Role and original member name unknown.
+    GF_OBJ_HANDLE *m_GF_OBJ_HANDLE; // Inferred role: handle; original member name unknown.
+    f32 unknown08;                  // Inferred role: target rotation; original member name unknown.
+    f32 unknown0c;                  // Inferred role: turn time; original member name unknown.
+    f32 unknown10;                  // Inferred role: turn speed; original member name unknown.
+    f32 unknown14;                  // Role and original member name unknown.
   };
 
   struct UiEnemyStatusIconInfo {
@@ -163,6 +163,7 @@ public:
   static bool isGameObjWait(GF_OBJ_HANDLE *handle);
   static bool isPlayVoice(GF_OBJ_HANDLE *handle);
   static void levelupForEnemy(GF_OBJ_HANDLE *handle, u32 addLevel);
+  static void setTransformPreEnemy(GF_OBJ_HANDLE *handle, const mm::Vec3 &position, const mm::Vec3 &rotation);
   static bool isDispWorldMap(u32 map);
   static u32 getBladeOnBookedItem(u32 blade);
   static bool execActivateUnuseForBlade(u32 blade, bool isRelease);

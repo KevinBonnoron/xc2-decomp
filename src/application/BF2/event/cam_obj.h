@@ -41,16 +41,16 @@ public:
   virtual ~CamObj();
   u32 getScreenID() const { return unknown64; }
   void changeActive(CamBase *cam);
-  CamHands *getHands() { return &unknownb0; }
+  CamHands *getHands() { return &m_camHands; }
   // Inferred role: motion camera; original name unknown.
-  CamMotion *unknown005() { return &unknownbb0; }
+  CamMotion *unknown005() { return &m_camMotion; }
   CamHands *activateHands() {
-    changeActive(&unknownb0);
-    return &unknownb0;
+    changeActive(&m_camHands);
+    return &m_camHands;
   }
   CamMotion *activateMotion() {
-    changeActive(&unknownbb0);
-    return &unknownbb0;
+    changeActive(&m_camMotion);
+    return &m_camMotion;
   }
   void start();
   void end();
@@ -59,17 +59,17 @@ public:
   virtual void tail();
 
 private:
-  SetEnable unknown40;    // Inferred role: set enable; original member name unknown.
-  SetTargetPos unknown48; // Inferred role: set target pos; original member name unknown.
-  SetFov unknown50;       // Inferred role: set fov; original member name unknown.
-  SetNearfar unknown58;   // Inferred role: set nearfar; original member name unknown.
-  u32 unknown60;          // Inferred role: unknown; zeroed with unknown64 by one 64-bit store in the constructor (0x71000b4674), no other CamObj function reads it; original member name unknown.
-  u32 unknown64;          // Inferred role: screen id; original member name unknown.
+  SetEnable m_setEnable;       // Inferred role: set enable; original member name unknown.
+  SetTargetPos m_setTargetPos; // Inferred role: set target pos; original member name unknown.
+  SetFov m_setFov;             // Inferred role: set fov; original member name unknown.
+  SetNearfar m_setNearfar;     // Inferred role: set nearfar; original member name unknown.
+  u32 unknown60;               // Inferred role: unknown; zeroed with unknown64 by one 64-bit store in the constructor (0x71000b4674), no other CamObj function reads it; original member name unknown.
+  u32 unknown64;               // Inferred role: screen id; original member name unknown.
   u8 _68[0x70 - 0x68];
-  CamField unknown70;                    // Inferred role: field; original member name unknown.
-  CamHands unknownb0;                    // Inferred role: hands; original member name unknown.
-  CamMotion unknownbb0;                  // Inferred role: motion; original member name unknown.
-  CamBase *unknownc70;                   // Inferred role: active; original member name unknown.
+  CamField m_camField;                   // Inferred role: field; original member name unknown.
+  CamHands m_camHands;                   // Inferred role: hands; original member name unknown.
+  CamMotion m_camMotion;                 // Inferred role: motion; original member name unknown.
+  CamBase *m_camBase;                    // Inferred role: active; original member name unknown.
   CmdQueue<CMD_UNKNOWN_8, 0> unknownc78; // Inferred role: cmd queue; original member name unknown.
 };
 

@@ -30,7 +30,7 @@ extern const char *s_aszGfBdatName[];
 
 constexpr u32 BDAT_UNKNOWN_15 = 15; // Inferred role: bdat lookat; original name unknown.
 
-GfDataBdat::GfDataBdat(const GfSetupParam &param) : unknowncf8(0), unknowncfc(false) { initialize(param); }
+GfDataBdat::GfDataBdat(const GfSetupParam &param) : m_reloadCount(0), unknowncfc(false) { initialize(param); }
 
 void GfDataBdat::build(const GfSetupParam &param) {
 // __LINE__ of the operator new call is 0x1f7 in the game.
@@ -105,7 +105,7 @@ void GfDataBdat::setupBdatInfo() {
     dataBdat->unknown10[bdat] = fw::BdatManager::getFp(_gfbdat::s_aszGfBdatName[bdat]);
   }
 
-  dataBdat->unknowncf8++;
+  dataBdat->m_reloadCount++;
 }
 
 void GfDataBdat::releaseBdatInfo() {
@@ -127,6 +127,6 @@ void GfDataBdat::gevReloadBdat(RELOAD_BDAT reload, u32 value) {
   }
 }
 
-u32 GfDataBdat::getReloadCount() { return get()->unknowncf8; }
+u32 GfDataBdat::getReloadCount() { return get()->m_reloadCount; }
 
 } // namespace gf

@@ -21,16 +21,16 @@ public:
   void delViewInfo(int cate);
   void resetColorBuff(int index);
 
-  DrShdDataList *unknown00; // Inferred role: data list; original member name unknown.
-  DrShdMdoMan *unknown08;   // Inferred role: mdo man; original member name unknown.
-  DrShdFetchMan *unknown10; // Inferred role: fetch man (DrShdMdoDecRes::releaseObj 0x71008a152c); original member name unknown.
-  DrShdLgtMan *unknown18;   // Inferred role: lgt man; original member name unknown.
-  DrMan *unknown20;         // Inferred role: dr man; original member name unknown.
+  DrShdDataList *m_drShdDataList; // Inferred role: data list; original member name unknown.
+  DrShdMdoMan *m_drShdMdoMan;     // Inferred role: mdo man; original member name unknown.
+  DrShdFetchMan *m_drShdFetchMan; // Inferred role: fetch man (DrShdMdoDecRes::releaseObj 0x71008a152c); original member name unknown.
+  DrShdLgtMan *m_drShdLgtMan;     // Inferred role: lgt man; original member name unknown.
+  DrMan *m_drMan;                 // Inferred role: dr man; original member name unknown.
 };
 
-static_assert(offsetof(DrShdMan, unknown08) == 0x08, "");
-static_assert(offsetof(DrShdMan, unknown10) == 0x10, "");
-static_assert(offsetof(DrShdMan, unknown18) == 0x18, "");
-static_assert(offsetof(DrShdMan, unknown20) == 0x20, "");
+static_assert(offsetof(DrShdMan, m_drShdMdoMan) == 0x08, "");
+static_assert(offsetof(DrShdMan, m_drShdFetchMan) == 0x10, "");
+static_assert(offsetof(DrShdMan, m_drShdLgtMan) == 0x18, "");
+static_assert(offsetof(DrShdMan, m_drMan) == 0x20, "");
 
 } // namespace ml

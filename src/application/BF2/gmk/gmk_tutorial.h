@@ -22,9 +22,9 @@ public:
     void create(CBdatWrapper bdat, int id, const AGmkBase &gmk);
     bool isCondMatched() const;
 
-    u8 unknown00;               // Inferred role: sys multi flag; original member name unknown.
-    ScenarioFlagCond unknown02; // Inferred role: scenario flag; original member name unknown.
-    QuestFlagCond unknown06;    // Inferred role: quest flag; original member name unknown.
+    u8 unknown00;                        // Inferred role: sys multi flag; original member name unknown.
+    ScenarioFlagCond m_scenarioFlagCond; // Inferred role: scenario flag; original member name unknown.
+    QuestFlagCond m_questFlagCond;       // Inferred role: quest flag; original member name unknown.
   };
 
   struct Data {
@@ -50,16 +50,16 @@ public:
   void disposeGmkPhantom();
   void createGmkPhantom();
 
-  const BdatInfo *getBdatInfo() const { return reinterpret_cast<const BdatInfo *>(unknown20.unknown10); }
-  const Data *getData() const { return static_cast<const Data *>(unknown20.unknown08); }
+  const BdatInfo *getBdatInfo() const { return reinterpret_cast<const BdatInfo *>(m_createInfo.unknown10); }
+  const Data *getData() const { return static_cast<const Data *>(m_createInfo.unknown08); }
 
-  GmkPhantom unknown60; // Inferred role: phantom; original member name unknown.
-  bool unknownf0;       // Role and original member name unknown.
+  GmkPhantom m_gmkPhantom; // Inferred role: phantom; original member name unknown.
+  bool unknownf0;          // Role and original member name unknown.
 };
 
 static_assert(sizeof(GmkTutorial::BdatInfo) == 0xa, "");
 static_assert(offsetof(GmkTutorial::Data, unknown08) == 0x08, "");
-static_assert(offsetof(GmkTutorial, unknown60) == 0x60, "");
+static_assert(offsetof(GmkTutorial, m_gmkPhantom) == 0x60, "");
 static_assert(offsetof(GmkTutorial, unknownf0) == 0xf0, "");
 static_assert(sizeof(GmkTutorial) == 0x100, "");
 

@@ -29,14 +29,14 @@ public:
 
   mm::mtl::IAllocator *unknown08; // Inferred role: parent; original member name unknown.
   void *unknown10;                // Inferred role: buffer; original member name unknown.
-  GfSizeAlloc unknown18;          // Inferred role: size alloc; original member name unknown.
+  GfSizeAlloc m_sizeAlloc;        // Inferred role: size alloc; original member name unknown.
   mm::mtl::FixStr<64> m_name;
   bool unknown2ec; // Inferred role: use debug memory; original member name unknown.
 };
 
 static_assert(offsetof(GfSlotAllocator, unknown08) == 0x08, "");
 static_assert(offsetof(GfSlotAllocator, unknown10) == 0x10, "");
-static_assert(offsetof(GfSlotAllocator, unknown18) == 0x18, "");
+static_assert(offsetof(GfSlotAllocator, m_sizeAlloc) == 0x18, "");
 static_assert(offsetof(GfSlotAllocator, m_name) == 0x2a8, "");
 static_assert(offsetof(GfSlotAllocator, unknown2ec) == 0x2ec, "");
 static_assert(sizeof(GfSlotAllocator) == 0x2f0, "");

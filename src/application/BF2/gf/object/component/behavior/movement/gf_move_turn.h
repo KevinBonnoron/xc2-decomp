@@ -21,12 +21,12 @@ public:
   };
 
   struct Packet {
-    Packet() : unknown08() {}
+    Packet() : m_paramAdapter() {}
 
-    f32 unknown00;              // Inferred role: angular velocity; original member name unknown.
-    fw::ParamAdapter unknown08; // Inferred role: turn param; original member name unknown.
-    mm::Vec3 unknown10;         // Inferred role: target direction; original member name unknown.
-    mm::Vec3 unknown20;         // Inferred role: current direction; original member name unknown.
+    f32 unknown00;                   // Inferred role: angular velocity; original member name unknown.
+    fw::ParamAdapter m_paramAdapter; // Inferred role: turn param; original member name unknown.
+    mm::Vec3 unknown10;              // Inferred role: target direction; original member name unknown.
+    mm::Vec3 unknown20;              // Inferred role: current direction; original member name unknown.
   };
 
   static void createReflection(fw::Reflection *reflection, const char *name, u32 index);
@@ -35,7 +35,7 @@ public:
 
 static_assert(offsetof(GfMoveTurnControler::Param, angularVelMax) == 0x04, "");
 static_assert(sizeof(GfMoveTurnControler::Param) == 0x08, "");
-static_assert(offsetof(GfMoveTurnControler::Packet, unknown08) == 0x08, "");
+static_assert(offsetof(GfMoveTurnControler::Packet, m_paramAdapter) == 0x08, "");
 static_assert(offsetof(GfMoveTurnControler::Packet, unknown10) == 0x10, "");
 static_assert(offsetof(GfMoveTurnControler::Packet, unknown20) == 0x20, "");
 static_assert(sizeof(GfMoveTurnControler::Packet) == 0x30, "");

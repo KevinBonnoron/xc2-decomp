@@ -110,7 +110,7 @@ void GfMenuObjPartyGauge::GaugeListener::reciveEvent(const ui::EventData &event,
       ui::UIObjectAcc icon(acc.unknown10, name.c_str());
       if (type == 1) {
         icon.setDisp(true);
-        if (slot == 2 && unknown20->unknown24 == -1) {
+        if (slot == 2 && m_menuObjPartyGauge->unknown24 == -1) {
           GfMenuObjUtil::CtrlParam param;
           param.unknown08 = 0x40000000;
           param.unknown00 = 1.0f;
@@ -118,16 +118,16 @@ void GfMenuObjPartyGauge::GaugeListener::reciveEvent(const ui::EventData &event,
           param.unknown0c = 4;
           param.unknown14 = 8;
           param.unknown38 = 0.5f;
-          unknown20->unknown24 = GfMenuObjUtil::startCtrl(acc.searchChild("LAY_gauge_bar"), param, nullptr);
+          m_menuObjPartyGauge->unknown24 = GfMenuObjUtil::startCtrl(acc.searchChild("LAY_gauge_bar"), param, nullptr);
           GfMenuObjUtil::playSE(0x26);
         } else {
           GfMenuObjUtil::playSE(0x25);
         }
       } else {
         icon.setDisp(false);
-        if (unknown20->unknown24 != -1) {
-          GfMenuObjUtil::stopCtrl(unknown20->unknown24);
-          unknown20->unknown24 = -1;
+        if (m_menuObjPartyGauge->unknown24 != -1) {
+          GfMenuObjUtil::stopCtrl(m_menuObjPartyGauge->unknown24);
+          m_menuObjPartyGauge->unknown24 = -1;
         }
       }
     }

@@ -32,8 +32,8 @@ private:
   void *unknown48; // Inferred role: eva data; original member name unknown.
   void *unknown50; // Inferred role: eff data; original member name unknown.
   u8 _58[0x60 - 0x58];
-  CamEvaPlayer unknown60;    // Inferred role: eva player; original member name unknown.
-  CamEvaPlayerEff unknowna0; // Inferred role: eff player; original member name unknown.
+  CamEvaPlayer m_camEvaPlayer;       // Inferred role: eva player; original member name unknown.
+  CamEvaPlayerEff m_camEvaPlayerEff; // Inferred role: eff player; original member name unknown.
 };
 
 static_assert(sizeof(CamMotion) == 0xc0, "");

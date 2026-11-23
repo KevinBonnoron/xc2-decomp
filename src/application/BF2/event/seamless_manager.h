@@ -27,12 +27,12 @@ public:
   struct FirstKey {
     FirstKey(const char *name, const PosAxis &axis, const mm::Vec3 &pos) {
       this->unknown00 = name;
-      this->unknown20 = axis;
+      this->m_posAxis = axis;
       this->unknown40 = pos;
     }
 
     mm::mtl::FixStr<16> unknown00; // Inferred role: name; original member name unknown.
-    PosAxis unknown20;             // Inferred role: axis; original member name unknown.
+    PosAxis m_posAxis;             // Inferred role: axis; original member name unknown.
     mm::Vec3 unknown40;            // Inferred role: pos; original member name unknown.
   };
 

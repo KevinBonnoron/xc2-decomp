@@ -27,7 +27,7 @@ void GfMenuObjFieldIcon::open(GfMenuCallContext *context, const OpenParam &param
       ui::UIObjectAcc(icon.unknown10, "IMG_icon").setImageIndex(imageIndex);
       icon.setDisp(true);
       mm::Vec3 position = param.unknown10;
-      position += param.unknown20;
+      position += param.m_menuOffset.unknown00;
       GfMenuPosAdapter::createFixedPoint(icon.unknown10, position, false);
       startCallContext(context, CALL_UNKNOWN_120, icon.unknown10);
     }

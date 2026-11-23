@@ -52,14 +52,9 @@ void DrShdLgtClustered::stockBegin() {
 }
 
 // The game computes the three components before the first store (the result may alias an operand) and stores z, y, x (0x7100892610:
-// stp for y and z first, 0x710089262c: x after the square root); the other store orders give another schedule (54 instructions in every form).
+// stp for y and z first, 0x710089262c: x after the square root), which mm::Vec3::unknown004 does.
 void DrShdLgtClustered::createPlaneEquation(mm::Vec3 &result, const mm::Vec3 &first, const mm::Vec3 &second) {
-  f32 x = first.y * second.z - first.z * second.y;
-  f32 y = first.z * second.x - second.z * first.x;
-  f32 z = second.y * first.x - first.y * second.x;
-  result.z = z;
-  result.y = y;
-  result.x = x;
+  result.unknown004(first, second);
   result.unknown001();
 }
 
@@ -100,8 +95,8 @@ void DrShdLgtClustered::addViewInfo(int cate) {
 }
 
 void DrShdLgtClustered::convertToViewProj(mm::Vec3 &result, const mm::Vec2 &position) {
-  DrMan *man = unknown10;
-  const mm::Mat44 &matrix = man->unknowna0[unknown08]->unknown10->unknown1c0;
+  DrMan *man = m_drMan;
+  const mm::Mat44 &matrix = man->unknowna0[unknown08]->m_drCalcViewWork->unknown1c0;
   f32 vec[4] = {position.x, position.y, 1.0f, 1.0f};
   f32 out[4];
   for (int i = 0; i < 4; i++) {
@@ -147,11 +142,11 @@ void DrShdLgtClustered::setParamStorageBuffer(u32 cate, u32 index) { unknown20[c
 
 grlib::CGLibTexture *DrShdLgtClustered::getLightListTexture(u32 cate) const { return nullptr; }
 
-void DrShdLgtClustered::beginLightList() { unknown20[unknown08].unknown188 = static_cast<u8 *>(unknown20[unknown08].unknowna8.getBuff()); }
+void DrShdLgtClustered::beginLightList() { unknown20[unknown08].m_lightListData = static_cast<u8 *>(unknown20[unknown08].unknowna8.getBuff()); }
 
-void DrShdLgtClustered::setLightListData(u32 index, int data) { unknown20[unknown08].unknown188[index] = data; }
+void DrShdLgtClustered::setLightListData(u32 index, int data) { unknown20[unknown08].m_lightListData[index] = data; }
 
-u8 DrShdLgtClustered::getLightListData(u32 index) { return unknown20[unknown08].unknown188[index]; }
+u8 DrShdLgtClustered::getLightListData(u32 index) { return unknown20[unknown08].m_lightListData[index]; }
 
 void DrShdLgtClustered::endLightList() { unknown20[unknown08].unknowna8.updateData(); }
 

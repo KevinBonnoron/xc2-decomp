@@ -37,7 +37,7 @@ class Dispatcher : public mm::mtl::ReferenceObject {
 public:
   explicit Dispatcher(const CollisionInfo &info);
 
-  bool dispatchAll(mm::mtl::IntrusiveList<WindProbe> &probes, const UpdateInfo &info);
+  void dispatchAll(mm::mtl::IntrusiveList<WindProbe> &probes, const UpdateInfo &info);
 
   bool (*unknown10)(const WindObject &, const WindObject &, f32, HitCache *); // Inferred role: sphere/sphere test.
   bool (*unknown18)(const WindObject &, const WindObject &, f32, HitCache *); // Inferred role: sphere/box test.

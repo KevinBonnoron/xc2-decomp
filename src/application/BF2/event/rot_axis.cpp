@@ -49,13 +49,13 @@ f32 DataManager::getRotOfsY(u32 axis, const mm::Vec3 &pos) {
     f32 rotY = 0.0f;
     switch (axis) {
     case RotAxis::AXIS_UNKNOWN_0:
-      rotY = unknown120->unknown110.y;
+      rotY = m_ofsInfo->unknown110.y;
       break;
     case RotAxis::AXIS_UNKNOWN_1:
-      rotY = unknown120->unknown110.y;
+      rotY = m_ofsInfo->unknown110.y;
       break;
     case RotAxis::AXIS_UNKNOWN_2:
-      rotY = unknown120->unknown160.y;
+      rotY = m_ofsInfo->unknown160.y;
       break;
     case RotAxis::AXIS_UNKNOWN_3:
       if (mm::mtl::Singleton<TextManager>::getPtr()->getTalker() != nullptr) {

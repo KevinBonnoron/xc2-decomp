@@ -5,13 +5,18 @@
 
 #include "event/chara_obj.h"
 #include "event/manager.h"
+#include "event/mercenaries_manager.h"
 #include "event/object.h"
 #include "event/object_chara.h"
 #include "event/object_manager.h"
+#include "event/quest_manager.h"
+#include "event/ui_manager.h"
 #include "gf/data/gf_data_blade.h"
+#include "gf/data/gf_data_util.h"
 #include "gf/data/gf_game_flag.h"
 #include "gf/data/gf_object_type.h"
 #include "gf/game/event/gf_game_event.h"
+#include "gf/game/gf_game_cond.h"
 #include "gf/request/gf_req_scom.h"
 #include "mm_math/mm_math.h"
 #include "mm_mtl/singleton.h"
@@ -31,6 +36,107 @@ void StatusManager::init() {
 void StatusManager::clear() {
   unknown20.clear();
   unknown18 = 0;
+}
+
+// Inferred role: result text of the log lines of judge; original name unknown.
+static const char *unknown001(bool isOk) { return isOk ? "OK" : "NG"; }
+
+// Erased arguments (ruling of 2026-11-13): the game never sets the this and tag registers (x0, x1) before its calls to log, which is
+// defined in this unit and reads neither, so clang drops them. The tag the original passed cannot be checked; nullptr is passed.
+// The game checks the singleton guard again for the second getState of the range tests (cases 5 and 31), as written here.
+bool StatusManager::judge(EVT_judge type, int id, int value0, int value1, int value2, bool &result) {
+  result = false;
+  switch (type) {
+  case 1:
+    result = static_cast<u32>(id) <= gf::GfDataUtil::getScenarioFlag();
+    log(nullptr, "%d <= scenario  (%s)", id, unknown001(result));
+    return true;
+  case 2:
+    if (mm::mtl::PtrSingleton<Manager>::get()->isEndFadeOut()) {
+      return true;
+    }
+    if (!mm::mtl::Singleton<QuestManager>::getPtr()->entry(id, &result)) {
+      return false;
+    }
+    log(nullptr, "quest[%d].state = %d  (%s)", id, result, unknown001(result));
+    return true;
+  case 3:
+    result = value0 <= mm::mtl::Singleton<QuestManager>::getPtr()->getState(id);
+    log(nullptr, "%d <= quest[%d].state  (%s)", value0, id, unknown001(result));
+    return true;
+  case 5:
+    result = value0 <= mm::mtl::Singleton<QuestManager>::getPtr()->getState(id) && mm::mtl::Singleton<QuestManager>::getPtr()->getState(id) <= value1;
+    log(nullptr, "%d <= quest[%d].state <= %d  (%s)", value0, id, value1, unknown001(result));
+    return true;
+  case 8:
+    result = (value1 != 0) == mm::mtl::Singleton<QuestManager>::getPtr()->getComp(id, value0);
+    log(nullptr, "quest[%d].comp[%d] == %d  (%s)", id, value0, value1, unknown001(result));
+    return true;
+  case 11:
+    result = value0 <= gf::GfGameFlag::getLocal(8, id + 0x848);
+    log(nullptr, "%d <= town8[%d]  (%s)", value0, id, unknown001(result));
+    return true;
+  case 13:
+    result = value0 <= gf::GfGameFlag::getLocal(4, id + 0x1fa);
+    log(nullptr, "%d <= town4[%d]  (%s)", value0, id, unknown001(result));
+    return true;
+  case 15:
+    result = gf::GfGameFlag::getLocal(1, id + 0xc327) == value0;
+    log(nullptr, "%d == town1[%d]  (%s)", value0, id, unknown001(result));
+    return true;
+  case 17:
+    result = value0 <= gf::GfGameFlag::getLocal(8, id + 0x8ad);
+    log(nullptr, "%d <= sys8[%d]  (%s)", value0, id, unknown001(result));
+    return true;
+  case 19:
+    result = value0 <= gf::GfGameFlag::getLocal(4, id + 0x20b);
+    log(nullptr, "%d <= sys4[%d]  (%s)", value0, id, unknown001(result));
+    return true;
+  case 21:
+    result = gf::GfGameFlag::getLocal(1, id + 0x89fa) == value0;
+    log(nullptr, "%d == sys1[%d]  (%s)", value0, id, unknown001(result));
+    return true;
+  case 23:
+    result = value0 <= gf::GfGameFlag::getLocal(8, id + 0x8af);
+    log(nullptr, "%d <= hanyou[%d]  (%s)", value0, id, unknown001(result));
+    return true;
+  case 25:
+    result = gf::GfGameFlag::getLocal(1, id + 0xd651) == 1;
+    log(nullptr, "1 == meet[%d]  (%s)", id, unknown001(result));
+    return true;
+  case 26:
+    result = gf::GfGameCond::isGameCond(id);
+    log(nullptr, "1 == condition[%d]  (%s)", id, unknown001(result));
+    return true;
+  case 27:
+    if (mm::mtl::PtrSingleton<Manager>::get()->isEndFadeOut()) {
+      return true;
+    }
+    if (!mm::mtl::Singleton<UIManager>::getPtr()->execFieldSkill(id, result)) {
+      return false;
+    }
+    log(nullptr, "skill[%d].play()  (%s)", id, unknown001(result));
+    return true;
+  case 28:
+    if (mm::mtl::PtrSingleton<Manager>::get()->isEndFadeOut()) {
+      return true;
+    }
+    if (!mm::mtl::Singleton<UIManager>::getPtr()->openShopUI(id, result)) {
+      return false;
+    }
+    log(nullptr, "shop[%d].play()  (%s)", id, unknown001(result));
+    return true;
+  case 29:
+    result = value0 <= mm::mtl::Singleton<MercenariesManager>::getPtr()->getState(id);
+    log(nullptr, "%d <= merce[%d].state  (%s)", value0, id, unknown001(result));
+    return true;
+  case 31:
+    result = value0 <= mm::mtl::Singleton<MercenariesManager>::getPtr()->getState(id) && mm::mtl::Singleton<MercenariesManager>::getPtr()->getState(id) <= value1;
+    log(nullptr, "%d <= merce[%d].state <= %d  (%s)", value0, id, value1, unknown001(result));
+    return true;
+  default:
+    return true;
+  }
 }
 
 void StatusManager::log(const char *tag, const char *format, ...) {

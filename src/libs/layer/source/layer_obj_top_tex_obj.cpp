@@ -12,18 +12,18 @@
 
 namespace layer {
 
-LayerObjTopTexObj::LayerObjTopTexObj(const grlib::CGLibTextureBuffer *texture) : unknown258(this) {
+LayerObjTopTexObj::LayerObjTopTexObj(const grlib::CGLibTextureBuffer *texture) : m_layerObjSortTexObj(this) {
   unknown270 = texture;
   unknown18 = LAYER_OBJ_TYPE_TEX;
   unknowna8 |= 0x20000;
-  unknown250 = nullptr;
+  m_layerResViewPortInfo = nullptr;
   unknown238 = nullptr;
   createWorkBuffer();
 }
 
 void LayerObjTopTexObj::finalRender() {
-  LayerShdManager *shader = LayerManager::get()->unknown58;
-  if (!shader->unknown002(unknown248, unknown250)) {
+  LayerShdManager *shader = LayerManager::get()->m_layerShdManager;
+  if (!shader->unknown002(m_layerObjTopMaskObj, m_layerResViewPortInfo)) {
     return;
   }
   shader->unknown003(LayerShdManager::s_resDefBlend[unknownc5]);
@@ -32,8 +32,8 @@ void LayerObjTopTexObj::finalRender() {
   shader->setSecTexture(unknown220[2]);
   shader->setupVertex(static_cast<LayerDefVertType>(1));
   shader->unknown4f0 = 1;
-  shader->setupShader(&unknown278);
-  shader->setupTexture(*unknown270, static_cast<LayerSamplerType>(unknownc6), 0);
+  shader->setupShader(&m_cGLibDblUniformBlock);
+  shader->setupTexture(*unknown270, static_cast<LayerSamplerType>(m_texFilterType), 0);
   shader->renderQuadsIndex();
 }
 
@@ -43,7 +43,7 @@ LayerObjTopTexObj::~LayerObjTopTexObj() {
 }
 
 void LayerObjTopTexObj::createWorkBuffer() {
-  unknown278.setup(0x80);
+  m_cGLibDblUniformBlock.setup(0x80);
   u32 width = 0x40;
   u32 height = 0x40;
   if (unknown270->isInitialized()) {
@@ -53,16 +53,16 @@ void LayerObjTopTexObj::createWorkBuffer() {
   unknown005(width, height);
 }
 
-void LayerObjTopTexObj::releaseWorkBuffer() { unknown278.release(); }
+void LayerObjTopTexObj::releaseWorkBuffer() { m_cGLibDblUniformBlock.release(); }
 
 void LayerObjTopTexObj::applyParams(const LayerRenderView *view, const LayerResMatrix &matrix, const LayerResColor &color) {
-  unknown250 = view->unknown08;
-  unknown170.unknown001();
-  LayerObjUtil::calcDispInfo(unknown170, matrix, unknown180);
+  m_layerResViewPortInfo = view->m_layerResViewPortInfo;
+  m_layerResDispInfo.unknown001();
+  LayerObjUtil::calcDispInfo(m_layerResDispInfo, matrix, m_layerResRenderInfo);
   if (unknowna8 & 0x90000) {
     return;
   }
-  updateDefUniformBlock(unknown278, matrix, color, nullptr);
+  updateDefUniformBlock(m_cGLibDblUniformBlock, matrix, color, nullptr);
 }
 
 void LayerObjTopTexObj::setDrawList(LayerSortMan *sortMan, bool is3D) {
@@ -71,12 +71,12 @@ void LayerObjTopTexObj::setDrawList(LayerSortMan *sortMan, bool is3D) {
   }
   if (is3D) {
     if (unknowna8 & 0x400) {
-      LayerManager::get()->unknown60->unknown10->set3DSpace(&unknown258, unknown200);
+      LayerManager::get()->m_layerObjManager->m_layerSortMan->set3DSpace(&m_layerObjSortTexObj, unknown200);
     } else if (!isClip()) {
-      sortMan->set2DSpace(&unknown258, unknownc0);
+      sortMan->set2DSpace(&m_layerObjSortTexObj, m_priority);
     }
   } else if (!isClip()) {
-    sortMan->set2DSpace(&unknown258, unknownc0);
+    sortMan->set2DSpace(&m_layerObjSortTexObj, m_priority);
   }
 }
 

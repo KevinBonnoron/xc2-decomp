@@ -14,7 +14,7 @@ namespace gf {
 // Inferred role: call id of the cursor; original name unknown.
 constexpr u32 unknown001 = 0x13;
 
-GfMenuObjOtherCursor::GfMenuObjOtherCursor(u32 handle) : GfMenuObject(handle), unknown24(0), unknown30(nullptr) {}
+GfMenuObjOtherCursor::GfMenuObjOtherCursor(u32 handle) : GfMenuObject(handle), unknown24(0), m_menuPosAdapter(nullptr) {}
 
 GfMenuObjOtherCursor::~GfMenuObjOtherCursor() { ; }
 
@@ -32,8 +32,8 @@ void GfMenuObjOtherCursor::initialize() {
       listener->release();
     }
     unknown24 = main;
-    unknown30 = GfMenuPosAdapter::create(acc.searchChild("LAY_main"), unknown020, nullptr);
-    unknown30->setPosOffsMode(1);
+    m_menuPosAdapter = GfMenuPosAdapter::create(acc.searchChild("LAY_main"), unknown020, nullptr);
+    m_menuPosAdapter->setPosOffsMode(1);
   }
   GfMenuObject::initialize();
 }

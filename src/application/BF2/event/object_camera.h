@@ -57,17 +57,17 @@ public:
   virtual void OnManiRender(IManiCallback::RenderParam &param);
   const char *getCutName() const;
 
-  CamObj *getCamObj() const { return unknown68; }
-  const PosAxis &getPosAxis() const { return unknown80; }
-  const TarAxis &getTarAxis() const { return unknown2b0; }
+  CamObj *getCamObj() const { return m_camObj; }
+  const PosAxis &getPosAxis() const { return m_posAxis; }
+  const TarAxis &getTarAxis() const { return m_tarAxis; }
 
 private:
-  CamObj *unknown68; // Inferred role: cam object; original member name unknown.
-  u32 unknown70;     // Inferred role: id; original member name unknown.
+  CamObj *m_camObj; // Inferred role: cam object; original member name unknown.
+  u32 unknown70;    // Inferred role: id; original member name unknown.
   u8 _74[0x80 - 0x74];
-  PosAxis unknown80;                                        // Inferred role: pos axis; original member name unknown.
+  PosAxis m_posAxis;                                        // Inferred role: pos axis; original member name unknown.
   mm::mtl::FixedVector<PosAxis, KEY_UNKNOWN_16> unknowna0;  // Inferred role: pos axes; original member name unknown.
-  TarAxis unknown2b0;                                       // Inferred role: tar axis; original member name unknown.
+  TarAxis m_tarAxis;                                        // Inferred role: tar axis; original member name unknown.
   mm::mtl::FixedVector<TarAxis, KEY_UNKNOWN_16> unknown2d0; // Inferred role: tar axes; original member name unknown.
   u32 unknown4e0;                                           // Inferred role: pos axis key index; original member name unknown.
   u32 unknown4e4;                                           // Inferred role: tar axis key index; original member name unknown.

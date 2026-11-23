@@ -34,7 +34,7 @@ bool StateFieldAreaWalk::isCondMatch(const GfComBehaviorEnemy &behavior) {
     return false;
   }
 
-  return !(static_cast<gmk::GmkEnemy *>(gmkInst)->getData()->unknown00 <= behavior.unknown140.unknown08.unknown10);
+  return !(static_cast<gmk::GmkEnemy *>(gmkInst)->getData()->unknown00 <= behavior.m_behaviorEnemyField.m_createInfo.unknown10);
 }
 
 bool StateFieldAreaWalk::getGoalPosRandom(mm::Vec3 &position, const GfComBehaviorEnemy &behavior) const {
@@ -54,11 +54,11 @@ bool StateFieldAreaWalk::getGoalPosRandom(mm::Vec3 &position, const GfComBehavio
   mm::Vec3 front = transform.unknown10.rotate(mm::Vec3::unitZ);
   f32 rotY = atan2f(front.x, front.z);
 
-  bool isFront = ml::mtRandf1(0.0f, 100.0f) <= behavior.unknown140.unknown28;
+  bool isFront = ml::mtRandf1(0.0f, 100.0f) <= behavior.m_behaviorEnemyField.unknown28;
   f32 angleMin = rotY + (isFront ? -1.5707964f : 1.5707964f);
   f32 angleMax = rotY + (isFront ? 1.5707964f : 4.712389f);
-  f32 distanceMin = behavior.unknown140.unknown34 * 0.01f;
-  f32 distanceMax = behavior.unknown140.unknown35 * 0.01f;
+  f32 distanceMin = behavior.m_behaviorEnemyField.unknown34 * 0.01f;
+  f32 distanceMax = behavior.m_behaviorEnemyField.unknown35 * 0.01f;
 
   if (gmkInst->isPointInsideRandomWalk(current)) {
     mm::Mat44 rotation;
@@ -93,8 +93,8 @@ bool StateFieldAreaWalk::getGoalPosCircle(mm::Vec3 &position, const GfComBehavio
     return false;
   }
 
-  const mm::Vec3 &center = enemy->unknown08.unknown08->unknown00;
-  mm::Vec3 direction = behavior.unknown140.unknownc0 - center;
+  const mm::Vec3 &center = enemy->m_createBaseInfo.m_xform->unknown00;
+  mm::Vec3 direction = behavior.m_behaviorEnemyField.unknownc0 - center;
   if (direction.unknown003()) {
     direction = mm::Vec3::unitX;
   } else {
@@ -150,7 +150,7 @@ bool StateFieldAreaWalk::getGoalPosWater(mm::Vec3 &position, const GfComBehavior
 }
 
 void StateFieldAreaWalk::enter(GfComBehaviorEnemy *behavior, ai::State *previous) {
-  if (behavior->unknown140.getGmkRouteNavi() != nullptr || behavior->getBindedGmkInst() == nullptr) {
+  if (behavior->m_behaviorEnemyField.getGmkRouteNavi() != nullptr || behavior->getBindedGmkInst() == nullptr) {
     reqState(STATE_ID_UNKNOWN_1);
     return;
   }
@@ -166,7 +166,7 @@ void StateFieldAreaWalk::enter(GfComBehaviorEnemy *behavior, ai::State *previous
     unknown18 = 1;
   }
 
-  behavior->unknown140.applyFieldMoveSpeed(static_cast<STATE_ID>(unknown08), *behavior);
+  behavior->m_behaviorEnemyField.applyFieldMoveSpeed(static_cast<STATE_ID>(m_state), *behavior);
   unknown58 = &StateFieldAreaWalk::seqInitGoalPos;
 }
 
@@ -198,7 +198,7 @@ void StateFieldAreaWalk::seqInitGoalPos(GfComBehaviorEnemy &behavior, const fw::
     break;
   }
 
-  if (behavior.unknown140.unknown90) {
+  if (behavior.m_behaviorEnemyField.unknown90) {
     f32 radius = gmkInst->getYSnapRayLength() * 0.5f;
     if (fw::NaviUtil::testNaviFindPos(behavior.getTransform().unknown00, radius, radius, 0.1f, goal, radius, radius, 0.1f, 0) != 3) {
       return;
@@ -217,7 +217,7 @@ void StateFieldAreaWalk::seqInitGoalPos(GfComBehaviorEnemy &behavior, const fw::
     goal.y = setup->unknown20.y + ml::mtRandf1(-1.0f, 1.0f) * 3.0f;
   }
 
-  behavior.unknown140.unknownc0 = goal;
+  behavior.m_behaviorEnemyField.unknownc0 = goal;
   behavior.execTurnCmdToGoal();
   unknown58 = &StateFieldAreaWalk::seqWaitTurnEnd;
 }
@@ -250,13 +250,13 @@ void StateFieldAreaWalk::seqMoveToGoal(GfComBehaviorEnemy &behavior, const fw::U
   unknown20.update(info.unknown04);
   if (unknown20.unknown34) {
     bool isFly = behavior.isFly();
-    if (!isFly && !canGetMoveVec(behavior.unknown140.unknown40)) {
+    if (!isFly && !canGetMoveVec(behavior.m_behaviorEnemyField.unknown40)) {
       reqState(STATE_ID_UNKNOWN_1);
     } else {
       unknown68 = info.unknown04 + unknown68;
-      if (behavior.unknown140.isArrivedToGoal() || unknown68 > 5.0f) {
+      if (behavior.m_behaviorEnemyField.isArrivedToGoal() || unknown68 > 5.0f) {
         if (!isFly) {
-          behavior.unknown140.applyFieldMoveSpeed(GfBehaviorEnemyField::MOVE_SPEED_UNKNOWN_1, behavior);
+          behavior.m_behaviorEnemyField.applyFieldMoveSpeed(GfBehaviorEnemyField::MOVE_SPEED_UNKNOWN_1, behavior);
           unknown20.create(TFieldExecCmd<GfComAsm>::CreateInfo(static_cast<GfObj *>(behavior.unknown08)->unknownf8, "C_walkend"));
           unknown58 = &StateFieldAreaWalk::seqWaitMoveEnd;
         } else {
@@ -268,7 +268,7 @@ void StateFieldAreaWalk::seqMoveToGoal(GfComBehaviorEnemy &behavior, const fw::U
         }
       }
 
-      behavior.unknown140.moveToGoal(info.unknown04);
+      behavior.m_behaviorEnemyField.moveToGoal(info.unknown04);
     }
   }
 }

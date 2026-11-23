@@ -23,12 +23,12 @@ static GfMenuShopAdapter::TypeInfo TYPE_INFOS[] = {
     {&GfMenuShopAdapter::update_Owner, {GfMenuAdapter::unknown004_3, 0, 0}},
 };
 
-GfMenuShopAdapter::GfMenuShopAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways) : GfMenuAdapter(plugin, false, isUpdateAlways), unknown50(nullptr), unknown58(0), unknown5c(0) {}
+GfMenuShopAdapter::GfMenuShopAdapter(ui::UIObjectPlugin *plugin, bool isUpdateAlways) : GfMenuAdapter(plugin, false, isUpdateAlways), m_iConverter(nullptr), unknown58(0), unknown5c(0) {}
 
 GfMenuShopAdapter::~GfMenuShopAdapter() {
-  if (unknown50 != nullptr) {
-    delete unknown50;
-    unknown50 = nullptr;
+  if (m_iConverter != nullptr) {
+    delete m_iConverter;
+    m_iConverter = nullptr;
   }
 }
 
@@ -186,7 +186,7 @@ GfMenuShopAdapter *GfMenuShopAdapter::createFromReference(u32 handle, u32 type, 
   ReferenceConverter *converter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) ReferenceConverter();
   GfMenuShopAdapter *adapter = create(handle, type, GfMenuReference::getReferenceShopID(), isUpdateAlways);
   if (adapter != nullptr) {
-    adapter->unknown50 = converter;
+    adapter->m_iConverter = converter;
   }
   return adapter;
 }
@@ -197,7 +197,7 @@ GfMenuShopAdapter *GfMenuShopAdapter::createFromCoverter(u32 handle, u32 type, I
   }
   GfMenuShopAdapter *adapter = create(handle, type, converter->getShopID(), isUpdateAlways);
   if (adapter != nullptr) {
-    adapter->unknown50 = converter;
+    adapter->m_iConverter = converter;
   }
   return adapter;
 }
@@ -211,14 +211,14 @@ GfMenuShopAdapter *GfMenuShopAdapter::createFromReference(u32 handle, u32 type, 
   ReferenceNumberConverter *converter = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) ReferenceNumberConverter(number);
   GfMenuShopAdapter *adapter = create(handle, type, converter->getShopID(), isUpdateAlways);
   if (adapter != nullptr) {
-    adapter->unknown50 = converter;
+    adapter->m_iConverter = converter;
   }
   return adapter;
 }
 
 void GfMenuShopAdapter::update(const fw::UpdateInfo &info) {
-  if (unknown50 != nullptr) {
-    u32 newShop = unknown50->getShopID();
+  if (m_iConverter != nullptr) {
+    u32 newShop = m_iConverter->getShopID();
     if (unknown58 != newShop) {
       unknown58 = newShop;
       setChange();

@@ -43,7 +43,7 @@ void StateFieldWaterPrepareWarp::update(GfComBehaviorPc *behavior, const fw::Upd
     }
   } else if (StateUtilField::execAsmCmd(*comAsm, ASM_CMD_ID_FIELD_WATERHOLE_00)) {
     GfComPropertyPc *property = behavior->unknown08->getComponent<GfComPropertyPc>();
-    MsgPcFieldNotifyWaterWarp message(property->unknown310.getWarpInfo());
+    MsgPcFieldNotifyWaterWarp message(property->m_propertyField.getWarpInfo());
     StateUtil::broadcastMainChar(*behavior, message);
     reqState(STATE_ID_UNKNOWN_30);
   }
@@ -62,11 +62,11 @@ bool StateFieldWaterPrepareWarp::recieveMessage(void *owner, fw::MessageObject *
 
 void StateFieldWaterPrepareWarp::procMsgPcFieldNotifyWarp(GfComBehaviorPc *behavior, fw::MessageObject *sender, MsgPcFieldNotifyWarp &message) {
   GfComPropertyPc *property = behavior->unknown08->getComponent<GfComPropertyPc>();
-  property->unknown310.setWarpInfo(&message);
+  property->m_propertyField.setWarpInfo(&message);
   if (sender != nullptr) {
     GfObj *object = mm::mtl::dynamicCast<GfObj>(sender);
     if (object != nullptr) {
-      property->unknown310.unknown78 = object->unknownf8;
+      property->m_propertyField.m_GF_OBJ_HANDLE = object->unknownf8;
     }
   }
   unknown18 = true;

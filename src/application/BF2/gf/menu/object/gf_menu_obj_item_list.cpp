@@ -111,7 +111,7 @@ void GfMenuObjItemList::initialize() {
       }
     }
     GfMenuItemList::ItemBoxSetup setup;
-    setup.unknown00.unknown08 = unknown28->getSize();
+    setup.m_setupParam.unknown08 = unknown28->getSize();
     for (int i = 0; i < 21; i++) {
       GfMenuItemList *list = GfMenuItemList::create();
       setup.unknown14 = static_cast<ItemType::Type>(i + 1);
@@ -175,9 +175,9 @@ void GfMenuObjItemList::TypeListener::reciveEvent(const ui::EventData &event, u3
     break;
   case 6: {
     int index = event.unknown08;
-    if (index != -1 && index < unknown20->unknown48.size()) {
-      unknown20->unknownf0->unknown001(unknown20->unknown48[index]);
-      ui::UISelectObjList *list = unknown20->unknown38;
+    if (index != -1 && index < m_menuObjItemList->unknown48.size()) {
+      m_menuObjItemList->unknownf0->unknown001(m_menuObjItemList->unknown48[index]);
+      ui::UISelectObjList *list = m_menuObjItemList->unknown38;
       list->setIndex((index + 2) % list->getSize());
       {
         ui::UIObjectAcc name(acc.unknown10, "TXT_item_cate_name");
@@ -204,17 +204,17 @@ void GfMenuObjItemList::ListListener::reciveEvent(const ui::EventData &event, u3
     break;
   case 6: {
     u32 index = event.unknown08;
-    unknown20->unknown28->setIndex(index);
+    m_menuObjItemList->unknown28->setIndex(index);
     break;
   }
   case 0x100:
-    if (unknown20->unknownf0->unknown10->getSize() == 0) {
+    if (m_menuObjItemList->unknownf0->unknown10->getSize() == 0) {
       GfMenuObject::disableInput(acc.unknown10);
       acc.setDispChild(false, "IMG_item_cursor");
     } else {
       GfMenuObject::enableInput(acc.unknown10);
       acc.setDispChild(true, "IMG_item_cursor");
-      GfMenuObject::setupInputSelectionFromList(acc.unknown10, *unknown20->unknownf0->unknown10);
+      GfMenuObject::setupInputSelectionFromList(acc.unknown10, *m_menuObjItemList->unknownf0->unknown10);
     }
     break;
   default:

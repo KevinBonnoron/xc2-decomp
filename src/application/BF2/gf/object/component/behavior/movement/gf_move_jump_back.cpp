@@ -18,7 +18,7 @@ void GfMoveJumpBackControler::createReflection(fw::Reflection *reflection, const
 }
 
 void GfMoveJumpBackControler::update(const fw::UpdateInfo &info, Packet &packet) {
-  const Param *param = packet.unknown10.get<Param>();
+  const Param *param = packet.m_paramAdapter.get<Param>();
   f32 speedMin = -(param->velocityMax * packet.unknown18);
   f32 speed = packet.unknown00.x * packet.unknown20.x + packet.unknown00.y * packet.unknown20.y + packet.unknown00.z * packet.unknown20.z - param->accel * info.unknown04;
   if (!(speed > speedMin)) {

@@ -21,11 +21,11 @@ template <typename T> inline void unknown001(T *&object) {
 
 DrPixlPostObjSSR::DrPixlPostObjSSR(DrMan *drMan, DrPixlMan *pixlMan, DrPixlPostMan *postMan) : DrPixlPostObj(drMan, pixlMan, postMan) {
   unknown18 = 0;
-  unknown20 = new (unknown00->unknown0c) DrPixlRenderTarget(unknown00);
+  unknown20 = new (m_drMan->unknown0c) DrPixlRenderTarget(m_drMan);
   for (s32 i = 0; i < 2; i++) {
-    m_reflectionTexture[i] = new (unknown00->unknown0c) DrPixlRenderTarget(unknown00);
+    m_reflectionTexture[i] = new (m_drMan->unknown0c) DrPixlRenderTarget(m_drMan);
   }
-  unknown38 = new (unknown00->unknown0c) DrPixlRenderTarget(unknown00);
+  unknown38 = new (m_drMan->unknown0c) DrPixlRenderTarget(m_drMan);
   unknown18 |= 3;
   resetColorBuff();
 }
@@ -38,7 +38,7 @@ DrPixlPostObjSSR::~DrPixlPostObjSSR() {
 }
 
 void DrPixlPostObjSSR::releaseColorBuff() {
-  DrPixlPostParm *postParm = unknown00->unknown120[unknown00->unknown1c98];
+  DrPixlPostParm *postParm = m_drMan->unknown120[m_drMan->unknown1c98];
   if (postParm->unknownfe4 == 3) {
     m_reflectionTexture[0]->releaseTexture();
     m_reflectionTexture[1]->releaseTexture();
@@ -53,7 +53,7 @@ void DrPixlPostObjSSR::releaseColorBuff() {
 }
 
 void DrPixlPostObjSSR::render() {
-  if (!unknown00->unknown120[unknown00->unknown1c98]->getSSROn()) {
+  if (!m_drMan->unknown120[m_drMan->unknown1c98]->getSSROn()) {
     unknown18 |= 2;
     return;
   }
@@ -72,7 +72,7 @@ void DrPixlPostObjSSR::render() {
 }
 
 void DrPixlPostObjSSR::debugRender() {
-  DrPixlPostParm *postParm = unknown00->unknown120[unknown00->unknown1c98];
+  DrPixlPostParm *postParm = m_drMan->unknown120[m_drMan->unknown1c98];
   if (postParm->unknown489) {
     DrPixlRenderTarget *target = m_reflectionTexture[DrMan::s_nDblIdx];
     s32 width = target->unknownbc >> postParm->unknownf78;

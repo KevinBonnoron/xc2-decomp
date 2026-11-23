@@ -67,7 +67,7 @@ void BgmManager::stop() {
   if (unknown10 & FLAG_UNKNOWN_1) {
     gf::EventBgmSetup setup;
     setup.unknown00 = "";
-    setup.unknown44 = 1.0f;
+    setup.m_playBgmVolume = 1.0f;
     setup.unknown48 = 0.0f;
     setup.unknown4c = 0.0f;
     setup.unknown50 = 0.0f;
@@ -92,7 +92,7 @@ void BgmManager::playDefaultBgm(f32 fadeFrame) {
   if (fadeFrame >= 0.0f) {
     gf::EventBgmSetup setup;
     setup.unknown00 = "";
-    setup.unknown44 = 1.0f;
+    setup.m_playBgmVolume = 1.0f;
     setup.unknown48 = 0.0f;
     setup.unknown4c = fadeFrame * TO_SEC;
     setup.unknown50 = 0.0f;
@@ -106,7 +106,7 @@ void BgmManager::playDefaultBgm(f32 fadeFrame) {
   }
   gf::EventBgmSetup setup;
   setup.unknown00 = "";
-  setup.unknown44 = 1.0f;
+  setup.m_playBgmVolume = 1.0f;
   setup.unknown48 = 0.0f;
   setup.unknown4c = 0.0f;
   setup.unknown50 = 0.0f;
@@ -130,7 +130,7 @@ void BgmManager::changeVolume(f32 volume, f32 frame) {
   unknown5c = volume;
   gf::EventBgmSetup setup;
   setup.unknown48 = frame * TO_SEC;
-  setup.unknown44 = volume;
+  setup.m_playBgmVolume = volume;
   gf::GfGameEvent::changeVolume(setup);
 }
 
@@ -141,7 +141,7 @@ void BgmManager::setSyncFrame(f32 frame) {
       mm::mtl::Singleton<DebugManager>::getPtr()->playMessage("bgm play offset %.1f", __builtin_fmaxf(frame + unknown68 - unknown6c, 0.0f));
       gf::EventBgmSetup setup;
       setup.unknown00 = "";
-      setup.unknown44 = 1.0f;
+      setup.m_playBgmVolume = 1.0f;
       setup.unknown48 = 0.0f;
       setup.unknown4c = 0.0f;
       setup.unknown50 = 0.0f;

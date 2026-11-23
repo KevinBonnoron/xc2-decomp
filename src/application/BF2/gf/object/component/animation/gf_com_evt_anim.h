@@ -70,20 +70,20 @@ public:
   public:
     class AsmLisener : public anm::AsmListener {
     public:
-      void callback(CallBackType type, const anm::AsmAnnotetion &annotation) override { unknown08->cacheCallback(type, annotation); }
+      void callback(CallBackType type, const anm::AsmAnnotetion &annotation) override { m_asm->cacheCallback(type, annotation); }
 
-      Asm *unknown08; // Inferred role: owner; original member name unknown.
+      Asm *m_asm; // Inferred role: owner; original member name unknown.
     };
 
     class ViewerListener {
     public:
       virtual void onWkStandbyLogout() {
-        if (unknown08 != nullptr) {
-          unknown08->unknown180 = nullptr;
+        if (m_asm != nullptr) {
+          m_asm->unknown180 = nullptr;
         }
       }
 
-      Asm *unknown08; // Inferred role: owner; original member name unknown.
+      Asm *m_asm; // Inferred role: owner; original member name unknown.
     };
 
     Asm();
@@ -110,16 +110,16 @@ public:
     void procMsgActivateComponentDebugWindow(fw::MessageObject *sender, MsgDebugActivateComponentWindow &message);
     void cacheCallback(anm::AsmListener::CallBackType type, const anm::AsmAnnotetion &annotation);
 
-    mm::mtl::unknown027<32> unknown00;         // Inferred role: flags; original member name unknown.
-    GfComModel *unknown08;                     // Inferred role: model; original member name unknown.
-    anm::ASMControl *unknown10;                // Inferred role: asm control; original member name unknown.
-    fw::AnimAsmUpdater unknown18;              // Inferred role: updater; original member name unknown.
-    fw::AnimEventAsmPoseSampler unknown38;     // Inferred role: pose sampler; original member name unknown.
-    CallBack unknown70[CALLBACK_UNKNOWN_5];    // Inferred role: callbacks; original member name unknown.
-    AsmLisener unknown138;                     // Inferred role: listener; original member name unknown.
-    mm::mtl::Vector<CallBackCache> unknown148; // Inferred role: callback caches; original member name unknown.
-    ViewerListener unknown170;                 // Inferred role: viewer listener; original member name unknown.
-    void *unknown180;                          // Inferred role: viewer; original member name unknown.
+    mm::mtl::unknown027<32> unknown00;                     // Inferred role: flags; original member name unknown.
+    GfComModel *m_comModel;                                // Inferred role: model; original member name unknown.
+    anm::ASMControl *unknown10;                            // Inferred role: asm control; original member name unknown.
+    fw::AnimAsmUpdater m_animAsmUpdater;                   // Inferred role: updater; original member name unknown.
+    fw::AnimEventAsmPoseSampler m_animEventAsmPoseSampler; // Inferred role: pose sampler; original member name unknown.
+    CallBack unknown70[CALLBACK_UNKNOWN_5];                // Inferred role: callbacks; original member name unknown.
+    AsmLisener m_asmLisener;                               // Inferred role: listener; original member name unknown.
+    mm::mtl::Vector<CallBackCache> unknown148;             // Inferred role: callback caches; original member name unknown.
+    ViewerListener m_viewerListener;                       // Inferred role: viewer listener; original member name unknown.
+    void *unknown180;                                      // Inferred role: viewer; original member name unknown.
   };
 
   class Mot {
@@ -141,11 +141,11 @@ public:
     bool setEaseSpeed(const char *state, AnimLayer layer, f32 speed);
 
     mm::mtl::unknown027<32> unknown00;                                     // Inferred role: flags; original member name unknown.
-    GfComModel *unknown08;                                                 // Inferred role: model; original member name unknown.
+    GfComModel *m_comModel;                                                // Inferred role: model; original member name unknown.
     anm::ResASM *unknown10;                                                // Inferred role: res asm; original member name unknown.
     anm::Blender *unknown18;                                               // Inferred role: blender; original member name unknown.
-    fw::AnimBlenderUpdater unknown20;                                      // Inferred role: blender updater; original member name unknown.
-    fw::AnimEventMotPoseSamper unknown40;                                  // Inferred role: pose sampler; original member name unknown.
+    fw::AnimBlenderUpdater m_animBlenderUpdater;                           // Inferred role: blender updater; original member name unknown.
+    fw::AnimEventMotPoseSamper m_animEventMotPoseSamper;                   // Inferred role: pose sampler; original member name unknown.
     mm::mtl::FixedVector<anm::Control *, EASE_UNKNOWN_16> unknown78;       // Inferred role: ease controls; original member name unknown.
     mm::mtl::FixedVector<mm::mtl::FixStr<32>, EASE_UNKNOWN_16> unknown100; // Inferred role: ease names; original member name unknown.
     anm::Control *unknown348[MOTION_UNKNOWN_8];                            // Inferred role: controls; original member name unknown.
@@ -186,28 +186,28 @@ public:
   bool setEaseSpeed(const char *name, AnimLayer layer, f32 speed);
   const mm::mtl::RTTI *getRTTI() const override;
 
-  Asm unknown10;                      // Inferred role: anim asm; original member name unknown.
-  Mot unknown198;                     // Inferred role: mot; original member name unknown.
+  Asm m_asm;                          // Inferred role: anim asm; original member name unknown.
+  Mot m_mot;                          // Inferred role: mot; original member name unknown.
   anm::ResASM *unknown550;            // Inferred role: res asm; original member name unknown.
   mm::mtl::FixStr<32> unknown558;     // Inferred role: state; original member name unknown.
   mm::mtl::unknown027<32> unknown57c; // Inferred role: flags; original member name unknown.
   bool unknown580;                    // Inferred role: local space; original member name unknown.
 };
 
-static_assert(offsetof(GfComEvtAnim::Asm, unknown08) == 0x08, "");
+static_assert(offsetof(GfComEvtAnim::Asm, m_comModel) == 0x08, "");
 static_assert(offsetof(GfComEvtAnim::Asm, unknown10) == 0x10, "");
-static_assert(offsetof(GfComEvtAnim::Asm, unknown18) == 0x18, "");
-static_assert(offsetof(GfComEvtAnim::Asm, unknown38) == 0x38, "");
+static_assert(offsetof(GfComEvtAnim::Asm, m_animAsmUpdater) == 0x18, "");
+static_assert(offsetof(GfComEvtAnim::Asm, m_animEventAsmPoseSampler) == 0x38, "");
 static_assert(offsetof(GfComEvtAnim::Asm, unknown70) == 0x70, "");
-static_assert(offsetof(GfComEvtAnim::Asm, unknown138) == 0x138, "");
+static_assert(offsetof(GfComEvtAnim::Asm, m_asmLisener) == 0x138, "");
 static_assert(offsetof(GfComEvtAnim::Asm, unknown148) == 0x148, "");
-static_assert(offsetof(GfComEvtAnim::Asm, unknown170) == 0x170, "");
+static_assert(offsetof(GfComEvtAnim::Asm, m_viewerListener) == 0x170, "");
 static_assert(offsetof(GfComEvtAnim::Asm, unknown180) == 0x180, "");
 static_assert(sizeof(GfComEvtAnim::Asm) == 0x188, "");
-static_assert(offsetof(GfComEvtAnim::Mot, unknown08) == 0x08, "");
+static_assert(offsetof(GfComEvtAnim::Mot, m_comModel) == 0x08, "");
 static_assert(offsetof(GfComEvtAnim::Mot, unknown18) == 0x18, "");
-static_assert(offsetof(GfComEvtAnim::Mot, unknown20) == 0x20, "");
-static_assert(offsetof(GfComEvtAnim::Mot, unknown40) == 0x40, "");
+static_assert(offsetof(GfComEvtAnim::Mot, m_animBlenderUpdater) == 0x20, "");
+static_assert(offsetof(GfComEvtAnim::Mot, m_animEventMotPoseSamper) == 0x40, "");
 static_assert(offsetof(GfComEvtAnim::Mot, unknown78) == 0x78, "");
 static_assert(offsetof(GfComEvtAnim::Mot, unknown100) == 0x100, "");
 static_assert(offsetof(GfComEvtAnim::Mot, unknown348) == 0x348, "");
@@ -216,8 +216,8 @@ static_assert(offsetof(GfComEvtAnim::Mot, unknown3a8) == 0x3a8, "");
 static_assert(offsetof(GfComEvtAnim::Mot, unknown3b0) == 0x3b0, "");
 static_assert(offsetof(GfComEvtAnim::Mot, unknown3b4) == 0x3b4, "");
 static_assert(sizeof(GfComEvtAnim::Mot) == 0x3b8, "");
-static_assert(offsetof(GfComEvtAnim, unknown10) == 0x10, "");
-static_assert(offsetof(GfComEvtAnim, unknown198) == 0x198, "");
+static_assert(offsetof(GfComEvtAnim, m_asm) == 0x10, "");
+static_assert(offsetof(GfComEvtAnim, m_mot) == 0x198, "");
 static_assert(offsetof(GfComEvtAnim, unknown550) == 0x550, "");
 static_assert(offsetof(GfComEvtAnim, unknown558) == 0x558, "");
 static_assert(offsetof(GfComEvtAnim, unknown580) == 0x580, "");

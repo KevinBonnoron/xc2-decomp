@@ -39,13 +39,13 @@ static const unknown001 unknown003[5] = {
     {STATE_ID_UNKNOWN_1, "IDL_Time"}, {STATE_ID_UNKNOWN_2, nullptr}, {STATE_ID_UNKNOWN_3, nullptr}, {STATE_ID_UNKNOWN_4, "ExIDL1_Time"}, {STATE_ID_UNKNOWN_5, "ExIDL2_Time"}};
 
 void StateFieldIdle::enter(GfComBehaviorEnemy *behavior, ai::State *previous) {
-  behavior->unknown140.applyFieldMoveSpeed(GfBehaviorEnemyField::MOVE_SPEED_UNKNOWN_1, *behavior);
+  behavior->m_behaviorEnemyField.applyFieldMoveSpeed(GfBehaviorEnemyField::MOVE_SPEED_UNKNOWN_1, *behavior);
   GfComAsm *comAsm = behavior->unknown08->getComponent<GfComAsm>();
   if (comAsm != nullptr) {
     comAsm->execCmd("C_walkend", ANIM_LAYER_UNKNOWN_0);
   }
 
-  u32 state = unknown08;
+  u32 state = m_state;
   mm::mtl::FixStr<32> command;
   if (previous == nullptr) {
     if (comAsm != nullptr && comAsm->getStateName(ANIM_LAYER_UNKNOWN_0) != nullptr) {
@@ -55,8 +55,8 @@ void StateFieldIdle::enter(GfComBehaviorEnemy *behavior, ai::State *previous) {
       command = "C_idle";
     }
   } else {
-    u32 previousState = previous->unknown08; // Places the load before the clear of the command (0x710050eb20).
-    command.clear();                         // The game clears the command again here (0x710050eb24).
+    u32 previousState = previous->m_state; // Places the load before the clear of the command (0x710050eb20).
+    command.clear();                       // The game clears the command again here (0x710050eb24).
     // The game tests the states 4 and 5 with one comparison (0x710050eb2c); `!= 4 && != 5` gives `and #0xfffffffe; cmp #4`.
     if ((previousState | 1) != STATE_ID_UNKNOWN_5) {
       for (u32 i = 0; i < 5; i++) {
@@ -91,7 +91,7 @@ void StateFieldIdle::enter(GfComBehaviorEnemy *behavior, ai::State *previous) {
     unknown20.create(TFieldExecCmd<GfComAsm>::CreateInfo(static_cast<GfObj *>(behavior->unknown08)->unknownf8, command.c_str()));
   }
 
-  behavior->unknown140.applyFieldMoveSpeed(GfBehaviorEnemyField::MOVE_SPEED_UNKNOWN_0, *behavior);
+  behavior->m_behaviorEnemyField.applyFieldMoveSpeed(GfBehaviorEnemyField::MOVE_SPEED_UNKNOWN_0, *behavior);
   unknown58 = 0.0f;
   bool isFlyInsect = behavior->isFlyInsect();
   unknown18 = isFlyInsect ? 2 : 1;
@@ -101,9 +101,9 @@ void StateFieldIdle::enter(GfComBehaviorEnemy *behavior, ai::State *previous) {
 void StateFieldIdle::leave(GfComBehaviorEnemy *behavior, ai::State *next) {
   GfComAsm *comAsm = behavior->unknown08->getComponent<GfComAsm>();
   if (comAsm != nullptr) {
-    if (unknown08 == STATE_ID_UNKNOWN_4) {
+    if (m_state == STATE_ID_UNKNOWN_4) {
       comAsm->execCmd("C_specialA_02", ANIM_LAYER_UNKNOWN_0);
-    } else if (unknown08 == STATE_ID_UNKNOWN_5) {
+    } else if (m_state == STATE_ID_UNKNOWN_5) {
       comAsm->execCmd("C_specialB_02", ANIM_LAYER_UNKNOWN_0);
     }
   }
@@ -123,7 +123,7 @@ void StateFieldIdle::update(GfComBehaviorEnemy *behavior, const fw::UpdateInfo &
     }
 
     unknown58 = info.unknown04 + unknown58;
-    if ((unknown5c != 0.0f && unknown5c <= unknown58) || (behavior->unknown54e2 && unknown08 != STATE_ID_UNKNOWN_1)) {
+    if ((unknown5c != 0.0f && unknown5c <= unknown58) || (behavior->unknown54e2 && m_state != STATE_ID_UNKNOWN_1)) {
       if (behavior->isStateCondMatch(STATE_ID_UNKNOWN_14)) {
         reqState(STATE_ID_UNKNOWN_14);
       } else {
@@ -148,21 +148,21 @@ void StateFieldIdle::seqFlyInsectIdle(GfComBehaviorEnemy &behavior, const fw::Up
     mm::Vec3 position = behavior.getTransform().unknown00;
     GfObjSetupEnemy *setup = mm::mtl::dynamicCast<GfObjSetupEnemy>(GfObjManager::getObjInfo(static_cast<GfObj *>(behavior.unknown08)->unknownf8)->unknown30);
     position.y = setup->unknown20.y + ml::mtRandf1(-1.0f, 1.0f) * 3.0f;
-    behavior.unknown140.unknownc0 = position;
+    behavior.m_behaviorEnemyField.unknownc0 = position;
   }
 
   if (unknown20.unknown34) {
     behavior.unknown003(info.unknown04);
   }
 
-  if (behavior.unknown140.isArrivedToGoal()) {
+  if (behavior.m_behaviorEnemyField.isArrivedToGoal()) {
     unknown58 = unknown5c;
   }
 }
 
 void StateFieldIdle::seqOthersIdle(GfComBehaviorEnemy &behavior, const fw::UpdateInfo &info) {
   if (unknown20.unknown35) {
-    behavior.unknown140.unknownc0 = behavior.getTransform().unknown00;
+    behavior.m_behaviorEnemyField.unknownc0 = behavior.getTransform().unknown00;
   }
 }
 

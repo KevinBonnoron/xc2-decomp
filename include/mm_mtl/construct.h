@@ -41,7 +41,13 @@ template <typename T> void destruct_n(T *, size_t, int_to_type<1>) {}
 
 template <typename T> void construct_n(T *buffer, size_t count) { mtl_detail::construct_n(buffer, count, int_to_type<__is_scalar(T)>()); }
 
-template <typename T> void copy_construct_n(const T *source, size_t count, T *destination) { mtl_detail::copy_construct_n(source, count, destination, int_to_type<__has_trivial_copy(T)>()); }
+// One memcpy of the range for a type with a trivial copy and a trivial destructor, or declared plain old data through is_pod (arc::CArcData: its destructor is user-provided, yet the game copies
+// Vector<CArcData>::extend, 0x710014e68c, with one memcpy; the element loop gives 89 instructions against 72). A type with a user destructor is copied element by element, a memcpy of one element per
+// iteration unrolled by two (Vector<GmkNpcIdInfo>::expand 0x710068e2b4, Vector<GfFieldLod::BdatInfo>::expand 0x71002e7014): testing has_trivial_copy alone gives the memcpy of the range there (81
+// instructions against 99, and 101 against 123).
+template <typename T> void copy_construct_n(const T *source, size_t count, T *destination) {
+  mtl_detail::copy_construct_n(source, count, destination, int_to_type<(__has_trivial_copy(T) && __has_trivial_destructor(T)) || is_pod<T>::unknown001>());
+}
 
 template <typename T> void destruct_n(T *buffer, size_t count) { mtl_detail::destruct_n(buffer, count, int_to_type<__has_trivial_destructor(T)>()); }
 

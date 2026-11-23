@@ -44,7 +44,9 @@ public:
   };
 
   static SlopeGroundSolver *create(const Description &description, mm::mtl::IntrusivePtr<ReferenceFrame> &frame, anm::Pose &pose, IKGroundInterface *ground);
+  bool createImpl(const Description &description, mm::mtl::IntrusivePtr<ReferenceFrame> &frame, anm::Pose &pose, IKGroundInterface *ground);
 
+  SlopeGroundSolver();
   ~SlopeGroundSolver() override;
   FootPlacementIKSolver *createFootPlacementIK(IKFootIndex index, ParamAdapter &param, const char *footName, const char *kneeName, const char *hipName, bool isMirror);
   void setEnablePlacement(bool enable);
@@ -53,24 +55,24 @@ public:
   void slopeBody(const UpdateInfo &info);
   void solveFoot(const UpdateInfo &info);
 
-  Description unknown20;                                                           // Inferred role: description copied by createImpl; original member name unknown.
+  Description m_description;                                                       // Inferred role: description copied by createImpl; original member name unknown.
   mm::Quat unknown40;                                                              // Inferred role: unknown; original member name unknown.
   mm::mtl::FixedVector<mm::mtl::IntrusivePtr<FootPlacementIKSolver>, 6> unknown50; // Inferred role: foot solvers; original member name unknown.
   bool unknown88;                                                                  // Inferred role: unknown; original member name unknown.
   bool unknown89;                                                                  // Inferred role: placement enabled; original member name unknown.
   u8 _8a[0x90 - 0x8a];
-  IKGroundInterface *unknown90; // Inferred role: ground interface; original member name unknown.
+  IKGroundInterface *m_iKGroundInterface; // Inferred role: ground interface; original member name unknown.
 };
 
 static_assert(offsetof(SlopeGroundSolver::Description, unknown14) == 0x14, "");
 static_assert(offsetof(SlopeGroundSolver::Description, unknown1c) == 0x1c, "");
 static_assert(sizeof(SlopeGroundSolver::Description) == 0x20, "");
-static_assert(offsetof(SlopeGroundSolver, unknown20) == 0x20, "");
-static_assert(offsetof(SlopeGroundSolver, unknown20.unknown1c) == 0x3c, "");
+static_assert(offsetof(SlopeGroundSolver, m_description) == 0x20, "");
+static_assert(offsetof(SlopeGroundSolver, m_description.unknown1c) == 0x3c, "");
 static_assert(offsetof(SlopeGroundSolver, unknown40) == 0x40, "");
 static_assert(offsetof(SlopeGroundSolver, unknown50) == 0x50, "");
 static_assert(offsetof(SlopeGroundSolver, unknown88) == 0x88, "");
 static_assert(offsetof(SlopeGroundSolver, unknown89) == 0x89, "");
-static_assert(offsetof(SlopeGroundSolver, unknown90) == 0x90, "");
+static_assert(offsetof(SlopeGroundSolver, m_iKGroundInterface) == 0x90, "");
 
 } // namespace fw

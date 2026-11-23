@@ -20,20 +20,20 @@ class GfMenuObjDrCustomTop : public GfMenuObject {
 public:
   class MainListener : public ui::UIObjectListener {
   public:
-    MainListener(GfMenuObjDrCustomTop *owner) : _0c(), unknown20(owner) {}
+    MainListener(GfMenuObjDrCustomTop *owner) : _0c(), m_menuObjDrCustomTop(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
-    GfMenuObjDrCustomTop *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjDrCustomTop *m_menuObjDrCustomTop; // Inferred role: owner; original member name unknown.
   };
 
   class DrSelectListener : public ui::UIObjectListener {
   public:
-    DrSelectListener(GfMenuObjDrCustomTop *owner) : _0c(), unknown20(owner) {}
+    DrSelectListener(GfMenuObjDrCustomTop *owner) : _0c(), m_menuObjDrCustomTop(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
     u8 _0c[0x1c - 0x0c];
-    GfMenuObjDrCustomTop *unknown20; // Inferred role: owner; original member name unknown.
+    GfMenuObjDrCustomTop *m_menuObjDrCustomTop; // Inferred role: owner; original member name unknown.
   };
 
   GfMenuObjDrCustomTop(u32 handle);
@@ -60,7 +60,7 @@ public:
   bool seqEndAddLayer();
 
   u8 _24[0x28 - 0x24];
-  GfMenuDriverList *unknown28;                       // Inferred role: drivers; original member name unknown.
+  GfMenuDriverList *m_menuDriverList;                // Inferred role: drivers; original member name unknown.
   ui::UISelectObjList *unknown30;                    // Inferred role: driver objects; original member name unknown.
   ui::UICtrlRevolveSelect *unknown38;                // Inferred role: driver ring control; original member name unknown.
   GfMenuCallContext *unknown40;                      // Inferred role: common jog call context; original member name unknown.
@@ -71,7 +71,7 @@ public:
   u16 unknown2ec;                                    // Inferred role: layer to add; original member name unknown.
 };
 
-static_assert(offsetof(GfMenuObjDrCustomTop, unknown28) == 0x28, "");
+static_assert(offsetof(GfMenuObjDrCustomTop, m_menuDriverList) == 0x28, "");
 static_assert(offsetof(GfMenuObjDrCustomTop, unknown30) == 0x30, "");
 static_assert(offsetof(GfMenuObjDrCustomTop, unknown38) == 0x38, "");
 static_assert(offsetof(GfMenuObjDrCustomTop, unknown40) == 0x40, "");
@@ -81,9 +81,9 @@ static_assert(offsetof(GfMenuObjDrCustomTop, unknown58) == 0x58, "");
 static_assert(offsetof(GfMenuObjDrCustomTop, unknown2e8) == 0x2e8, "");
 static_assert(offsetof(GfMenuObjDrCustomTop, unknown2ec) == 0x2ec, "");
 
-static_assert(offsetof(GfMenuObjDrCustomTop::MainListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjDrCustomTop::MainListener, m_menuObjDrCustomTop) == 0x20, "");
 static_assert(sizeof(GfMenuObjDrCustomTop::MainListener) == 0x28, "");
-static_assert(offsetof(GfMenuObjDrCustomTop::DrSelectListener, unknown20) == 0x20, "");
+static_assert(offsetof(GfMenuObjDrCustomTop::DrSelectListener, m_menuObjDrCustomTop) == 0x20, "");
 static_assert(sizeof(GfMenuObjDrCustomTop::DrSelectListener) == 0x28, "");
 
 } // namespace gf

@@ -22,10 +22,10 @@ public:
 #line 57
   static GfMenuReferenceItem *unknown001() { return new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) GfMenuReferenceItem; }
 
-  MenuItemInfo unknown0c; // Inferred role: item; original member name unknown.
+  MenuItemInfo m_menuItemInfo; // Inferred role: item; original member name unknown.
 };
 
-static_assert(offsetof(GfMenuReferenceItem, unknown0c) == 0x0c, "");
+static_assert(offsetof(GfMenuReferenceItem, m_menuItemInfo) == 0x0c, "");
 
 class GfMenuReferenceDriverEquipItem : public IGfMenuReferenceItem {
 public:

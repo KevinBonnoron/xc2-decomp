@@ -48,7 +48,7 @@ SpineRotateIKSolver *SpineRotateIKSolver::create(const ParamAdapter &param, cons
 
 bool SpineRotateIKSolver::setupLimit(const ParamAdapter &param, const char *boneName, const char *endBoneName, mm::mtl::IntrusivePtr<ReferenceFrame> &frame, anm::Pose &pose) {
   bind(frame, pose);
-  unknown38 = param;
+  m_paramAdapter = param;
   const anm::Skeleton *skeleton = unknown18->unknown18;
   if (boneName != nullptr) {
     unknown40 = skeleton->getBoneID(boneName);
@@ -60,7 +60,7 @@ bool SpineRotateIKSolver::setupLimit(const ParamAdapter &param, const char *bone
   return unknown40 != anm::Skeleton::INVALID_BONE || unknown42 != anm::Skeleton::INVALID_BONE;
 }
 
-SpineRotateIKSolver::SpineRotateIKSolver() : unknown38(), unknown40(0xffff), unknown42(0xffff), unknown44() {}
+SpineRotateIKSolver::SpineRotateIKSolver() : m_paramAdapter(), unknown40(0xffff), unknown42(0xffff), unknown44() {}
 
 SpineRotateIKSolver::~SpineRotateIKSolver() {}
 
