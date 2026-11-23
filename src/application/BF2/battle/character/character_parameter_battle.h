@@ -241,9 +241,9 @@ public:
   f32 unknown34;                // Inferred role: height; original member name unknown.
   f32 unknown38;                // Role and original member name unknown.
   f32 unknown3c;                // Inferred role: ball radius; original member name unknown.
-  f32 unknown40;                // Inferred role: attack rate; original member name unknown.
-  f32 unknown44;                // Inferred role: attack rate scaled; original member name unknown.
-  f32 unknown48;                // Inferred role: run rate; original member name unknown.
+  f32 unknown40;                // Inferred role: battle speed, SDataEnemy unknown4b scaled; original member name unknown.
+  f32 unknown44;                // Inferred role: two thirds of unknown40 times the model scale; original member name unknown.
+  f32 unknown48;                // Inferred role: run speed, SDataEnemy unknown4a scaled; original member name unknown.
   f32 unknown4c;                // Inferred role: attack angle; original member name unknown.
   u8 _50[0x5c - 0x50];
   f32 unknown5c[SPECIAL_ENHANCE_COUNT]; // Inferred role: special enhance rates; original member name unknown.

@@ -50,6 +50,7 @@ void CharacterParameter::Initialize(gf::GF_OBJ_HANDLE *handle) {
   unknown18 = gf::GfObjUtil::getGameObjectID(handle);
   u32 chrId = objAcc.getBdatId();
   unknown24 = chrId;
+  // Declared before the branch so the flag word at 0x5a8 gets one read-modify-write; assigning 0 inside the branch instead gives 266 instructions against the game's 264.
   u32 size = 0;
   if (IsEnemyParameter()) {
     const gf::SDataEnemy *enemy = acc.getSDataEnemy();
@@ -65,10 +66,10 @@ void CharacterParameter::Initialize(gf::GF_OBJ_HANDLE *handle) {
     unknown2c = 0.5f;
     unknown3c = 0.5f;
     unknown30 = chestHeight * 1.4285715f;
-    unknown40 = 1.0f / 6.0f;
-    unknown44 = 1.0f / 9.0f;
     unknown34 = chestHeight;
     unknown38 = chestHeight;
+    unknown40 = 1.0f / 6.0f;
+    unknown44 = 1.0f / 9.0f;
     unknown48 = 7.0f / 27.0f;
     unknown4c = 1.5707964f;
     if (chrId >= 0x3e9) {
@@ -116,7 +117,7 @@ void CharacterParameter::Initialize(gf::GF_OBJ_HANDLE *handle) {
     unknown48 = scale * static_cast<f32>(enemy->unknown4a) * (1.0f / 108.0f);
 
     u32 frontAngle = rsc->getRscEnFrontAngle(resource);
-    unknown4c = frontAngle == 0 ? 1.5707964f : static_cast<f32>(frontAngle) * 0.017453292f;
+    unknown4c = frontAngle == 0 ? 1.5707964f : static_cast<f32>(frontAngle) * mm::DEG_TO_RAD;
 
     unknown5aa = static_cast<s8>(rsc->getRscEnRotateX(resource));
     unknown5ab = static_cast<s8>(rsc->getRscEnRotateY(resource));
