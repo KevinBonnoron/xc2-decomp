@@ -25,6 +25,9 @@ struct EventData {
       union {
         u32 unknown0c;     // Inferred role: param1; original member name unknown.
         f32 unknown0c_f32; // View of the second parameter slot as a float; original member name unknown.
+        // Low bit of the second parameter slot, read by GfMenuObjBalloon::openAutoTalk with ldrb and tbnz #0 (0x71003ee39c):
+        // a plain bool or u8 gives cbz. Original member name unknown.
+        bool unknown0c_0 : 1;
         struct {
           u16 unknown0c_u16; // Inferred role: param1 low half; original member name unknown.
           u16 unknown0e;     // Inferred role: param1 high half; original member name unknown.
