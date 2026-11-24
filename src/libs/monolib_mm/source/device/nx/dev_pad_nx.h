@@ -2,6 +2,8 @@
 #include <stddef.h>
 
 #include "ml/dev_pad.h"
+#include "mm_mtl/delegate.h"
+#include "mm_mtl/fixed_array.h"
 #include "mm_mtl/unique_ptr.h"
 #include "nn/hid.h"
 #include "types.h"
@@ -66,16 +68,38 @@ public:
     void updateDebugPad(PadData &data);
     void release();
     void stopVibration(PadData &data);
+    void playVibration(PadData &data, const PadVibrationInfo &info);
     nn::hid::VibrationPlayer *getVibPlayer(u32 id);
+    // Inferred role: returns the pad that padNo selects; original function name unknown. The table is indexed through
+    // its base pointer: a direct FixedArray index gives a branch where the game has a select.
+    PadData &unknown003(int padNo) {
+      PadData *pads = unknown3638.begin();
+      if (unknown4548 == padNo) {
+        return unknown4238;
+      }
+      if (padNo == 4) {
+        int index = unknown4540;
+        return index >= 0 ? pads[index] : unknown43b8;
+      }
+      return padNo < 4 ? pads[padNo] : unknown43b8;
+    }
 
-    u8 _0000[0x0020];
-    s32 unknown20;    // Inferred role: state of the pad update, 2 updates the npads; original member name unknown.
-    u32 unknown24[4]; // Inferred role: npad ids of the pads; original member name unknown.
+    mm::mtl::Delegate<void(f32)> unknown0000; // Inferred role: update callback bound by stateInitialize; original member name unknown.
+    s32 unknown20;                            // Inferred role: state of the pad update, 2 updates the npads; original member name unknown.
+    u32 unknown24[4];                         // Inferred role: npad ids of the pads; original member name unknown.
     u8 _0034[0x38 - 0x34];
-    unknown002 unknown38[64]; // Inferred role: vibration entries; original member name unknown.
-    u8 _3638[0x4540 - 0x3638];
-    s32 unknown4540; // Inferred role: pad index; original member name unknown.
-    s32 unknown4544; // Inferred role: user select pad id; original member name unknown.
+    unknown002 unknown38[64];                    // Inferred role: vibration entries; original member name unknown.
+    mm::mtl::FixedArray<PadData, 4> unknown3638; // Inferred role: player pads; original member name unknown.
+    mm::mtl::FixedArray<PadData, 4> unknown3c38; // Inferred role: second pad table; original member name unknown.
+    PadData unknown4238;                         // Inferred role: pad that unknown4548 selects; original member name unknown.
+    PadData unknown43b8;                         // Inferred role: pad used when no player pad matches; original member name unknown.
+    s32 unknown4538;                             // Inferred role: unknown, nothing reads it; zeroed by Impl::Impl with unknown453c; original member name unknown.
+    s32 unknown453c;                             // Inferred role: pad count; Impl::Impl leaves it 0 and only the pad loops read it, so they are dead in this build; original member name unknown.
+    s32 unknown4540;                             // Inferred role: pad index; original member name unknown.
+    s32 unknown4544;                             // Inferred role: user select pad id; original member name unknown.
+    s32 unknown4548;                             // Inferred role: pad id that maps to unknown4238; only ever -1 in this build; original member name unknown.
+    s32 unknown454c;                             // Inferred role: loop counter; incremented by Impl::updateNpad and never read; original member name unknown.
+    s32 unknown4550;                             // Inferred role: id of the vibration playing; original member name unknown.
   };
 
   DevPadNx(const char *name, WorkObj *parent);
@@ -88,6 +112,8 @@ public:
   f32 getLocalALY(int padNo) const override;
   f32 getLocalARX(int padNo) const override;
   f32 getLocalARY(int padNo) const override;
+  void playLocalVibration(int padNo, const PadVibrationInfo &info) override;
+  void stopLocalVibration(int padNo) override;
   void updateDevice(f32 time) override;
   bool createDevice() override;
   void releaseDevice() override;
@@ -110,8 +136,18 @@ static_assert(sizeof(DevPadNx::Impl::unknown002) == 0xd8, "");
 static_assert(offsetof(DevPadNx::Impl, unknown20) == 0x0020, "");
 static_assert(offsetof(DevPadNx::Impl, unknown24) == 0x0024, "");
 static_assert(offsetof(DevPadNx::Impl, unknown38) == 0x0038, "");
+static_assert(offsetof(DevPadNx::Impl, unknown3638) == 0x3638, "");
+static_assert(offsetof(DevPadNx::Impl, unknown3c38) == 0x3c38, "");
+static_assert(offsetof(DevPadNx::Impl, unknown4238) == 0x4238, "");
+static_assert(offsetof(DevPadNx::Impl, unknown43b8) == 0x43b8, "");
+static_assert(offsetof(DevPadNx::Impl, unknown4538) == 0x4538, "");
+static_assert(offsetof(DevPadNx::Impl, unknown453c) == 0x453c, "");
 static_assert(offsetof(DevPadNx::Impl, unknown4540) == 0x4540, "");
 static_assert(offsetof(DevPadNx::Impl, unknown4544) == 0x4544, "");
+static_assert(offsetof(DevPadNx::Impl, unknown4548) == 0x4548, "");
+static_assert(offsetof(DevPadNx::Impl, unknown454c) == 0x454c, "");
+static_assert(offsetof(DevPadNx::Impl, unknown4550) == 0x4550, "");
+static_assert(sizeof(DevPadNx::Impl) == 0x4558, "");
 static_assert(offsetof(DevPadNx, unknown548) == 0x548, "");
 
 } // namespace ml
