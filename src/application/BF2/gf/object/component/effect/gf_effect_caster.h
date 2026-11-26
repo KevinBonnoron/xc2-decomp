@@ -5,6 +5,10 @@
 #include "mm_math/mm_mat44.h"
 #include "types.h"
 
+namespace fw {
+class EffectPoint;
+} // namespace fw
+
 namespace gf {
 
 class GfComEffectCaster;
@@ -15,7 +19,20 @@ class GfComEffectCaster;
 // point transform with the matrix. The virtual overrides update, postUpdate and the destructor (D0 0x710050ae80) are not declared: none of them is matched yet.
 class EffectCaster : public fw::EffectCasterBase {
 public:
-  u8 _48[0x58 - 0x48];
+  void unknown001(const fw::UpdateInfo &info) override;
+  void unknown002(const fw::UpdateInfo &info) override;
+
+  EffectCaster(const fw::EffectPoint *point, u32 layer) : EffectCasterBase(point, layer) {
+    m_comEffectCaster = nullptr;
+    unknowna0 = false;
+    unknown60 = mm::Mat44::identity;
+    unknown4c = 0;
+    unknown44 = 0;
+    unknown48 = 0;
+    unknown50 = 0;
+  }
+
+  u8 _48[0x58 - 0x54];
   GfComEffectCaster *m_comEffectCaster; // Inferred role: owner component; original member name unknown.
   mm::Mat44 unknown60;                  // Inferred role: root matrix of the caster; original member name unknown.
   bool unknowna0;                       // Inferred role: copy the matrix into the effect manager; original member name unknown.

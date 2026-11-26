@@ -276,6 +276,8 @@ public:
   bool stopTimer(u32 effect);
   bool addCasterEffectEv(u32 effect);
   void effectEnd(u32 effect);
+  void setupEfTail(u32 effect);
+  void setupCaster(const fw::EffectPoint *point);
   void procMsgObjectNotifyDamage(fw::MessageObject *object, MsgObjectNotifyDamage &message);
   void procMsgObjectNotifyDead(fw::MessageObject *object, MsgObjectNotifyDead &message);
   void procMsgFxRimBloomEnd(fw::MessageObject *object, MsgFxRimBloomEnd &message);

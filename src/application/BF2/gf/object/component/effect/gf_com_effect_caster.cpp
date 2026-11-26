@@ -14,16 +14,19 @@
 #include "framework/framework.h"
 #include "framework/memory/framework_memory.h"
 #include "framework/object/updatable_object.h"
+#include "fw/fw_model_object.h"
 #include "fw/fw_transform.h"
 #include "gf/asset/gf_asset_def.h"
 #include "gf/asset/gf_asset_manager.h"
 #include "gf/asset/gf_asset_resource.h"
 #include "gf/data/gf_data_param_acc.h"
 #include "gf/data/gf_data_weapon.h"
+#include "gf/game/gf_game_manager.h"
 #include "gf/game/gf_game_util.h"
 #include "gf/object/component/animation/gf_com_asm.h"      // IWYU pragma: keep
 #include "gf/object/component/animation/gf_com_evt_anim.h" // IWYU pragma: keep
 #include "gf/object/component/effect/gf_effect_caster.h"
+#include "gf/object/component/gf_com_transform.h"
 #include "gf/object/component/model/gf_com_model.h"       // IWYU pragma: keep
 #include "gf/object/component/property/gf_com_property.h" // IWYU pragma: keep
 #include "gf/object/gf_obj.h"
@@ -31,11 +34,20 @@
 #include "gf/object/gf_obj_handle.h"
 #include "gf/object/gf_obj_util.h"
 #include "mm_mtl/delegate.h"
+#include "mm_mtl/reference_object.h"
 #include "mm_mtl/unique_ptr.h"
 #include "mm_mtl/vector.h"
+#include "scn/scn_obj_model_dr_sys.h"
+
+namespace ml {
+class ScnObjModel;
+} // namespace ml
 
 // Named as the game's global symbol ASM_CB_NAME_EFFECT.
 const char *ASM_CB_NAME_EFFECT = "asm_effect";
+
+// Inferred role: set when the party leader's caster is set up; original name unknown.
+static bool s_isPartyLeaderCaster;
 
 namespace {
 // Inferred roles: effect point files selected by setupEfp (0x7100506134); original names unknown.
@@ -494,6 +506,78 @@ void GfComEffectCaster::effectEnd(u32 effect) {
     if (param->unknown58 == effect && param->unknown58 != 0) {
       fw::EffectManager::get()->dead(effect);
       param->unknownba = true;
+      return;
+    }
+  }
+}
+
+void GfComEffectCaster::setupCaster(const fw::EffectPoint *point) {
+  GfComTransform *transform = static_cast<GfObj *>(unknown08)->getComponent<GfComTransform>();
+  mm::mtl::IntrusivePtr<fw::ReferenceFrame> &frame = transform->unknown001();
+#line 626
+  EffectCaster *caster = new (fw::Framework::getAllocator(), 16, __FILE__, __LINE__) EffectCaster(point, unknown113c0);
+  m_effectCaster = caster;
+  if (caster == nullptr) {
+    return;
+  }
+  caster->unknown08 = frame.get();
+  m_effectCaster->m_comEffectCaster = this;
+  if (!s_isPartyLeaderCaster && static_cast<GfObj *>(unknown08)->unknownf8 == GfGameManager::getPartyLeader()) {
+    s_isPartyLeaderCaster = true;
+    m_effectCaster->unknowna0 = true;
+  }
+  GfComModel *model = static_cast<GfObj *>(unknown08)->getComponent<GfComModel>();
+  if (model != nullptr && model->unknown18 != nullptr) {
+    fw::EffectCasterBase *caster = m_effectCaster;
+    ml::ScnObjModel *interface = model->unknown18->getInterface();
+    caster->unknown18 = static_cast<ml::ScnObjModelDrSys *>(interface);
+  }
+}
+
+void GfComEffectCaster::setupEfTail(u32 effect) {
+  if (unknown1149c != 0) {
+    if (unknown114ac == effect) {
+      return;
+    }
+    GfAssetResource *resource = GfObjUtil::getWeaponResourceSwt(static_cast<GfObj *>(unknown08)->unknownf8, 0);
+    if (resource == nullptr) {
+      return;
+    }
+    fw::EffectCasterBase *caster = m_effectCaster;
+    void *data = resource->getAssetData();
+    u32 size = resource->getAssetSize();
+    caster->unknown20 = static_cast<fw::EffectCasterSend::MtxAndName *>(data);
+    caster->unknown28 = size;
+    unknown114ac = effect;
+    return;
+  }
+  if (m_effectCaster == nullptr || unknown114ac == effect) {
+    return;
+  }
+  u32 count = GfObjUtil::getWeaponResourceSwtNum(static_cast<GfObj *>(unknown08)->unknownf8);
+  if (count == 0) {
+    return;
+  }
+  for (u32 i = 0; i < count; i++) {
+    GfAssetResource *resource = GfObjUtil::getWeaponResourceSwt(static_cast<GfObj *>(unknown08)->unknownf8, i);
+    if (resource == nullptr) {
+      continue;
+    }
+    const char *found = strchr(resource->getAssetName(), '_');
+    if (found == nullptr) {
+      continue;
+    }
+    char digits[4] = {};
+    digits[0] = found[1];
+    digits[1] = found[2];
+    digits[2] = 0;
+    if (atoi(digits) == effect) {
+      fw::EffectCasterBase *caster = m_effectCaster;
+      void *data = resource->getAssetData();
+      u32 size = resource->getAssetSize();
+      caster->unknown20 = static_cast<fw::EffectCasterSend::MtxAndName *>(data);
+      caster->unknown28 = size;
+      unknown114ac = effect;
       return;
     }
   }
