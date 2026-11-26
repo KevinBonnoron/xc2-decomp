@@ -229,6 +229,20 @@ void GfComEffectCaster::procMsgFxRimBloomTarget(fw::MessageObject *object, MsgFx
   unknown20 = -1.0f;
 }
 
+void GfComEffectCaster::procMsgFxFootPrint(fw::MessageObject *object, MsgFxFootPrint &message) { GfEffectGround::emitFootStepEffect(this, message); }
+
+void GfComEffectCaster::procMsgFxSplashdown(fw::MessageObject *object, MsgFxSplashdown &message) { GfEffectGround::emitSplashdownEffect(this, message.unknown08); }
+
+void GfComEffectCaster::procMsgFxComboBuff(fw::MessageObject *object, MsgFxComboBuff &message) {
+  GfObjAcc acc(static_cast<GfObj *>(unknown08));
+  EffectSetUp setup;
+  const char *name = message.unknown10;
+  setup.unknown44 = 1;
+  setup.unknown28 = name;
+  setup.unknown38 = unknown114a8;
+  effectStart(setup, nullptr);
+}
+
 void GfComEffectCaster::procMsgFxRimBloom(fw::MessageObject *object, MsgFxRimBloom &message) {
   if (unknown1c < 0.0f || message.unknown0c) {
     unknown18 = message.unknown08;

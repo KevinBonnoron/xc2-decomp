@@ -9,6 +9,7 @@ class GfComEffectCaster;
 class GfEnvProperty;
 
 struct GfCharaWaterInfo;
+struct MsgFxFootPrint;
 
 class GfEffectGround {
 public:
@@ -28,6 +29,8 @@ public:
   static bool tryGetWaterDepth(const GfComEffectCaster *caster, const GfCharaWaterInfo *waterInfo, f32 &depth);
   static SwimEffectState calcSwimEffectParam(const GfComEffectCaster *caster, bool unknown1, bool unknown2, effect::SendParam &param);
   static bool isOnWaterSurface(const GfComEffectCaster *caster);
+  static void emitFootStepEffect(const GfComEffectCaster *caster, const MsgFxFootPrint &message);
+  static void emitSplashdownEffect(const GfComEffectCaster *caster, bool isBig);
   static u32 getWaterHeightStateImpl(f32 height, f32 first, f32 second);
 };
 

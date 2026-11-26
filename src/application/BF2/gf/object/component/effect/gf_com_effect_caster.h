@@ -283,6 +283,10 @@ public:
   void procMsgFxRimBloomEnd(fw::MessageObject *object, MsgFxRimBloomEnd &message);
   void procMsgFxRimBloomTarget(fw::MessageObject *object, MsgFxRimBloomTarget &message);
   void procMsgFxRimBloom(fw::MessageObject *object, MsgFxRimBloom &message);
+  void procMsgFxFootPrint(fw::MessageObject *object, MsgFxFootPrint &message);
+  void procMsgFxSplashdown(fw::MessageObject *object, MsgFxSplashdown &message);
+  void procMsgFxCombo(fw::MessageObject *object, MsgFxCombo &message);
+  void procMsgFxComboBuff(fw::MessageObject *object, MsgFxComboBuff &message);
   void openDebugWindow(ml::WinProc *window);
   fw::EffectPack *getEffectPack(GF_ASSET_HANDLE *handle);
   const char *getEfpData(const char *name, mm::Mat44 &matrix);
