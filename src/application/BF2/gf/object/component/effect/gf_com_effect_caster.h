@@ -246,13 +246,20 @@ public:
     bool unknown42;                                      // Inferred role: follow enabled; original member name unknown.
   };
 
+  // Layout evidence: setupEfp (0x7100506134) reads the asset handle at 0x08 and the layer at 0x10.
+  struct SetupInfo {
+    u8 unknown00[0x08];
+    GF_ASSET_HANDLE *unknown08; // Inferred role: asset handle; original member name unknown.
+    u32 unknown10;              // Inferred role: layer; original member name unknown.
+  };
+
   static mm::mtl::RTTI m_rtti;
   static const u32 COMPONENT_INDEX = 7;
-
   static void registerAsmCallbackEffect(GF_OBJ_HANDLE *handle, anm::ResASM *resAsm, fw::EffectResData *effectData);
   void cleanup();
   void procMessageAsmCallback(fw::MessageObject *object, MsgObjectNotifyAsmCallback &message);
   void callbackImpl(const CallBackCache &cache);
+  void setupEfp(const SetupInfo &info);
   bool getEfpMatrix(const char *name, mm::Mat44 &matrix);
   void calcMtxAndScale(GfComEffectCaster *caster, Param *param, f32 time, bool unknown, effect::SendParam &sendParam);
   u32 effectStart(const EffectSetUp &setup, const char *pointName);
@@ -280,6 +287,7 @@ public:
   bool getWeaponEffectPack(mm::mtl::FixedVector<fw::EffectPack *, 8> &packs, int type, int);
   fw::EffectPack *getWeaponEffectPack(const char *name);
   fw::EffectPoint *getEffectPoint();
+  f32 getHeightAboveGround() const;
   bool getValidEffectName(const char *name) const;
   bool isDynamicAnnotationEffect(u8 type) const;
   bool getDynamicAnnotationEffectFileName(u8 type, const char *&fileName) const;
@@ -346,6 +354,8 @@ static_assert(offsetof(GfComEffectCaster, unknown114a4) == 0x114a4, "");
 static_assert(offsetof(GfComEffectCaster, unknown114a8) == 0x114a8, "");
 static_assert(offsetof(GfComEffectCaster, unknown114ac) == 0x114ac, "");
 static_assert(sizeof(GfComEffectCaster) == 0x114b0, "");
+static_assert(offsetof(GfComEffectCaster::SetupInfo, unknown08) == 0x08, "");
+static_assert(offsetof(GfComEffectCaster::SetupInfo, unknown10) == 0x10, "");
 static_assert(offsetof(GfComEffectCaster::Param, unknown24) == 0x24, "");
 static_assert(offsetof(GfComEffectCaster::Param, unknown28) == 0x28, "");
 static_assert(offsetof(GfComEffectCaster::Param, unknown30) == 0x30, "");
@@ -383,5 +393,7 @@ static_assert(offsetof(GfComEffectCaster::EffectSetUp, unknown46) == 0x46, "");
 static_assert(offsetof(GfComEffectCaster::EffectSetUp, unknown48) == 0x48, "");
 static_assert(offsetof(GfComEffectCaster::EffectSetUp, unknown4e) == 0x4e, "");
 static_assert(offsetof(GfComEffectCaster::EffectSetUp, unknown4f) == 0x4f, "");
+static_assert(offsetof(GfComEffectCaster::SetupInfo, unknown08) == 0x08, "");
+static_assert(offsetof(GfComEffectCaster::SetupInfo, unknown10) == 0x10, "");
 
 } // namespace gf

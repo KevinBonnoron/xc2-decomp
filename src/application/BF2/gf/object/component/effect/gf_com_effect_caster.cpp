@@ -1,5 +1,6 @@
 #include "gf/object/component/effect/gf_com_effect_caster.h"
 
+#include <float.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -10,7 +11,12 @@
 #include "framework/effect/effect_manager.h"
 #include "framework/effect/effect_pack.h"
 #include "framework/effect/effect_point.h"
+#include "framework/framework.h"
+#include "framework/memory/framework_memory.h"
 #include "framework/object/updatable_object.h"
+#include "fw/fw_transform.h"
+#include "gf/asset/gf_asset_def.h"
+#include "gf/asset/gf_asset_manager.h"
 #include "gf/asset/gf_asset_resource.h"
 #include "gf/data/gf_data_param_acc.h"
 #include "gf/data/gf_data_weapon.h"
@@ -18,16 +24,26 @@
 #include "gf/object/component/animation/gf_com_asm.h"      // IWYU pragma: keep
 #include "gf/object/component/animation/gf_com_evt_anim.h" // IWYU pragma: keep
 #include "gf/object/component/effect/gf_effect_caster.h"
-#include "gf/object/component/model/gf_com_model.h" // IWYU pragma: keep
+#include "gf/object/component/model/gf_com_model.h"       // IWYU pragma: keep
+#include "gf/object/component/property/gf_com_property.h" // IWYU pragma: keep
 #include "gf/object/gf_obj.h"
 #include "gf/object/gf_obj_acc.h"
 #include "gf/object/gf_obj_handle.h"
 #include "gf/object/gf_obj_util.h"
 #include "mm_mtl/delegate.h"
+#include "mm_mtl/unique_ptr.h"
 #include "mm_mtl/vector.h"
 
 // Named as the game's global symbol ASM_CB_NAME_EFFECT.
 const char *ASM_CB_NAME_EFFECT = "asm_effect";
+
+namespace {
+// Inferred roles: effect point files selected by setupEfp (0x7100506134); original names unknown.
+const gf::GfFileIdx FILE_IDX_UNKNOWN_2 = static_cast<gf::GfFileIdx>(2);
+const gf::GfFileIdx FILE_IDX_UNKNOWN_3 = static_cast<gf::GfFileIdx>(3);
+const gf::GfFileIdx FILE_IDX_UNKNOWN_9 = static_cast<gf::GfFileIdx>(9);
+const gf::GfFileIdx FILE_IDX_UNKNOWN_35 = static_cast<gf::GfFileIdx>(35);
+} // namespace
 
 namespace gf {
 
@@ -264,6 +280,57 @@ fw::EffectPack *GfComEffectCaster::getEffectPack(GF_ASSET_HANDLE *handle) {
   return nullptr;
 }
 
+// The game constructs a GfObjAcc here without reading it (0x7100506150-0x7100506158); the constructor
+// has side effects, so the statement stays (ruling 5).
+void GfComEffectCaster::setupEfp(const SetupInfo &info) {
+  GfObjAcc acc(static_cast<GfObj *>(unknown08));
+  GfObj *obj = static_cast<GfObj *>(unknown08);
+  u32 casterType = unknown1149c;
+  GfAssetResource *resource;
+  switch (casterType) {
+  case 2:
+  case 6:
+  case 7:
+    resource = GfAssetManager::getResource(info.unknown08, FILE_IDX_UNKNOWN_9, ASSET_TYPE_UNKNOWN_0);
+    break;
+  case 0:
+  case 1:
+    resource = GfAssetManager::getResource(info.unknown08, FILE_IDX_UNKNOWN_35, ASSET_TYPE_UNKNOWN_0);
+    break;
+  case 3:
+  case 5:
+    resource = GfAssetManager::getResource(info.unknown08, FILE_IDX_UNKNOWN_3, ASSET_TYPE_UNKNOWN_0);
+    break;
+  case 4:
+  case 8:
+    resource = GfAssetManager::getResource(info.unknown08, FILE_IDX_UNKNOWN_2, ASSET_TYPE_UNKNOWN_0);
+    break;
+  default:
+    return;
+  }
+  if (resource == nullptr) {
+    return;
+  }
+
+  fw::EfpInitData init;
+  init.unknown00 = info.unknown10;
+  init.unknown04 = 1.0f;
+  GfComModel *model = obj->getComponent<GfComModel>();
+  if (model != nullptr) {
+    init.unknown28.bind(model, &GfComModel::createBoneReferenceFrame);
+    init.unknown48.bind(model, &GfComModel::destroyBoneReferenceFrame);
+    init.unknown20 = model->unknown18;
+  }
+  init.unknown18 = fw::Framework::getAllocator();
+  init.unknown10 = resource->getAssetData();
+  init.unknown08 = resource->getAssetSize();
+#line 570
+  m_effectPoint = new (init.unknown18, 16, __FILE__, __LINE__) fw::EffectPoint(init);
+  if (m_effectPoint != nullptr) {
+    m_effectPoint->unknown001();
+  }
+}
+
 const char *GfComEffectCaster::getEfpData(const char *name, mm::Mat44 &matrix) {
   if (m_effectCaster == nullptr || m_effectCaster->unknown10 == nullptr) {
     return nullptr;
@@ -328,6 +395,17 @@ void GfComEffectCaster::updateParam(GfComEffectCaster *caster, Param *param, f32
 void GfComEffectCaster::getWpnMat(mm::Mat44 &matrix) { matrix = unknown002(unknown113d0, unknown11410); }
 
 fw::EffectPoint *GfComEffectCaster::getEffectPoint() { return m_effectPoint; }
+
+f32 GfComEffectCaster::getHeightAboveGround() const {
+  GfComProperty *property = static_cast<GfObj *>(unknown08)->getComponent<GfComProperty>();
+  GfEnvProperty *env = property->unknown28.get();
+  // The game reads the flags before testing the environment pointer (0x7100506d24).
+  if ((env->unknown2d0 & 2) != 0 && env != nullptr) {
+    GfObjAcc acc(static_cast<GfObj *>(unknown08));
+    return acc.getWorldTransform().unknown00.y - env->unknown00[0].unknown00.y;
+  }
+  return FLT_MAX;
+}
 
 bool GfComEffectCaster::getValidEffectName(const char *name) const { return true; }
 
