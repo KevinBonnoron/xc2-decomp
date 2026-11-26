@@ -229,6 +229,52 @@ void GfComEffectCaster::procMsgFxRimBloomTarget(fw::MessageObject *object, MsgFx
   unknown20 = -1.0f;
 }
 
+void GfComEffectCaster::procMsgFxBuff(fw::MessageObject *object, MsgFxBuff &message) {
+  GfObj *owner = static_cast<GfObj *>(unknown08);
+  GfComAsm *comAsm = owner->getComponent<GfComAsm>();
+  if (unknown30 == nullptr || comAsm == nullptr) {
+    return;
+  }
+  GfObjAcc acc(static_cast<GfObj *>(unknown08));
+  for (fw::EffectAnnotationData *it = unknown30->unknown10.begin(); it != unknown30->unknown10.end(); ++it) {
+    if (it->unknownf0.unknown14 != 9) {
+      continue;
+    }
+    const char *state = comAsm->getStateName();
+    if (strstr(it->unknown00.c_str(), state) == nullptr) {
+      continue;
+    }
+    EffectSetUp setup;
+    setup.unknown28 = it->unknown54.c_str();
+    setup.unknown44 = it->unknownf0.unknown18;
+    setup.unknown38 = unknown114a8 * it->unknownc0.unknown04;
+    setup.unknown48 = it->unknownf0.unknown05;
+    setup.unknown49 = it->unknownf0.unknown04;
+    setup.m_obj = message.unknown10;
+    setup.unknown00 = it->unknownd0;
+    setup.unknown10 = it->unknowne0;
+    setup.unknown4b = it->unknownf0.unknown09;
+    setup.unknown4c = it->unknownf0.unknown0a;
+    setup.unknown4d = it->unknownf0.unknown0a >> 8;
+    if (setup.unknown4d != 0) {
+      setup.unknown38 = it->unknownc0.unknown04;
+    }
+    it->unknownf0.unknown1c = effectStart(setup, it->unknown78.c_str());
+  }
+}
+
+void GfComEffectCaster::procMsgFxForceCancel(fw::MessageObject *object, MsgFxForceCancel &message) {
+  if (unknown30 == nullptr) {
+    return;
+  }
+  for (fw::EffectAnnotationData *it = unknown30->unknown10.begin(); it != unknown30->unknown10.end(); ++it) {
+    if (it->unknownf0.unknown08 != 0 && it->unknownf0.unknown1c != 0) {
+      effectEnd(it->unknownf0.unknown1c);
+      it->unknownf0.unknown1c = 0;
+    }
+  }
+}
+
 void GfComEffectCaster::procMsgFxFootPrint(fw::MessageObject *object, MsgFxFootPrint &message) { GfEffectGround::emitFootStepEffect(this, message); }
 
 void GfComEffectCaster::procMsgFxSplashdown(fw::MessageObject *object, MsgFxSplashdown &message) { GfEffectGround::emitSplashdownEffect(this, message.unknown08); }
