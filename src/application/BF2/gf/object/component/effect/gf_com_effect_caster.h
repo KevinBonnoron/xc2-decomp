@@ -42,6 +42,7 @@ class WinProc;
 namespace gf {
 
 class GfObj;
+struct CallBackCache;
 struct GF_OBJ_HANDLE;
 struct GF_ASSET_HANDLE;
 struct MsgObjectNotifyAsmCallback;
@@ -161,8 +162,11 @@ public:
   // at 0x4e true. The name comes from the mangled symbol of effectStart.
   struct EffectSetUp {
     EffectSetUp()
-        : unknown00(mm::Vec3::zero), unknown10(mm::Vec3::zero), m_obj(nullptr), unknown28(nullptr), unknown30(nullptr), unknown38(1.0f), unknown3c(-1.0f), unknown40(1.0f), unknown44(0), unknown46(0),
-          unknown48(0), unknown49(0), unknown4a(0), unknown4b(0), unknown4c(0), unknown4d(0), unknown4e(true), unknown4f(0) {}
+        : m_obj(nullptr), unknown28(nullptr), unknown30(nullptr), unknown38(1.0f), unknown3c(-1.0f), unknown40(1.0f), unknown44(0), unknown46(0), unknown48(0), unknown49(0), unknown4a(0),
+          unknown4b(0), unknown4c(0), unknown4d(0), unknown4e(true), unknown4f(0) {
+      unknown00 = mm::Vec3::zero;
+      unknown10 = mm::Vec3::zero;
+    }
 
     mm::Vec3 unknown00;              // Inferred role: offset; original member name unknown.
     mm::Vec3 unknown10;              // Inferred role: second vector; original member name unknown.
@@ -248,6 +252,7 @@ public:
   static void registerAsmCallbackEffect(GF_OBJ_HANDLE *handle, anm::ResASM *resAsm, fw::EffectResData *effectData);
   void cleanup();
   void procMessageAsmCallback(fw::MessageObject *object, MsgObjectNotifyAsmCallback &message);
+  void callbackImpl(const CallBackCache &cache);
   bool getEfpMatrix(const char *name, mm::Mat44 &matrix);
   void calcMtxAndScale(GfComEffectCaster *caster, Param *param, f32 time, bool unknown, effect::SendParam &sendParam);
   u32 effectStart(const EffectSetUp &setup, const char *pointName);

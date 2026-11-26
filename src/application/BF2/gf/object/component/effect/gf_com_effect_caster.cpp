@@ -20,6 +20,7 @@
 #include "gf/object/component/effect/gf_effect_caster.h"
 #include "gf/object/component/model/gf_com_model.h" // IWYU pragma: keep
 #include "gf/object/gf_obj.h"
+#include "gf/object/gf_obj_acc.h"
 #include "gf/object/gf_obj_handle.h"
 #include "gf/object/gf_obj_util.h"
 #include "mm_mtl/delegate.h"
@@ -81,6 +82,84 @@ void GfComEffectCaster::procMessageAsmCallback(fw::MessageObject *object, MsgObj
       }
       it->unknownf0.unknown1c = effectStart(setup, it->unknown78.c_str());
     }
+  }
+}
+
+// The game evaluates getComponent<GfComModel>() and constructs a GfObjAcc here without reading either
+// result (0x7100508dd8-0x7100508e04); both calls have side effects, so the statements stay (ruling 5).
+// The enter and frame cases write the setup fields out again: a shared helper gives one copy of the
+// block and does not match the two separately scheduled blocks at 0x7100509044 and 0x7100508f34.
+void GfComEffectCaster::callbackImpl(const CallBackCache &cache) {
+  static_cast<GfObj *>(unknown08)->getComponent<GfComModel>();
+  GfObjAcc acc(static_cast<GfObj *>(unknown08));
+  f32 scale = unknown114a8;
+  switch (cache.unknown00) {
+  case anm::AsmListener::CALLBACK_ENTER: {
+    fw::EffectAnnotationData *data = const_cast<fw::EffectAnnotationData *>(static_cast<const fw::EffectAnnotationData *>(cache.unknown08->unknown10_ptr));
+    EffectSetUp setup;
+    setup.unknown28 = data->unknown54.c_str();
+    effectEnd(data->unknownf0.unknown1c);
+    setup.unknown30 = m_effectCaster;
+    setup.unknown38 = scale * data->unknownc0.unknown04;
+    setup.unknown44 = data->unknownf0.unknown18;
+    if (data->unknown4c.unknown04 > 0.0f) {
+      setup.unknown3c = data->unknown4c.unknown04;
+    }
+    setup.unknown48 = data->unknownf0.unknown05;
+    setup.unknown49 = data->unknownf0.unknown04;
+    setup.unknown46 = data->unknownf0.unknown1a;
+    setup.unknown00 = data->unknownd0;
+    setup.unknown10 = data->unknowne0;
+    setup.unknown4b = data->unknownf0.unknown09;
+    setup.unknown4c = data->unknownf0.unknown0a;
+    setup.unknown4d = data->unknownf0.unknown0a >> 8;
+    setup.unknown4f = data->unknownf0.unknown24;
+    if (setup.unknown4d != 0) {
+      setup.unknown38 = data->unknownc0.unknown04;
+    }
+    data->unknownf0.unknown1c = effectStart(setup, data->unknown78.c_str());
+    break;
+  }
+  case anm::AsmListener::CALLBACK_LEAVE: {
+    fw::EffectAnnotationData *data = const_cast<fw::EffectAnnotationData *>(static_cast<const fw::EffectAnnotationData *>(cache.unknown08->unknown10_ptr));
+    effectEnd(data->unknownf0.unknown1c);
+    data->unknownf0.unknown1c = 0;
+    break;
+  }
+  case anm::AsmListener::CALLBACK_FRAME: {
+    fw::EffectAnnotationData *data = const_cast<fw::EffectAnnotationData *>(static_cast<const fw::EffectAnnotationData *>(cache.unknown08->unknown10_ptr));
+    if (data->unknownf0.unknown1c != 0 && data->unknownf0.unknown14 != 1) {
+      effectEnd(data->unknownf0.unknown1c);
+      data->unknownf0.unknown1c = 0;
+      break;
+    }
+    EffectSetUp setup;
+    setup.unknown28 = data->unknown54.c_str();
+    setup.unknown38 = scale * data->unknownc0.unknown04;
+    setup.unknown44 = data->unknownf0.unknown18;
+    setup.unknown46 = data->unknownf0.unknown1a;
+    if (data->unknown4c.unknown04 > 0.0f) {
+      setup.unknown3c = data->unknown4c.unknown04;
+    }
+    setup.unknown48 = data->unknownf0.unknown05;
+    setup.unknown49 = data->unknownf0.unknown04;
+    setup.unknown00 = data->unknownd0;
+    setup.unknown10 = data->unknowne0;
+    setup.unknown4b = data->unknownf0.unknown09;
+    setup.unknown4c = data->unknownf0.unknown0a;
+    setup.unknown4d = data->unknownf0.unknown0a >> 8;
+    setup.unknown4f = data->unknownf0.unknown24;
+    if (setup.unknown4d != 0) {
+      setup.unknown38 = data->unknownc0.unknown04;
+    }
+    if (setup.unknown44 == 1) {
+      setup.unknown30 = m_effectCaster;
+    }
+    data->unknownf0.unknown1c = effectStart(setup, data->unknown78.c_str());
+    break;
+  }
+  default:
+    break;
   }
 }
 
