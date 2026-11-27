@@ -759,6 +759,26 @@ struct unknown094 {
 
 static_assert(sizeof(unknown094) == 0x10, "");
 
+struct unknown263 {
+  mm::Vec3 unknown00; // Inferred role: max; original member name unknown.
+  mm::Vec3 unknown10; // Inferred role: min; original member name unknown.
+};
+
+static_assert(sizeof(unknown263) == 0x20, "");
+
+struct unknown262 {
+  u32 unknown00; // Inferred role: offset of the id runs; original member name unknown.
+  u8 unknown04;  // Inferred role: third run count; original member name unknown.
+  u8 unknown05;  // Inferred role: first run count; original member name unknown.
+  u8 unknown06;  // Inferred role: second run count; original member name unknown.
+  u8 unknown07;  // Inferred role: third run table index; original member name unknown.
+  u8 unknown08;  // Inferred role: first run table index; original member name unknown.
+  u8 unknown09;  // Inferred role: second run table index; original member name unknown.
+  u8 _0a[0x0c - 0x0a];
+};
+
+static_assert(sizeof(unknown262) == 0xc, "");
+
 struct wrkIDCmfWork {
   const u8 *unknown00;                  // Inferred role: binary; original member name unknown.
   const unknown021 *unknown08;          // Inferred role: tree cell object table; original member name unknown.
@@ -772,8 +792,8 @@ struct wrkIDCmfWork {
   u32 *unknown48;                       // Inferred role: first table copied from the binary; original member name unknown.
   u32 *unknown50;                       // Inferred role: second table copied from the binary; original member name unknown.
   u32 *unknown58;                       // Inferred role: third table copied from the binary; original member name unknown.
-  const void *unknown60;                // Inferred role: tree bounds table; original member name unknown.
-  const void *unknown68;                // Inferred role: tree node table; original member name unknown.
+  const unknown263 *unknown60;          // Inferred role: tree bounds table; original member name unknown.
+  const unknown262 *unknown68;          // Inferred role: tree node table; original member name unknown.
   IDColiGrdMoveObj *m_moveObj;          // Inferred role: move objs; named after the game accessor idcoli::IDColiParmsGrand::getMoveObj.
   int m_moveMax;                        // Inferred role: move max; named after the game accessor idcoli::IDColiParmsGrand::getMoveMax.
   u8 _7c[0x80 - 0x7c];

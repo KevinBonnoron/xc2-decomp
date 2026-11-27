@@ -378,6 +378,41 @@ bool DrCalcTexStreamMan::calcMemOptimization() {
   return result;
 }
 
+// 0x71008b2ac4. The last loop (0x71008b2bd8) is `!(flags & 2) && count < 0x200` in this order: SimplifyCFG merges the two tests into one `and` whose operands Reassociate sorts count
+// first, the flags load stays in that block and SelectionDAGBuilder splits the `and` into `cmp #511; b.hi`, then `ldr w12; tbnz` (0x71008b2be0), a full width load that SelectionDAG
+// cannot narrow. Written `count < 0x200 && !(flags & 2)` the load is sunk into the second test and narrowed to `ldrb` (measured). `index` and `entries` are the game's ldrsw
+// (0x71008b2bc8) and table base (0x71008b2bd4) before the loop; `unknown58[DrMan::s_nDblIdx][count++]` in the loop is 90 instructions. The budget test is the or of `unknown2488 == 0`
+// and `unknown04 <= 0` (`cmp #1; b.lt`, 0x71008b2b28): with `unknown2488 != 0 && unknown04 > 0` the compare is `cmp #0; b.le`.
+void DrCalcTexStreamMan::afterUpdate() {
+  DrStmListAfterArg arg;
+  arg.unknown00 = false;
+  arg.unknown01 = false;
+  arg.unknown04 = 0;
+  if (m_cacherClearMode & 2) {
+    arg.unknown01 = true;
+    arg.unknown04 = unknown2488;
+  }
+  for (DrCalcStmListObj *list = unknown28.unknown00; list != nullptr; list = list->unknown10) {
+    list->afterUpdate(arg);
+  }
+  if (unknown2488 == 0 || arg.unknown04 <= 0) {
+  } else {
+    arg.unknown04 = unknown2488;
+    for (DrCalcStmListObj *list = unknown28.unknown00; list != nullptr; list = list->unknown10) {
+      list->callUpdate(arg);
+    }
+  }
+  u32 count = 0;
+  s32 index = DrMan::s_nDblIdx;
+  DrCalcStmListObj **entries = unknown58[index];
+  for (DrCalcStmListObj *list = unknown28.unknown00; list != nullptr; list = list->unknown10) {
+    if (!(list->unknown80 & 2) && count < 0x200) {
+      entries[count++] = list;
+    }
+  }
+  unknown2058[index] = count;
+}
+
 void DrCalcTexStreamMan::apiUpdate() {
   u32 count = unknown2058[DrMan::s_nDblStockIdx];
   DrCalcStmListObj **list = unknown58[DrMan::s_nDblStockIdx];

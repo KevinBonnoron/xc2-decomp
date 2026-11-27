@@ -202,6 +202,42 @@ bool IDColiGrandTree::isAaBbToAaBb(const float *max, const float *min) {
   return input->unknown00.y < min[1];
 }
 
+// Each run adds the id from the cell record to a table entry; the table is read first and `start` is the loop's own induction variable, so
+// the preheader keeps the game's `ids + table` order (a `start + i` argument is rebuilt by LSR as `table + ids`).
+bool IDColiGrandTree::treeHitDef(u32 index) {
+  const unknown263 *bounds = &m_wrkIDCmfWork->unknown60[index];
+  if ((this->*unknownb0)(&bounds->unknown00.x, &bounds->unknown10.x)) {
+    return false;
+  }
+  const unknown262 *nodes = m_wrkIDCmfWork->unknown68;
+  const u16 *ids = reinterpret_cast<const u16 *>(m_wrkIDCmfWork->unknown00 + nodes[index].unknown00);
+  bool isHit = false;
+  u8 count = nodes[index].unknown05;
+  if (count != 0) {
+    u32 start = *(m_wrkIDCmfWork->unknown48 + nodes[index].unknown08) + *ids++;
+    u8 hit = 0;
+    for (u32 i = 0; i < count; i++, start++) {
+      hit |= (this->*unknown20)(start);
+    }
+    isHit = hit != 0;
+  }
+  count = nodes[index].unknown06;
+  if (count != 0) {
+    u32 start = *(m_wrkIDCmfWork->unknown50 + nodes[index].unknown09) + *ids++;
+    for (u32 i = 0; i < count; i++, start++) {
+      isHit |= (this->*unknowna0)(start);
+    }
+  }
+  count = nodes[index].unknown04;
+  if (count != 0) {
+    u32 start = *(m_wrkIDCmfWork->unknown58 + nodes[index].unknown07) + *ids;
+    for (u32 i = 0; i < count; i++, start++) {
+      isHit |= (this->*unknown90)(start);
+    }
+  }
+  return isHit;
+}
+
 IDColiGrandObj::IDColiGrandObj(wrkIDCmfWork *work) {
   m_wrkIDCmfWork = work;
   m_iDCmfPosData = nullptr;

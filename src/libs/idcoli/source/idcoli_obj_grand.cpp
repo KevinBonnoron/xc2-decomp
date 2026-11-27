@@ -74,8 +74,8 @@ void IDColiObjGrand::createMemBinary() {
   m_iDColiGrandWork.m_iDCmfPosData = reinterpret_cast<const IDCmfPosData *>(m_iDColiGrandWork.unknown00 + header->unknown58);
   m_iDColiGrandWork.m_iDCmfPosInfo = reinterpret_cast<const IDCmfPosInfo *>(m_iDColiGrandWork.m_iDCmfPosData + header->unknown5c);
   m_iDColiGrandWork.unknown40 = reinterpret_cast<const unknown097 *>(m_iDColiGrandWork.unknown00 + header->unknown74);
-  m_iDColiGrandWork.unknown60 = m_iDColiGrandWork.unknown00 + header->unknown60;
-  m_iDColiGrandWork.unknown68 = m_iDColiGrandWork.unknown00 + header->unknown68;
+  m_iDColiGrandWork.unknown60 = reinterpret_cast<const unknown263 *>(m_iDColiGrandWork.unknown00 + header->unknown60);
+  m_iDColiGrandWork.unknown68 = reinterpret_cast<const unknown262 *>(m_iDColiGrandWork.unknown00 + header->unknown68);
   if (header->unknowna0 == 0) {
     m_iDColiGrandWork.unknown80 = nullptr;
     m_iDColiGrandWork.unknown88 = 0;
