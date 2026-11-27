@@ -1,5 +1,6 @@
 #include "gf/object/component/pc/plugin/gf_pc_look_at_plugin.h"
 
+#include "framework/debug/debug_draw.h"
 #include "framework/ik/ik_look_at_solver.h"
 #include "framework/ik/ik_look_solver.h"
 #include "framework/object/updatable_object.h"
@@ -15,6 +16,9 @@
 #include "gf/object/gf_obj_acc.h"
 #include "gf/object/gf_obj_handle.h"
 #include "gf/object/gf_obj_util.h"
+#include "mm_math/mm_col4.h"
+#include "mm_math/mm_mat44.h"
+#include "mm_math/mm_math.h"
 #include "mm_math/mm_quat.h"
 #include "mm_math/mm_vec3.h"
 #include "mm_mtl/map.h" // IWYU pragma: keep
@@ -182,6 +186,38 @@ void LookAtPlugin::onReloadBdat() {
   info->m_searchParam.unknown00 |= 2;
   info->m_searchParam.unknown30 = upper;
   info->m_searchParam.unknown34 = lower;
+}
+
+// Frame of 0xb0 bytes as in the game (1.0.0: 0x7100579d1c, 158 instructions) only with the GfObjAcc in its own block; the matrix is the affine matrix of the rotation (mm::unknown001) with the
+// position set afterwards.
+void LookAtPlugin::drawDebug() {
+  for (mm::mtl::Map<GF_OBJ_HANDLE *, TargetInfo>::iterator it = unknown28.begin(); it != unknown28.end(); ++it) {
+    TargetInfo &info = it->second;
+    mm::Col4 color;
+    if (&info == unknown40) {
+      color = mm::Col4::red;
+    } else if (!info.unknown1c) {
+      color = mm::Col4::green;
+    } else {
+      color = mm::Col4::yellow;
+    }
+    GfObj *obj = GfObjUtil::getObj(info.m_GF_OBJ_HANDLE);
+    if (obj != nullptr) {
+      const fw::Transform *transform;
+      {
+        GfObjAcc acc(obj);
+        transform = &acc.getWorldTransform();
+      }
+      mm::Vec3 position = transform->unknown00;
+      mm::Mat44 matrix;
+      mm::unknown001(matrix, transform->unknown10);
+      matrix.setTrans(position);
+      fw::debug::drawSphereLine(matrix, 1.0f, color, 12);
+    }
+  }
+  const unknown002 *param = getParam();
+  GfGameSearchObj::GFSEARCH_INFO *info = GfGameSearchObj::getInfo(m_GF_SEARCH_OBJ);
+  info->m_searchParam.unknown38 = param->unknown00;
 }
 
 void LookAtPlugin::drawDebugTarget() {

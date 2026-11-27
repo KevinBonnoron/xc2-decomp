@@ -12,7 +12,8 @@ namespace ml {
 
 // Inferred role: node table header of the model data; original type name unknown.
 struct unknown740 {
-  u8 _00[0x08 - 0x00];
+  u32 unknown00; // Inferred role: first value, copied to DrMdoAnim::unknown182; original member name unknown.
+  u32 unknown04; // Inferred role: node count; original member name unknown.
   u32 unknown08; // Inferred role: offset of the node infos; original member name unknown.
 };
 
@@ -29,6 +30,7 @@ static_assert(sizeof(unknown741) == 0x18, "");
 class DrMdoNode : public DrMdoAnim {
 public:
   void updateMdlPos();
+  void nodeInfoSetup(u32 &size);
   void calcOfsMat();
   const char *getNodeName(int index) const;
   int getNodeIdx(const char *name) const;

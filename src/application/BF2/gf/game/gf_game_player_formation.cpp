@@ -65,6 +65,31 @@ GfGamePlayerFormation::GfGamePlayerFormation() : unknown230(0), unknown234(false
 
 GfGamePlayerFormation::~GfGamePlayerFormation() {}
 
+void GfGamePlayerFormation::calcTargetTransform(const fw::Transform &transform, u32 playerId, mm::Vec3 *position) const {
+  f32 mirror = unknown234 ? -1.0f : 1.0f;
+  switch (playerId) {
+  case 0:
+    *position = transform.unknown00;
+    break;
+  case 1:
+  case 2:
+  case 4: {
+    const FormationParam *param = static_cast<const FormationParam *>(fw::ParamManager::get()->unknown408[6].operator->()->unknown10[unknown230].param);
+    const mm::Pnt<f32> &offset = param->offsets[playerId - 1];
+    *position = transform.unknown00 + transform.unknown10.rotate(mm::Vec3(mirror * offset.x, 0.0f, offset.y));
+    break;
+  }
+  case 3:
+  case 5: {
+    const FormationParam *param = static_cast<const FormationParam *>(fw::ParamManager::get()->unknown408[6].operator->()->unknown10[unknown230].param);
+    const mm::Pnt<f32> &first = param->offsets[playerId - 1];
+    const mm::Pnt<f32> &second = param->offsets[playerId - 2];
+    *position = transform.unknown00 + transform.unknown10.rotate(mm::Vec3(mirror * (first.x + second.x), 0.0f, first.y + second.y));
+    break;
+  }
+  }
+}
+
 const fw::Transform &GfGamePlayerFormation::getFollowTransform(u32 playerId) const {
   u32 followIndex = unknown1a0[playerId].unknown00;
   if (followIndex != PLAYER_ID_UNKNOWN_4294967295) {

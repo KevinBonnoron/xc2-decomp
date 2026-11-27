@@ -3,10 +3,14 @@
 #include "framework/anim/anim_manager.h"
 #include "framework/ik/ik_rotate_solver.h"
 #include "framework/ik/ik_solver.h"
+#include "fw/fw_transform.h"
 #include "gf/object/component/gf_com_ik.h"
 #include "gf/object/gf_obj.h"
 #include "gf/object/gf_obj_acc.h"
 #include "gf/object/gf_obj_handle.h"
+#include "gmk/gmk_route_navi.h"
+#include "mm_math/mm_math.h"
+#include "mm_math/mm_vec3.h"
 #include "mm_mtl/intrusive_ptr.h"
 #include "mm_mtl/rtti.h"
 #include "mm_mtl/vector.h"
@@ -80,6 +84,68 @@ void GfFieldPitchRollController::update(const gmk::GmkRouteNavi &navi) {
       (this->*unknown18)(navi);
     }
   }
+}
+
+void GfFieldPitchRollController::seqUpdate(const gmk::GmkRouteNavi &navi) {
+  f32 ratio = static_cast<f32>(navi.unknowna8) / static_cast<f32>(navi.m_createInfo.unknown18);
+  if (ratio > 0.5f) {
+    ratio = 1.0f - ratio;
+  }
+
+  if (unknown08.unknown00 || unknown08.unknown01) {
+    GfObjAcc acc(m_GF_OBJ_HANDLE);
+    GfObj *obj = acc.getObj();
+    if (obj == nullptr) {
+      dispose();
+      return;
+    }
+
+    if (unknown30) {
+      unknown28 = unknown28 + unknown28 * -0.1f;
+    } else {
+      const mm::Vec3 &position = acc.getWorldTransform().unknown00;
+      mm::Vec3 direction(navi.unknown90.x - position.x, navi.unknown90.y - position.y, navi.unknown90.z - position.z);
+      if (!direction.unknown003()) {
+        direction.unknown001();
+      }
+      // Declared first and assigned after: the constructor form `horizontal(direction.x, 0.0f, direction.z)` orders the phis of the three components
+      // (z, y, x) and Reassociate then swaps the operands of the last add of the dot product (`fadd s8, s1, s0`); the game has them as `fadd s8, s0, s1`.
+      mm::Vec3 horizontal;
+      horizontal = mm::Vec3(direction.x, 0.0f, direction.z);
+      if (!horizontal.unknown003()) {
+        horizontal.unknown001();
+      }
+      f32 angle = mm::acos(horizontal.x * direction.x + horizontal.y * direction.y + horizontal.z * direction.z);
+      if (direction.y > 0.0f) {
+        if (unknown08.unknown00) {
+          angle = -angle;
+        } else {
+          angle = unknown28;
+        }
+      } else if (!unknown08.unknown01) {
+        angle = unknown28;
+      }
+      unknown28 = unknown28 + (angle - unknown28) * 0.1f;
+    }
+  }
+
+  if (unknown0a) {
+    if (unknown31) {
+      unknown2c = unknown2c + unknown2c * -0.1f;
+    } else {
+      f32 target = ratio * navi.unknownac;
+      if (target < -1.5707964f) {
+        target = 1.5707964f;
+      } else if (target > 1.5707964f) {
+        target = -1.5707964f;
+      } else {
+        target = -target;
+      }
+      unknown2c = unknown2c + (target - unknown2c) * 0.1f;
+    }
+  }
+
+  unknown10->unknown40 = mm::Vec3(unknown28, 0.0f, unknown2c);
 }
 
 } // namespace gf

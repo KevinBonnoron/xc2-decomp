@@ -2,6 +2,7 @@
 
 #include <math.h>
 
+#include "bdat.h"
 #include "framework/framework.h"
 #include "framework/memory/allocator.h"
 #include "framework/memory/framework_memory.h"
@@ -10,6 +11,8 @@
 #include "fw/fw_transform.h"
 #include "gf/camera/gf_camera_player_target.h"
 #include "gf/camera/gf_camera_utilities.h"
+#include "gf/data/gf_bdat_id.h"
+#include "gf/data/gf_data_bdat.h"
 #include "gf/data/gf_data_manager.h"
 #include "gf/data/gf_data_option.h"
 #include "gf/data/gf_data_util.h"
@@ -22,6 +25,10 @@
 #include "mm_math/mm_math.h"
 #include "mm_math/mm_quat.h"
 #include "mm_math/mm_vec3.h"
+
+namespace fw {
+enum CAMERA_PRIO : int;
+} // namespace fw
 
 namespace gf {
 
@@ -127,6 +134,59 @@ void PlayerCamera::createReflection(fw::Reflection *reflection, const char *name
   reflection->setReflectionStruct(index, value);
 }
 
+static bool unknown007; // Inferred role: onActivate already ran, cleared by the constructor and setOnceOff; original variable name unknown.
+
+// Forms of the constructor (1.0.0: 0x71001d9678, 281 instructions), each measured against the game:
+// - ColiCheckConfig has no constructor (functions of the game set only some of its fields): the game stores its defaults (0xb, -1, 0, 0, 2, 0, 0) in the initializers, so they are written as
+//   an aggregate.
+// - the stores of the two configs after the camera clip distances are written 00, 10, 04 of each: another order gives the scheduler's other order of the two constants (-9 and -10 as `orr`).
+// - `rootHeight` makes the game's order of the two `scvtf` (height first): with both conversions in the division the width goes first.
+// - the sums of the speed rows are converted from u32 (`ucvtf`); the cast of the u8 to f32 gives `scvtf`.
+PlayerCamera::PlayerCamera(fw::ParamAdapter &param)
+    : fw::Camera(static_cast<fw::CAMERA_PRIO>(55)), m_GF_OBJ_HANDLE(unknown020), m_paramAdapter(param), unknownb8(0.0f), m_saveYaw(0.0f), unknownc0(0.0f), m_savePitch(0.0f), unknownc8(0.0f),
+      unknowncc(0.0f), unknownd0(0.0f), m_saveDistance(0.0f), unknownd8(0.0f), m_saveHeight(0.0f), unknowne0(0.0f), unknowne4(0.0f), m_saveSide(1), unknownec(0.0f), unknownf0(0.0f), unknownf4(0.0f),
+      unknownf8(0.0f), unknown100(mm::Vec3::zero), unknown110(mm::Vec3::zero), m_manual(false), unknown121(false), unknown122(false), unknown123(false), unknown124(false), unknown125(false),
+      unknown126(false), unknown127(false), unknown128(0), unknown12c{0xb, 0xffffffff, 0.0f, 0.0f, 2, false, false}, unknown144{0xb, 0xffffffff, 0.0f, 0.0f, 2, false, false},
+      unknown5180(mm::Vec3::zero), unknown5190(false), unknown51a0(mm::Vec3::zero), unknown51b0(0.0f), unknown52c0(1.0f), unknown52c4(RESET_CAMERA_WALL_TIMING_UNKNOWN_1), unknown52c8(false),
+      unknown52cc(0.0f), unknown52d0(0.0f) {
+  m_nearClip = 0.4f;
+  m_farClip = 80000.0f;
+  unknown12c.unknown00 = 9;
+  unknown12c.unknown10 = 1;
+  unknown12c.unknown04 = 0xfffffff7;
+  unknown144.unknown00 = 9;
+  unknown144.unknown10 = 1;
+  unknown144.unknown04 = 0xfffffff6;
+  unknown160.clear();
+  unknown007 = false;
+  s32 width = ml::DevGraph::getRootWidth();
+  s32 height = ml::DevGraph::getRootHeight();
+  if (width >= 1 && height >= 1) {
+    f32 rootHeight = static_cast<f32>(height);
+    unknown52c0 = static_cast<f32>(width) / rootHeight;
+  }
+  unknown52d0 = tanf(static_cast<const unknown002 *>(m_paramAdapter.unknown00->param)->fov * mm::DEG_TO_RAD * 0.5f) * 0.4f;
+  unknown52cc = unknown52d0 * unknown52c0;
+  u8 *maxLevel = GfDataBdat::getFP(BDAT_CAM_MAX_LEVEL);
+  unknown52d4 = Bdat::getValCheck(maxLevel, "ZoomSpeed", 1, 1);
+  unknown52d5 = Bdat::getValCheck(maxLevel, "RotSpeed", 1, 1);
+  unknown52d6 = Bdat::getValCheck(maxLevel, "RevReset", 1, 1);
+  unknown52d7 = Bdat::getValCheck(maxLevel, "RevAuto", 1, 1);
+  u8 *params = GfDataBdat::getFP(BDAT_CAM_PARAMS);
+  s32 count = Bdat::getIdCount(params);
+  s32 top = Bdat::getIdTop(params);
+  unknown52d8.clear();
+  for (s32 id = top; id < top + count; id++) {
+    unknown001 speed;
+    speed.unknown00 = static_cast<u32>(static_cast<u8>(Bdat::getValCheck(params, "ZoomSpeed", id, 1))) * 0.01f;
+    speed.unknown04 = static_cast<u32>(static_cast<u8>(Bdat::getValCheck(params, "YawRotSpeed", id, 1))) * mm::DEG_TO_RAD;
+    speed.unknown08 = static_cast<u32>(static_cast<u8>(Bdat::getValCheck(params, "PitchRotSpeed", id, 1))) * mm::DEG_TO_RAD;
+    speed.unknown0c = static_cast<u32>(static_cast<u8>(Bdat::getValCheck(params, "RevReset", id, 1))) * 0.01f;
+    speed.unknown10 = static_cast<u32>(static_cast<u8>(Bdat::getValCheck(params, "RevAuto", id, 1))) * 0.01f;
+    unknown52d8.push_back(speed);
+  }
+}
+
 PlayerCamera::~PlayerCamera() { ; }
 
 void PlayerCamera::updateViewMatrix() {
@@ -142,16 +202,6 @@ mm::mtl::IntrusivePtr<fw::Camera> PlayerCamera::create() {
   adapter.unknown00 = paramList->unknown0c > 0 ? &paramList->unknown10[0] : nullptr;
 #line 233
   return new (fw::Framework::getAllocator(), 16, __FILE__, __LINE__) PlayerCamera(adapter);
-}
-
-bool PlayerCamera::isResetClimb() {
-  f32 yaw = getYaw(PlayerCameraTarget::get()->unknown60, mm::Vec3::unitZ);
-  f32 target = unknownb8;
-  if (target < 0.0f) {
-    target += 6.2831855f;
-  }
-  f32 diff = fabsf(yaw - target);
-  return diff > 1.4835299f && diff < 4.7996554f;
 }
 
 // Inferred helper: position of the camera on the player target in the frame of the camera, at the default distance and the look height above the camera height; original name unknown.
@@ -174,6 +224,79 @@ static void unknown004(PlayerCamera *camera, PlayerCameraTarget *target) {
   camera->unknown100 = camera->unknown110;
   camera->unknown5190 = false;
   camera->unknown51a0 = camera->unknown100;
+}
+
+// Forms of onActivate() (1.0.0: 0x71001da8c4, 366 instructions), each measured against the game:
+// - the yaw block, `pitchPosition` and `forward` are written as in reset(); the frame of 0x90 bytes needs both in blocks: the two vectors of `position` and `lookTarget` then share the
+//   slots of `forward` (sp+0, the second argument of updateCollision2 and setLookAt) and `pitchPosition` (sp+0x10), with `pitchPosition` at function level the frame is 0xb0.
+// - `height` is written once and the offset of the camera height inline in the two sums: with a local `offset` the sum of the target (0x71001dac4c) has its operands swapped.
+// - `pitch` places the load of unknownc0 before the load of unknownc8 (0x71001dac6c): with `-unknownc8 - unknownc0` in the argument the two registers of the loads and the fsub swap
+//   (4 differing lines).
+void PlayerCamera::onActivate() {
+  if (unknown007) {
+    return;
+  }
+  unknown007 = true;
+  PlayerCameraTarget *target = PlayerCameraTarget::get();
+  if (target != nullptr) {
+    const fw::Transform &transform = target->m_transform;
+    const unknown002 *param = m_paramAdapter.get<unknown002>();
+    {
+      mm::Vec3 direction;
+      mm::Vec3 reference = mm::Vec3::unitZ;
+      direction = mm::Vec3(-reference.x, -reference.y, -reference.z);
+      const mm::Quat targetRotation = target->m_transform.unknown10;
+      mm::unknown010(targetRotation, direction);
+      unknownb8 = m_saveYaw = getYaw(direction, reference);
+    }
+    {
+      mm::Vec3 pitchPosition = unknown003(this);
+      mm::Vec3 forward = mm::Vec3::unitZ;
+      unknownc8 = getPitch(pitchPosition, forward);
+    }
+    unknownc0 = 0.0f;
+    m_savePitch = 0.0f;
+    unknownd0 = m_saveDistance = GfDataUtil::getPlayerCameraDistance();
+    unknownd8 = m_saveHeight = GfDataUtil::getCameraHeight();
+    m_saveSide = GfDataUtil::getCameraSide();
+    unknowne0 = unknowne4 = param->side_distance[m_saveSide];
+    unknown110 = target->m_transform.unknown00;
+    unknown100 = unknown110;
+    const unknown002 *base = static_cast<const unknown002 *>(m_paramAdapter.unknown00->param);
+    f32 height = ((unknownd0 - base->distance_minimum) / (base->distance_maximum - base->distance_minimum)) * base->height_max;
+    updateTarget(transform, true);
+    unknownb8 = m_saveYaw;
+    unknownc0 = m_savePitch;
+    unknown5190 = false;
+    unknown51a0 = unknown100;
+    mm::Quat rotation = unknown169(0.0f, unknownb8, 0.0f);
+    unknown5180 = rotation.rotate(mm::Vec3::unitZ * unknownd0);
+    unknown5180 += unknown100;
+    f32 pitch = unknownc0;
+    mm::Quat pitchRotation = unknown169(-unknownc8 - pitch, unknownb8, 0.0f);
+    mm::Vec3 position = pitchRotation.rotate(mm::Vec3::unitZ * unknownd0);
+    position += unknown100;
+    mm::Vec3 lookTarget = unknown100;
+    position.y += height + param->look_height + unknownd8;
+    lookTarget.y += height + param->look_height + unknownd8;
+    if (fabsf(unknowne0) >= 0.01f) {
+      updateCollisionSide(position, lookTarget);
+    }
+    updateCollision2(position, lookTarget);
+    unknownd0 = m_saveDistance;
+    m_fov = param->fov;
+    setLookAt(position, lookTarget, 0.0f);
+  }
+}
+
+bool PlayerCamera::isResetClimb() {
+  f32 yaw = getYaw(PlayerCameraTarget::get()->unknown60, mm::Vec3::unitZ);
+  f32 target = unknownb8;
+  if (target < 0.0f) {
+    target += 6.2831855f;
+  }
+  f32 diff = fabsf(yaw - target);
+  return diff > 1.4835299f && diff < 4.7996554f;
 }
 
 // The camera position of resetClimb(), reset() and resetLoad() is the product of unitZ * unknownd0 rotated by the yaw quaternion, stored in unknown5180 and then added to unknown100
@@ -223,6 +346,8 @@ void PlayerCamera::setTarget(GF_OBJ_HANDLE *target) {
 }
 
 f32 PlayerCamera::getFov() { return static_cast<const unknown002 *>(fw::ParamManager::get()->unknown408[19]->unknown10->param)->fov; }
+
+void PlayerCamera::setOnceOff() { unknown007 = false; }
 
 const mm::mtl::RTTI *PlayerCamera::getRTTI() const { return &m_rtti; }
 
@@ -489,5 +614,4 @@ void PlayerCamera::updateTarget(const fw::Transform &transform, bool param2) {
 // inlines a destructor the game calls (21 instructions against 18).
 #include "gf/camera/gf_camera_player_target.cpp"
 #include "gf/camera/gf_camera_subview.cpp"
-
 #include "gf/camera/gf_camera_utilities.cpp"

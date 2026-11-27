@@ -100,7 +100,8 @@ public:
   s16 unknown17c;                          // Inferred role: material index; original member name unknown.
   s16 unknown17e;                          // Inferred role: previous material index; original member name unknown.
   s16 m_nodeMax;
-  u8 _182[0x190 - 0x182];
+  s16 unknown182; // Inferred role: first value of the node table, stored by DrMdoNode::nodeInfoSetup; original member name unknown.
+  u8 _184[0x190 - 0x184];
 };
 
 static_assert(offsetof(DrMdoAnim, unknown170) == 0x170, "");

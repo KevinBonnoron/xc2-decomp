@@ -2,6 +2,7 @@
 
 #include "anm/anm_qs_transform.h"
 #include "mm_math/mm_quat.h"
+#include "mm_math/mm_quat_impl_nx.h"
 #include "mm_math/mm_vec3.h"
 #include "mm_math/mm_vec4.h"
 
@@ -91,6 +92,14 @@ void ReferenceFrame::unlinkChild(ReferenceFrame &frame) {
     }
   }
   frame.unknownb0.clear();
+}
+
+// mm::unknown011 gives the game's operand order of the rotated translation (a result declared before the quaternion and the vector are read);
+// Quat::rotate, the in-place mm::unknown010 and the statements written out differ in the schedule.
+void Transform::invert(const Transform &transform, Transform *result) {
+  result->unknown10 = transform.unknown10;
+  mm::Quat::inverse(result->unknown10);
+  mm::unknown011(result->unknown10, mm::Vec3(-transform.unknown00.x, -transform.unknown00.y, -transform.unknown00.z), result->unknown00);
 }
 
 void TransformManager::update(u32 layerMask) {

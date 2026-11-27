@@ -71,6 +71,16 @@ f32 FusionComboCamera::getYaw(const mm::Quat &rotation) {
   return getYaw(direction, reference);
 }
 
+void FusionComboCamera::getAxis(const mm::Vec3 &from, const mm::Vec3 &to, mm::Vec3 &axis) {
+  mm::Vec3 first = from;
+  mm::Vec3 second = to;
+  if (!first.unknown003() && !second.unknown003()) {
+    first.unknown002();
+    second.unknown002();
+    axis.unknown004(second, first);
+  }
+}
+
 f32 FusionComboCamera::getYaw(const mm::Vec3 &direction, const mm::Vec3 &reference) {
   mm::Vec3 from(direction.x, 0.0f, direction.z);
   mm::Vec3 to(reference.x, 0.0f, reference.z);

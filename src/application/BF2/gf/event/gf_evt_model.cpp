@@ -16,6 +16,7 @@
 #include "gf/object/component/animation/gf_com_asm.h"
 #include "gf/object/component/animation/gf_com_evt_anim.h"
 #include "gf/object/component/animation/gf_com_pack_anim.h"
+#include "gf/object/component/gf_com_transform.h"
 #include "gf/object/gf_init_param.h"
 #include "gf/object/gf_obj.h"
 #include "gf/object/gf_obj_acc.h"
@@ -25,6 +26,7 @@
 #include "gf/object/gf_obj_util.h"
 #include "gf/scom/gf_scom_obj.h"
 #include "mm_math/mm_math.h"
+#include "mm_math/mm_quat.h"
 #include "mm_math/mm_vec3.h"
 #include "mm_mtl/algorithm.h"
 #include "mm_mtl/fixed_array.h"
@@ -227,6 +229,19 @@ void GfEvtModel::setMount(GfEvtModel *parent, const char *bone, const mm::Vec3 &
       unknown30 = bone;
       parent->execMount(this, pos, rot);
     }
+  }
+}
+
+void GfEvtModel::execMount(GfEvtModel *child, const mm::Vec3 &position, const mm::Vec3 &rotation) {
+  GfObjAcc acc(child->m_GF_OBJ_HANDLE);
+  GfComTransform *transform = acc.getObj()->getComponent<GfComTransform>();
+  if (transform != nullptr) {
+    mm::Quat quat;
+    mm::unknown005(quat, rotation);
+    transform->setPosition(position);
+    transform->setRotation(quat);
+    transform->syncFrame();
+    execMount(child);
   }
 }
 

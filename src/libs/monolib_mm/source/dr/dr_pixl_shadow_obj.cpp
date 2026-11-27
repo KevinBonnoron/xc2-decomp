@@ -95,4 +95,33 @@ void DrPixlShadowObj::getScaleTranslateToFit(mm::Mat44 *mat, const mm::Vec3 &max
   mat->rows[3][3] = 1.0f;
 }
 
+// 1.0.0: 0x710085e754, 179 instructions. `side` and `top` are declared before `forward`: SROA creates the phis of the normalisations in the order of the allocas, which gives the rank of the
+// components of `forward` that the game's operand order of the cross product needs (with `forward` declared first the products `up.y * forward.z` and `up.y * forward.x` are swapped).
+void DrPixlShadowObj::getLightMatrix(mm::Mat44 &matrix, const mm::Vec3 &position, const mm::Vec3 &target, const mm::Vec3 &up) {
+  mm::Vec3 side;
+  mm::Vec3 top;
+  mm::Vec3 forward = position - target;
+  forward.unknown001();
+  side.unknown004(up, forward);
+  side.unknown001();
+  top.unknown004(forward, side);
+  top.unknown001();
+  matrix.rows[0][0] = side.x;
+  matrix.rows[0][1] = top.x;
+  matrix.rows[0][2] = forward.x;
+  matrix.rows[0][3] = 0.0f;
+  matrix.rows[1][0] = side.y;
+  matrix.rows[1][1] = top.y;
+  matrix.rows[1][2] = forward.y;
+  matrix.rows[1][3] = 0.0f;
+  matrix.rows[2][0] = side.z;
+  matrix.rows[2][1] = top.z;
+  matrix.rows[2][2] = forward.z;
+  matrix.rows[2][3] = 0.0f;
+  matrix.rows[3][0] = -(side.x * position.x + side.y * position.y + side.z * position.z);
+  matrix.rows[3][1] = -(top.x * position.x + top.y * position.y + top.z * position.z);
+  matrix.rows[3][2] = -(forward.x * position.x + forward.y * position.y + forward.z * position.z);
+  matrix.rows[3][3] = 1.0f;
+}
+
 } // namespace ml

@@ -61,12 +61,23 @@ grlib::CGLibVtxVertex *unknown008;
 // either). Forms tried without the helper in renderRealSphere: the rotated point in a local `mm::Vec3 point` before `add(...)` gives 101 instructions too, but the game's load of the virtual `add`
 // (ldr x24, [x8, #0x70]) before the sinf/cosf calls becomes a load after them (blr x8 against blr x24) and the registers differ; the three sums written inside the arguments of `add`, each repeating
 // sinf(angle) * radius, give 114 instructions. renderCapsule matches (196 instructions) with the helper and with the sums written out in both loops, so the helper is the form (decision 2026-11-14
-// #31, P4). DebDraw::renderCircle(const Mat44 &) (0x7100706f44, not matched) rotates a circle point the same way and adds the translation row: `unknown009(matrix, point) + Vec3(row 3)` gives its 89
-// instructions with another schedule, so it is not a user.
+// #31, P4). DebDraw::renderCircle(const Mat44 &) (0x7100706f44) rotates a circle point the same way and adds the translation row: it is transformPoint below, not this helper plus
+// a separate `+ Vec3(row 3)` (that form gives the same 89 instructions with the translation adds in the other operand order).
 mm::Vec3 unknown009(const mm::Mat44 &rotation, const mm::Vec3 &vector) {
   return mm::Vec3(vector.x * rotation.rows[0][0] + vector.y * rotation.rows[1][0] + vector.z * rotation.rows[2][0],
                   vector.x * rotation.rows[0][1] + vector.y * rotation.rows[1][1] + vector.z * rotation.rows[2][1],
                   vector.x * rotation.rows[0][2] + vector.y * rotation.rows[1][2] + vector.z * rotation.rows[2][2]);
+}
+
+// Inferred name; kept as an exception to the unknown-name rule (AGENTS.md): single-user helper whose existence only the match proves; rename if a sibling build gives a symbol.
+// Inferred role: vector rotated by the upper 3x3 of a matrix and moved by its translation row (each component sums vector.x * row 0, vector.y * row 1, vector.z * row 2 of its column, then the row 3
+// element). User: DebDraw::renderCircle(const Mat44 &) (1.0.0: 0x7100706f44, no call: the game inlines it). Forms tried without the helper: the translation is added after the three products in the
+// same expression (and the call form `add(transformPoint(matrix, Vec3(sinf * radius, 0, cosf * radius)))` gives the game's load of the virtual `add` before the sinf/cosf calls); rotating with
+// unknown009 and adding the row to its result, or adding the row first, gives the translation adds in the other operand order, and the sums assigned to a local Vec3 give 94 instructions.
+mm::Vec3 transformPoint(const mm::Mat44 &matrix, const mm::Vec3 &vector) {
+  return mm::Vec3(vector.x * matrix.rows[0][0] + vector.y * matrix.rows[1][0] + vector.z * matrix.rows[2][0] + matrix.rows[3][0],
+                  vector.x * matrix.rows[0][1] + vector.y * matrix.rows[1][1] + vector.z * matrix.rows[2][1] + matrix.rows[3][1],
+                  vector.x * matrix.rows[0][2] + vector.y * matrix.rows[1][2] + vector.z * matrix.rows[2][2] + matrix.rows[3][2]);
 }
 
 } // namespace
@@ -1255,6 +1266,17 @@ void DebDraw::renderCircleFill(const mm::Vec3 &center, f32 radius, int division)
         f32 angle = (6.2831855f / division) * i;
         add(mm::Vec3(center.x + sinf(angle) * radius, center.y, center.z + cosf(angle) * radius));
       }
+    }
+    end();
+  }
+}
+
+void DebDraw::renderCircle(const mm::Mat44 &matrix, f32 radius, int division) {
+  if (!m_cacheDraw->renderCircle(matrix, radius, division) && (unknown08 & 8)) {
+    begin(3, division + 1);
+    for (int i = 0; i <= division; i++) {
+      f32 angle = (6.2831855f / division) * i;
+      add(transformPoint(matrix, mm::Vec3(sinf(angle) * radius, 0.0f, cosf(angle) * radius)));
     }
     end();
   }

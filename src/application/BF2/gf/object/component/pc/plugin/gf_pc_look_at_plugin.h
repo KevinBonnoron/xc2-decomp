@@ -71,6 +71,7 @@ public:
   void onReloadBdat();
   const unknown002 *getParam() const;
   bool getTargetTransform(const TargetInfo &info, fw::Transform *transform) const;
+  void drawDebug();
   void drawDebugTarget();
 
   mm::mtl::IntrusivePtr<fw::LookIkSolver> unknown10;   // Inferred role: look solver; original member name unknown.

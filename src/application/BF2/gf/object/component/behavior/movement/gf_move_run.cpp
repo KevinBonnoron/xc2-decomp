@@ -5,7 +5,9 @@
 #include "framework/memory/allocator.h"
 #include "framework/memory/framework_memory.h"
 #include "framework/reflection.h"
+#include "fw/fw_update_info.h"
 #include "mm_math/mm_math.h"
+#include "mm_math/mm_quat.h"
 
 namespace gf {
 
@@ -37,6 +39,18 @@ void GfMoveRunControler::enter(Packet &packet, bool isInherit) {
   } else {
     packet.unknown00 = packet.unknown40 * speed;
   }
+}
+
+// 1.0.0: 0x71004fd754, 112 instructions. The single-use local `angle` is the case of decisions 44 and 57 (a named variable whose only effect comes from its DBG_VALUE under -g): without it
+// the A57 FP Anti-dependency breaker renames the first product to s3 (`fmul s3, s0, s1`, the game's is `fmul s0, s0, s1`) and the rotation has 15 differing lines. The rotation is
+// the in-place mm::unknown010; Quat::rotate gives 13 differing lines (the three components are stored at the end).
+void GfMoveRunControler::update(const fw::UpdateInfo &info, Packet &packet) {
+  calcAngularVelocity(info.unknown04, packet);
+  f32 angle = packet.unknown10 * info.unknown04;
+  mm::Quat rotation;
+  rotation.unknown001(angle * 0.5f);
+  mm::unknown010(rotation, packet.unknown40);
+  calcVelocity(info.unknown04, packet);
 }
 
 void GfMoveRunControler::calcAngularVelocity(f32 deltaTime, Packet &packet) {

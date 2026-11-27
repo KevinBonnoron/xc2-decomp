@@ -110,7 +110,7 @@ public:
     struct PopEnemyInfo {
       PopEnemyInfo()
           : unknown00(0), unknown02(0), unknown03(0), unknown04(0), unknown05(0), unknown06(0), unknown07(0), unknown08(0.0f), unknown0c(0), unknown10(nullptr), unknown18(nullptr), unknown20(0),
-            unknown24(0) {}
+            unknown24(0.0f) {}
       ~PopEnemyInfo() { dispose(); }
       void dispose();
 
@@ -139,7 +139,7 @@ public:
       mm::mtl::Vector<gf::GF_OBJ_HANDLE *> *unknown18; // Inferred role: game objects; original member name unknown.
       u16 unknown20;                                   // Inferred role: counts, the low byte then the defeated num in the high byte; original member name unknown.
       u8 _22[0x24 - 0x22];
-      u32 unknown24; // Role and original member name unknown.
+      f32 unknown24; // Inferred role: seconds since the pop attempts started, validatePopPos adds the frame time and compares it with 5.0; original member name unknown.
     };
 
     PopInfo();
@@ -158,9 +158,12 @@ public:
     void removeDefeatedNamedEnemyInfo();
     bool hasEneID(u16 eneId, bool flag) const;
     bool hasTypeGenus(u8 genus, bool flag) const;
+    void validatePopPos(f32 deltaTime, const GmkEnemyInsts &insts, const IPopXformFinder &finder);
+    bool findPopPosRot(mm::Vec3 &position, mm::Vec3 &rotation, gf::GF_OBJ_HANDLE *handle, const PopEnemyInfo &info, const IPopXformFinder &finder);
 
-    u16 unknown00; // Role and original member name unknown.
-    u8 unknown02;  // Role and original member name unknown.
+    bool unknown00; // Inferred role: enemy priority, the bdat flag ene_priority (PopInfo::create 0x71005ed1ac); original member name unknown.
+    u8 unknown01;   // Inferred role: pop act type, the bdat value pop_act_type; original member name unknown.
+    u8 unknown02;   // Role and original member name unknown.
     u8 _03[0x08 - 0x03];
     PopEnemyInfo m_popEnemyInfo[4]; // Inferred role: enemies; original member name unknown.
   };

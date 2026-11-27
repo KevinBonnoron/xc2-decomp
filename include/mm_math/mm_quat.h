@@ -171,4 +171,23 @@ static inline void unknown010(const Quat &quat, Vec3 &vector) {
   vector.z = -(quat.y * tx) + quat.x * ty - quat.z * tw + quat.w * tz;
 }
 
+// Inferred helper: rotates a vector by a quaternion into a result that is declared before the quaternion and the vector are read, each component stored by the last three statements; original
+// name unknown. Same statements as Quat::rotate, but `result = q.rotate(v)` and the in-place unknown010 give other operand orders where the result is a member or a field of a packet:
+// gf::GfComBehaviorPc::warpWall (0x7100567750: the search direction of the horizontal packet, 259 instructions; Quat::rotate gives 56 differing lines, unknown010 on a copy of the
+// axis 16, the vector loaded before the quaternion component of its first product) and fw::Transform::invert (0x710017e174, the negated translation into the result, 120 instructions; the
+// same two forms give 86 differing lines). Used by: warpWall, Transform::invert.
+// The body repeats the one of unknown010 on purpose: unknown010 written as `unknown011(quat, vector, vector)` breaks five functions that match through it (a helper is simplified before it is
+// inlined: ChainAttackCamera::updateParam, GfMenuModelViewCamera::updateLookAt, GfMenuBladeCreateCamera::updateLookAt, Aabb::transform(const Quat &), GfMoveRunControler::update), and
+// unknown011 written as a copy plus unknown010 gives warpWall's 16 differing lines.
+// Internal linkage: like unknown010.
+static inline void unknown011(const Quat &quat, const Vec3 &vector, Vec3 &result) {
+  f32 tx = quat.y * vector.z - quat.z * vector.y + quat.w * vector.x;
+  f32 ty = quat.z * vector.x - vector.z * quat.x + vector.y * quat.w;
+  f32 tz = vector.y * quat.x - quat.y * vector.x + vector.z * quat.w;
+  f32 tw = -vector.x * quat.x - quat.y * vector.y - vector.z * quat.z;
+  result.x = -(quat.z * ty) + quat.y * tz - quat.x * tw + quat.w * tx;
+  result.y = -(quat.x * tz) + quat.z * tx - quat.y * tw + quat.w * ty;
+  result.z = -(quat.y * tx) + quat.x * ty - quat.z * tw + quat.w * tz;
+}
+
 } // namespace mm

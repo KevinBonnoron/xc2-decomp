@@ -4,7 +4,7 @@
 #include "types.h"
 
 namespace fw {
-class IkFadeSolver;
+class RotateIkSolver;
 } // namespace fw
 
 namespace gmk {
@@ -44,7 +44,7 @@ public:
   GF_OBJ_HANDLE *m_GF_OBJ_HANDLE;                                               // Inferred role: object; original member name unknown.
   unknown001 unknown08;                                                         // Role and original member name unknown.
   bool unknown0a;                                                               // Role and original member name unknown.
-  fw::IkFadeSolver *unknown10;                                                  // Inferred role: solver; original member name unknown.
+  fw::RotateIkSolver *unknown10;                                                // Inferred role: solver; original member name unknown.
   void (GfFieldPitchRollController::*unknown18)(const gmk::GmkRouteNavi &navi); // Inferred role: seq; original member name unknown.
   f32 unknown28;                                                                // Inferred role: pitch; original member name unknown.
   f32 unknown2c;                                                                // Inferred role: roll; original member name unknown.

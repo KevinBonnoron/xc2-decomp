@@ -621,6 +621,34 @@ bool StateUtilField::isWallDetach(GfComPropertyPc &property) {
   return plane.distance + dot < -property.m_propertyField.unknown38;
 }
 
+// Inferred name; kept as an exception to the unknown-name rule (AGENTS.md): single-user helper whose existence only the match proves; rename if a sibling build gives a symbol.
+// Dot product of a position and a plane normal. User: StateUtilField::isWallClimbEnd (1.0.0: 0x71005524a4, 76 instructions): its three products of the plane distance take the loaded position first
+// (fmul s0, s3, s0 at 0x710055259c) although the normal is already loaded for the test against unitY, and the position loads sit between the products. Forms tried without the helper, all 76
+// instructions: the products written in the function (3 differing lines, the operand order of the three fmul), the position copied to a local before the null test of the ground (6, load order and the
+// fadd operands), a Plane copy (20 to 26). Forms of the helper: `static` 5 differing lines (argument promotion loads the operands at the call), `inline` with a Plane parameter 1 (the x product still
+// swapped, the normal x load is merged with the one of the unitY test); `inline` with the normal as a Vec3 reference and the distance added after the call matches.
+inline f32 dotProduct(const mm::Vec3 &position, const mm::Vec3 &normal) { return position.x * normal.x + position.y * normal.y + position.z * normal.z; }
+
+bool StateUtilField::isWallClimbEnd(GfComPropertyPc &property) {
+  if (property.unknown80.x * mm::Vec3::unitY.x + property.unknown80.y * mm::Vec3::unitY.y + property.unknown80.z * mm::Vec3::unitY.z <= 0.0f) {
+    return false;
+  }
+  EnviromentSensor *sensor = property.getEnvSensor();
+  if (sensor->unknown24_1 && sensor->unknown150.m_GF_OBJ_HANDLE != unknown020) {
+    return false;
+  }
+  GfComBehaviorPc *behavior = property.unknown08->getComponent<GfComBehaviorPc>();
+  EnviromentSensor::GroundInfo *ground = StateUtil::getClimbEndGroundInfo(*behavior);
+  if (ground == nullptr) {
+    return false;
+  }
+  const mm::Plane &plane = ground->unknown10;
+  if (plane.normal.x * mm::Vec3::unitY.x + plane.normal.y * mm::Vec3::unitY.y + plane.normal.z * mm::Vec3::unitY.z < 0.9f) {
+    return false;
+  }
+  return dotProduct(property.unknown160.unknown00, plane.normal) + plane.distance >= -property.m_propertyField.unknown28;
+}
+
 bool StateUtilField::isWallAdsorption(GfComPropertyPc &property) {
   if (property.m_propertyField.unknown10_3) {
     EnviromentSensor *sensor = property.getEnvSensor();

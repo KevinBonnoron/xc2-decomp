@@ -251,6 +251,36 @@ void GfComBehaviorPc::procMsgObjectGetVelocity(fw::MessageObject *sender, MsgObj
   }
 }
 
+bool GfComBehaviorPc::warpWall(GfComPropertyPc &property) {
+  const pc::WarpParam *param = property.unknown006();
+  EnviromentSensor::HorizonPacket packet;
+  EnviromentSensor::unknown006 wall;
+  packet.unknown00 = 0x40;
+  mm::unknown011(property.unknown130.unknown10, mm::Vec3::unitZ, packet.unknown10);
+  packet.unknown20 = 0.0f;
+  packet.unknown24 = param->wallSearchDist;
+  packet.unknown30 = property.getEnvSensor()->unknown290;
+  packet.unknown38 = &wall;
+  EnviromentSensor::searchHorizon(property.unknown130.unknown00, &packet);
+  if (((packet.unknown34 >> 6) & 1) && wall.unknown60.unknown24_4) {
+    GfComTransform *comTransform = mm::mtl::dynamicCast<GfComTransform>(unknown08->unknown38[GfComTransform::COMPONENT_INDEX]);
+    fw::Transform &frameTransform = comTransform->unknown10->unknown003();
+    frameTransform.unknown00 = property.unknown130.unknown00;
+    frameTransform.unknown10 = property.unknown130.unknown10;
+    property.m_propertyField.unknown130 = wall.unknown60;
+    property.m_propertyField.unknown10_6 = true;
+    fw::ColiObject *coli = unknown08->getComponent<GfComCollider>()->unknown001();
+    if (coli != nullptr) {
+      mm::Mat44 matrix;
+      frameTransform.unknown001(matrix);
+      coli->setInstantlyMatrix(matrix);
+    }
+    resetHeadColPosition(frameTransform);
+    return true;
+  }
+  return false;
+}
+
 // 1.0.0: 0x7100567b5c, 151 instructions; the game keeps the null test of the collider component (cbz x20 at 0x7100567c08, joining at the vector read), see GfComCollider::unknown001 and
 // UpdatableObject::getComponent. warpExternal reads the collider the same way.
 bool GfComBehaviorPc::warpBattle(GfComPropertyPc &property) {

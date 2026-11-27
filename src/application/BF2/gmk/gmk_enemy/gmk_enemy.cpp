@@ -1,5 +1,4 @@
 #include "gmk/gmk_enemy/gmk_enemy.h"
-#include "gmk/gmk_enemy/gmk_enemy_impl.h" // IWYU pragma: keep
 
 #include "bdat.h"
 #include "framework/debug/debug_draw.h"
@@ -10,15 +9,21 @@
 #include "gf/data/gf_object_type.h"
 #include "gf/game/gf_game_cond.h"
 #include "gf/game/gf_game_manager.h"
+#include "gf/game/gf_game_obj.h"
+#include "gf/game/gf_game_util.h"
+#include "gf/object/component/enemy/gf_com_behavior_enemy.h"
+#include "gf/object/gf_obj.h"
 #include "gf/object/gf_obj_acc.h"
 #include "gf/object/gf_obj_handle.h"
 #include "gf/object/gf_obj_util.h"
 #include "gmk/gmk_bdat.h"
-#include "gmk/gmk_list_impl.h" // IWYU pragma: keep
+#include "gmk/gmk_enemy/gmk_enemy_impl.h" // IWYU pragma: keep
+#include "gmk/gmk_list_impl.h"            // IWYU pragma: keep
 #include "gmk/gmk_squad.h"
 #include "ml/rand.h"
 #include "mm_math/mm_col4.h"
 #include "mm_math/mm_mat44.h"
+#include "mm_math/mm_quat.h"
 #include "mm_math/mm_vec2.h"
 #include "mm_math/mm_vec3.h"
 #include "mm_mtl/fixstr.h"
@@ -155,12 +160,12 @@ static void unknown003(mm::mtl::Vector<gf::GF_OBJ_HANDLE *> *&vector) {
 void GmkEnemyInsts::PopInfo::PopEnemyInfo::dispose() {
   unknown003(unknown10);
   unknown003(unknown18);
-  unknown24 = 0;
+  unknown24 = 0.0f;
 }
 
 // Unrolled by hand in the original (the game's constructor merges the last member of an entry with the first members of the next entry into one block of zero stores, which the construction loop of an
 // array does not).
-GmkEnemyInsts::PopInfo::PopInfo() : unknown00(0), unknown02(0), m_popEnemyInfo{PopEnemyInfo(), PopEnemyInfo(), PopEnemyInfo(), PopEnemyInfo()} {}
+GmkEnemyInsts::PopInfo::PopInfo() : unknown00(false), unknown01(0), unknown02(0), m_popEnemyInfo{PopEnemyInfo(), PopEnemyInfo(), PopEnemyInfo(), PopEnemyInfo()} {}
 
 void GmkEnemyInsts::PopInfo::dispose() {
   m_popEnemyInfo[0].dispose();
@@ -257,6 +262,88 @@ void GmkEnemyInsts::validateDisp(gf::GF_OBJ_HANDLE *handle) const {
   }
   bool isDisp = debugIsDispGmkType(gmk->getGmkType()) && unknown140;
   setEventDisp(handle, isDisp);
+}
+
+// The game never reads insts (x1) here.
+void GmkEnemyInsts::PopInfo::validatePopPos(f32 deltaTime, const GmkEnemyInsts &insts, const IPopXformFinder &finder) {
+  for (u32 i = 0; i < 4; i++) {
+    const PopEnemyInfo &info = m_popEnemyInfo[i];
+    if (info.unknown10 == nullptr || info.unknown18 == nullptr || info.unknown18->size() == 0) {
+      continue;
+    }
+    for (gf::GF_OBJ_HANDLE *handle : *info.unknown18) {
+      gf::GfObjAcc acc(handle);
+      if (!acc.isValidModel() || !gf::GfGameObj::isValidGameObj(handle, true, nullptr) || gf::GfGameUtil::isGameObjWait(handle)) {
+        return;
+      }
+    }
+  }
+  for (u32 i = 0; i < 4; i++) {
+    PopEnemyInfo &info = m_popEnemyInfo[i];
+    if (info.unknown10 == nullptr || info.unknown18 == nullptr || info.unknown10->size() == 0) {
+      continue;
+    }
+    size_t index = static_cast<size_t>(info.unknown10->size() * ml::mtRandf2());
+    gf::GF_OBJ_HANDLE **wait = info.unknown10->begin() + index;
+    info.unknown24 += deltaTime;
+    // The game keeps the sum in s11 across findPopPosRot and the water test (0x71005ee150 to 0x71005ee248): unknown24 is not read again after the call.
+    f32 time = info.unknown24;
+    gf::GF_OBJ_HANDLE *handle = *wait;
+    gf::GfObjAcc acc(handle);
+    gf::GfObj *obj = acc.getObj();
+    if (obj == nullptr) {
+      continue;
+    }
+    gf::GfComBehaviorEnemy *behavior = obj->getComponent<gf::GfComBehaviorEnemy>();
+    if (behavior == nullptr) {
+      continue;
+    }
+    mm::Vec3 position = mm::Vec3::zero;
+    mm::Vec3 rotation = mm::Vec3::zero;
+    // findPopPosRot never reads this, so the game never sets x0 for the call (0x71005ee1c8, ruling 6); the original expression cannot be checked. It is called before the time test.
+    bool isFound = findPopPosRot(position, rotation, handle, info, finder);
+    if (time > 5.0f || isFound) {
+      // Inlined, and evaluated before the second time test (0x71005ee1f0).
+      bool isWaterMatched = isWaterHeightCondMatchedOfEnemy(position, info.unknown06, info.unknown08);
+      if (time > 5.0f || isWaterMatched) {
+        if (!behavior->validatePopPos(position, rotation, time > 5.0f, unknown01 != 3 && unknown01 != 4)) {
+          return;
+        }
+        if (!finder.onPopGob(handle)) {
+          return;
+        }
+        info.unknown10->erase(wait);
+        info.unknown18->push_back(handle);
+        behavior->onPopped();
+        gf::GfGameUtil::setGameObjWait(handle, false);
+        return;
+      }
+    }
+  }
+}
+
+bool GmkEnemyInsts::PopInfo::findPopPosRot(mm::Vec3 &position, mm::Vec3 &rotation, gf::GF_OBJ_HANDLE *handle, const PopEnemyInfo &info, const IPopXformFinder &finder) {
+  u8 *actMove = gf::GfDataBdat::getFP(gf::BDAT_FLD_ENACT_MOVE);
+  if (Bdat::getValCheck(actMove, "actMove_Atr", info.unknown05, BDAT_TYPE_UNKNOWN_1) & 2) {
+    AGmkBase *gmk = getBindedGmkInst(handle);
+    if (gmk == nullptr || gmk->getGmkType() != GMK_TYPE_ENEMY) {
+      return false;
+    }
+    int random = ml::mtRand();
+    f32 angle = random * 6.2831855f;
+    f32 halfAngle = angle * 0.5f;
+    mm::Quat quat;
+    quat.unknown001(halfAngle);
+    position = gmk->m_createBaseInfo.m_xform->unknown00 + quat.rotate(mm::Vec3::unitX * static_cast<GmkEnemy *>(gmk)->getData()->unknown00);
+    rotation.x = 0.0f;
+    rotation.y = angle;
+    rotation.z = 0.0f;
+  } else {
+    if (!finder.findPosRot(position, rotation, handle, info)) {
+      return false;
+    }
+  }
+  return true;
 }
 
 bool GmkEnemyInsts::isQuestDead() const {

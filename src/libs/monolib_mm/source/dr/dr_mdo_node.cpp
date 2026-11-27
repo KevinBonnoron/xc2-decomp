@@ -14,6 +14,17 @@ static const unknown740 *unknown067(const MdoWrkMatRes *matRes) { return reinter
 // Inferred role: node infos of the node table; original name unknown.
 static const unknown741 *unknown065(const unknown740 *table) { return reinterpret_cast<const unknown741 *>(reinterpret_cast<const u8 *>(table) + table->unknown08); }
 
+// The node count is stored first and the work size read from it before the size is read again (0x7100805384..0x71008053b8): with `size += getNodeWorkSize() + 0x48` the reload of
+// the size ranks below the sum and the game's `add w8, w8, w9` (sum first) comes out as `add w8, w9, w8`.
+void DrMdoNode::nodeInfoSetup(u32 &size) {
+  size += -size & 0xf;
+  const unknown740 *table = unknown067(unknown30);
+  m_nodeMax = table->unknown04;
+  unknown182 = table->unknown00;
+  int workSize = getNodeWorkSize();
+  size = size + workSize + 0x48;
+}
+
 int DrMdoNode::getNodeWorkSize() { return m_nodeMax << 7; }
 
 void DrMdoNode::calcNodeWorkSetup(u8 *work) {

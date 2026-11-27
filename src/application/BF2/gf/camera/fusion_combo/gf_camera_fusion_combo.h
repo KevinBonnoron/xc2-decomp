@@ -50,6 +50,7 @@ public:
   void update(const fw::UpdateInfo &info) override;
   bool isPlayEnd() const;
   f32 getYaw(const mm::Quat &rotation);
+  void getAxis(const mm::Vec3 &from, const mm::Vec3 &to, mm::Vec3 &axis);
   f32 getYaw(const mm::Vec3 &direction, const mm::Vec3 &reference);
   f32 getPitch(const mm::Vec3 &direction, const mm::Vec3 &reference);
   static f32 fastOut(f32 t);
