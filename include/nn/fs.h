@@ -7,7 +7,8 @@
 // _ZN2nn2fs8OpenFileEPNS0_10FileHandleEPKci, _ZN2nn2fs11GetFileSizeEPlNS0_10FileHandleE,
 // _ZN2nn2fs9CloseFileENS0_10FileHandleE, _ZN2nn2fs8ReadFileEPmNS0_10FileHandleElPvm, _ZN2nn2fs8ReadFileENS0_10FileHandleElPvm) and from how the game calls
 // them; the parameter names, the return types and the layout of FileHandle are inferred (the game opens files with
-// mode 1), no SDK header was used. Unmount follows include/nn/fs/fs_mount.h of open-ead/nnheaders.
+// mode 1), no SDK header was used. Unmount, QueryMountRomCacheSize and MountRom follow include/nn/fs/fs_mount.h of
+// open-ead/nnheaders; the game imports the latter two in ml::DevFileNxTh::initializeSDK (0x7100728a68).
 namespace nn {
 namespace fs {
 
@@ -22,6 +23,8 @@ void CloseFile(FileHandle handle);
 Result ReadFile(size_t *outSize, FileHandle handle, long offset, void *buffer, size_t size);
 Result ReadFile(FileHandle handle, long offset, void *buffer, size_t size);
 Result Unmount(const char *mountPoint);
+Result QueryMountRomCacheSize(size_t *outSize);
+Result MountRom(const char *mountName, void *cacheBuffer, size_t cacheSize);
 
 } // namespace fs
 } // namespace nn
