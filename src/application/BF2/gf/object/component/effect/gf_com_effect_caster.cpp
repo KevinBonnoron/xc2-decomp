@@ -84,6 +84,10 @@ void GfComEffectCaster::procMessageAsmCallback(fw::MessageObject *object, MsgObj
   }
 }
 
+void GfComEffectCaster::asmCallback(GfComAsm *, const CallBackCache &cache) { callbackImpl(cache); }
+
+void GfComEffectCaster::evtAnimCallback(GfComEvtAnim *, const CallBackCache &cache) { callbackImpl(cache); }
+
 void GfComEffectCaster::registerAsmCallbackEffect(GF_OBJ_HANDLE *handle, anm::ResASM *resAsm, fw::EffectResData *effectData) {
   if (resAsm != nullptr && effectData != nullptr) {
     effectData->registerAsmAnnotation(resAsm, 3, ASM_CB_NAME_EFFECT);

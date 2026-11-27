@@ -42,6 +42,9 @@ class WinProc;
 namespace gf {
 
 class GfObj;
+class GfComAsm;
+class GfComEvtAnim;
+struct CallBackCache;
 struct GF_OBJ_HANDLE;
 struct GF_ASSET_HANDLE;
 struct MsgObjectNotifyAsmCallback;
@@ -248,6 +251,9 @@ public:
   static void registerAsmCallbackEffect(GF_OBJ_HANDLE *handle, anm::ResASM *resAsm, fw::EffectResData *effectData);
   void cleanup();
   void procMessageAsmCallback(fw::MessageObject *object, MsgObjectNotifyAsmCallback &message);
+  void callbackImpl(const CallBackCache &cache);
+  void asmCallback(GfComAsm *, const CallBackCache &cache);
+  void evtAnimCallback(GfComEvtAnim *, const CallBackCache &cache);
   bool getEfpMatrix(const char *name, mm::Mat44 &matrix);
   void calcMtxAndScale(GfComEffectCaster *caster, Param *param, f32 time, bool unknown, effect::SendParam &sendParam);
   u32 effectStart(const EffectSetUp &setup, const char *pointName);
