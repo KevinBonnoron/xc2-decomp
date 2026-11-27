@@ -103,10 +103,26 @@ nn::hid::VibrationPlayer *DevPadNx::Impl::getVibPlayer(u32 id) {
   return nullptr;
 }
 
+u32 DevPadNx::getLocalStyle(int padNo) const { return unknown548->unknown003(padNo).unknown18; }
+
 int DevPadNx::getLocalUserSelectPadID() const {
   const Impl *impl = unknown548.operator->();
   return impl->unknown4544 != impl->unknown4540 ? impl->unknown4544 : 4;
 }
+
+u32 DevPadNx::getLocalBtn(int padNo) const { return unknown548->unknown003(padNo).unknown00; }
+
+f32 DevPadNx::getLocalALX(int padNo) const { return unknown548->unknown003(padNo).unknown04; }
+
+f32 DevPadNx::getLocalALY(int padNo) const { return unknown548->unknown003(padNo).unknown08; }
+
+f32 DevPadNx::getLocalARX(int padNo) const { return unknown548->unknown003(padNo).unknown0c; }
+
+f32 DevPadNx::getLocalARY(int padNo) const { return unknown548->unknown003(padNo).unknown10; }
+
+void DevPadNx::playLocalVibration(int padNo, const PadVibrationInfo &info) { unknown548->playVibration(unknown548->unknown003(padNo), info); }
+
+void DevPadNx::stopLocalVibration(int padNo) { unknown548->stopVibration(unknown548->unknown003(padNo)); }
 
 void DevPadNx::setUserSelectControllerID(u32 id) {
   DevPadNx *pad = static_cast<DevPadNx *>(get());
@@ -120,6 +136,13 @@ void DevPadNx::setUserSelectControllerID(u32 id) {
       impl->unknown4544 = i;
       break;
     }
+  }
+}
+
+void DevPadNx::updateDevice(f32 time) {
+  Impl *impl = unknown548.operator->();
+  if (impl->unknown0000.isValid()) {
+    impl->unknown0000(time);
   }
 }
 
