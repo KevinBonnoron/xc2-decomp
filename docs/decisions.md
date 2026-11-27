@@ -391,7 +391,7 @@ The seven `mm::mtl::Queue<T>::erase` instantiations of the `GfMenuObj...Info` cl
 - **Rule.** `reinterpret_cast<const T *>(data + offset)` on model and resource blobs is accepted, extending decision 38 to the dr resource blob parsers.
 - **Why.** The symbols fix a `const u8 *` blob parameter and typed callees, so the original adds byte offsets to the blob and casts; no cast-free form exists.
 - **Scope.** Only a resource blob plus a header offset read from that blob; `reinterpret_cast` stays refused everywhere else (no casts of `this`, no punning of game objects).
-- **Evidence.** `DrResMdoSeamWrkPosMpf::setupInstMpf` (three `unknown08` assignments), outside the two files that decision 38 names. The same form is already on `main` in `DrResMdoSeamWrkMpf::changeMemCall`, `DrResMdoSeamWrkPosInst::changeMemEtcInstPos` and `DrMdoCtlMpfAuto::changeMemAutoMpf`.
+- **Evidence.** `DrResMdoSeamWrkPosMpf::setupInstMpf` (three `unknown08` assignments), outside the two files that decision 38 names. The same form is already on `main` in `DrResMdoSeamWrkMpf::changeMemCall`, `DrResMdoSeamWrkPosInst::changeMemEtcInstPos` and `DrMdoCtlMpfAuto::changeMemAutoMpf`. The same kind of blob read (a sprite resource read at byte offsets taken from its own header) is used by `minigame::tora::minigame::decode_4bpp_sprt(u32, int)` (`a6baa6c6e`).
 
 ### 55. The FixStr reverse search
 
