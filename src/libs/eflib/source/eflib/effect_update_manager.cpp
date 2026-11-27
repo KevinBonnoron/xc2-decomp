@@ -1,11 +1,20 @@
 #include <new>
+#include <string.h>
 
+#include "eflib/effect_send_param.h"
 #include "eflib/effect_system_manager.h"
+#include "framework/effect/effect_caster.h"
 #include "mm/mm_std_base.h"
+#include "mm_math/mm_col3.h"
+#include "mm_math/mm_col4.h"
+#include "mm_math/mm_mat44.h"
+#include "mm_math/mm_pnt.h"
+#include "mm_math/mm_vec3.h"
 #include "mm_mtl/fixed_array.h"
 #include "mm_mtl/fixed_vector.h"
 #include "mtl/alloc_handle.h"
 #include "ptlib/emitter/particle_emitter_manager.h"
+#include "ptlib/emitter/particle_emitter_param.h"
 #include "ptlib/forcefield/particle_force_field.h"
 #include "ptlib/particle_hash.h"
 #include "ptlib/particle_heap_allocater.h"
@@ -16,10 +25,14 @@
 
 namespace effect {
 
+class IEffectCallBack;
+
 namespace {
 SystemManager *s_instance;
 } // namespace
 
+// The assertion records its line number.
+#line 23
 SystemManager *SystemManager::get() {
   MM_ASSERT(getPtr());
   return getPtr();
@@ -249,5 +262,52 @@ int SystemManager::es_getDeadFlag(u32 handle) {
 void SystemManager::lastRender(const ptlib::DrDrawWorkInfoEF *info) {}
 
 void SystemManager::finalRender(const ptlib::DrDrawWorkInfoEF *info) { testRender(info); }
+
+void SystemManager::getEFP(IEffectCallBack *callback, int, int, const char *name, mm::Mat44 &matrix, f32 *value) {
+  if (callback == nullptr) {
+    return;
+  }
+  // The game's callback slots at +0x40 and +0x30 are getEfpMat and getMdlScl of EffectCasterSend.
+  fw::EffectCasterSend *caster = static_cast<fw::EffectCasterSend *>(callback);
+  if (name != nullptr) {
+    caster->getEfpMat(matrix, name);
+  }
+  if (value == nullptr) {
+    return;
+  }
+  *value *= caster->getMdlScl();
+}
+
+void SystemManager::moveMain() {
+  // The game tail-calls testUpdate without setting s0; its float argument is undefined here.
+  f32 delta;
+  testUpdate(delta);
+}
+
+void SystemManager::es_conv_param(ptlib::emitter::EmitterParam *param, const SendParam *src) {
+  memcpy(param, src, sizeof(mm::Mat44));
+  param->unknown6c = src->unknown60.x;
+  memcpy(&param->unknown50.r, &src->unknown70, sizeof(u32));
+  memcpy(&param->unknown50.g, reinterpret_cast<const u8 *>(&src->unknown70) + sizeof(u32), sizeof(u32));
+  memcpy(&param->unknown50.b, &src->unknown78, sizeof(u32));
+  param->unknown40 = src->unknown40;
+  memcpy(&param->unknown60, &src->unknown50, sizeof(mm::Pnt<f32>));
+  param->unknown70 = src->unknowna2;
+  param->unknown71 = src->unknowna3;
+  param->unknown72 = src->unknowna4;
+  param->unknown73 = src->unknowna5;
+  param->speed = src->unknown80;
+  param->unknown7c = src->unknown84;
+  param->unknown74 = src->unknowna0;
+  memcpy(&param->unknown76, &src->unknowna6, 1);
+  memcpy(&param->unknown77, reinterpret_cast<const u8 *>(&src->unknowna6) + 1, 1);
+  param->unknown80 = src->unknown88;
+  param->unknown84 = src->unknown8c;
+  param->unknown88 = src->unknown90;
+  param->unknown8c = src->unknown94;
+  memcpy(&param->unknown90, &src->unknown9c, sizeof(u32));
+  param->unknown68 = src->unknown98;
+  param->unknown94 = src->unknowna8;
+}
 
 } // namespace effect

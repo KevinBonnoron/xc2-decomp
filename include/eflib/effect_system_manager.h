@@ -6,11 +6,18 @@
 #include "ptlib/forcefield/particle_force_field.h"
 #include "types.h"
 
+namespace mm {
+struct Mat44;
+} // namespace mm
+
 namespace mtl {
 class ALLOC_HANDLE;
 } // namespace mtl
 
 namespace ptlib {
+namespace emitter {
+struct EmitterParam;
+} // namespace emitter
 struct DrDrawWorkInfoEF;
 } // namespace ptlib
 
@@ -100,6 +107,9 @@ public:
   static SystemManager *&getPtr();
   static bool isValid();
   static void testRender(const ptlib::DrDrawWorkInfoEF *info);
+  static void getEFP(IEffectCallBack *callback, int unknown1, int unknown2, const char *name, mm::Mat44 &matrix, f32 *value);
+  void testUpdate(f32 delta);
+  void moveMain();
   SystemManager();
   virtual ~SystemManager();
   static SystemManager *create(const ptlib::DrDrawWorkInfoEF *info);
@@ -142,6 +152,7 @@ public:
   void es_set_param_pos_only2(u32 handle, const SendParam *param);
   void es_set_category(u32 handle, u32 category);
   void es_set_param(u32 handle, const SendParam *param);
+  static void es_conv_param(ptlib::emitter::EmitterParam *param, const SendParam *sendParam);
   void es_set_alpha(u32 handle, f32 alpha);
   void es_set_speed(u32 handle, f32 speed);
   void es_set_viewnum(u32 handle, int viewnum);
