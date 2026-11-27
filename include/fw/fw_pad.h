@@ -161,7 +161,8 @@ static_assert(sizeof(PadConfigData) == 0x54, "");
 
 class PadManager : public ManagerObject, public mm::mtl::PtrSingleton<PadManager>, public ml::DevGraphCB {
 public:
-  static const u32 PAD_UNKNOWN_12 = 12; // Inferred role: maximum number of pads; original name unknown.
+  static const u32 PAD_UNKNOWN_12 = 12;      // Inferred role: maximum number of pads; original name unknown.
+  static const f32 ANALOG_TRIGGER_THRESHOLD; // Game symbol fw::PadManager::ANALOG_TRIGGER_THRESHOLD (rodata 0x7100f68eb8, 0.6f); defined in the pad manager unit.
 
   static const u32 BUTTON_UNKNOWN_32 = 32;   // Inferred role: maximum number of buttons; original name unknown.
   static const u32 LISTENER_UNKNOWN_16 = 16; // Inferred role: maximum number of listeners; original name unknown.

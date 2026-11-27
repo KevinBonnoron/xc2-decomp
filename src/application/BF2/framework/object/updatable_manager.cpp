@@ -6,8 +6,8 @@
 
 namespace fw {
 
-HandlePtr<void> UpdatableObjectManager::Impl::registPointer(u32 group, const void *ptr) {
-  HandlePtr<void> handle;
+HandlePtr<UpdatableObject> UpdatableObjectManager::Impl::registPointer(u32 group, const void *ptr) {
+  HandlePtr<UpdatableObject> handle;
   handle.id = m_pointerMap.regist(ptr);
   handle.map = &m_pointerMap;
   return handle;
@@ -126,7 +126,7 @@ void UpdatableObjectManager::tail(const UpdateInfo &info) {
   unknown18->tail(info);
 }
 
-HandlePtr<void> UpdatableObjectManager::registPointer(u32 group, const void *ptr) { return unknown18->registPointer(group, ptr); }
+HandlePtr<UpdatableObject> UpdatableObjectManager::registPointer(u32 group, const void *ptr) { return unknown18->registPointer(group, ptr); }
 
 void UpdatableObjectManager::registObject(u32 group, UpdatableObject *object) { unknown18->registObject(group, object); }
 

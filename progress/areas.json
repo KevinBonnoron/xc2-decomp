@@ -128,6 +128,14 @@
     }
   },
   {
+    "name": "minigame",
+    "code": {
+      "total": 70956,
+      "matching": 16516,
+      "non_matching": 0
+    }
+  },
+  {
     "name": "plugin",
     "code": {
       "total": 15372,
@@ -172,14 +180,6 @@
     "code": {
       "total": 24668,
       "matching": 3900,
-      "non_matching": 0
-    }
-  },
-  {
-    "name": "minigame",
-    "code": {
-      "total": 70956,
-      "matching": 3592,
       "non_matching": 0
     }
   },

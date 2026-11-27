@@ -40,7 +40,7 @@ public:
       m_pointerMap.destroy();
     }
 
-    HandlePtr<void> registPointer(u32 group, const void *ptr);
+    HandlePtr<UpdatableObject> registPointer(u32 group, const void *ptr);
     void registGroup(u32 group, UpdatableGroup *updatableGroup);
     void removeGroup(u32 group);
     void destroy();
@@ -64,7 +64,7 @@ public:
   virtual void update(const UpdateInfo &info, u32 layerMask);
   virtual void tail(const UpdateInfo &info);
   void execEvent(const ObjectEvent &event, u32 layerMask);
-  HandlePtr<void> registPointer(u32 group, const void *ptr);
+  HandlePtr<UpdatableObject> registPointer(u32 group, const void *ptr);
   void registObject(u32 group, UpdatableObject *object);
 
   mm::mtl::UniquePtr<Impl> unknown18; // Inferred role: impl; original member name unknown.
