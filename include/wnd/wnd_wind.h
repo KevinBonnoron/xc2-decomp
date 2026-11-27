@@ -64,7 +64,19 @@ static_assert(sizeof(ConpoundWind) == 0x1d0, "");
 class GlobalWind : public WindBlender {
 public:
   GlobalWind() : unknowne8(nullptr), unknownf0(nullptr) {}
-  void update(const UpdateInfo &info) override;
+  void update(const UpdateInfo &info) override {
+    if (unknownf0 != nullptr) {
+      unknownf0->update(info);
+    }
+    if (unknowne8 != nullptr) {
+      unknowne8->update(info);
+    }
+    WindBlender::update(info);
+    if (unknownf0 == nullptr) {
+      // Address 0x7100988d98: no-op store that the game emits after the null test.
+      unknownf0 = nullptr;
+    }
+  }
 
   WindNode *unknowne8; // Inferred role: current node; original member name unknown.
   WindNode *unknownf0; // Inferred role: debug node; original member name unknown.

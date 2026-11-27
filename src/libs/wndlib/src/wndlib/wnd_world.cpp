@@ -84,21 +84,9 @@ bool WindWorld::query(Query *query) {
   return false;
 }
 
-// Addresses 0x710098a768-70. The game inlines GlobalWind::update here instead of calling it,
-// so its body is written out; a call gives a two-instruction tail call.
-void WindWorld::updateGlobalWind(const UpdateInfo &info) {
-  if (unknown10.unknown40.unknownf0 != nullptr) {
-    unknown10.unknown40.unknownf0->update(info);
-  }
-  if (unknown10.unknown40.unknowne8 != nullptr) {
-    unknown10.unknown40.unknowne8->update(info);
-  }
-  unknown10.unknown40.WindBlender::update(info);
-  if (unknown10.unknown40.unknownf0 == nullptr) {
-    // Address 0x710098a770: no-op store, as in GlobalWind::update.
-    unknown10.unknown40.unknownf0 = nullptr;
-  }
-}
+// Addresses 0x710098a768-70. The game inlines GlobalWind::update here instead of calling it;
+// the definition sits in the class body so both callers emit the same code.
+void WindWorld::updateGlobalWind(const UpdateInfo &info) { unknown10.unknown40.update(info); }
 
 bool WindWorld::addProbe(WindProbe &probe) {
   probe.addRef();

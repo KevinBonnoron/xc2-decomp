@@ -54,18 +54,4 @@ void ConpoundWind::update(const UpdateInfo &info) {
   }
 }
 
-void GlobalWind::update(const UpdateInfo &info) {
-  if (unknownf0 != nullptr) {
-    unknownf0->update(info);
-  }
-  if (unknowne8 != nullptr) {
-    unknowne8->update(info);
-  }
-  WindBlender::update(info);
-  if (unknownf0 == nullptr) {
-    // Address 0x7100988d98: no-op store that the game emits after the null test.
-    unknownf0 = nullptr;
-  }
-}
-
 } // namespace wnd
