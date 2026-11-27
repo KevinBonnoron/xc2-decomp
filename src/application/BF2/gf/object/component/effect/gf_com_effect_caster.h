@@ -81,15 +81,6 @@ struct MsgObjectNotifyDead;
 // table; no member of this message is read.
 struct MsgFxForceCancel : fw::Message {};
 
-// Layout evidence: GfComEffectCaster::procMsgFxBuff (0x7100504aa0) reads the object pointer at 0x10.
-struct MsgFxBuff : fw::Message {
-  u32 unknown08;
-  u32 unknown0c;
-  GfObj *unknown10; // Inferred role: target object; original member name unknown.
-};
-
-static_assert(offsetof(MsgFxBuff, unknown10) == 0x10, "");
-
 struct EffectMountSetupEv {
   EffectMountSetupEv() : unknown30(mm::Vec3::zero), unknown40(0), unknown41(false), unknown42(false) {}
 
@@ -301,7 +292,6 @@ public:
   void procMsgFxCombo(fw::MessageObject *object, MsgFxCombo &message);
   void procMsgFxComboBuff(fw::MessageObject *object, MsgFxComboBuff &message);
   void procMsgFxForceCancel(fw::MessageObject *object, MsgFxForceCancel &message);
-  void procMsgFxBuff(fw::MessageObject *object, MsgFxBuff &message);
   void openDebugWindow(ml::WinProc *window);
   fw::EffectPack *getEffectPack(GF_ASSET_HANDLE *handle);
   const char *getEfpData(const char *name, mm::Mat44 &matrix);
