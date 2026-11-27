@@ -81,6 +81,7 @@ public:
   static gf::GF_OBJ_HANDLE *GetControlCharacterHandle();
   static bool IsSatisfyCondition(int condition);
   static bool IsSatisfyConditionFld(int condition);
+  static bool IsBattleStart(gf::GF_OBJ_HANDLE *handle);
   static void AchieveCondition(BTL_ACHIEVE_COND condition, gf::GF_OBJ_HANDLE *handle, u32 value);
   static void GetArtsData(ARTS_DATA::DATA_TYPE type, int id, ARTS_DATA &data);
   static int GetArtsEnhance(const ARTS_SLOT_DATA &slot);

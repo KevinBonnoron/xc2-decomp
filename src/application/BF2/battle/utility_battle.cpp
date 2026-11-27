@@ -18,7 +18,10 @@
 #include "battle/misc_battle.h"
 #include "battle/sp_attack_manager.h"
 #include "battle/talk_manager_battle.h"
+#include "battle/ui_manager_battle.h"
 #include "bdat.h"
+#include "event/object.h"
+#include "framework/object/updatable_object.h"
 #include "gf/data/gf_bdat_btl.h"
 #include "gf/data/gf_bdat_id.h"
 #include "gf/data/gf_data_bdat.h"
@@ -30,6 +33,9 @@
 #include "gf/game/gf_game_manager.h"
 #include "gf/game/gf_game_party.h"
 #include "gf/game/gf_game_util.h"
+#include "gf/object/component/pc/gf_com_property_pc.h"
+#include "gf/object/component/property/gf_com_property.h"
+#include "gf/object/gf_obj.h"
 #include "gf/object/gf_obj_handle.h"
 #include "gf/object/gf_obj_util.h"
 #include "gf/scom/gf_scom_achiev.h"
@@ -37,8 +43,10 @@
 #include "ml/rand.h"
 #include "mm_math/mm_math.h"
 #include "mm_math/mm_vec3.h"
+#include "mm_mtl/bitflag.h"
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/intrusive_ptr.h"
+#include "mm_mtl/unique_ptr.h"
 
 namespace btl {
 
@@ -79,6 +87,51 @@ bool Utility::IsSatisfyCondition(int condition) {
 }
 
 bool Utility::IsSatisfyConditionFld(int condition) { return gf::GfGameCond::isGameCond(condition); }
+
+// Inferred name; kept as an exception to the unknown-name rule (AGENTS.md): single-user helper whose existence only
+// the match proves; rename if a sibling build gives a symbol.
+// Gets the property component of an object. Single user: btl::Utility::IsBattleStart (1.0.0: 0x710000c210), which
+// keeps the null test of the component (cbz x20 at 0x710000c248, joining at the flag load at 0x710000c270).
+// Forms tried without this helper: reading the component directly after getComponent<GfComPropertyPc>(), through a
+// named local, and through a helper taking gf::GfObj *; each drops the cbz (58 instructions against 59).
+// The cause is written at UpdatableObject::getComponent.
+static gf::GfComPropertyPc *getPropertyComponent(fw::UpdatableObject *obj) { return obj->getComponent<gf::GfComPropertyPc>(); }
+
+bool Utility::IsBattleStart(gf::GF_OBJ_HANDLE *handle) {
+  BattleGlobal *global = BattleGlobal::get();
+  if (global == nullptr || !global->IsEnableBattle()) {
+    return false;
+  }
+  gf::GfObj *obj = gf::GfObjUtil::getObj(handle);
+  if (obj == nullptr) {
+    return false;
+  }
+  gf::GfComPropertyPc *property = getPropertyComponent(obj);
+  if (property->unknown110_7) {
+    return false;
+  }
+  if (gf::GfObjUtil::getObjType(property->unknown18.get()->handle) != event::OBJTYPE_UNKNOWN_5) {
+    return false;
+  }
+  if (gf::GfGameManager::isDisableBattou()) {
+    return false;
+  }
+  if (UIManager::get()->unknown45_2) {
+    return true;
+  }
+  if (property->unknown60.unknown08.test(gf::pc::INPUT_ID_UNKNOWN_5)) {
+    return true;
+  }
+  BattleCharacter *character = CharacterManager::get()->GetCharacterConst(handle);
+  if (character == nullptr) {
+    return false;
+  }
+  const CharacterParameter *parameter = character->GetCharacterParameterConst(true);
+  if (parameter != nullptr && parameter->IsBuff(11)) {
+    return true;
+  }
+  return false;
+}
 
 void Utility::AchieveCondition(BTL_ACHIEVE_COND condition, gf::GF_OBJ_HANDLE *handle, u32 value) {
   switch (condition) {
