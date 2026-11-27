@@ -31,7 +31,9 @@ public:
       unknown001_15 = 1 << 15,
     };
 
-    // Evidence for the size: Impl::Impl constructs two FixedArray<PadData, 4> at 0x3638 and 0x3c38.
+    // Evidence for the size: Impl::Impl constructs two FixedArray<PadData, 4> at 0x3638 and 0x3c38. FixedArray's
+    // constructor constructs the vibration objects: VibrationTarget at 0x80 and 0xc8, VibrationNodeConnection at
+    // 0x110 and 0x148 (0x710073b950-0x710073b98c).
     struct PadData {
       u32 unknown00;  // Inferred role: button flags; original member name unknown.
       f32 unknown04;  // Inferred role: left stick x; original member name unknown.
@@ -46,7 +48,9 @@ public:
       f32 unknown78;                       // Inferred role: vibration time; original member name unknown.
       bool unknown7c;                      // Inferred role: vibration playing; original member name unknown.
       bool unknown7d;                      // Inferred role: vibration initialized; original member name unknown.
-      u8 _7e[0x110 - 0x7e];
+      u8 _7e[0x80 - 0x7e];
+      nn::hid::VibrationTarget unknown80;          // Inferred role: left vibration target; original member name unknown.
+      nn::hid::VibrationTarget unknownc8;          // Inferred role: right vibration target; original member name unknown.
       nn::hid::VibrationNodeConnection unknown110; // Inferred role: left vibration connection; original member name unknown.
       nn::hid::VibrationNodeConnection unknown148; // Inferred role: right vibration connection; original member name unknown.
     };
@@ -102,6 +106,8 @@ static_assert(offsetof(DevPadNx::Impl::PadData, unknown18) == 0x18, "");
 static_assert(offsetof(DevPadNx::Impl::PadData, m_padVibrationInfo) == 0x60, "");
 static_assert(offsetof(DevPadNx::Impl::PadData, unknown78) == 0x78, "");
 static_assert(offsetof(DevPadNx::Impl::PadData, unknown7c) == 0x7c, "");
+static_assert(offsetof(DevPadNx::Impl::PadData, unknown80) == 0x80, "");
+static_assert(offsetof(DevPadNx::Impl::PadData, unknownc8) == 0xc8, "");
 static_assert(offsetof(DevPadNx::Impl::PadData, unknown110) == 0x110, "");
 static_assert(offsetof(DevPadNx::Impl::PadData, unknown148) == 0x148, "");
 static_assert(sizeof(DevPadNx::Impl::PadData) == 0x180, "");
