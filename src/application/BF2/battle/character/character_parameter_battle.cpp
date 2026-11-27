@@ -5,6 +5,7 @@
 
 #include "battle/battle_global.h"
 #include "battle/blade_change_manager.h"
+#include "battle/btl_system_balance_access.h"
 #include "battle/chain_attack_manager.h"
 #include "battle/character/battle_character.h"
 #include "battle/character/character_manager_battle.h"
@@ -12,10 +13,15 @@
 #include "battle/group_data.h"
 #include "battle/misc_battle.h"
 #include "battle/utility_battle.h"
+#include "bdat.h"
 #include "gf/data/gf_bdat_chrenarrange.h"
+#include "gf/data/gf_bdat_id.h"
+#include "gf/data/gf_bdat_rsc.h"
+#include "gf/data/gf_data_bdat.h"
 #include "gf/data/gf_data_enemy.h"
 #include "gf/data/gf_data_param_acc.h"
 #include "gf/game/gf_game_util.h"
+#include "gf/object/component/model/gf_com_model.h"
 #include "gf/object/component/property/gf_com_property.h"
 #include "gf/object/gf_obj.h"
 #include "gf/object/gf_obj_acc.h"
@@ -33,6 +39,94 @@ constexpr int ENHANCE_LINK_DISTANCE_BONUS = 258;
 constexpr int unknown001 = 5; // Inferred role: damage armor buff id; original name unknown.
 
 gf::GfObj *CharacterParameter::GetUserObject() const { return gf::GfObjUtil::getObj(unknown08); }
+
+void CharacterParameter::Initialize(gf::GF_OBJ_HANDLE *handle) {
+  Reset();
+  unknown08 = handle;
+  unknown5ae = static_cast<u8>(CharacterManager::get()->SearchCharacter(handle));
+  gf::DataParamAcc acc(handle);
+  gf::GfObjAcc objAcc(handle);
+  unknown5a7_0 = static_cast<u8>(gf::GfObjUtil::getObjType(handle));
+  unknown18 = gf::GfObjUtil::getGameObjectID(handle);
+  u32 chrId = objAcc.getBdatId();
+  unknown24 = chrId;
+  // Declared before the branch so the flag word at 0x5a8 gets one read-modify-write; assigning 0 inside the branch instead gives 266 instructions against the game's 264.
+  u32 size = 0;
+  if (IsEnemyParameter()) {
+    const gf::SDataEnemy *enemy = acc.getSDataEnemy();
+    if (enemy != nullptr) {
+      size = enemy->unknown1e & 0xf;
+    }
+  }
+  unknown5a8_0 = size;
+
+  f32 chestHeight = static_cast<f32>(acc.getChestHeight()) * 0.01f;
+  if (IsPlayerParameter()) {
+    unknown28 = 1.0f;
+    unknown2c = 0.5f;
+    unknown3c = 0.5f;
+    unknown30 = chestHeight * 1.4285715f;
+    unknown34 = chestHeight;
+    unknown38 = chestHeight;
+    unknown40 = 1.0f / 6.0f;
+    unknown44 = 1.0f / 9.0f;
+    unknown48 = 7.0f / 27.0f;
+    unknown4c = 1.5707964f;
+    if (chrId >= 0x3e9) {
+      unknown5aa = 0;
+      unknown5ab = 0;
+      unknown5ac = 0;
+      unknown5ad = 0;
+    } else {
+      u8 *bdat = gf::GfDataBdat::getFP(gf::BDAT_CHR_DR);
+      unknown5aa = static_cast<s8>(Bdat::getValCheck(bdat, "RotateX", chrId, 4));
+      unknown5ab = static_cast<s8>(Bdat::getValCheck(bdat, "RotateY", chrId, 4));
+      unknown5ac = static_cast<s8>(Bdat::getValCheck(bdat, "RotateZ", chrId, 4));
+      unknown5ad = static_cast<s8>(Bdat::getValCheck(bdat, "RotateDeg", chrId, 4));
+    }
+  } else {
+    const gf::SDataEnemy *enemy = acc.getSDataEnemy();
+    u32 resource = enemy->unknown44;
+    gf::GfBdatRsc *rsc = gf::GfBdatRsc::get();
+    f32 modelScale;
+    gf::GfObj *obj = gf::GfObjUtil::getObj(unknown08);
+    gf::GfComModel *model = obj != nullptr ? obj->getComponent<gf::GfComModel>() : nullptr;
+    if (model == nullptr || model->m_modelScale <= 0.0f) {
+      modelScale = objAcc.getModelScale();
+    } else {
+      modelScale = model->m_modelScale;
+    }
+    f32 scale = fmaxf(modelScale, 0.0001f);
+    unknown28 = scale;
+
+    int sizeType = BtlSystemBalanceAccess::get()->IsSpSizeEnemy(resource);
+    if (sizeType < 0) {
+      unknown2c = fmaxf(static_cast<f32>(rsc->getRscEnEnRadius(resource)) * scale, 0.1f);
+    } else if (sizeType == 0) {
+      unknown2c = 2.4f;
+    } else {
+      unknown2c = 1.0f;
+    }
+
+    unknown30 = fmaxf(rsc->getRscEnBallHeight(resource) * scale, 0.1f);
+    unknown34 = chestHeight * scale;
+    unknown38 = scale * (static_cast<f32>(rsc->getRscEnChestHeight2(resource)) * 0.01f);
+    unknown3c = fmaxf(rsc->getRscEnBallRadius(resource) * scale, 0.1f);
+    unknown40 = scale * static_cast<f32>(enemy->unknown4b) * (1.0f / 108.0f);
+    unknown44 = scale * unknown40 * 0.6666666f;
+    unknown48 = scale * static_cast<f32>(enemy->unknown4a) * (1.0f / 108.0f);
+
+    u32 frontAngle = rsc->getRscEnFrontAngle(resource);
+    unknown4c = frontAngle == 0 ? 1.5707964f : static_cast<f32>(frontAngle) * mm::DEG_TO_RAD;
+
+    unknown5aa = static_cast<s8>(rsc->getRscEnRotateX(resource));
+    unknown5ab = static_cast<s8>(rsc->getRscEnRotateY(resource));
+    unknown5ac = static_cast<s8>(rsc->getRscEnRotateZ(resource));
+    unknown5ad = static_cast<s8>(rsc->getRscEnRotateDeg(resource));
+  }
+
+  unknown5df_0 = true;
+}
 
 gf::GfObjPropertyCharacter *CharacterParameter::GetCharacterProperty() const {
   gf::GF_OBJ_HANDLE *handle = unknown08;
