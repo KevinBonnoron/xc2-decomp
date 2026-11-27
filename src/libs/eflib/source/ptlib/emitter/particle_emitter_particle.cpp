@@ -2,20 +2,22 @@
 #include <string.h>
 
 #include "mm_math/mm_col4.h"
+#include "mm_math/mm_mat44.h"
 #include "mm_math/mm_vec3.h"
 #include "mm_math/mm_vec3_na.h"
 #include "ptlib/emitter/particle_emitter.h"
 #include "ptlib/emitter/particle_emitter_ext.h"
+#include "ptlib/emitter/particle_emitter_manager.h"
 #include "ptlib/emitter/particle_emitter_param.h"
 #include "ptlib/emitter/particle_emitter_particle.h"
 #include "ptlib/math/particle_keyframe_ip.h"
 #include "ptlib/particle_intrusive_list.h"
+#include "ptlib/particle_math.h"
 #include "ptlib/particle_noise.h"
 #include "ptlib/particle_system.h"
 #include "types.h"
 
 namespace ptlib {
-struct vec2f;
 
 namespace emitter {
 
@@ -29,6 +31,26 @@ inline f32 unknown007(f32 angle) {
     angle += 6.2831855f;
   }
   return angle;
+}
+
+// Inferred role: evaluates one speed keyframe step and returns the speed value; original name unknown.
+inline f32 unknown009(ParticleObj *self, EmitterObj *emitter, unknown006 *speed, EmitterArg *arg, math::KeyFrameIP &keyFrame, f32 frame, f32 emitterFrame) {
+  f32 value = 1.0f;
+  int hasKey = 0;
+  if (speed->unknown0c != 0) {
+    arg->get_kf(&keyFrame, speed->unknown0c, 2, frame, self->m_extParam->unknown214[0], &self->m_extParam->unknown190[0], &self->unknownd8[0], emitter->unknown2b8[0]);
+    value = keyFrame.keyrand_get_ip1(&self->m_extParam->unknown190[0], emitter->unknown268);
+    hasKey = 1;
+  }
+  if (speed->unknown08 != 0) {
+    value *= self->unknownac.z;
+  } else if (speed->unknown0a != 0) {
+    arg->get_kf(&keyFrame, speed->unknown0a, 2, emitterFrame, emitter->unknown250[3], &emitter->unknown220[0], &self->unknownd8[0], emitter->unknown2b8[0]);
+    value *= keyFrame.keyrand_get_ip1(&emitter->unknown220[0], emitter->unknown268);
+  } else if (!hasKey) {
+    value = self->unknownac.y;
+  }
+  return value;
 }
 
 } // namespace
@@ -115,6 +137,56 @@ void ParticleObj::move_common_keyframe_uv23(vec2f *uv0, vec2f *uv1, f32 *rotatio
   keyFrame.get_ip2(uv0, 0);
   keyFrame.get_ip2(uv1, 4);
   *rotation = keyFrame.get_ip1(8);
+}
+
+void ParticleObj::move01_common_posVec(EmitterObj *emitter, int isFit) {
+  EmitterManager *manager = EmitterManager::getPtr();
+  f32 speed = emitter->m_param.speed * manager->unknown1700[emitter->m_param.unknown90];
+  mm::Vec3 offset;
+  offset.x = unknownac.x * unknown30.x;
+  offset.y = unknownac.x * unknown30.y;
+  offset.z = unknownac.x * unknown30.z;
+  calcGravity(emitter, speed, offset);
+  calcWind(emitter, offset);
+  calcNoise(emitter, offset);
+  calcVortex2(emitter, offset);
+  calcNewton(emitter, offset);
+  unknown10.x += speed * offset.x;
+  unknown10.y += speed * offset.y;
+  unknown10.z += speed * offset.z;
+  calcIsFit(isFit, emitter, offset);
+}
+
+void ParticleObj::emitter_create_local_common_grav_wind(EmitterObj *emitter) {
+  unknown004 *gravity = emitter->unknown1c8;
+  if (gravity != nullptr) {
+    m_extParam->unknown20 = gravity->unknown14 + gravity->unknown18 * math::unknown001(emitter->unknown268);
+    m_extParam->unknown10 = mm::Vec3::zero;
+  }
+  unknown012 *wind = emitter->unknown1f0;
+  if (wind != nullptr) {
+    mm::Vec3 direction(wind->unknown0c.x, wind->unknown0c.y, wind->unknown0c.z);
+    f32 strength = wind->unknown18;
+    u16 mode = wind->unknown06;
+    switch (mode) {
+    case 0:
+    case 8:
+    case 10:
+    case 11:
+      break;
+    default: {
+      const mm::Mat44 &matrix = emitter->unknownc0->unknown10;
+      direction = mm::Vec3(direction.x * matrix.rows[0][0] + direction.y * matrix.rows[1][0] + direction.z * matrix.rows[2][0],
+                           direction.x * matrix.rows[0][1] + direction.y * matrix.rows[1][1] + direction.z * matrix.rows[2][1],
+                           direction.x * matrix.rows[0][2] + direction.y * matrix.rows[1][2] + direction.z * matrix.rows[2][2]);
+      break;
+    }
+    }
+    m_extParam->unknown30 = mm::Vec3(strength * direction.x, strength * direction.y, strength * direction.z);
+  }
+  if (emitter->unknown1f8 != nullptr) {
+    m_extParam->unknown40 = mm::Vec3::zero;
+  }
 }
 
 void ParticleObj::calcGravity(EmitterObj *emitter, f32 speed, mm::Vec3 &result) {
@@ -252,6 +324,34 @@ void ParticleObj::calcIsFit(int isFit, EmitterObj *emitter, mm::Vec3 &direction)
     } else {
       calc_fit(unknown94.x, unknown94.y, &direction);
     }
+  }
+}
+
+void ParticleObj::calcSpeedKeyframe(EmitterObj *emitter, math::KeyFrameIP &keyFrame, f32 frame, f32 emitterFrame) {
+  unknown006 *speed = emitter->unknown1c0;
+  if (speed == nullptr) {
+    return;
+  }
+  EmitterArg *arg = emitter->unknown98;
+  if (emitter->unknown280 > 1.0f) {
+    f32 start = frame - emitter->unknown280 * unknownbc;
+    if (start <= 0.0f) {
+      start = 1.0f;
+    }
+    if (speed->unknown0c != 0) {
+      unknownd8[0] = &arg->unknown24c[speed->unknown0c];
+    } else if (speed->unknown08 != 0) {
+      unknownd8[0] = &arg->unknown24c[speed->unknown08];
+    } else if (speed->unknown0a != 0) {
+      unknownd8[0] = &arg->unknown24c[speed->unknown0a];
+    }
+    unknownac.x = 0.0f;
+    while (start <= frame) {
+      unknownac.x += unknown009(this, emitter, speed, arg, keyFrame, frame, emitterFrame) * emitter->getEmitterScale();
+      start += 1.0f;
+    }
+  } else {
+    unknownac.x = unknown009(this, emitter, speed, arg, keyFrame, frame, emitterFrame) * emitter->getEmitterScale();
   }
 }
 
@@ -422,6 +522,22 @@ void ParticleObj::moveFlowMap(EmitterObj *emitter, int isMove) {
       m_extParam->unknown230 = 1;
     }
   }
+}
+
+void ParticleObj::move01_common_keyframe(EmitterObj *emitter, f32 speed, int isMove) {
+  f32 frame = move_common_keyframe_life(emitter);
+  f32 emitterFrame = emitter->unknown18c;
+  math::KeyFrameIP keyFrame;
+  calcSpeedKeyframe(emitter, keyFrame, frame, emitterFrame);
+  calcParSize(isMove, emitter, keyFrame, frame, emitterFrame, true);
+  calcParRot(keyFrame, frame, emitter, true, speed);
+  EmitterArg *arg = emitter->unknown98;
+  if (arg->unknowne2 != 0) {
+    arg->get_kf(&keyFrame, arg->unknowne2, 6, frame, m_extParam->unknown214[3], &m_extParam->unknown190[3], &unknownd8[3], emitter->unknown2b8[3]);
+    keyFrame.keyrand_get_ip3(&unknowna0, &m_extParam->unknown190[3], emitter->unknown268);
+  }
+  move_common_keyframe_uv1_full(emitter, frame, speed);
+  calcMatColor(frame, keyFrame, emitter, emitterFrame, true);
 }
 
 f32 ParticleObj::move_common_keyframe_life(EmitterObj *emitter) {

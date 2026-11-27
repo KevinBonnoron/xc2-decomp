@@ -217,6 +217,19 @@ int ParticleManager::convert_key_by_material_index(int key, FxHeader *header) co
   return key;
 }
 
+material::MaterialBase *ParticleManager::parse_efb_tex(int key, u8 *data, void *owner, bool isResident) {
+  if (key >= 0x10000000) {
+    return material::MaterialManager::getPtr()->getMaterialByKey(key, nullptr);
+  }
+  renderer::RenderManager *renderManager = renderer::RenderManager::get();
+  unknown007 *table = unknown002<unknown007>(data, reinterpret_cast<const unknown001 *>(data)->unknown10);
+  if (table != nullptr && static_cast<int>(table->unknown00) > key) {
+    const unknown006 *entry = table->get(key);
+    return renderManager->tex_loadmem(entry->unknown00, unknown002<void>(table, entry->unknown0c), entry->unknown08, entry->unknown04, data, isResident, owner);
+  }
+  return nullptr;
+}
+
 void ParticleManager::parse_efb_type0051(u8 *data) { unknown160 = unknown002<u8>(data, reinterpret_cast<const unknown001 *>(data)->unknown10); }
 
 void ParticleManager::parse_efb_type0050(u8 *data) {

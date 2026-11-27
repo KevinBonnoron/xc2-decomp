@@ -72,8 +72,12 @@ public:
   void calcGravity(EmitterObj *emitter, f32 speed, mm::Vec3 &result);
   void calcWind(EmitterObj *emitter, mm::Vec3 &result);
   void calcNoise(EmitterObj *emitter, mm::Vec3 &result);
+  void calcVortex2(EmitterObj *emitter, mm::Vec3 &result);
   void calcNewton(EmitterObj *emitter, mm::Vec3 &result);
   void calcParRot(math::KeyFrameIP &keyFrame, f32 frame, EmitterObj *emitter, bool isCreate, f32 speed);
+  void calcSpeedKeyframe(EmitterObj *emitter, math::KeyFrameIP &keyFrame, f32 frame, f32 emitterFrame);
+  void calcParSize(int isMove, EmitterObj *emitter, math::KeyFrameIP &keyFrame, f32 frame, f32 emitterFrame, bool isCreate);
+  void calcMatColor(f32 frame, math::KeyFrameIP &keyFrame, EmitterObj *emitter, f32 emitterFrame, bool isCreate);
   void calcParPivot(math::KeyFrameIP &keyFrame, f32 frame, EmitterObj *emitter);
   void calcSpeed(EmitterObj *emitter, math::KeyFrameIP &keyFrame, f32 frame);
   void calcTurb(mm::Vec3 &result, f32 frequency, f32 amplitude, int octaves);
@@ -103,7 +107,11 @@ public:
   void move_common_check_begin_end_sub(EmitterObj *emitter, int mode, u16 &begin, u16 &end);
   f32 move_common_check_begin_end_fin_fout(EmitterObj *emitter, u16 begin, u16 end, u16 fadeIn, u16 fadeOut, int mode);
   void moveFlowMap(EmitterObj *emitter, int isMove);
+  void move_common_keyframe_uv1_full(EmitterObj *emitter, f32 frame, f32 speed);
+  void move01_common_posVec(EmitterObj *emitter, int isFit);
+  void move01_common_keyframe(EmitterObj *emitter, f32 speed, int isMove);
   f32 move_common_keyframe_life(EmitterObj *emitter);
+  void emitter_create_local_common_grav_wind(EmitterObj *emitter);
 
   mm::Vec3 unknown10;   // Inferred role: position; original member name unknown.
   mm::Vec3 unknown20;   // Inferred role: previous position; original member name unknown.
