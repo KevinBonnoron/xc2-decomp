@@ -157,16 +157,16 @@ void BroadPhazeOctree::collectWindObj(Dispatcher &dispatcher, mm::mtl::Intrusive
     OverlappingCache *pCache = it->m_pOverlappingCache;
     pCache->unknown10.clear();
     mm::mtl::FixedQueue<AreaBlock *, 1024> areas;
-    if (unknown005(unknown40.unknown60, pProxy->unknown20, dispatcher.unknown30.unknown00)) {
+    if (unknown005(unknown40.unknown60, pProxy->unknown20, dispatcher.m_collisionInfo.unknown00)) {
       areas.push(&unknown40);
     }
     while (!areas.empty()) {
       AreaBlock *area = areas.front();
       areas.pop_front();
-      detectAreaWind(area, pProxy->unknown20, dispatcher.unknown30.unknown00, pCache);
+      detectAreaWind(area, pProxy->unknown20, dispatcher.m_collisionInfo.unknown00, pCache);
       for (u32 i = 0; i < 8; i++) {
         AreaBlock *child = area->unknown18[i];
-        if (child != nullptr && unknown005(child->unknown60, pProxy->unknown20, dispatcher.unknown30.unknown00)) {
+        if (child != nullptr && unknown005(child->unknown60, pProxy->unknown20, dispatcher.m_collisionInfo.unknown00)) {
           areas.push(child);
         }
       }

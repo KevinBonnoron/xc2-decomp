@@ -13,7 +13,7 @@
 
 namespace wnd {
 
-void SphereBoxAgent::registerAgent(Dispatcher &dispatcher) { dispatcher.unknown18 = &SphereBoxAgent::processCollision; }
+void SphereBoxAgent::registerAgent(Dispatcher &dispatcher) { dispatcher.unknown10[SHAPE_TYPE_UNKNOWN_0][SHAPE_TYPE_UNKNOWN_1] = &SphereBoxAgent::processCollision; }
 
 bool SphereBoxAgent::processCollision(const WindObject &wind0, const WindObject &wind1, f32 radius, HitCache *cache) {
   // The inverse and rotate must run before the shape asserts. The game loads the positions at
@@ -44,7 +44,7 @@ bool SphereBoxAgent::processCollision(const WindObject &wind0, const WindObject 
   // Repeats the tail of SphereSphereAgent::processCollision. This copy is at 0x710098afc4; the
   // original, in that function, is at 0x710098b18c. A shared helper breaks both functions. Tried by
   // value, by reference, and as a HitCache member.
-  cache->unknown00 = &wind1;
+  cache->m_windObject = &wind1;
   cache->unknown08 = sqrtf(direction.x * direction.x + direction.y * direction.y + direction.z * direction.z);
   if (!direction.unknown003()) {
     direction.unknown001();
