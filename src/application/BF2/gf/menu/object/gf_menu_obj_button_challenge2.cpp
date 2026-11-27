@@ -101,7 +101,7 @@ void GfMenuObjButtonChallenge2::open(GfMenuCallContext *context, const OpenParam
         *openParam = param;
         ui::EventData event;
         event.unknown00 = GfMenuTypes::unknown003_33;
-        event.unknown08_u64 = reinterpret_cast<u64>(openParam);
+        event.unknown08_ptr = openParam;
         event.unknown10 = sequence;
         GfMenuObject::sendEvent(acc.unknown10, event, 0.0f);
         GfMenuObject::startCallContext(context, unknown001, acc.unknown10);

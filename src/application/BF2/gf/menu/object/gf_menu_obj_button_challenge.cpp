@@ -55,7 +55,7 @@ bool GfMenuObjButtonChallenge::start(GfMenuCallContext *context, const Challenge
         m_ChallengeData.unknown06 = param.unknown04;
         m_ChallengeData.unknown08 = param.unknown06;
         event.unknown00 = GfMenuTypes::unknown003_33;
-        event.unknown08_u64 = reinterpret_cast<u64>(&m_ChallengeData);
+        event.unknown08_ptr = &m_ChallengeData;
         ui::UIManager::get()->requestObjectEvent(acc.unknown10, event, 0.0f);
         GfMenuObject::startCallContext(context, unknown002, acc.unknown10);
         result = true;

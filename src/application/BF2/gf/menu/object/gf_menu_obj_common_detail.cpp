@@ -60,7 +60,7 @@ void GfMenuObjCommonDetail::open(GfMenuCallContext *context, const OpenParam &pa
       *copy = param;
       ui::EventData event;
       event.unknown00 = GfMenuTypes::unknown003_33;
-      event.unknown08_u64 = reinterpret_cast<u64>(copy);
+      event.unknown08_ptr = copy;
       sendEvent(object, event, 0.0f);
       if (context != nullptr && GfMenuObjUtil::checkCCStart(context)) {
         startCallContext(context, CALL_UNKNOWN_79, object);

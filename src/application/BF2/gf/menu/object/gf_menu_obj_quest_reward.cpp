@@ -46,7 +46,7 @@ void GfMenuObjQuestReward::create(GfMenuCallContext *context, const OpenParam &p
       OpenParam *copy = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) OpenParam();
       *copy = param;
       event.unknown00 = GfMenuTypes::unknown003_257;
-      event.unknown08_u64 = reinterpret_cast<u64>(copy);
+      event.unknown08_ptr = copy;
       sendEvent(acc.unknown10, event, 0.0f);
       startCallContext(context, CALL_UNKNOWN_33, acc.unknown10);
       if (isAnim) {
@@ -94,7 +94,7 @@ void GfMenuObjQuestReward::RewardListener::reciveEvent(const ui::EventData &even
   ui::UIObjectAcc acc(handle);
   switch (event.unknown00) {
   case GfMenuTypes::unknown003_257: {
-    OpenParam *param = reinterpret_cast<OpenParam *>(event.unknown08_u64);
+    OpenParam *param = static_cast<OpenParam *>(event.unknown08_ptr);
     if (param != nullptr) {
       m_menuItemList = GfMenuItemList::create();
       unknown30 = param->unknown00;

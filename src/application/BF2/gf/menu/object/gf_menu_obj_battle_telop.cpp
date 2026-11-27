@@ -105,7 +105,7 @@ void GfMenuObjBattleTelop::openUniteCombo(const OpenUniteParam &param) {
       *copy = param;
       ui::EventData event;
       event.unknown00 = unknown007;
-      event.unknown08_u64 = reinterpret_cast<u64>(copy);
+      event.unknown08_ptr = copy;
       sendEvent(acc.searchChild("LAY_fusion_combo"), event, 0.0f);
     }
   }

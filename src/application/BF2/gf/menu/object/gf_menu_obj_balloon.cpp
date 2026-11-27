@@ -774,9 +774,8 @@ void GfMenuObjBalloon::SelMoneyListener::reciveEvent(const ui::EventData &event,
     break;
   }
   case GfMenuTypes::unknown003_33: {
-    // The sender (openEventSelectMoney) stores the pointer of the copied parameter in the 64-bit view of the first two slots. The EventData has no pointer view, so the cast is
-    // the one GfMenuObjQuestReward::RewardListener::reciveEvent already uses for its OpenParam; a pointer member in ui::EventData would remove it.
-    OpenSelectMoneyParam *param = reinterpret_cast<OpenSelectMoneyParam *>(event.unknown08_u64);
+    // The sender (openEventSelectMoney) stores the pointer of the copied parameter in the first two slots.
+    OpenSelectMoneyParam *param = static_cast<OpenSelectMoneyParam *>(event.unknown08_ptr);
     int cancel = param->unknown10.size();
     if (param->unknown08 == 0 || param->unknown00 == nullptr) {
       acc.setDispChild(false, "TXT_sel_money_title");
@@ -868,7 +867,7 @@ void GfMenuObjBalloon::openEventSelectMoney(GfMenuCallContext *context, const Op
     OpenSelectMoneyParam *copy = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) OpenSelectMoneyParam();
     *copy = param;
     event.unknown00 = GfMenuTypes::unknown003_33;
-    event.unknown08_u64 = reinterpret_cast<u64>(copy);
+    event.unknown08_ptr = copy;
     GfMenuObject::sendEvent(object, event, 0.0f);
     ui::UIObjectAcc(object).setSuspend(false);
   }

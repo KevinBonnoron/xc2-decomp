@@ -74,7 +74,7 @@ void GfMenuObjBlDetail::create(GfMenuCallContext *context, const CreateParam &pa
         CreateParam *copy = new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) CreateParam();
         *copy = param;
         event.unknown00 = GfMenuTypes::unknown003_257;
-        event.unknown08_u64 = reinterpret_cast<u64>(copy);
+        event.unknown08_ptr = copy;
         event.unknown10 = count;
         sendEvent(object, event, 0.0f);
         startCallContext(context, CALL_UNKNOWN_80, object);
