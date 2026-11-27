@@ -1,5 +1,6 @@
 #include "gf/object/component/effect/gf_com_effect_caster.h"
 
+#include <float.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -10,23 +11,51 @@
 #include "framework/effect/effect_manager.h"
 #include "framework/effect/effect_pack.h"
 #include "framework/effect/effect_point.h"
+#include "framework/framework.h"
+#include "framework/memory/framework_memory.h"
 #include "framework/object/updatable_object.h"
+#include "fw/fw_model_object.h"
+#include "fw/fw_transform.h"
+#include "gf/asset/gf_asset_def.h"
+#include "gf/asset/gf_asset_manager.h"
 #include "gf/asset/gf_asset_resource.h"
 #include "gf/data/gf_data_param_acc.h"
 #include "gf/data/gf_data_weapon.h"
+#include "gf/game/gf_game_manager.h"
 #include "gf/game/gf_game_util.h"
 #include "gf/object/component/animation/gf_com_asm.h"      // IWYU pragma: keep
 #include "gf/object/component/animation/gf_com_evt_anim.h" // IWYU pragma: keep
 #include "gf/object/component/effect/gf_effect_caster.h"
-#include "gf/object/component/model/gf_com_model.h" // IWYU pragma: keep
+#include "gf/object/component/gf_com_transform.h"
+#include "gf/object/component/model/gf_com_model.h"       // IWYU pragma: keep
+#include "gf/object/component/property/gf_com_property.h" // IWYU pragma: keep
 #include "gf/object/gf_obj.h"
+#include "gf/object/gf_obj_acc.h"
 #include "gf/object/gf_obj_handle.h"
 #include "gf/object/gf_obj_util.h"
 #include "mm_mtl/delegate.h"
+#include "mm_mtl/reference_object.h"
+#include "mm_mtl/unique_ptr.h"
 #include "mm_mtl/vector.h"
+#include "scn/scn_obj_model_dr_sys.h"
+
+namespace ml {
+class ScnObjModel;
+} // namespace ml
 
 // Named as the game's global symbol ASM_CB_NAME_EFFECT.
 const char *ASM_CB_NAME_EFFECT = "asm_effect";
+
+// Inferred role: set when the party leader's caster is set up; original name unknown.
+static bool s_isPartyLeaderCaster;
+
+namespace {
+// Inferred roles: effect point files selected by setupEfp (0x7100506134); original names unknown.
+const gf::GfFileIdx FILE_IDX_UNKNOWN_2 = static_cast<gf::GfFileIdx>(2);
+const gf::GfFileIdx FILE_IDX_UNKNOWN_3 = static_cast<gf::GfFileIdx>(3);
+const gf::GfFileIdx FILE_IDX_UNKNOWN_9 = static_cast<gf::GfFileIdx>(9);
+const gf::GfFileIdx FILE_IDX_UNKNOWN_35 = static_cast<gf::GfFileIdx>(35);
+} // namespace
 
 namespace gf {
 
@@ -84,6 +113,84 @@ void GfComEffectCaster::procMessageAsmCallback(fw::MessageObject *object, MsgObj
   }
 }
 
+// The game evaluates getComponent<GfComModel>() and constructs a GfObjAcc here without reading either
+// result (0x7100508dd8-0x7100508e04); both calls have side effects, so the statements stay (ruling 5).
+// The enter and frame cases write the setup fields out again: a shared helper gives one copy of the
+// block and does not match the two separately scheduled blocks at 0x7100509044 and 0x7100508f34.
+void GfComEffectCaster::callbackImpl(const CallBackCache &cache) {
+  static_cast<GfObj *>(unknown08)->getComponent<GfComModel>();
+  GfObjAcc acc(static_cast<GfObj *>(unknown08));
+  f32 scale = unknown114a8;
+  switch (cache.unknown00) {
+  case anm::AsmListener::CALLBACK_ENTER: {
+    fw::EffectAnnotationData *data = const_cast<fw::EffectAnnotationData *>(static_cast<const fw::EffectAnnotationData *>(cache.unknown08->unknown10_ptr));
+    EffectSetUp setup;
+    setup.unknown28 = data->unknown54.c_str();
+    effectEnd(data->unknownf0.unknown1c);
+    setup.unknown30 = m_effectCaster;
+    setup.unknown38 = scale * data->unknownc0.unknown04;
+    setup.unknown44 = data->unknownf0.unknown18;
+    if (data->unknown4c.unknown04 > 0.0f) {
+      setup.unknown3c = data->unknown4c.unknown04;
+    }
+    setup.unknown48 = data->unknownf0.unknown05;
+    setup.unknown49 = data->unknownf0.unknown04;
+    setup.unknown46 = data->unknownf0.unknown1a;
+    setup.unknown00 = data->unknownd0;
+    setup.unknown10 = data->unknowne0;
+    setup.unknown4b = data->unknownf0.unknown09;
+    setup.unknown4c = data->unknownf0.unknown0a;
+    setup.unknown4d = data->unknownf0.unknown0a >> 8;
+    setup.unknown4f = data->unknownf0.unknown24;
+    if (setup.unknown4d != 0) {
+      setup.unknown38 = data->unknownc0.unknown04;
+    }
+    data->unknownf0.unknown1c = effectStart(setup, data->unknown78.c_str());
+    break;
+  }
+  case anm::AsmListener::CALLBACK_LEAVE: {
+    fw::EffectAnnotationData *data = const_cast<fw::EffectAnnotationData *>(static_cast<const fw::EffectAnnotationData *>(cache.unknown08->unknown10_ptr));
+    effectEnd(data->unknownf0.unknown1c);
+    data->unknownf0.unknown1c = 0;
+    break;
+  }
+  case anm::AsmListener::CALLBACK_FRAME: {
+    fw::EffectAnnotationData *data = const_cast<fw::EffectAnnotationData *>(static_cast<const fw::EffectAnnotationData *>(cache.unknown08->unknown10_ptr));
+    if (data->unknownf0.unknown1c != 0 && data->unknownf0.unknown14 != 1) {
+      effectEnd(data->unknownf0.unknown1c);
+      data->unknownf0.unknown1c = 0;
+      break;
+    }
+    EffectSetUp setup;
+    setup.unknown28 = data->unknown54.c_str();
+    setup.unknown38 = scale * data->unknownc0.unknown04;
+    setup.unknown44 = data->unknownf0.unknown18;
+    setup.unknown46 = data->unknownf0.unknown1a;
+    if (data->unknown4c.unknown04 > 0.0f) {
+      setup.unknown3c = data->unknown4c.unknown04;
+    }
+    setup.unknown48 = data->unknownf0.unknown05;
+    setup.unknown49 = data->unknownf0.unknown04;
+    setup.unknown00 = data->unknownd0;
+    setup.unknown10 = data->unknowne0;
+    setup.unknown4b = data->unknownf0.unknown09;
+    setup.unknown4c = data->unknownf0.unknown0a;
+    setup.unknown4d = data->unknownf0.unknown0a >> 8;
+    setup.unknown4f = data->unknownf0.unknown24;
+    if (setup.unknown4d != 0) {
+      setup.unknown38 = data->unknownc0.unknown04;
+    }
+    if (setup.unknown44 == 1) {
+      setup.unknown30 = m_effectCaster;
+    }
+    data->unknownf0.unknown1c = effectStart(setup, data->unknown78.c_str());
+    break;
+  }
+  default:
+    break;
+  }
+}
+
 void GfComEffectCaster::registerAsmCallbackEffect(GF_OBJ_HANDLE *handle, anm::ResASM *resAsm, fw::EffectResData *effectData) {
   if (resAsm != nullptr && effectData != nullptr) {
     effectData->registerAsmAnnotation(resAsm, 3, ASM_CB_NAME_EFFECT);
@@ -120,6 +227,32 @@ void GfComEffectCaster::procMsgFxRimBloomTarget(fw::MessageObject *object, MsgFx
   unknown14 = false;
   unknown1c = 0.0f;
   unknown20 = -1.0f;
+}
+
+void GfComEffectCaster::procMsgFxForceCancel(fw::MessageObject *object, MsgFxForceCancel &message) {
+  if (unknown30 == nullptr) {
+    return;
+  }
+  for (fw::EffectAnnotationData *it = unknown30->unknown10.begin(); it != unknown30->unknown10.end(); ++it) {
+    if (it->unknownf0.unknown08 != 0 && it->unknownf0.unknown1c != 0) {
+      effectEnd(it->unknownf0.unknown1c);
+      it->unknownf0.unknown1c = 0;
+    }
+  }
+}
+
+void GfComEffectCaster::procMsgFxFootPrint(fw::MessageObject *object, MsgFxFootPrint &message) { GfEffectGround::emitFootStepEffect(this, message); }
+
+void GfComEffectCaster::procMsgFxSplashdown(fw::MessageObject *object, MsgFxSplashdown &message) { GfEffectGround::emitSplashdownEffect(this, message.unknown08); }
+
+void GfComEffectCaster::procMsgFxComboBuff(fw::MessageObject *object, MsgFxComboBuff &message) {
+  GfObjAcc acc(static_cast<GfObj *>(unknown08));
+  EffectSetUp setup;
+  const char *name = message.unknown10;
+  setup.unknown44 = 1;
+  setup.unknown28 = name;
+  setup.unknown38 = unknown114a8;
+  effectStart(setup, nullptr);
 }
 
 void GfComEffectCaster::procMsgFxRimBloom(fw::MessageObject *object, MsgFxRimBloom &message) {
@@ -183,6 +316,57 @@ fw::EffectPack *GfComEffectCaster::getEffectPack(GF_ASSET_HANDLE *handle) {
     return fw::EffectPack::createFromMemory(resource->getAssetData(), resource->getAssetSize(), resource->getAssetName(), false);
   }
   return nullptr;
+}
+
+// The game constructs a GfObjAcc here without reading it (0x7100506150-0x7100506158); the constructor
+// has side effects, so the statement stays (ruling 5).
+void GfComEffectCaster::setupEfp(const SetupInfo &info) {
+  GfObjAcc acc(static_cast<GfObj *>(unknown08));
+  GfObj *obj = static_cast<GfObj *>(unknown08);
+  u32 casterType = unknown1149c;
+  GfAssetResource *resource;
+  switch (casterType) {
+  case 2:
+  case 6:
+  case 7:
+    resource = GfAssetManager::getResource(info.unknown08, FILE_IDX_UNKNOWN_9, ASSET_TYPE_UNKNOWN_0);
+    break;
+  case 0:
+  case 1:
+    resource = GfAssetManager::getResource(info.unknown08, FILE_IDX_UNKNOWN_35, ASSET_TYPE_UNKNOWN_0);
+    break;
+  case 3:
+  case 5:
+    resource = GfAssetManager::getResource(info.unknown08, FILE_IDX_UNKNOWN_3, ASSET_TYPE_UNKNOWN_0);
+    break;
+  case 4:
+  case 8:
+    resource = GfAssetManager::getResource(info.unknown08, FILE_IDX_UNKNOWN_2, ASSET_TYPE_UNKNOWN_0);
+    break;
+  default:
+    return;
+  }
+  if (resource == nullptr) {
+    return;
+  }
+
+  fw::EfpInitData init;
+  init.unknown00 = info.unknown10;
+  init.unknown04 = 1.0f;
+  GfComModel *model = obj->getComponent<GfComModel>();
+  if (model != nullptr) {
+    init.unknown28.bind(model, &GfComModel::createBoneReferenceFrame);
+    init.unknown48.bind(model, &GfComModel::destroyBoneReferenceFrame);
+    init.unknown20 = model->unknown18;
+  }
+  init.unknown18 = fw::Framework::getAllocator();
+  init.unknown10 = resource->getAssetData();
+  init.unknown08 = resource->getAssetSize();
+#line 570
+  m_effectPoint = new (init.unknown18, 16, __FILE__, __LINE__) fw::EffectPoint(init);
+  if (m_effectPoint != nullptr) {
+    m_effectPoint->unknown001();
+  }
 }
 
 const char *GfComEffectCaster::getEfpData(const char *name, mm::Mat44 &matrix) {
@@ -249,6 +433,17 @@ void GfComEffectCaster::updateParam(GfComEffectCaster *caster, Param *param, f32
 void GfComEffectCaster::getWpnMat(mm::Mat44 &matrix) { matrix = unknown002(unknown113d0, unknown11410); }
 
 fw::EffectPoint *GfComEffectCaster::getEffectPoint() { return m_effectPoint; }
+
+f32 GfComEffectCaster::getHeightAboveGround() const {
+  GfComProperty *property = static_cast<GfObj *>(unknown08)->getComponent<GfComProperty>();
+  GfEnvProperty *env = property->unknown28.get();
+  // The game reads the flags before testing the environment pointer (0x7100506d24).
+  if ((env->unknown2d0 & 2) != 0 && env != nullptr) {
+    GfObjAcc acc(static_cast<GfObj *>(unknown08));
+    return acc.getWorldTransform().unknown00.y - env->unknown00[0].unknown00.y;
+  }
+  return FLT_MAX;
+}
 
 bool GfComEffectCaster::getValidEffectName(const char *name) const { return true; }
 
@@ -337,6 +532,78 @@ void GfComEffectCaster::effectEnd(u32 effect) {
     if (param->unknown58 == effect && param->unknown58 != 0) {
       fw::EffectManager::get()->dead(effect);
       param->unknownba = true;
+      return;
+    }
+  }
+}
+
+void GfComEffectCaster::setupCaster(const fw::EffectPoint *point) {
+  GfComTransform *transform = static_cast<GfObj *>(unknown08)->getComponent<GfComTransform>();
+  mm::mtl::IntrusivePtr<fw::ReferenceFrame> &frame = transform->unknown001();
+#line 626
+  EffectCaster *caster = new (fw::Framework::getAllocator(), 16, __FILE__, __LINE__) EffectCaster(point, unknown113c0);
+  m_effectCaster = caster;
+  if (caster == nullptr) {
+    return;
+  }
+  caster->unknown08 = frame.get();
+  m_effectCaster->m_comEffectCaster = this;
+  if (!s_isPartyLeaderCaster && static_cast<GfObj *>(unknown08)->unknownf8 == GfGameManager::getPartyLeader()) {
+    s_isPartyLeaderCaster = true;
+    m_effectCaster->unknowna0 = true;
+  }
+  GfComModel *model = static_cast<GfObj *>(unknown08)->getComponent<GfComModel>();
+  if (model != nullptr && model->unknown18 != nullptr) {
+    fw::EffectCasterBase *caster = m_effectCaster;
+    ml::ScnObjModel *interface = model->unknown18->getInterface();
+    caster->unknown18 = static_cast<ml::ScnObjModelDrSys *>(interface);
+  }
+}
+
+void GfComEffectCaster::setupEfTail(u32 effect) {
+  if (unknown1149c != 0) {
+    if (unknown114ac == effect) {
+      return;
+    }
+    GfAssetResource *resource = GfObjUtil::getWeaponResourceSwt(static_cast<GfObj *>(unknown08)->unknownf8, 0);
+    if (resource == nullptr) {
+      return;
+    }
+    fw::EffectCasterBase *caster = m_effectCaster;
+    void *data = resource->getAssetData();
+    u32 size = resource->getAssetSize();
+    caster->unknown20 = static_cast<fw::EffectCasterSend::MtxAndName *>(data);
+    caster->unknown28 = size;
+    unknown114ac = effect;
+    return;
+  }
+  if (m_effectCaster == nullptr || unknown114ac == effect) {
+    return;
+  }
+  u32 count = GfObjUtil::getWeaponResourceSwtNum(static_cast<GfObj *>(unknown08)->unknownf8);
+  if (count == 0) {
+    return;
+  }
+  for (u32 i = 0; i < count; i++) {
+    GfAssetResource *resource = GfObjUtil::getWeaponResourceSwt(static_cast<GfObj *>(unknown08)->unknownf8, i);
+    if (resource == nullptr) {
+      continue;
+    }
+    const char *found = strchr(resource->getAssetName(), '_');
+    if (found == nullptr) {
+      continue;
+    }
+    char digits[4] = {};
+    digits[0] = found[1];
+    digits[1] = found[2];
+    digits[2] = 0;
+    if (atoi(digits) == effect) {
+      fw::EffectCasterBase *caster = m_effectCaster;
+      void *data = resource->getAssetData();
+      u32 size = resource->getAssetSize();
+      caster->unknown20 = static_cast<fw::EffectCasterSend::MtxAndName *>(data);
+      caster->unknown28 = size;
+      unknown114ac = effect;
       return;
     }
   }

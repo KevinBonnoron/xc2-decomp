@@ -11,6 +11,12 @@
 #include "mm_mtl/vector.h"
 #include "types.h"
 
+namespace mm {
+namespace mtl {
+class IAllocator;
+}
+} // namespace mm
+
 namespace fw {
 
 class ModelObject;
@@ -21,8 +27,27 @@ struct UpdateInfo;
 // (102) when it releases its point, not reference_object.h's "m_RefCount > 0" at line 0x3c. The ctor zeroes the u32 at
 // 0x08 before the vtable store (1.0.0: 0x7100178128). The members from 0x60 are copied by the ctor from its EfpInitData
 // argument, whose caller GfComEffectCaster binds the delegates.
+// Layout evidence: GfComEffectCaster::setupEfp (0x7100506134) builds it at sp+8 and passes it to the
+// EffectPoint constructor at 0x7100506298. The type is in namespace fw: the mangled constructor symbol
+// _ZN2fw11EffectPointC2ERKNS_11EfpInitDataE names it there. Original member names unknown.
+struct EfpInitData {
+  EfpInitData() : unknown08(0), unknown10(nullptr), unknown18(nullptr), unknown20(nullptr) {}
+
+  u32 unknown00;                                                                    // Inferred role: layer, copied from SetupInfo::unknown10; original member name unknown.
+  f32 unknown04;                                                                    // Inferred role: set to 1.0 by setupEfp, role unknown; original member name unknown.
+  u32 unknown08;                                                                    // Inferred role: asset data size; original member name unknown.
+  u32 unknown0c;                                                                    // Inferred role: not written by setupEfp; original member name unknown.
+  const void *unknown10;                                                            // Inferred role: asset data; original member name unknown.
+  mm::mtl::IAllocator *unknown18;                                                   // Inferred role: allocator; original member name unknown.
+  ModelObject *unknown20;                                                           // Inferred role: model object; original member name unknown.
+  mm::mtl::Delegate<mm::mtl::IntrusivePtr<ReferenceFrame>(const char *)> unknown28; // Inferred role: bone frame getter; original member name unknown.
+  mm::mtl::Delegate<void(const char *)> unknown48;                                  // Inferred role: bone frame releaser; original member name unknown.
+};
+
 class EffectPoint {
 public:
+  explicit EffectPoint(const EfpInitData &init);
+
   struct Param {
     mm::Mat44 unknown00;                             // Inferred role: offset matrix; original member name unknown.
     mm::Vec3 unknown40;                              // Inferred role: scale; original member name unknown.
@@ -70,6 +95,13 @@ public:
   mm::mtl::Delegate<void(const char *)> unknown88;
 };
 
+static_assert(offsetof(EfpInitData, unknown08) == 0x08, "");
+static_assert(offsetof(EfpInitData, unknown10) == 0x10, "");
+static_assert(offsetof(EfpInitData, unknown18) == 0x18, "");
+static_assert(offsetof(EfpInitData, unknown20) == 0x20, "");
+static_assert(offsetof(EfpInitData, unknown28) == 0x28, "");
+static_assert(offsetof(EfpInitData, unknown48) == 0x48, "");
+static_assert(sizeof(EfpInitData) == 0x68, "");
 static_assert(sizeof(EffectPoint::Param) == 0xb0, "");
 static_assert(offsetof(EffectPoint::Param, unknown50) == 0x50, "");
 static_assert(offsetof(EffectPoint::Param, unknown58) == 0x58, "");

@@ -103,6 +103,11 @@ public:
   u32 unknown38;                                             // Inferred role: point count; original member name unknown.
   u32 unknown3c;                                             // Inferred role: layer; original member name unknown.
   bool _40;
+  u8 _41[0x44 - 0x41];
+  u32 unknown44; // Inferred role: zeroed by gf::EffectCaster's constructor; original member name unknown.
+  u32 unknown48; // Inferred role: zeroed by gf::EffectCaster's constructor; original member name unknown.
+  u32 unknown4c; // Inferred role: zeroed by gf::EffectCaster's constructor; original member name unknown.
+  u32 unknown50; // Inferred role: zeroed by gf::EffectCaster's constructor; original member name unknown.
 };
 
 static_assert(offsetof(EffectCasterBase, unknown08) == 0x08, "");
@@ -110,5 +115,9 @@ static_assert(offsetof(EffectCasterBase, unknown10) == 0x10, "");
 static_assert(offsetof(EffectCasterBase, unknown18) == 0x18, "");
 static_assert(offsetof(EffectCasterBase, unknown20) == 0x20, "");
 static_assert(offsetof(EffectCasterBase, unknown3c) == 0x3c, "");
+static_assert(offsetof(EffectCasterBase, unknown44) == 0x44, "");
+static_assert(offsetof(EffectCasterBase, unknown48) == 0x48, "");
+static_assert(offsetof(EffectCasterBase, unknown4c) == 0x4c, "");
+static_assert(offsetof(EffectCasterBase, unknown50) == 0x50, "");
 
 } // namespace fw

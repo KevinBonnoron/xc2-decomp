@@ -42,6 +42,7 @@ class WinProc;
 namespace gf {
 
 class GfObj;
+struct CallBackCache;
 struct GF_OBJ_HANDLE;
 struct GF_ASSET_HANDLE;
 struct MsgObjectNotifyAsmCallback;
@@ -75,6 +76,10 @@ struct MsgFxRimBloom : fw::Message {
 
 struct MsgObjectNotifyDamage;
 struct MsgObjectNotifyDead;
+
+// Layout evidence: GfComEffectCaster::procMsgFxForceCancel (0x7100503888) reads only the annotation
+// table; no member of this message is read.
+struct MsgFxForceCancel : fw::Message {};
 
 struct EffectMountSetupEv {
   EffectMountSetupEv() : unknown30(mm::Vec3::zero), unknown40(0), unknown41(false), unknown42(false) {}
@@ -161,8 +166,11 @@ public:
   // at 0x4e true. The name comes from the mangled symbol of effectStart.
   struct EffectSetUp {
     EffectSetUp()
-        : unknown00(mm::Vec3::zero), unknown10(mm::Vec3::zero), m_obj(nullptr), unknown28(nullptr), unknown30(nullptr), unknown38(1.0f), unknown3c(-1.0f), unknown40(1.0f), unknown44(0), unknown46(0),
-          unknown48(0), unknown49(0), unknown4a(0), unknown4b(0), unknown4c(0), unknown4d(0), unknown4e(true), unknown4f(0) {}
+        : m_obj(nullptr), unknown28(nullptr), unknown30(nullptr), unknown38(1.0f), unknown3c(-1.0f), unknown40(1.0f), unknown44(0), unknown46(0), unknown48(0), unknown49(0), unknown4a(0),
+          unknown4b(0), unknown4c(0), unknown4d(0), unknown4e(true), unknown4f(0) {
+      unknown00 = mm::Vec3::zero;
+      unknown10 = mm::Vec3::zero;
+    }
 
     mm::Vec3 unknown00;              // Inferred role: offset; original member name unknown.
     mm::Vec3 unknown10;              // Inferred role: second vector; original member name unknown.
@@ -242,12 +250,20 @@ public:
     bool unknown42;                                      // Inferred role: follow enabled; original member name unknown.
   };
 
+  // Layout evidence: setupEfp (0x7100506134) reads the asset handle at 0x08 and the layer at 0x10.
+  struct SetupInfo {
+    u8 unknown00[0x08];
+    GF_ASSET_HANDLE *unknown08; // Inferred role: asset handle; original member name unknown.
+    u32 unknown10;              // Inferred role: layer; original member name unknown.
+  };
+
   static mm::mtl::RTTI m_rtti;
   static const u32 COMPONENT_INDEX = 7;
-
   static void registerAsmCallbackEffect(GF_OBJ_HANDLE *handle, anm::ResASM *resAsm, fw::EffectResData *effectData);
   void cleanup();
   void procMessageAsmCallback(fw::MessageObject *object, MsgObjectNotifyAsmCallback &message);
+  void callbackImpl(const CallBackCache &cache);
+  void setupEfp(const SetupInfo &info);
   bool getEfpMatrix(const char *name, mm::Mat44 &matrix);
   void calcMtxAndScale(GfComEffectCaster *caster, Param *param, f32 time, bool unknown, effect::SendParam &sendParam);
   u32 effectStart(const EffectSetUp &setup, const char *pointName);
@@ -264,17 +280,25 @@ public:
   bool stopTimer(u32 effect);
   bool addCasterEffectEv(u32 effect);
   void effectEnd(u32 effect);
+  void setupEfTail(u32 effect);
+  void setupCaster(const fw::EffectPoint *point);
   void procMsgObjectNotifyDamage(fw::MessageObject *object, MsgObjectNotifyDamage &message);
   void procMsgObjectNotifyDead(fw::MessageObject *object, MsgObjectNotifyDead &message);
   void procMsgFxRimBloomEnd(fw::MessageObject *object, MsgFxRimBloomEnd &message);
   void procMsgFxRimBloomTarget(fw::MessageObject *object, MsgFxRimBloomTarget &message);
   void procMsgFxRimBloom(fw::MessageObject *object, MsgFxRimBloom &message);
+  void procMsgFxFootPrint(fw::MessageObject *object, MsgFxFootPrint &message);
+  void procMsgFxSplashdown(fw::MessageObject *object, MsgFxSplashdown &message);
+  void procMsgFxCombo(fw::MessageObject *object, MsgFxCombo &message);
+  void procMsgFxComboBuff(fw::MessageObject *object, MsgFxComboBuff &message);
+  void procMsgFxForceCancel(fw::MessageObject *object, MsgFxForceCancel &message);
   void openDebugWindow(ml::WinProc *window);
   fw::EffectPack *getEffectPack(GF_ASSET_HANDLE *handle);
   const char *getEfpData(const char *name, mm::Mat44 &matrix);
   bool getWeaponEffectPack(mm::mtl::FixedVector<fw::EffectPack *, 8> &packs, int type, int);
   fw::EffectPack *getWeaponEffectPack(const char *name);
   fw::EffectPoint *getEffectPoint();
+  f32 getHeightAboveGround() const;
   bool getValidEffectName(const char *name) const;
   bool isDynamicAnnotationEffect(u8 type) const;
   bool getDynamicAnnotationEffectFileName(u8 type, const char *&fileName) const;
@@ -341,6 +365,8 @@ static_assert(offsetof(GfComEffectCaster, unknown114a4) == 0x114a4, "");
 static_assert(offsetof(GfComEffectCaster, unknown114a8) == 0x114a8, "");
 static_assert(offsetof(GfComEffectCaster, unknown114ac) == 0x114ac, "");
 static_assert(sizeof(GfComEffectCaster) == 0x114b0, "");
+static_assert(offsetof(GfComEffectCaster::SetupInfo, unknown08) == 0x08, "");
+static_assert(offsetof(GfComEffectCaster::SetupInfo, unknown10) == 0x10, "");
 static_assert(offsetof(GfComEffectCaster::Param, unknown24) == 0x24, "");
 static_assert(offsetof(GfComEffectCaster::Param, unknown28) == 0x28, "");
 static_assert(offsetof(GfComEffectCaster::Param, unknown30) == 0x30, "");
@@ -378,5 +404,7 @@ static_assert(offsetof(GfComEffectCaster::EffectSetUp, unknown46) == 0x46, "");
 static_assert(offsetof(GfComEffectCaster::EffectSetUp, unknown48) == 0x48, "");
 static_assert(offsetof(GfComEffectCaster::EffectSetUp, unknown4e) == 0x4e, "");
 static_assert(offsetof(GfComEffectCaster::EffectSetUp, unknown4f) == 0x4f, "");
+static_assert(offsetof(GfComEffectCaster::SetupInfo, unknown08) == 0x08, "");
+static_assert(offsetof(GfComEffectCaster::SetupInfo, unknown10) == 0x10, "");
 
 } // namespace gf
