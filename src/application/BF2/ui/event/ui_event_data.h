@@ -11,8 +11,10 @@ struct EventData {
   u16 unknown00; // Inferred role: type; original member name unknown.
   u8 _02[0x08 - 0x02];
   union {
-    u64 unknown08_u64; // 64-bit view of the first two parameter slots: stored whole by GfMenuObjBalloon::openEventSelectMoney, GfMenuObjBattleTelop::openUniteCombo and
-                       // GfMenuObjButtonChallenge::start; GfMenuObjOpeningTelop's MainListener loads 0x08/0x0c with one 64-bit load; original member name unknown.
+    u64 unknown08_u64;   // 64-bit view of the first two parameter slots: stored whole by GfMenuObjBalloon::openEventSelectMoney, GfMenuObjBattleTelop::openUniteCombo and
+                         // GfMenuObjButtonChallenge::start; GfMenuObjOpeningTelop's MainListener loads 0x08/0x0c with one 64-bit load; original member name unknown.
+    void *unknown08_ptr; // Pointer view of the first two slots: GfMenuObjBalloon's SelMoneyListener and GfMenuObjQuestReward's RewardListener read the parameter pointer their openers store there;
+                         // original member name unknown.
     struct {
       union {
         u32 unknown08;     // Inferred role: param0; original member name unknown.
@@ -55,6 +57,7 @@ struct EventData {
 
 static_assert(offsetof(EventData, unknown08) == 0x08, "");
 static_assert(offsetof(EventData, unknown08_u64) == 0x08, "");
+static_assert(offsetof(EventData, unknown08_ptr) == 0x08, "");
 static_assert(offsetof(EventData, unknown08_f32) == 0x08, "");
 static_assert(offsetof(EventData, unknown08_u16) == 0x08, "");
 static_assert(offsetof(EventData, unknown0a) == 0x0a, "");
