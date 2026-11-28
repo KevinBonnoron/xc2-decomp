@@ -35,10 +35,11 @@ public:
 
   class ZoneListener : public ui::UIObjectListener {
   public:
-    ZoneListener(GfMenuObjMercenaryTop *owner) : _0c(), m_menuObjMercenaryTop(owner) {}
+    ZoneListener(GfMenuObjMercenaryTop *owner) : unknown0c(0), _10(), m_menuObjMercenaryTop(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
-    u8 _0c[0x1c - 0x0c];
+    int unknown0c; // Inferred role: 1 once the zone selection moved, selects the background reopened on close; original member name unknown.
+    u8 _10[0x1c - 0x10];
     u8 _1c[0x20 - 0x1c];
     GfMenuObjMercenaryTop *m_menuObjMercenaryTop; // Inferred role: owner; original member name unknown.
   };

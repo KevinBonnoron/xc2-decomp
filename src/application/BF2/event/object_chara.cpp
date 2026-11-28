@@ -5,10 +5,12 @@
 #include "mm_math/mm_math.h"
 
 #include "event/bou_rect.h"
+#include "event/chara_manager.h"
 #include "event/frame_manager.h"
 #include "event/mani_manager.h"
 #include "event/memory_manager.h"
 #include "event/object_manager.h"
+#include "event/object_util.h"
 #include "mm_math/mm_mat44.h"
 #include "mtl/alloc_handle.h"
 
@@ -89,6 +91,57 @@ void ObjectChara::update() {
   }
 }
 
+// 0x71001107d0, 524 instructions. The actor/box block of the first branch is written out as in OnBouRender and OnManiRender (ruling 8, measured at OnBouRender).
+void ObjectChara::render(const mm::Col4 &color) {
+  if (mm::mtl::Singleton<ObjectManager>::getPtr()->isDisp()) {
+    if ((unknown68 & FLAG_UNKNOWN_0) != 0) {
+      ObjectUtil::drawActor(getPos(), m_charaObj->getRotTo().y, m_charaObj->getEyeOffset(), color, m_charaObj->isTar() ? &m_charaObj->getTar() : nullptr);
+    } else {
+      ObjectUtil::drawObject(getPos(), getRot(), color);
+    }
+  }
+  if (mm::mtl::Singleton<CharaManager>::getPtr()->isCharaDisp()) {
+    ObjectUtil::drawChara(getName(), getPos(), getRot(), m_charaObj->isTar() ? m_tarAxis.getOrigName() : nullptr, m_charaObj->getEyeOffset(), m_charaObj->getHandle());
+    if ((unknown68 & FLAG_UNKNOWN_0) != 0) {
+      ObjectUtil::drawState(getPos(), m_charaObj->getEyeOffset(), m_charaObj->getHandle());
+    }
+    if (m_charaObj != nullptr) {
+      m_charaObj->renderAction();
+    }
+    if (m_charaObj != nullptr) {
+      m_charaObj->renderMotion();
+    }
+  }
+  if (mm::mtl::Singleton<CharaManager>::getPtr()->isFacialDisp()) {
+    if (m_charaObj != nullptr) {
+      m_charaObj->renderHead();
+    }
+    if (m_charaObj != nullptr) {
+      m_charaObj->renderFacial();
+    }
+    if (m_charaObj != nullptr) {
+      m_charaObj->renderWink();
+    }
+    if (m_charaObj != nullptr) {
+      m_charaObj->renderLens();
+    }
+    if (m_charaObj != nullptr) {
+      m_charaObj->renderTalk();
+    }
+    if (m_charaObj != nullptr) {
+      m_charaObj->renderWeight();
+    }
+    if (m_charaObj != nullptr) {
+      m_charaObj->renderIK();
+    }
+  }
+  if (mm::mtl::Singleton<CharaManager>::getPtr()->isBoneDisp()) {
+    if (m_charaObj != nullptr) {
+      m_charaObj->renderBone();
+    }
+  }
+}
+
 void ObjectChara::setTar(const TarAxis &axis, f32 frame, EVT_tarcvtype cv, EVT_aimtype aim, f32 weight, f32 speed) {
   m_tarAxis = axis;
   m_charaObj->setTar(axis, frame, cv, aim, weight, speed);
@@ -152,6 +205,24 @@ mm::Mat44 ObjectChara::getEyeMat() {
   return mat;
 }
 
+// 0x7100112014, 393 instructions. `relative` places the product before the call that copies `original` into the parameter (the game computes the
+// 16 values first and keeps them across the call: eight in d8-d15, eight spilled); written straight into param.unknown40 the call comes before the
+// product (392 instructions). The position is read through the member getPos(): through m_charaObj->getPos() the three loads are consecutive and
+// Reassociate puts the sum of the translation row in the other operand order.
+// Ruling 8: the same body is written out in OnManiStartTar (0x7100112c8c) and in ObjectEffect::OnManiStartPos (0x71001179ec), 393 instructions each. A file-local static template holding the body
+// (axis and position as parameters, the position by const reference or by value) gives 397 instructions against 393 for OnManiStartPos and OnManiStartTar.
+bool ObjectChara::OnManiStartPos(IManiCallback::StartParam &param) {
+  mm::Mat44 original = m_posAxis.calcOrigMat();
+  mm::Mat44 inverse;
+  inverse.unknown014(original);
+  mm::Mat44 current;
+  current.unknown007(getPos());
+  mm::Mat44 relative = current * inverse;
+  param.unknown00 = original;
+  param.unknown40 = relative;
+  return true;
+}
+
 void ObjectChara::OnManiSetPos(IManiCallback::SetParam &param) {
   mm::Vec3 pos = param.matrix.unknown004();
   PosAxis axis = m_posAxis;
@@ -179,6 +250,19 @@ bool ObjectChara::OnManiStartRot(IManiCallback::StartParam &param) {
   rot.setRotY(m_charaObj->getRotTo().y - ofs);
   param.unknown00 = start;
   param.unknown40 = rot;
+  return true;
+}
+
+// 0x7100112c8c, 393 instructions: the same body as OnManiStartPos on the target axis and the target position (CharaObj+0x5b0, getTar()); ruling 8, see OnManiStartPos for the helper form measured.
+bool ObjectChara::OnManiStartTar(IManiCallback::StartParam &param) {
+  mm::Mat44 original = m_tarAxis.calcOrigMat();
+  mm::Mat44 inverse;
+  inverse.unknown014(original);
+  mm::Mat44 current;
+  current.unknown007(getTar());
+  mm::Mat44 relative = current * inverse;
+  param.unknown00 = original;
+  param.unknown40 = relative;
   return true;
 }
 
@@ -213,6 +297,24 @@ void ObjectChara::OnManiSetTar(IManiCallback::SetParam &param) {
     pos = DataManager::unknown002(axis.calcOrigMatInv(), pos.x, pos.y, pos.z);
     axis.set(axis.getAxis(), pos);
     setTar(axis, -1.0f, static_cast<EVT_tarcvtype>(0), static_cast<EVT_aimtype>(0), -1.0f, -1.0f);
+  }
+}
+
+// Ruling 8: the game writes the actor/box block out in OnBouRender (0x7100111cf4), OnManiRender (0x7100113690), 200 instructions each, and in render (0x71001107d0, 524 instructions). The helper
+// form (a private member holding the block, also defined `inline`) is not inlined: OnBouRender and OnManiRender are then 1 instruction (a tail call) against 200 and render has 338 against 524.
+void ObjectChara::OnBouRender(const IBouCallback::RenderParam &param) {
+  if ((unknown68 & FLAG_UNKNOWN_0) != 0) {
+    ObjectUtil::drawActor(getPos(), m_charaObj->getRotTo().y, m_charaObj->getEyeOffset(), param.color, m_charaObj->isTar() ? &m_charaObj->getTar() : nullptr);
+  } else {
+    ObjectUtil::drawObject(getPos(), getRot(), param.color);
+  }
+}
+
+void ObjectChara::OnManiRender(IManiCallback::RenderParam &param) {
+  if ((unknown68 & FLAG_UNKNOWN_0) != 0) {
+    ObjectUtil::drawActor(getPos(), m_charaObj->getRotTo().y, m_charaObj->getEyeOffset(), param.unknown00, m_charaObj->isTar() ? &m_charaObj->getTar() : nullptr);
+  } else {
+    ObjectUtil::drawObject(getPos(), getRot(), param.unknown00);
   }
 }
 

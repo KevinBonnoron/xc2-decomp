@@ -13,6 +13,7 @@
 #include "gf/menu/adapter/gf_menu_zone_adapter.h"
 #include "gf/menu/call/gf_menu_call_context.h"
 #include "gf/menu/gf_menu_fade.h"
+#include "gf/menu/gf_menu_fullscreen.h"
 #include "gf/menu/gf_menu_reference.h"
 #include "gf/menu/gf_menu_reference_number.h"
 #include "gf/menu/gf_menu_types.h"
@@ -20,6 +21,7 @@
 #include "gf/menu/list/gf_menu_field_skill_list.h"
 #include "gf/menu/list/gf_menu_mission_list.h"
 #include "gf/menu/list/gf_menu_team_list.h"
+#include "gf/menu/object/gf_menu_obj_blade_set.h"
 #include "gf/menu/object/gf_menu_obj_common_text.h"
 #include "gf/menu/object/gf_menu_obj_operation_info.h"
 #include "gf/menu/object/gf_menu_obj_util.h"
@@ -726,6 +728,147 @@ void GfMenuObjMercenaries::MissionListener::reciveEvent(const ui::EventData &eve
     ui::UIObjectListener::reciveEvent(event, handle);
     break;
   }
+}
+
+// Inferred name; kept as an exception to the unknown-name rule (AGENTS.md): single-user helper whose existence only the match proves; rename if a sibling build gives a symbol.
+// Role: opens the blade set screen (mode 2) for the reference mission from the mission detail, and registers the mission as the layer parameter of the owner.
+// Its user is MissionDetailListener::reciveEvent case 8 (0x710048d4e0, 376 instructions). Forms tried without the helper, written in the case (measured with check on the unit): the block in a
+// `{}` with `u32 layer = m_menuObjMercenaries->unknown20;` first gives 377 instructions (38 lines differ), the same with the load at the registLayerParam call 376 (29 lines differ), both from
+// +0x20 (0x710048d500): the accessor, the owner accessor and the IntrusivePtr copy sit 8 bytes lower and the 8 byte OpenParam below them (the game has it at x29-64, above them); without the
+// `{}` 385 and 386 instructions. With the helper the OpenParam alloca of the inlined copy comes first and every slot is the game's. The `layer` local places the load before the accessor (without it,
+// 375 instructions).
+static void openMissionBladeSet(GfMenuObjMercenaries *owner, u32 handle) {
+  u32 layer = owner->unknown20;
+  ui::UIObjectAcc main(handle);
+  GfMenuObjBladeSet::OpenParam openParam;
+  openParam.unknown00 = 2;
+  openParam.unknown04 = GfMenuReference::getReferenceMissionID();
+  GfMenuObjBladeSet::registOpenParam(openParam);
+  GfMenuObject::changeFSSubLayer(main.unknown10, 1, 6, true);
+  GfMenuTypes::Param layerParam;
+  layerParam.set(GfMenuReference::getReferenceMissionID());
+  GfMenuFullScreen::registLayerParam(layer, layerParam);
+}
+
+void GfMenuObjMercenaries::MissionDetailListener::reciveEvent(const ui::EventData &event, u32 handle) {
+  ui::UIObjectAcc acc(handle);
+  ui::UIObjectAcc owner(m_menuObjMercenaries->unknown18);
+  switch (event.unknown00) {
+  case 1:
+    setupMissionDetail(acc, m_menuObjMercenaries->unknown60, m_menuObjMercenaries->unknown380);
+    break;
+  case 3:
+    if (event.unknown08 == 0xd) {
+      GfMenuObject::enableInput(handle);
+    }
+    return;
+  case 8:
+    if (event.unknown0c == 1) {
+      if (GfDataMercenaries::isMissionOrderTeam(GfMenuReference::getReferenceMissionID())) {
+        m_menuObjMercenaries->m_menuCallContext->reset();
+        m_menuObjMercenaries->unknown388 = 0x22;
+      } else if (m_menuObjMercenaries->unknown380->unknown0c == 3) {
+        openMissionBladeSet(m_menuObjMercenaries, handle);
+        unknown003(handle, "LAY_mission");
+        setFadeOut(handle);
+        break;
+      } else {
+        m_menuObjMercenaries->m_menuCallContext->reset();
+        m_menuObjMercenaries->unknown388 = 0x24;
+      }
+      GfMenuObjCommonText::open(m_menuObjMercenaries->m_menuCallContext, m_menuObjMercenaries->unknown388, 0);
+      GfMenuObject::setCallContextEventHandler(m_menuObjMercenaries->m_menuCallContext, handle);
+    } else if (event.unknown0c == 2) {
+      unknown164(owner.searchChild("LAY_mis_list"), GfMenuTypes::unknown003_257);
+      setFadeOut(handle);
+    } else {
+      return;
+    }
+    break;
+  case GfMenuTypes::unknown003_33: {
+    updateBladeListReserver(m_menuObjMercenaries->unknown60);
+    // The `{}` is the game's stack slot reuse (ruling 3): without it the accessor and the parameter keep their slots (376 instructions, 72 lines differ from +0x20).
+    {
+      ui::UIObjectAcc button(acc.searchChild("LAY_mis_detail_btn"));
+      GfMenuObjUtil::CtrlParam param;
+      param.unknown08 = 0x100;
+      param.unknown0c = 1;
+      param.unknown00 = 0.4f;
+      param.unknown04 = 0xd;
+      int ctrl = GfMenuObjUtil::startCtrl(button.unknown10, param, nullptr);
+      GfMenuObject::hookCtrlEvent(acc.unknown10, ctrl);
+    }
+    bool isEnough = true;
+    for (u32 condition = 0; condition < 3; condition++) {
+      GfRequestBladeData request = {};
+      if (GfDataMercenaries::getRequestCondition(request, GfMenuReference::getReferenceMissionID(), condition)) {
+        // The count local places the call before the load of request.unknown0c (the call inside the compare gives 375 instructions, 53 lines differ from +0x70).
+        u32 count = GfMenuObjUtil::getMissionCondBladeCount(request, m_menuObjMercenaries->unknown60);
+        if (count < (request.unknown0c == 0 ? 1 : request.unknown0c)) {
+          isEnough = false;
+          break;
+        }
+      }
+    }
+    u32 team = 0;
+    for (u32 index = 1; index <= GfDataMercenaries::getTeamNum(); index++) {
+      if (GfDataMercenaries::isTeamMemberEmpty(index)) {
+        team = index;
+        break;
+      }
+    }
+    // The game forms the flag before the IntrusivePtr assert of unknown380 (0x710048d89c, `and w21, w22, w8` ahead of the `_ptr != 0` test at 0x710048d8a4).
+    bool isReady = isEnough && team != 0;
+    m_menuObjMercenaries->unknown380->unknown162(isReady ? 3 : 2);
+    acc.setDisp(true);
+    setFadeIn(handle);
+    GfMenuObjOperationInfo::open(handle, 0, 0, 0);
+    return;
+  }
+  case GfMenuTypes::unknown003_34:
+    break;
+  case 0x41:
+    if (m_menuObjMercenaries->m_menuCallContext == nullptr || m_menuObjMercenaries->m_menuCallContext->unknown0c != event.unknown08) {
+      return;
+    }
+    {
+      // The game loads the result (ldrh) and the reference mission before the compare of unknown388 (0x710048d5d8); the cases are written in ascending order because the compares come out in the
+      // reverse of the source order (the game tests 0x24, 0x23, 0x22).
+      u16 result = event.unknown10_u16;
+      u32 mission = GfMenuReference::getReferenceMissionID();
+      switch (m_menuObjMercenaries->unknown388) {
+      case 0x22: {
+        if (result != 0) {
+          GfMenuObject::enableInput(handle);
+          return;
+        }
+        // The local places the team lookup before cancelMission (inlined into the clearTeamMember call 374 instructions, 57 lines differ from +0x4c).
+        u32 team = GfDataMercenaries::getTeamIDByMissionID(mission);
+        GfGameMercenaries::cancelMission(mission);
+        GfGameMercenaries::clearTeamMember(team);
+        m_menuObjMercenaries->m_menuCallContext->reset();
+        m_menuObjMercenaries->unknown388 = 0x23;
+        GfMenuObjCommonText::open(m_menuObjMercenaries->m_menuCallContext, m_menuObjMercenaries->unknown388, 0);
+        GfMenuObject::setCallContextEventHandler(m_menuObjMercenaries->m_menuCallContext, handle);
+        return;
+      }
+      case 0x23:
+        unknown164(owner.searchChild("LAY_mis_list"), GfMenuTypes::unknown003_257);
+        setFadeOut(handle);
+        break;
+      case 0x24:
+        GfMenuObject::enableInput(handle);
+        return;
+      default:
+        return;
+      }
+    }
+    break;
+  default:
+    ui::UIObjectListener::reciveEvent(event, handle);
+    return;
+  }
+  GfMenuObject::disableInput(handle);
 }
 
 void GfMenuObjMercenaries::MissionRewardListener::reciveEvent(const ui::EventData &event, u32 handle) {

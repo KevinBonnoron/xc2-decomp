@@ -19,6 +19,7 @@
 #include "gf/menu/gf_menu_types.h"
 #include "gf/menu/list/gf_menu_blade_list.h"
 #include "gf/menu/list/gf_menu_driver_list.h"
+#include "gf/menu/object/gf_menu_obj_mainmenu2bg.h"
 #include "gf/menu/object/gf_menu_obj_operation_info.h"
 #include "gf/menu/object/gf_menu_obj_popup.h"
 #include "gf/menu/object/gf_menu_obj_util.h"
@@ -52,8 +53,8 @@ bool GfMenuObjMainMenu2::s_cancelEnable;
 static u32 unknown006;
 
 GfMenuObjMainMenu2::GfMenuObjMainMenu2(u32 handle)
-    : GfMenuObject(handle), unknown28(nullptr), m_menuCallContext(nullptr), unknown38(0), unknown3c(-1), unknown40(-1), unknown44(0), m_menuDriverList(nullptr), m_menuBladeList(nullptr),
-      m_selectionChecker(nullptr), unknown88(0), unknown8c(false), unknown90(this), unknown320(false) {
+    : GfMenuObject(handle), unknown28(nullptr), m_menuCallContext(nullptr), unknown38(false), unknown39(false), unknown3c(-1), unknown40(-1), unknown44(0), m_menuDriverList(nullptr),
+      m_menuBladeList(nullptr), m_selectionChecker(nullptr), unknown88(0), unknown8c(false), unknown90(this), unknown320(false) {
   m_menuDriverList = GfMenuDriverList::create();
   m_menuBladeList = GfMenuBladeList::create();
   // __LINE__ must be 186 as in the original source: it is the line argument of operator new.
@@ -713,6 +714,179 @@ bool GfMenuObjMainMenu2::seqExecTerm() {
   }
   main.setTerm();
   return true;
+}
+
+void GfMenuObjMainMenu2::ContentsListener::reciveEvent(const ui::EventData &event, u32 handle) {
+  ui::UIObjectAcc acc(handle);
+  ui::UIObjectAcc root(m_menuObjMainMenu2->unknown18);
+  switch (event.unknown00) {
+  // Case 8 is written before case 1, as the game lays out the blocks: with case 8 after case 1 the function has the same 735 instructions but 103 lines differ, the first at 0x7100485ecc (the slot
+  // of the CtrlParam of the inlined moveMainMenu, measured).
+  case 8:
+    switch (event.unknown0c) {
+    case 1: {
+      int index = m_menuObjMainMenu2->unknown3c;
+      u8 *order = GfDataBdat::getFP(BDAT_MNU_MAIN_ORDER);
+      int count = m_menuObjMainMenu2->unknown60.size();
+      if (index < count) {
+        int entry = m_menuObjMainMenu2->unknown60[index];
+        if (GfMenuObjUtil::getMenuCondition(Bdat::getVal(order, "useCond", entry).valueU16)) {
+          m_menuObjMainMenu2->unknown44 = Bdat::getVal(order, "layer", entry).valueU16;
+          GfMenuObject::changeFSSubLayer(root.unknown10, 1, m_menuObjMainMenu2->unknown44, false);
+          moveMainMenu(root, 3, false);
+          sendEvent(root.searchChild("LAY_main"), GfMenuTypes::unknown003_259, 0);
+          GfMenuObject::disableInput(handle);
+          cancelEnableMainMenu(false);
+          GfMenuObjOperationInfo::remove(handle, 0, 0, 0);
+          GfMenuObjUtil::playSECommonDecide();
+        }
+      }
+      setDispGold(false);
+      break;
+    }
+    case 10:
+      GfMenuObject::sendOpenEvent(acc.searchSibiling("LAY_chr_change"), 0, 0.0f);
+      break;
+    }
+    break;
+  case 1: {
+    m_menuObjMainMenu2->unknown38 = false;
+    m_menuObjMainMenu2->unknown39 = false;
+    // Written out like the cursor setup of GfMenuObjCharSelect::SubMenuListener, GfMenuObjHanaSubmenu::SubmenuListener and GfMenuObjPouch2::SlotListener (ruling 8). Measured against the game's 735
+    // instructions and 384 byte frame (both helper forms differ first at 0x7100485e6c, the frame size `sub sp, sp, #N`): a file-local helper that fills the parameter (handle, accessor, cursor name,
+    // format) gives 735 instructions, a 368 byte frame and 174 differing lines; a helper that creates the cursor and returns it (the base through a reference) gives 736 instructions, a 320 byte frame
+    // and 335 differing lines. The three stores after the search of the cursor base are the game's (0x7100485f48 to 0x7100485f50: strh wzr, strh wzr, strb wzr).
+    GfMenuObjUtil::CursorParam param;
+    param.unknown00 = ui::UIObjectAcc(handle).getParentHandle();
+    param.unknown04 = acc.searchChild("IMG_contents_cursor_base");
+    param.unknown1a = 0;
+    param.m_cursorSetting.unknown18 = 0;
+    param.m_cursorSetting.unknown20 = false;
+    param.unknown08 = "LAY_contents_item@%02d";
+    m_menuObjMainMenu2->unknown28 = GfMenuObjUtil::createCursor(param);
+    m_menuObjMainMenu2->unknown28->open(0);
+    GfMenuObjUtil::createSyncPlugin(acc.searchChild("IMG_contents_cursor"), param.unknown04, 0x32);
+    m_menuObjMainMenu2->unknown8c = false;
+    int page = 0;
+    // The scope: the game's parameter shares the frame slot of the inlined CtrlParam (0x7100485f98: add x1, sp, #168); with the parameter alive to the end of the case 184 lines differ (measured).
+    {
+      GfMenuTypes::Param layerParam;
+      if (GfMenuObject::getFSLayerParam(m_menuObjMainMenu2->unknown20, layerParam)) {
+        page = layerParam.get<OpenParam>().unknown00;
+        m_menuObjMainMenu2->unknown8c = true;
+        GfMenuObject::removeFSLayerParam(m_menuObjMainMenu2->unknown20);
+      }
+    }
+    sendEvent(root.searchChild("LAY_close"), GfMenuTypes::unknown003_33, 0);
+    if (m_menuObjMainMenu2->unknown8c) {
+      setCloseKeyEnable(false);
+    }
+    GfMenuObject::setupInputSelection(handle, page, unknown006);
+    GfMenuObject::enableInput(handle);
+    sendEvent(root.searchChild("LAY_index"), GfMenuTypes::unknown003_257, page);
+    GfMenuObject::startCallContext(m_menuObjMainMenu2->m_menuCallContext, unknown002, handle);
+    GfMenuObject::setCallContextEventHandler(m_menuObjMainMenu2->m_menuCallContext, handle);
+    GfMenuObject::registFSLayerObject(9, handle);
+    GfMenuObject::setInputSelectionChecker(handle, m_menuObjMainMenu2->m_selectionChecker);
+    m_menuObjMainMenu2->unknown3c = -1;
+    m_menuObjMainMenu2->unknown40 = -1;
+    m_menuObjMainMenu2->unknown44 = 0;
+    u8 *order = GfDataBdat::getFP(BDAT_MNU_MAIN_ORDER);
+    GfMenuObjOperationInfo::setGuideText(Bdat::getVal(order, "guide", m_menuObjMainMenu2->unknown60[page]).valueU16, 0);
+    if (m_menuObjMainMenu2->unknown8c) {
+      GfMenuObjOperationInfo::open(0, 0, 0, 0);
+      GfMenuObject::setInputActionEnable(root.searchChild("LAY_close"), 2, false);
+      moveMainMenu(root, 6, false);
+      setDispGold(false);
+      int entry = m_menuObjMainMenu2->unknown60[page];
+      order = GfDataBdat::getFP(BDAT_MNU_MAIN_ORDER);
+      if (GfMenuObjUtil::getMenuCondition(Bdat::getVal(order, "useCond", entry).valueU16)) {
+        m_menuObjMainMenu2->unknown44 = Bdat::getVal(order, "layer", entry).valueU16;
+        GfMenuObject::changeFSSubLayer(root.unknown10, 1, m_menuObjMainMenu2->unknown44, false);
+        sendEvent(root.searchChild("LAY_main"), GfMenuTypes::unknown003_259, 0);
+        GfMenuObject::disableInput(handle);
+        GfMenuObjOperationInfo::remove(handle, 0, 0, 0);
+      }
+    } else {
+      GfMenuObjOperationInfo::open(root.searchChild("LAY_close"), handle, 0, 0);
+      moveMainMenu(root, 5, false);
+    }
+    break;
+  }
+  case 2:
+    GfMenuObject::termCallContext(handle);
+    GfMenuObject::setInputSelectionChecker(handle, nullptr);
+    acc.setTerm();
+    break;
+  case 6: {
+    int next = event.unknown08;
+    int previous = event.unknown0c;
+    m_menuObjMainMenu2->unknown28->inputChange(next);
+    GfMenuObjUtil::playAnime(acc.unknown10, "IMG_contents_cursor", "loop");
+    sendEvent(root.searchChild("LAY_index"), GfMenuTypes::unknown003_257, next);
+    // The game calls getParamMenu before the test of unknown38 (0x7100486408) and reads the result only inside it; calling it inside the if gives 736 instructions and 65 differing lines (measured).
+    const GfMenuObjUtil::unknown001 *menu = GfMenuObjUtil::getParamMenu();
+    if (m_menuObjMainMenu2->unknown38) {
+      GfMenuObjMainMenu2BG::OpenMainMenuBg move;
+      move.unknown00 = next;
+      move.unknown04 = unknown006;
+      move.unknown08_f32 = menu != nullptr ? menu->unknown0c : 0.0f;
+      GfMenuObjMainMenu2BG::move(m_menuObjMainMenu2->m_menuCallContext, handle, move);
+      mm::mtl::FixStr<32> arrow;
+      if (next > previous) {
+        // The game loads unknown006 and stores the name's length before its first test (0x7100486764 to 0x7100486770: ldr w8, [x22, #696]; mov w9, #20; str w9, [sp, #72]; cbnz w24): the condition is
+        // flattened and the store hoisted, which needs the load first in the condition (`previous == 0 && next == ...` gives 728 instructions against 735, `previous == ... - 1 && next == 0` in the
+        // else arm 727, measured). The else arm tests next first and loads after it (0x710048678c: cbnz w21).
+        if (next == unknown006 - 1 && previous == 0) {
+          arrow = "IMG_contents_input_l";
+        } else {
+          arrow = "IMG_contents_input_r";
+        }
+      } else if (next == 0 && previous == unknown006 - 1) {
+        arrow = "IMG_contents_input_r";
+      } else {
+        arrow = "IMG_contents_input_l";
+      }
+      ui::UIObjectAcc input(acc.searchChild(arrow.c_str()));
+      input.setAddColor("black");
+      GfMenuObjUtil::CtrlParam param;
+      param.unknown08 = 0x40000000;
+      param.unknown0c = 3;
+      param.unknown00 = 0.2f;
+      param.unknown38 = 1.0f;
+      GfMenuObjUtil::startCtrl(input.unknown10, param, nullptr);
+    }
+    // old is the index shown before the move (0 when the cursor starts); `u32 old = previous + 1;` gives 734 instructions and 40 differing lines (measured).
+    u32 old = 0;
+    mm::mtl::FixStr<32> name;
+    if (previous != -1) {
+      old = previous + 1;
+      name.format("TXT_contents_item@%02d", old);
+      GfMenuObjUtil::setColMulandAdd(acc.searchChild(name.c_str()), "txt_main_title");
+      GfMenuObjUtil::playSE(5);
+    }
+    name.format("TXT_contents_item@%02d", next + 1);
+    GfMenuObjUtil::setColMulandAdd(acc.searchChild(name.c_str()), "txt_main_select");
+    name.format("IMG_contents_item_bg@%02d", old);
+    GfMenuObjUtil::playAnime(acc.unknown10, name.c_str(), "idol");
+    name.format("IMG_contents_item_bg@%02d", next + 1);
+    GfMenuObjUtil::playAnime(acc.unknown10, name.c_str(), "loop");
+    m_menuObjMainMenu2->unknown3c = next;
+    m_menuObjMainMenu2->unknown40 = previous;
+    m_menuObjMainMenu2->unknown44 = 0;
+    u8 *order = GfDataBdat::getFP(BDAT_MNU_MAIN_ORDER);
+    GfMenuObjOperationInfo::setGuideText(Bdat::getVal(order, "guide", m_menuObjMainMenu2->unknown60[next]).valueU16, 0);
+    m_menuObjMainMenu2->unknown38 = true;
+    m_menuObjMainMenu2->unknown39 = false;
+    break;
+  }
+  case 0x41:
+  case 0x43:
+    break;
+  default:
+    ui::UIObjectListener::reciveEvent(event, handle);
+    break;
+  }
 }
 
 void GfMenuObjMainMenu2::IndexListener::reciveEvent(const ui::EventData &event, u32 handle) {

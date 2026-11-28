@@ -121,11 +121,12 @@ private:
   ObjectTree *unknown68;         // Inferred role: effect tree; original member name unknown.
   ObjectTree *unknown70;         // Inferred role: light tree; original member name unknown.
   Object *m_object;              // Inferred role: active; original member name unknown.
-  ObjectChara *m_objectChara;    // Inferred role: first chara; original member name unknown.
-  u32 unknown88;                 // Inferred role: chara count; original member name unknown.
-  u32 unknown8c;                 // Inferred role: camera count; original member name unknown.
-  u32 unknown90;                 // Inferred role: effect count; original member name unknown.
-  u32 unknown94;                 // Inferred role: light count; original member name unknown.
+public:
+  ObjectChara *m_objectChara; // Inferred role: first chara; original member name unknown.
+  u32 unknown88;              // Inferred role: chara count; original member name unknown.
+  u32 unknown8c;              // Inferred role: camera count; original member name unknown.
+  u32 unknown90;              // Inferred role: effect count; original member name unknown.
+  u32 unknown94;              // Inferred role: light count; original member name unknown.
 };
 
 static_assert(sizeof(ObjectList) == 0x98, "");

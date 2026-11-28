@@ -3,7 +3,9 @@
 #include <math.h>
 
 #include "framework/anim/anim_manager.h"
+#include "framework/ik/ik_look_at_solver.h"
 #include "framework/ik/ik_look_solver.h"
+#include "framework/ik/ik_solver.h"
 #include "fw/fw_transform.h"
 #include "gf/data/gf_bdat_wrapper.h"
 #include "gf/game/gf_game_manager.h"
@@ -23,10 +25,6 @@
 #include "mm_mtl/rtti.h"
 #include "mm_mtl/vector.h"
 
-namespace fw {
-class IkSolver;
-} // namespace fw
-
 namespace gf {
 
 template <typename T> static T *castSolver(const mm::mtl::IntrusivePtr<fw::IkSolver> &solver) {
@@ -34,6 +32,32 @@ template <typename T> static T *castSolver(const mm::mtl::IntrusivePtr<fw::IkSol
     return nullptr;
   }
   return mm::mtl::dynamicCast<T>(solver.get());
+}
+
+// Inferred helper: stores the smoothed target into the solver; original name unknown. The one body of updateIkSolver serves both solvers: fw::LookIkSolver has the out-of-line
+// setTarget (symbol _ZN2fw12LookIkSolver9setTargetERKN2mm4Vec3E), fw::LookAtIkSolver has no such symbol and the game stores the target inline (1.0.0: 0x7100341fcc), so the
+// store is one overload per solver (a member name shared by the two classes would be an invented name for the second).
+static void unknown002(fw::LookIkSolver &solver, const mm::Vec3 &target) { solver.setTarget(target); }
+
+static void unknown002(fw::LookAtIkSolver &solver, const mm::Vec3 &target) { solver.unknowna0 = target; }
+
+// 1.0.0: 0x7100341e08 (fw::LookIkSolver) and 0x7100341f04 (fw::LookAtIkSolver).
+template <typename T> void GfFieldLookIk::updateIkSolver(T &solver) {
+  mm::Vec3 target;
+  if (!findTargetPos(target)) {
+    return;
+  }
+  if (solver.unknown001() == fw::IkFadeSolver::unknown002_0) {
+    bool isMatched = isCondMatched(target);
+    if (!unknown30 && isMatched) {
+      solver.fadeIn(unknown18);
+    } else if (unknown30 && !isMatched) {
+      solver.fadeOut(unknown18);
+    }
+    unknown30 = isMatched;
+  }
+  unknown20 = unknown20 + (target - unknown20) * 0.2f;
+  unknown002(solver, unknown20);
 }
 
 GfFieldLookIk::GfFieldLookIk(GF_OBJ_HANDLE *handle) {

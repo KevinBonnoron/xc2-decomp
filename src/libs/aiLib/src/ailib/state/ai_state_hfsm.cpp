@@ -2,6 +2,7 @@
 #include "ai/ai_state_hfsm.h"
 
 #include "mm_mtl/allocator.h"
+#include "mm_mtl/fixed_queue.h"
 
 template void mm::mtl::Vector<ai::Hfsm::StateInfo>::extend(size_t, size_t);
 template void mm::mtl::Vector<ai::Hfsm::StateInfo>::resize(size_t);
@@ -59,6 +60,31 @@ void Hfsm::clearState() {
     state = next;
   }
   m_pState = nullptr;
+}
+
+void Hfsm::update(const void *info) {
+  m_inside = true;
+  mm::mtl::FixedQueue<State *, MAX_DEPTH> states;
+  for (State *state = m_pState; state != nullptr; state = state->unknown10) {
+    states.push_front(state);
+  }
+  for (mm::mtl::FixedQueue<State *, MAX_DEPTH>::iterator it = states.begin(); it != states.end(); ++it) {
+    State *state = *it;
+    state->onStep(unknown00, info);
+    if (state->m_reqState != INVALID_STATE_ID) {
+      break;
+    }
+  }
+  for (mm::mtl::FixedQueue<State *, MAX_DEPTH>::iterator it = states.begin(); it != states.end(); ++it) {
+    State *state = *it;
+    if (state->m_reqState != INVALID_STATE_ID) {
+      u32 request = state->m_reqState;
+      state->m_reqState = INVALID_STATE_ID;
+      setStateImpl(request);
+      break;
+    }
+  }
+  m_inside = false;
 }
 
 bool Hfsm::execEvent(void *event) {

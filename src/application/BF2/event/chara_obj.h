@@ -36,7 +36,9 @@
 #include "event/cmd_queue.h"
 #include "event/curve.h"
 #include "event/frame_manager.h"
+#include "mm_math/mm_mat44.h"
 #include "mm_math/mm_vec3.h"
+#include "mm_mtl/bitflag.h"
 #include "mm_mtl/fixstr.h"
 #include "types.h"
 
@@ -77,12 +79,15 @@ public:
   static constexpr size_t QUEUE_UNKNOWN_8 = 8;     // Inferred role: queue count; original name unknown.
   static constexpr size_t SUB_QUEUE_UNKNOWN_5 = 5; // Inferred role: sub queue count; original name unknown.
 
+  // Bit indices of the flags, for mm::mtl::unknown027<32>::test/set.
   enum {
-    FLAG_UNKNOWN_3 = 1 << 3, // Inferred role: ready flag; original name unknown.
-    FLAG_UNKNOWN_4 = 1 << 4, // Inferred role: mount flag; original name unknown.
-    FLAG_UNKNOWN_5 = 1 << 5, // Inferred role: fade out flag; original name unknown.
-    FLAG_UNKNOWN_6 = 1 << 6, // Inferred role: model stream flag; original name unknown.
-    FLAG_UNKNOWN_7 = 1 << 7, // Inferred role: disp jiji flag; original name unknown.
+    FLAG_UNKNOWN_0 = 0, // Inferred role: attach flag 0 (bone render); original name unknown.
+    FLAG_UNKNOWN_1 = 1, // Inferred role: attach flag 1 (bone render); original name unknown.
+    FLAG_UNKNOWN_3 = 3, // Inferred role: ready flag; original name unknown.
+    FLAG_UNKNOWN_4 = 4, // Inferred role: mount flag; original name unknown.
+    FLAG_UNKNOWN_5 = 5, // Inferred role: fade out flag; original name unknown.
+    FLAG_UNKNOWN_6 = 6, // Inferred role: model stream flag; original name unknown.
+    FLAG_UNKNOWN_7 = 7, // Inferred role: disp jiji flag; original name unknown.
   };
 
   enum {
@@ -174,7 +179,7 @@ public:
   void updateDispJiji();
 
   const char *getName() const;
-  bool isReady() const { return (unknownca0 & FLAG_UNKNOWN_3) != 0; }
+  bool isReady() const { return unknownca0.test(FLAG_UNKNOWN_3); }
   gf::GF_OBJ_HANDLE *getHandle() const { return unknownd40; }
   IAttachActor *getAttachActor() const { return m_iAttachActor; }
   const FrameInfo &getFrameInfo() const { return m_frameInfo; }
@@ -205,8 +210,11 @@ private:
   CharaPlayWink m_charaPlayWink;             // Inferred role: cmd play wink; original member name unknown.
   CharaMount m_charaMount;                   // Inferred role: cmd mount; original member name unknown.
   CharaFade m_charaFade;                     // Inferred role: cmd fade; original member name unknown.
-  u32 unknownca0;                            // Inferred role: flags; original member name unknown.
-  u32 unknownca4;                            // Inferred role: state; original member name unknown.
+  // Inferred role: flags; original member name unknown. A bit set (decision 48): the game reads single bits of this word with byte loads, next to the
+  // 32-bit state at 0xca4 (update 0x71000c00e0: `ldrb w8, [x19, #0xca0]; tbnz w8, #3`; isFadeOut 0x71000c8310: `ldrb; ubfx #5`), and the other event
+  // classes keep their flag words in the same bit set (CharaDysUpdater, CharaWinkPlayer, CharaLensPlayer...).
+  mm::mtl::unknown027<32> unknownca0;
+  u32 unknownca4; // Inferred role: state; original member name unknown.
   mm::mtl::FixStr<64> m_name;
   CHARA_TYPE unknowncec;                 // Inferred role: type; original member name unknown.
   u32 unknowncf0;                        // Inferred role: id; original member name unknown.
@@ -234,7 +242,7 @@ private:
   mm::Vec3 unknown2fc0;                         // Inferred role: pos to; original member name unknown.
   mm::Vec3 m_rot;                               // Inferred role: rot; named after the game accessor event::CharaObj::getRot.
   mm::Vec3 unknown2fe0;                         // Inferred role: rot to; original member name unknown.
-  u8 unknown2ff0[0x3030 - 0x2ff0];              // Inferred role: 2 ff0; original member name unknown.
+  mm::Mat44 unknown2ff0;                        // Inferred role: matrix; original member name unknown.
   FrameInfo m_frameInfo;                        // Inferred role: frame info; original member name unknown.
   f32 unknown3044;                              // Inferred role: stream frame; original member name unknown.
   f32 unknown3048;                              // Inferred role: weapon scale; original member name unknown.

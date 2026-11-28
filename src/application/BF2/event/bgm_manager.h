@@ -54,6 +54,7 @@ private:
     }
   }
 
+public:
   u32 unknown10;                 // Inferred role: flags; original member name unknown.
   u32 unknown14;                 // Inferred role: disp flags; original member name unknown.
   mm::mtl::FixStr<64> unknown18; // Inferred role: name; original member name unknown.

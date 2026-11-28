@@ -13,6 +13,7 @@
 #include "eflib/effect_system_manager.h"
 #include "framework/effect/effect_caster.h"
 #include "framework/effect/effect_data.h"
+#include "framework/effect/effect_lod_manager.h"
 #include "framework/effect/effect_pack.h"
 #include "framework/effect/effect_point.h"
 #include "framework/effect/volume_fade_params.h"
@@ -23,6 +24,8 @@
 #include "grlib/cglib_texture.h"
 #include "grlib/cglib_texture_buffer.h"
 #include "ml/dev_file_th.h"
+#include "ml/dev_graph.h"
+#include "ml/scn.h"
 #include "mm_math/mm_col3.h"
 #include "mm_math/mm_col4.h"
 #include "mm_math/mm_mat44.h"
@@ -30,8 +33,10 @@
 #include "mm_math/mm_vec3_na.h"
 #include "mm_mtl/fixstr.h"
 #include "mm_mtl/reference_object.h"
+#include "mtl/alloc_handle.h"
 #include "mtl/mem_manager.h"
 #include "scn/scn_obj_acc.h"
+#include "scn/scn_render_dr_sys.h"
 
 namespace ml {
 class IDrDrawWorkInfo;
@@ -78,7 +83,202 @@ void EffectManager::addForce(const AddForceParam *param) {
   }
 }
 
+// 1.0.0: 0x710016c574. The five resource lists (unknown1fb8, unknown27c8, unknownfa8, unknown7a0, unknown17b0) are released by the same loop here, in finalize and,
+// for unknown1fb8, in es_clearall (ruling 8). Measured: a file-local helper taking the list is not inlined, with or without `inline` (cost 610 against the threshold
+// of 275, or 325 with `inline`), and the destructor then has 244 instructions against the game's 715 (first difference at the frame size, 0x710016c574), so the
+// loop is written out. The explicit null tests around the two maps matter: with a plain `delete unknown348; unknown348 = nullptr;` the function has the game's 715
+// instructions but the first difference is at 0x710016cdac (a branch target one instruction off).
+EffectManager::~EffectManager() {
+  for (size_t i = 0; i < unknown37760.size(); i++) {
+    if (*unknown37760.at(i) != nullptr) {
+      delete *unknown37760.at(i);
+    }
+  }
+  unknown37760.clear();
+  for (u32 i = 0; i < unknown1fb8.size(); i++) {
+    if (unknown1fb8[i].unknown08 != nullptr) {
+      unknown1fb8[i].unknown08->release();
+      unknown1fb8[i].unknown08 = nullptr;
+    }
+    if (unknown1fb8[i].unknown00 != nullptr) {
+      unknown1fb8[i].unknown00->release();
+      unknown1fb8[i].unknown00 = nullptr;
+    }
+  }
+  unknown1fb8.clear();
+  for (u32 i = 0; i < unknown27c8.size(); i++) {
+    if (unknown27c8[i].unknown08 != nullptr) {
+      unknown27c8[i].unknown08->release();
+      unknown27c8[i].unknown08 = nullptr;
+    }
+    if (unknown27c8[i].unknown00 != nullptr) {
+      unknown27c8[i].unknown00->release();
+      unknown27c8[i].unknown00 = nullptr;
+    }
+  }
+  unknown27c8.clear();
+  for (u32 i = 0; i < unknownfa8.size(); i++) {
+    if (unknownfa8[i].unknown08 != nullptr) {
+      unknownfa8[i].unknown08->release();
+      unknownfa8[i].unknown08 = nullptr;
+    }
+    if (unknownfa8[i].unknown00 != nullptr) {
+      unknownfa8[i].unknown00->release();
+      unknownfa8[i].unknown00 = nullptr;
+    }
+  }
+  unknownfa8.clear();
+  for (u32 i = 0; i < unknown7a0.size(); i++) {
+    if (unknown7a0[i].unknown08 != nullptr) {
+      unknown7a0[i].unknown08->release();
+      unknown7a0[i].unknown08 = nullptr;
+    }
+    if (unknown7a0[i].unknown00 != nullptr) {
+      unknown7a0[i].unknown00->release();
+      unknown7a0[i].unknown00 = nullptr;
+    }
+  }
+  unknown7a0.clear();
+  for (u32 i = 0; i < unknown17b0.size(); i++) {
+    if (unknown17b0[i].unknown08 != nullptr) {
+      unknown17b0[i].unknown08->release();
+      unknown17b0[i].unknown08 = nullptr;
+    }
+    if (unknown17b0[i].unknown00 != nullptr) {
+      unknown17b0[i].unknown00->release();
+      unknown17b0[i].unknown00 = nullptr;
+    }
+  }
+  unknown17b0.clear();
+  if (unknown348 != nullptr) {
+    delete unknown348;
+    unknown348 = nullptr;
+  }
+  if (unknown350 != nullptr) {
+    delete unknown350;
+    unknown350 = nullptr;
+  }
+  delete EffectLodManager::get();
+  unknown40->unknown38->releaseCallBack(this);
+  if (unknown30.isValid()) {
+    ml::DevGraph::releaseMemPoolMemHandle(unknown30);
+  }
+  if (unknown30.isValid()) {
+    mtl::MemManager::erase(unknown30);
+    unknown30 = mtl::ALLOC_HANDLE();
+  }
+  if (unknown2c.isValid()) {
+    mtl::MemManager::erase(unknown2c);
+    unknown2c = mtl::ALLOC_HANDLE();
+  }
+  if (unknown28.isValid()) {
+    mtl::MemManager::erase(unknown28);
+    unknown28 = mtl::ALLOC_HANDLE();
+  }
+  ml::Scn::removeRenderCB(this);
+  for (u32 i = 0; i < unknown002; i++) {
+    unknown353e0[i].unknown459 = 0;
+    unknown353e0[i].unknown10 = mm::Vec3::zero;
+    unknown353e0[i].unknown20 = mm::Vec3::zero;
+    unknown353e0[i].term();
+  }
+  for (u32 i = 0; i < unknown005; i++) {
+    m_volumeFadeParam[i] = nullptr;
+  }
+}
+
 bool EffectManager::initialize() { return true; }
+
+// 1.0.0: 0x710016e34c. Releases the lists with the loops of the destructor (ruling 8, see there); the caster lists are emptied first, deleting each
+// caster before clear() unlinks the nodes, as the game does.
+bool EffectManager::finalize() {
+  unknown2fd6 = true;
+  u32 emitterNum = 0;
+  u32 particleNum = 0;
+  u32 drawNum = 0;
+  if (effect::SystemManager::isValid()) {
+    effect::SystemManager::getPtr()->getNum(emitterNum, particleNum, drawNum);
+  }
+  if (unknown2fd9 == 0) {
+    for (u32 layer = 0; layer < LAYER_MAX; layer++) {
+      mm::mtl::IntrusiveList<EffectCasterSend> &casters = unknown48[layer].unknown00;
+      for (mm::mtl::IntrusiveList<EffectCasterSend>::iterator it = casters.begin(); it != casters.end(); ++it) {
+        delete it.operator->();
+      }
+      casters.clear();
+    }
+    get()->es_clearall(true);
+  }
+  unknown2fd9++;
+  if (unknown2fd9 > 2 && emitterNum == 0 && particleNum == 0) {
+    if (!unknown2fd7) {
+      return true;
+    }
+    unknown2fd7 = false;
+    for (size_t i = 0; i < unknown37760.size(); i++) {
+      if (*unknown37760.at(i) != nullptr) {
+        delete *unknown37760.at(i);
+      }
+    }
+    unknown37760.clear();
+    for (u32 i = 0; i < unknown1fb8.size(); i++) {
+      if (unknown1fb8[i].unknown08 != nullptr) {
+        unknown1fb8[i].unknown08->release();
+        unknown1fb8[i].unknown08 = nullptr;
+      }
+      if (unknown1fb8[i].unknown00 != nullptr) {
+        unknown1fb8[i].unknown00->release();
+        unknown1fb8[i].unknown00 = nullptr;
+      }
+    }
+    unknown1fb8.clear();
+    for (u32 i = 0; i < unknown27c8.size(); i++) {
+      if (unknown27c8[i].unknown08 != nullptr) {
+        unknown27c8[i].unknown08->release();
+        unknown27c8[i].unknown08 = nullptr;
+      }
+      if (unknown27c8[i].unknown00 != nullptr) {
+        unknown27c8[i].unknown00->release();
+        unknown27c8[i].unknown00 = nullptr;
+      }
+    }
+    unknown27c8.clear();
+    for (u32 i = 0; i < unknownfa8.size(); i++) {
+      if (unknownfa8[i].unknown08 != nullptr) {
+        unknownfa8[i].unknown08->release();
+        unknownfa8[i].unknown08 = nullptr;
+      }
+      if (unknownfa8[i].unknown00 != nullptr) {
+        unknownfa8[i].unknown00->release();
+        unknownfa8[i].unknown00 = nullptr;
+      }
+    }
+    unknownfa8.clear();
+    for (u32 i = 0; i < unknown7a0.size(); i++) {
+      if (unknown7a0[i].unknown08 != nullptr) {
+        unknown7a0[i].unknown08->release();
+        unknown7a0[i].unknown08 = nullptr;
+      }
+      if (unknown7a0[i].unknown00 != nullptr) {
+        unknown7a0[i].unknown00->release();
+        unknown7a0[i].unknown00 = nullptr;
+      }
+    }
+    unknown7a0.clear();
+    for (u32 i = 0; i < unknown17b0.size(); i++) {
+      if (unknown17b0[i].unknown08 != nullptr) {
+        unknown17b0[i].unknown08->release();
+        unknown17b0[i].unknown08 = nullptr;
+      }
+      if (unknown17b0[i].unknown00 != nullptr) {
+        unknown17b0[i].unknown00->release();
+        unknown17b0[i].unknown00 = nullptr;
+      }
+    }
+    unknown17b0.clear();
+  }
+  return false;
+}
 
 bool EffectManager::isCommonLoaded() { return commonLoaded(); }
 

@@ -5,7 +5,7 @@
 #include "event/effect_obj.h"
 #include "event/mani_manager.h"
 #include "event/memory_manager.h"
-#include "fw/fw_debug.h"
+#include "event/object_util.h"
 #include "mm_math/mm_math.h"
 #include "mm_mtl/singleton.h"
 #include "mtl/alloc_handle.h"
@@ -26,19 +26,9 @@ ObjectEffect::ObjectEffect(const char *name) : Object(OBJTYPE_UNKNOWN_4, name) {
   unknown150.clear();
 }
 
-// Inferred helper: draws the box of an effect object at its position and rotation; original name unknown. The game inlines it in OnBouRender, OnManiRender and render
-// (0x71001178a0, 0x7100118988, 0x71001173f4): the rotation and the position are read before the six sinf and cosf calls of the matrix.
-static void unknown001(const mm::Vec3 &rotation, const mm::Vec3 &pos, const mm::Col4 &color) {
-  mm::Mat44 matrix;
-  matrix.unknown015(rotation);
-  matrix.setTrans(pos);
-  mm::Vec3 size(0.25f, 0.25f, 0.25f);
-  fw::debug::drawBoxLine(matrix, size, color);
-}
+void ObjectEffect::OnBouRender(const IBouCallback::RenderParam &param) { ObjectUtil::drawObject(getPos(), getRot(), param.color); }
 
-void ObjectEffect::OnBouRender(const IBouCallback::RenderParam &param) { unknown001(getRot(), getPos(), param.color); }
-
-void ObjectEffect::OnManiRender(IManiCallback::RenderParam &param) { unknown001(getRot(), getPos(), param.unknown00); }
+void ObjectEffect::OnManiRender(IManiCallback::RenderParam &param) { ObjectUtil::drawObject(getPos(), getRot(), param.unknown00); }
 
 ObjectEffect::~ObjectEffect() {
   if (m_effectObj != nullptr) {
@@ -70,6 +60,27 @@ bool ObjectEffect::OnBouRectSelect(const IBouCallback::SelectParam &param) {
   }
   mm::mtl::Singleton<ManiManager>::getPtr()->removeManipulate(this);
   return false;
+}
+
+// 0x71001179ec, 393 instructions: the same body as ObjectChara::OnManiStartPos (object_chara.cpp); ruling 8, the helper form measured there (397 instructions against 393) does not match.
+bool ObjectEffect::OnManiStartPos(IManiCallback::StartParam &param) {
+  mm::Mat44 original = m_posAxis.calcOrigMat();
+  mm::Mat44 inverse;
+  inverse.unknown014(original);
+  mm::Mat44 current;
+  current.unknown007(getPos());
+  mm::Mat44 relative = current * inverse;
+  param.unknown00 = original;
+  param.unknown40 = relative;
+  return true;
+}
+
+void ObjectEffect::OnManiSetPos(IManiCallback::SetParam &param) {
+  mm::Vec3 pos = param.matrix.unknown004();
+  PosAxis axis = m_posAxis;
+  pos = DataManager::unknown001(axis.calcOrigMatInv(), pos.x, pos.y, pos.z);
+  axis.set(axis.getAxis(), pos);
+  setPosAxis(axis);
 }
 
 void ObjectEffect::setPosAxis(const PosAxis &axis) {

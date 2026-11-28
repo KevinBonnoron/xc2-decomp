@@ -58,6 +58,8 @@ static const char *const unknown008[4] = {"LAY_char_dr", "LAY_char_bl@01", "LAY_
 static const u32 unknown009[4] = {0xb9, 0xba, 0xbb, 0xbc};
 // Inferred role: layer names of the status of the driver and the three blades of the character select; original name unknown.
 static const char *const unknown010[4] = {"LAY_status_dr", "LAY_status_bl@01", "LAY_status_bl@02", "LAY_status_bl@03"};
+// Inferred role: glow image names of the driver and the three blades of the character select; original name unknown.
+static const char *const unknown011[4] = {"IMG_char_dr_glow", "IMG_char_bl_glow@01", "IMG_char_bl_glow@02", "IMG_char_bl_glow@03"};
 
 GfMenuObjCharSelect::GfMenuObjCharSelect(u32 handle)
     : GfMenuObject(handle), unknown48(nullptr), unknown3f8(0), unknown3fc(0), unknown428(false), unknown429(false), unknown430(this), unknown6c0(false), unknown6d8(0), unknown6e8(-1),
@@ -510,6 +512,309 @@ bool GfMenuObjCharSelect::chkSubMenuSpec(u32 character) {
   return false;
 }
 
+// Inferred helper: tints the image of a character white when it is selected and gray otherwise; original name unknown.
+static void unknown012(ui::UIObjectAcc &acc, const char *name, bool isSelected) {
+  ui::UIObjectAcc image(acc.searchChild(name));
+  image.setMulColor(isSelected ? "white" : "char_unselect");
+}
+
+// Inferred helper: starts the fade of the background of a layer and hooks its end on a handle; original name unknown.
+static void unknown013(u32 handle, ui::UIObjectAcc &layer) {
+  GfMenuObjUtil::CtrlParam param;
+  param.unknown08 = 0;
+  param.unknown04 = 4;
+  param.unknown00 = 0.06f;
+  int ctrl = GfMenuObjUtil::startCtrl(layer.searchChild("LAY_bg"), param, nullptr);
+  GfMenuObject::hookCtrlEvent(handle, ctrl);
+}
+
+// Inferred helper: sets up the emotion fade of a control with a motion name; original name unknown. A helper that also starts the control (taking the handle) gives another
+// stack slot for the CtrlParam (61 differing lines in CharListener::reciveEvent, 12 in SubMenuListener::reciveEvent); taking the CtrlParam matches in both.
+static void unknown014(GfMenuObjUtil::CtrlParam &param, const char *motion) {
+  param.unknown08 = 0x10000000;
+  param.unknown50 = "cmn_fade_emotion";
+  param.unknown58 = motion;
+}
+
+void GfMenuObjCharSelect::CharListener::reciveEvent(const ui::EventData &event, u32 handle) {
+  ui::UIObjectAcc acc(handle);
+  ui::UIObjectAcc owner(m_menuObjCharSelect->unknown18);
+  switch (event.unknown00) {
+  case 1:
+    if (!m_menuObjCharSelect->unknown741) {
+      unknown164(handle, GfMenuTypes::unknown003_33);
+    } else {
+      acc.setDisp(false);
+      unknown164(owner.searchChild("LAY_sub_menu"), GfMenuTypes::unknown003_33);
+    }
+    break;
+  case 3:
+    if (event.unknown08 == 4) {
+      u32 driver = GfMenuReference::getReferenceDriverID(0);
+      ui::UIObjectAcc main(owner.searchChild("LAY_main"));
+      setDriverPos(main, m_menuObjCharSelect->unknown3a8, driver);
+      setCharOffset(main, m_menuObjCharSelect->unknown3a8, driver);
+      m_menuObjCharSelect->unknown768 = false;
+    }
+    break;
+  case 6: {
+    u64 params = event.unknown08_u64;
+    int selected = params;
+    int previous = params >> 32;
+    if (selected != -1 && selected != previous) {
+      // The game compares the slot signed against 1 and unsigned against 3 (`cmp w27, #1; b.lt` 0x710042d1b0, `cmp w27, #3; b.hi` 0x710042d1b8); the compares against
+      // 3 below (`slot`, the glow test) are unsigned too, a signed one gives another block order or 1335 instructions.
+      if (selected >= 1 && selected <= 3u) {
+        // The game calls getIndex(false) and getSize() on the list and drops both results (0x710042d1d8, 0x710042d1e8, ruling 5): 1326 instructions against 1336 without them.
+        m_menuObjCharSelect->unknown30[selected - 1]->getIndex(false);
+        m_menuObjCharSelect->unknown30[selected - 1]->getSize();
+        GfMenuBladeList *list = m_menuObjCharSelect->unknown30[selected - 1];
+        u32 blade = list->getContents(list->getIndex(false)).unknown00;
+        // `isValid` is the loop flag: with `while (!isValidBlade(blade))` the loop is laid out differently (first difference at 0x710042d830).
+        bool isValid = GfMenuObjUtil::isValidBlade(blade);
+        while (!isValid) {
+          int slot = selected < 3u ? selected : 0;
+          list = m_menuObjCharSelect->unknown30[slot];
+          blade = list->getContents(list->getIndex(false)).unknown00;
+          isValid = GfMenuObjUtil::isValidBlade(blade);
+          selected = slot + 1;
+        }
+        GfMenuReference::setReferenceBladeID(0, blade);
+      } else {
+        GfMenuDriverList *drivers = m_menuObjCharSelect->m_menuDriverList;
+        GfMenuReference::setReferenceDriverID(0, drivers->getContents(drivers->getIndex(false)).unknown00);
+      }
+      m_menuObjCharSelect->unknown3f8 = selected;
+      m_menuObjCharSelect->updateSpecialOperation();
+      for (u32 i = 0; i < 5; i++) {
+        ui::UIObjectAcc glow(acc.searchChild(i != 4 ? unknown011[i] : "IMG_char_dr_glow_solo"));
+        glow.setAlpha(0.0f);
+        glow.setDisp(false);
+        int ctrl = m_menuObjCharSelect->unknown750[i];
+        if (ctrl != -1 && ctrl == GfMenuObjUtil::getCtrlID(glow.unknown10)) {
+          GfMenuObjUtil::stopCtrl(m_menuObjCharSelect->unknown750[i]);
+          m_menuObjCharSelect->unknown750[i] = -1;
+        }
+      }
+      if (selected >= 0) {
+        // The game sign-extends the slot once, between its two range tests (`tbnz w27, #31` 0x710042d91c, `cmp w27, #3` 0x710042d920, `sxtw x21, w27` 0x710042d92c), and
+        // indexes the glow names (0x710042d94c) and the fade layers (0x710042dc54) with that register. Without the 64-bit index the tests merge into one `cmp #4; b.hs`
+        // and each load folds the extension (1334 instructions against 1336).
+        s64 selectedIndex = selected;
+        if (selected <= 3u) {
+          int bladeNum = getEquipBladeNum(GfMenuReference::getReferenceDriverID(0), m_menuObjCharSelect->unknown3a8);
+          const char *name;
+          u32 index = selected;
+          if (bladeNum == 0 && selected == 0) {
+            index = 4;
+            name = "IMG_char_dr_glow_solo";
+          } else {
+            name = unknown011[selectedIndex];
+          }
+          ui::UIObjectAcc glow(acc.searchChild(name));
+          GfMenuObjUtil::CtrlParam param;
+          // Store order searched over all 720 orders with unknown18 last: only 08, 00, 3c, 10, 14, 0c, 18 gives the game's merged and paired stores.
+          param.unknown08 = 4;
+          param.unknown00 = 2.0f;
+          param.unknown3c = 0.5f;
+          param.unknown10 = true;
+          param.unknown14 = 8;
+          param.unknown0c = 3;
+          param.unknown18 = m_menuObjCharSelect->unknown750[index];
+          m_menuObjCharSelect->unknown750[index] = GfMenuObjUtil::startCtrl(glow.unknown10, param, nullptr);
+          for (u32 i = 0; i < 4; i++) {
+            ui::UIObjectAcc layer(acc.searchChild(unknown008[i]));
+            u16 priority = m_menuObjCharSelect->unknown6c4[i];
+            if (selected == i) {
+              priority = priority + 1;
+            }
+            layer.setDispPriority(priority);
+          }
+          if (previous >= 0 && !m_menuObjCharSelect->unknown429) {
+            GfMenuObjUtil::CtrlParam fade;
+            unknown014(fade, "fade_in_select");
+            fade.unknown11 = true;
+            GfMenuObjUtil::startCtrl(acc.searchChild(unknown008[selectedIndex]), fade, nullptr);
+          }
+          m_menuObjCharSelect->unknown429 = false;
+        }
+      }
+      unknown012(acc, "IMG_char_dr_img", selected == 0);
+      unknown012(acc, "IMG_char_bl_img@01", selected == 1);
+      unknown012(acc, "IMG_char_bl_img@02", selected == 2);
+      unknown012(acc, "IMG_char_bl_img@03", selected == 3);
+      if (previous != -1 && selected != previous) {
+        GfMenuObjUtil::playSECommonCursor();
+      }
+    }
+    break;
+  }
+  // The cases 0x140 and 0x108 of this listener are written in the order of the game's stack slots: with 0x140 after 0x108 the temporary accessor of its
+  // `setAlpha` takes the first of the three unshared slots instead of the last (0x42cc14, `add x0, sp, #64` against `#16`).
+  case 0x140: {
+    m_menuObjCharSelect->refreshCharSelect(event.unknown08);
+    m_menuObjCharSelect->updateSpecialOperation();
+    int bladeNum = getEquipBladeNum(GfMenuReference::getReferenceDriverID(0), m_menuObjCharSelect->unknown3a8);
+    const char *name = bladeNum == 0 ? "LAY_char_dr_solo" : "LAY_char_dr";
+    GfMenuObjUtil::setChildDisp(acc.unknown10, name, false);
+    ui::UIObjectAcc(acc.searchChild(name)).setAlpha(0.0f);
+    mm::mtl::FixStr<32> layerName;
+    for (int i = 1; i < 4; i++) {
+      layerName.format("LAY_char_bl@%02d", i);
+      GfMenuObjUtil::setChildDisp(acc.unknown10, layerName.c_str(), false);
+    }
+    unknown007.m_selectBusy = true;
+    for (u32 i = 0; i < 4; i++) {
+      ui::UIObjectAcc glow(acc.searchChild(unknown011[i]));
+      int ctrl = m_menuObjCharSelect->unknown750[i];
+      if (ctrl != -1 && ctrl == GfMenuObjUtil::getCtrlID(glow.unknown10)) {
+        GfMenuObjUtil::stopCtrl(m_menuObjCharSelect->unknown750[i]);
+        m_menuObjCharSelect->unknown750[i] = -1;
+      }
+      glow.setAlpha(0.0f);
+      glow.setDisp(false);
+    }
+    for (u32 i = 0; i < 4; i++) {
+      ui::UIObjectAcc layer(acc.searchChild(unknown008[i]));
+      layer.setDispPriority(m_menuObjCharSelect->unknown6c4[i]);
+    }
+    m_menuObjCharSelect->unknown430.unknown005();
+    m_menuObjCharSelect->unknown430.unknown002(&GfMenuObjCharSelect::seqStreamWaitSelectBefore);
+    m_menuObjCharSelect->unknown430.unknown004(1);
+    m_menuObjCharSelect->unknown430.unknown002(&GfMenuObjCharSelect::seqStreamWaitSelect);
+    disableInput(handle);
+    ui::UIObjectAcc main(owner.searchChild("LAY_main"));
+    unknown013(handle, main);
+    break;
+  }
+  case 8:
+    if (unknown007.m_selectBusy) {
+      break;
+    }
+    switch (event.unknown0c) {
+    case 1: {
+      u32 character;
+      if (m_menuObjCharSelect->unknown3f8 == 0) {
+        GfMenuDriverList *drivers = m_menuObjCharSelect->m_menuDriverList;
+        character = drivers->getContents(drivers->getIndex(false)).unknown00;
+      } else {
+        GfMenuBladeList *list = m_menuObjCharSelect->unknown30[m_menuObjCharSelect->unknown3f8 - 1];
+        character = list->getContents(list->getIndex(false)).unknown00;
+      }
+      if (!m_menuObjCharSelect->chkSubMenuSpec(character)) {
+        GfMenuObjUtil::playSECommon(2);
+      } else {
+        unknown164(handle, GfMenuTypes::unknown003_34);
+        unknown163(owner.searchChild("LAY_sub_menu"), GfMenuTypes::unknown003_33, 0);
+        disableInput(handle);
+        GfMenuObjMainMenu2::setSystemKeyEnable(false);
+        GfMenuObjMainMenu2::disableCharChange();
+        GfMenuObjUtil::playSECommonDecide();
+      }
+      break;
+    }
+    case 2:
+      unknown164(owner.searchChild("LAY_main"), GfMenuTypes::unknown003_34);
+      disableInput(handle);
+      GfMenuObjOperationInfo::remove(handle, 0, 0, 0);
+      break;
+    case 9:
+      if (GfMenuObjUtil::getMenuCondition(0x23)) {
+        GfMenuObjMainMenu2::setSubLayer(getMenuLayerID(0x24));
+        changeFSSubLayer(owner.unknown10, 1, getMenuLayerID(0x24), true);
+        GfMenuObjOperationInfo::remove(handle, 0, 0, 0);
+        GfMenuObjUtil::playSECommonDecide();
+      }
+      break;
+    case 0xd:
+      if (m_menuObjCharSelect->unknown748 < 4) {
+        m_menuObjCharSelect->unknown6c0 = false;
+        m_menuObjCharSelect->unknown430.unknown005();
+        m_menuObjCharSelect->unknown430.unknown002(&GfMenuObjCharSelect::seqConfSpecial);
+        disableInput(handle);
+        GfMenuObjMainMenu2::disableCharChange();
+        GfMenuObjMainMenu2::cancelEnableMainMenu(false);
+      }
+      break;
+    }
+    break;
+  case 0x108:
+    m_menuObjCharSelect->unknown430.unknown002(&GfMenuObjCharSelect::seqWaitSelect);
+    // fall through
+  case GfMenuTypes::unknown003_33: {
+    ui::EventData sendData;
+    sendData.unknown00 = 6;
+    sendData.unknown08 = m_menuObjCharSelect->unknown3f8;
+    sendData.unknown0c = -1;
+    ui::UIManager::get()->requestObjectEvent(handle, sendData, 0.0f);
+    GfMenuObjOperationInfo::add(handle, 0, 0, 0);
+    GfMenuObjOperationInfo::changeText(handle, 9, !GfMenuObjUtil::getMenuCondition(0x23));
+    setInputActionEnable(handle, 0xd, false);
+    GfMenuDriverList *drivers = m_menuObjCharSelect->m_menuDriverList;
+    u32 driver = drivers->getContents(drivers->getIndex(false)).unknown00;
+    ui::UIObjectAcc main(owner.searchChild("LAY_main"));
+    int bladeNum = getEquipBladeNum(driver, m_menuObjCharSelect->unknown3a8);
+    resetInputSelection(handle);
+    setupInputSelection(handle, m_menuObjCharSelect->unknown3f8, bladeNum + 1);
+    adjustBladeList(m_menuObjCharSelect->unknown3a8, m_menuObjCharSelect->unknown50, m_menuObjCharSelect->unknown30, driver);
+    // The accessors live in a scope of their own: their stack slots are reused by the later ones (ruling 3); without the scope the function has 1356 instructions against 1336.
+    {
+      ui::UIObjectAcc layer(acc.searchChild("LAY_char_dr"));
+      ui::UIObjectAcc solo(acc.searchChild("LAY_char_dr_solo"));
+      layer.setDisp(false);
+      solo.setDisp(false);
+      if (bladeNum == 0) {
+        ui::UIObjectAcc status(acc.searchChild("LAY_status_dr"));
+        acc.setLayout(status.unknown10, "driver_index_layout_solo");
+      }
+    }
+    unknown013(handle, main);
+    break;
+  }
+  case GfMenuTypes::unknown003_34:
+    disableInput(acc.searchChild("LAY_char_dr"));
+    disableInput(acc.searchChild("LAY_char_bl@01"));
+    disableInput(acc.searchChild("LAY_char_bl@02"));
+    disableInput(acc.searchChild("LAY_char_bl@03"));
+    disableInput(handle);
+    GfMenuObjOperationInfo::remove(handle, 0, 0, 0);
+    break;
+  case GfMenuTypes::unknown003_257:
+  case GfMenuTypes::unknown003_258: {
+    // The game loads event.unknown08 into a callee-saved register before resetInputSelection (0x710042cb10, ruling 2).
+    int count = event.unknown08;
+    resetInputSelection(handle);
+    setupInputSelection(handle, 0, count + 1);
+    if (event.unknown00 == GfMenuTypes::unknown003_257) {
+      acc.setAlpha(0.0f);
+      setFadeIn(handle, 0);
+    }
+    break;
+  }
+  case GfMenuTypes::unknown003_259: {
+    // The game loads event.unknown08 before the load of unknown3f8 (0x710042d390, ruling 2).
+    int count = event.unknown08;
+    setupInputSelection(handle, m_menuObjCharSelect->unknown3f8, count + 1);
+    break;
+  }
+  case 0x107:
+    if (event.unknown08 == 1) {
+      unknown140(handle, 0x140, GfMenuReference::getReferenceDriverID(0), 0.0f);
+    } else {
+      m_menuObjCharSelect->updateSpecialOperation();
+    }
+    if (!m_menuObjCharSelect->unknown741) {
+      GfMenuObjMainMenu2::openCharChange(acc.unknown10, 3, false);
+    }
+    GfMenuObjMainMenu2::cancelEnableMainMenu(true);
+    enableInput(handle);
+    break;
+  default:
+    ui::UIObjectListener::reciveEvent(event, handle);
+    break;
+  }
+}
+
 void GfMenuObjCharSelect::MainListener::reciveEvent(const ui::EventData &event, u32 handle) {
   ui::UIObjectAcc acc(handle);
   switch (event.unknown00) {
@@ -531,6 +836,8 @@ void GfMenuObjCharSelect::MainListener::reciveEvent(const ui::EventData &event, 
     m_menuObjCharSelect->unknown768 = !m_menuObjCharSelect->unknown741;
     m_menuObjCharSelect->unknown430.unknown005();
     m_menuObjCharSelect->unknown430.unknown002(&GfMenuObjCharSelect::seqStreamWait);
+    // The three loops stay written out (ruling 8): a template helper taking the list, the BDAT table and the count (clear, getFP and the loop) gives 997 instructions against
+    // the game's 1009 (227 differing lines, first difference 0x710042ab84); one holding only the loop and taking the table pointer gives 1000 (228 lines).
     m_menuObjCharSelect->unknown6f0.clear();
     u8 *driverOrder = GfDataBdat::getFP(BDAT_MNU_CHAR_DRIVER_ORDER);
     for (int i = 0; i < 5; i++) {
@@ -585,6 +892,8 @@ void GfMenuObjCharSelect::MainListener::reciveEvent(const ui::EventData &event, 
       setFadeOut(handle, 0);
     }
     break;
+  // Only a case label and one call are shared with other listeners. A helper form that takes the arm out of the switch (`if (unknown019(acc, type)) return;` before it, holding the
+  // test `type == unknown003_33` and `setDisp(true)`) gives 1009 instructions and 0 differing lines only because clang folds it back into the switch: it is not a block, so the arm stays.
   case GfMenuTypes::unknown003_33:
     acc.setDisp(true);
     break;
@@ -613,6 +922,7 @@ void GfMenuObjCharSelect::MainListener::reciveEvent(const ui::EventData &event, 
     } else {
       m_menuObjCharSelect->seqStreamWaitStatBlBefore();
     }
+    // unknown013 (the same four statements) gives 1011 instructions against the game's 1009 here (measured), so the block stays written out (ruling 8).
     GfMenuObjUtil::CtrlParam param;
     param.unknown08 = 0;
     param.unknown04 = 4;
@@ -790,6 +1100,8 @@ void GfMenuObjCharSelect::SubMenuListener::reciveEvent(const ui::EventData &even
   switch (event.unknown00) {
   case 1: {
     setupCharSubMenu(acc, m_menuObjCharSelect->unknown6f0, m_menuObjCharSelect->unknown710, m_menuObjCharSelect->unknown728);
+    // A static helper holding these statements (taking `handle` and `owner`, returning the cursor) gives 2715 instructions as the game and 156 differing lines (frame of 864 bytes
+    // against 880, first difference 0x710042f23c), so the block stays written out (ruling 8).
     GfMenuObjUtil::CursorParam param;
     param.unknown00 = ui::UIObjectAcc(handle).getParentHandle();
     param.unknown04 = owner.searchChild("IMG_sub_cursor");
@@ -797,6 +1109,8 @@ void GfMenuObjCharSelect::SubMenuListener::reciveEvent(const ui::EventData &even
     param.m_cursorSetting.unknown18 = 0;
     param.unknown08 = "LAY_sub_menu_dr@%02d";
     m_menuObjCharSelect->unknown48 = GfMenuObjUtil::createCursor(param);
+    // The two getLayoutRect calls only share their shape with other functions (a Rect and one call, with different names). A wrapper of both calls taking the accessor and the two
+    // rects gives 2715 instructions and 0 differing lines, but it is a helper of two calls with one user, so it is not written.
     mm::Rect<s16> rect;
     acc.getLayoutRect("icon_layout_center", rect);
     mm::Rect<s16> range;
@@ -806,8 +1120,9 @@ void GfMenuObjCharSelect::SubMenuListener::reciveEvent(const ui::EventData &even
     ui::UISelectObjList::CreateParam createParam;
     createParam.allocator = getAllocator(ALLOCATOR_UNKNOWN_0);
     ui::UISelectObjList *list = ui::UISelectObjList::create(createParam);
-    // The three loops stay written out: one template helper called three times (the list type as the parameter) compiles to 2712 instructions against
-    // the game's 2715 (1.0.0: 0x710042f220), so the game does not share them.
+    // The three loops stay written out (ruling 8): a template helper holding the loop and placeObjectH, called three times with the list type as the parameter, gives 2712
+    // instructions against the game's 2715 (667 differing lines, first difference 0x710042f24c, 1.0.0: 0x710042f220 for the function); one holding only the loop gives the same
+    // numbers, and one taking the count gives 2706 (685 lines).
     for (u32 i = 0; i < m_menuObjCharSelect->unknown6f0.size(); i++) {
       mm::mtl::FixStr<32> name;
       name.format("LAY_sub_menu_dr@%02d", i + 1);
@@ -855,11 +1170,7 @@ void GfMenuObjCharSelect::SubMenuListener::reciveEvent(const ui::EventData &even
       m_menuObjCharSelect->unknown430.unknown002(&GfMenuObjCharSelect::seqStreamWaitStatBl);
     }
     ui::UIObjectAcc main(owner.searchChild("LAY_main"));
-    GfMenuObjUtil::CtrlParam param;
-    param.unknown08 = 0;
-    param.unknown04 = 4;
-    param.unknown00 = 0.06f;
-    hookCtrlEvent(handle, GfMenuObjUtil::startCtrl(main.searchChild("LAY_bg"), param, nullptr));
+    unknown013(handle, main);
     break;
   }
   case 6: {
@@ -939,9 +1250,7 @@ void GfMenuObjCharSelect::SubMenuListener::reciveEvent(const ui::EventData &even
         name.format("LAY_sub_menu_hana@%02d", index + 1);
       }
       GfMenuObjUtil::CtrlParam param;
-      param.unknown08 = 0x10000000;
-      param.unknown50 = "cmn_fade_emotion";
-      param.unknown58 = "fade_in_select";
+      unknown014(param, "fade_in_select");
       param.unknown11 = true;
       GfMenuObjUtil::startCtrl(acc.searchChild(name.c_str()), param, nullptr);
       m_menuObjCharSelect->unknown3fc = index;

@@ -178,17 +178,21 @@ struct SDataBlade {
   mm::mtl::FixStr<16> unknown75c;         // Inferred role: resource name add motion; original member name unknown.
   mm::mtl::FixStr<16> unknown770; // Inferred role: voice str; original member name unknown. Evidence: GfBladeCreate::setupSDataBlade (0x7100301fd4) assigns it from a FixStr<16> (length at 0x780,
                                   // assertion "m_nLen < LEN").
-  u8 _784[0x7ac - 0x784];
-  char m_effectResourceName[0x28]; // Inferred role: resource name effect; named after the game accessor gf::DataObjBlade::getEffectResourceName.
-  char m_centerBone[0x14];         // Inferred role: center bone; named after the game accessor gf::DataObjBlade::getCenterBone.
-  char m_camBone[0x14];            // Inferred role: cam bone; named after the game accessor gf::DataObjBlade::getCamBone.
-  mm::mtl::FixStr<32> unknown7fc;  // Inferred role: se pack; original member name unknown. Evidence: GfBladeCreate::setupSDataBlade assigns it from a FixStr<32> (length at 0x81c).
-  u8 unknown820;                   // Inferred role: size; original member name unknown.
-  u8 m_weaponType;                 // Inferred role: weapon type; named after the game accessor gf::DataObjBlade::getWeaponType.
-  u8 unknown822;                   // Inferred role: equip orb max; original member name unknown.
-  u8 unknown823;                   // Inferred role: attribute; original member name unknown.
-  u8 m_personality;                // Inferred role: personality; named after the game accessor gf::GfDataBlade::getPersonality.
-  u8 _825[0x826 - 0x825];
+  mm::mtl::FixStr<16> unknown784; // Inferred role: clip event; original member name unknown. Evidence: GfDataBlade::setupSDataBlade (0x71002965ac) assigns it from the clip event column of the blade
+                                  // table (length at 0x794).
+  mm::mtl::FixStr<16> unknown798; // Inferred role: common se; original member name unknown. Evidence: GfDataBlade::setupSDataBlade assigns it from the Com_SE column (length at 0x7a8).
+  mm::mtl::FixStr<16> m_effectResourceName; // Inferred role: resource name effect; named after the game accessor gf::DataObjBlade::getEffectResourceName. Evidence: GfDataBlade::setupSDataBlade
+                                            // assigns it from the Com_Eff column (length at 0x7bc).
+  mm::mtl::FixStr<16> unknown7c0;           // Inferred role: common voice; original member name unknown. Evidence: GfDataBlade::setupSDataBlade assigns it from the Com_Vo column (length at 0x7d0).
+  mm::mtl::FixStr<16> m_centerBone;         // Inferred role: center bone; named after the game accessor gf::DataObjBlade::getCenterBone. Evidence: GfDataBlade::setupSDataBlade (length at 0x7e4).
+  mm::mtl::FixStr<16> m_camBone;            // Inferred role: cam bone; named after the game accessor gf::DataObjBlade::getCamBone. Evidence: GfDataBlade::setupSDataBlade (length at 0x7f8).
+  mm::mtl::FixStr<32> unknown7fc;           // Inferred role: se pack; original member name unknown. Evidence: GfBladeCreate::setupSDataBlade assigns it from a FixStr<32> (length at 0x81c).
+  u8 unknown820;                            // Inferred role: size; original member name unknown.
+  u8 m_weaponType;                          // Inferred role: weapon type; named after the game accessor gf::DataObjBlade::getWeaponType.
+  u8 unknown822;                            // Inferred role: equip orb max; original member name unknown.
+  u8 unknown823;                            // Inferred role: attribute; original member name unknown.
+  u8 m_personality;                         // Inferred role: personality; named after the game accessor gf::GfDataBlade::getPersonality.
+  u8 unknown825;      // Inferred role: extra parts mask; original member name unknown. Evidence: GfDataBlade::setupSDataBlade or-s one bit per non-zero extra part (0x71002965ac).
   u8 m_eyeRotControl; // Inferred role: eye rot control; named after the game accessor gf::DataObjBlade::getEyeRotControl.
   u8 _827[0x828 - 0x827];
   u16 m_coolTime;      // Inferred role: cool time; named after the game accessor gf::DataObjBlade::getCoolTime.
@@ -267,7 +271,10 @@ static_assert(offsetof(SDataBlade, unknown734) == 0x734, "");
 static_assert(offsetof(SDataBlade, unknown748) == 0x748, "");
 static_assert(offsetof(SDataBlade, unknown75c) == 0x75c, "");
 static_assert(offsetof(SDataBlade, unknown770) == 0x770, "");
+static_assert(offsetof(SDataBlade, unknown784) == 0x784, "");
+static_assert(offsetof(SDataBlade, unknown798) == 0x798, "");
 static_assert(offsetof(SDataBlade, m_effectResourceName) == 0x7ac, "");
+static_assert(offsetof(SDataBlade, unknown7c0) == 0x7c0, "");
 static_assert(offsetof(SDataBlade, m_centerBone) == 0x7d4, "");
 static_assert(offsetof(SDataBlade, m_camBone) == 0x7e8, "");
 static_assert(offsetof(SDataBlade, unknown7fc) == 0x7fc, "");
@@ -276,6 +283,7 @@ static_assert(offsetof(SDataBlade, m_weaponType) == 0x821, "");
 static_assert(offsetof(SDataBlade, unknown822) == 0x822, "");
 static_assert(offsetof(SDataBlade, unknown823) == 0x823, "");
 static_assert(offsetof(SDataBlade, m_personality) == 0x824, "");
+static_assert(offsetof(SDataBlade, unknown825) == 0x825, "");
 static_assert(offsetof(SDataBlade, m_eyeRotControl) == 0x826, "");
 static_assert(offsetof(SDataBlade, m_coolTime) == 0x828, "");
 static_assert(offsetof(SDataBlade, unknown82a) == 0x82a, "");

@@ -8,6 +8,7 @@
 #include "dr/dr_draw_callback.h"
 #include "framework/effect/effect_caster.h" // IWYU pragma: keep
 #include "framework/manager_object.h"
+#include "framework/render/rim_bloom_calc.h"
 #include "ml/stl_custom_allocator.h"
 #include "mm_math/mm_vec3.h"
 #include "mm_mtl/fixed_array.h"
@@ -256,7 +257,7 @@ public:
   void blurRender(const ml::IDrDrawWorkInfo *info) override;
   void finalRender(const ml::IDrDrawWorkInfo *info) override;
 
-  u8 _28[0x2c - 0x28];
+  mtl::ALLOC_HANDLE unknown28; // Inferred role: top handle; original member name unknown.
   mtl::ALLOC_HANDLE unknown2c; // Inferred role: sys handle; original member name unknown.
   mtl::ALLOC_HANDLE unknown30; // Inferred role: res handle; original member name unknown.
   u8 _34[0x38 - 0x34];
@@ -265,7 +266,10 @@ public:
   mm::mtl::FixedArray<CasterGroup, LAYER_MAX> unknown48; // Inferred role: caster groups; original member name unknown.
   PackMap *unknown348;                                   // Inferred role: pack map; original member name unknown.
   DataMap *unknown350;                                   // Inferred role: data map; original member name unknown.
-  u8 _358[0x1fb8 - 0x358];
+  u8 _358[0x7a0 - 0x358];
+  mm::mtl::FixedVector<unknown008, COMMON_EFFECT_MAX> unknown7a0;  // Inferred role: resource lists released by the destructor and finalize; original member name unknown.
+  mm::mtl::FixedVector<unknown008, COMMON_EFFECT_MAX> unknownfa8;  // Inferred role: resource lists released by the destructor and finalize; original member name unknown.
+  mm::mtl::FixedVector<unknown008, COMMON_EFFECT_MAX> unknown17b0; // Inferred role: resource lists released by the destructor and finalize; original member name unknown.
   mm::mtl::FixedVector<unknown008, COMMON_EFFECT_MAX> unknown1fb8; // Inferred role: common effects; original member name unknown.
   u32 unknown27c0;                                                 // Inferred role: common effect load step, switched on by commonLoaded; original member name unknown.
   u8 _27c4[0x27c8 - 0x27c4];
@@ -274,12 +278,13 @@ public:
   u8 _2fd4[0x2fd5 - 0x2fd4];
   bool m_masterPause;
   bool unknown2fd6; // Inferred role: finalizing; original member name unknown.
-  u8 _2fd7[0x2fd8 - 0x2fd7];
+  bool unknown2fd7; // Inferred role: resources not yet released by finalize, set by the constructor; original member name unknown.
   u8 unknown2fd8;   // Inferred role: caster buffer index flipped every tail; original member name unknown.
-  bool unknown2fd9; // Inferred role: destroy the effect system on tail; original member name unknown.
+  u8 unknown2fd9;   // Inferred role: finalize step counter, nonzero once finalize has cleared the effect system; original member name unknown.
   u8 _2fda[0x2fe0 - 0x2fda];
   const VolumeFadeParams *m_volumeFadeParam[unknown005]; // Inferred role: volume fade params per effect type, read by getVolumeFadeParam; original member name unknown.
-  u8 _30e0[0x353e0 - 0x30e0];
+  RimBloomCalc m_rimBloomCalc[64];                       // Inferred role: rim bloom curves; original member name unknown (type-derived).
+  u8 _352e0[0x353e0 - 0x352e0];
   KizunaWork unknown353e0[unknown002];                                        // Inferred role: kizuna lines; original member name unknown.
   mm::mtl::FixedVector<grlib::CGLibTextureBuffer *, unknown004> unknown37760; // Inferred role: kizuna line textures; original member name unknown.
   u8 _37868[0x37958 - 0x37868];
@@ -300,20 +305,27 @@ static_assert(offsetof(EffectManager::KizunaWork, unknown460) == 0x460, "");
 static_assert(offsetof(EffectManager::KizunaWork, unknown468) == 0x468, "");
 static_assert(sizeof(EffectManager::KizunaWork) == 0x470, "");
 static_assert(sizeof(EffectManager::CasterGroup) == 0x18, "");
+static_assert(sizeof(RimBloomCalc) == 0xc88, "");
+static_assert(offsetof(EffectManager, unknown28) == 0x28, "");
 static_assert(offsetof(EffectManager, unknown2c) == 0x2c, "");
 static_assert(offsetof(EffectManager, unknown38) == 0x38, "");
 static_assert(offsetof(EffectManager, unknown48) == 0x48, "");
 static_assert(offsetof(EffectManager, unknown348) == 0x348, "");
 static_assert(offsetof(EffectManager, unknown350) == 0x350, "");
+static_assert(offsetof(EffectManager, unknown7a0) == 0x7a0, "");
+static_assert(offsetof(EffectManager, unknownfa8) == 0xfa8, "");
+static_assert(offsetof(EffectManager, unknown17b0) == 0x17b0, "");
 static_assert(offsetof(EffectManager, unknown1fb8) == 0x1fb8, "");
 static_assert(offsetof(EffectManager, unknown27c0) == 0x27c0, "");
 static_assert(offsetof(EffectManager, unknown27c8) == 0x27c8, "");
 static_assert(offsetof(EffectManager, unknown2fd0) == 0x2fd0, "");
 static_assert(offsetof(EffectManager, m_masterPause) == 0x2fd5, "");
 static_assert(offsetof(EffectManager, unknown2fd6) == 0x2fd6, "");
+static_assert(offsetof(EffectManager, unknown2fd7) == 0x2fd7, "");
 static_assert(offsetof(EffectManager, unknown2fd8) == 0x2fd8, "");
 static_assert(offsetof(EffectManager, unknown2fd9) == 0x2fd9, "");
 static_assert(offsetof(EffectManager, m_volumeFadeParam) == 0x2fe0, "");
+static_assert(offsetof(EffectManager, m_rimBloomCalc) == 0x30e0, "");
 static_assert(offsetof(EffectManager, unknown353e0) == 0x353e0, "");
 static_assert(offsetof(EffectManager, unknown37760) == 0x37760, "");
 static_assert(offsetof(EffectManager, unknown37958) == 0x37958, "");

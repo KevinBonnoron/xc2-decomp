@@ -5,8 +5,10 @@
 #include "bdat.h"
 #include "gf/data/gf_character_id.h"
 #include "gf/data/gf_data_blade.h"
+#include "gf/data/gf_data_driver.h"
 #include "gf/data/gf_data_mercenaries.h"
 #include "gf/data/gf_data_param_acc.h"
+#include "gf/data/gf_data_party.h"
 #include "gf/data/gf_object_type.h"
 #include "gf/game/gf_game_manager.h"
 #include "gf/gf_allocator.h"
@@ -250,6 +252,109 @@ void GfMenuBladeList::getBladeFromDriver(u32 driver, mm::mtl::FixedVector<u16, 4
           blades.push_back(slotBlade);
         }
       }
+    }
+  }
+}
+
+// 1.0.0: 0x71003d3a04, 506 instructions. The 6 blade loops of the cases 0 and 2 are written out (ruling 8, genuine duplication): a file-local helper holding the loop is not inlined (233
+// instructions, 334 differing lines, also with `inline`) and with the helper for case 0 only the function has 522 instructions.
+void GfMenuBladeList::setupFromTeam(const TeamSetup &setup) {
+  SetupParam param = setup.m_setupParam;
+  mm::mtl::FixedVector<u16, 422> blades;
+  switch (setup.unknown14) {
+  case 0: {
+    unknown120 *team = GfDataMercenaries::getTeamMember(setup.unknown18);
+    if (team == nullptr) {
+      return;
+    }
+    // The loop body of case 2 (0x71003d3cf0), with its null test of `team` although the return above makes it redundant: without the test the function has 492 instructions (the game
+    // pushes a `mov w8, wzr` at 0x71003d3a88 and reloads m_size after the first push, 0x71003d3a90).
+    for (u32 i = 0; i < 6; i++) {
+      u32 blade = 0;
+      if (team != nullptr) {
+        blade = team->unknown00[i];
+      }
+      if (blade != 0 || setup.unknown1c) {
+        blades.push_back(blade);
+      }
+    }
+    break;
+  }
+  case 1: {
+    unknown124 *party = GfDataParty::getSDataParty();
+    for (u32 member = 0; member < 10; member++) {
+      u32 driver = party->m_partyMember[member].m_driver;
+      if (driver != 0) {
+        for (u32 slot = 0; slot < 6; slot++) {
+          u32 blade = 0;
+          if (slot < 3) {
+            blade = GfDataDriver::getBlade(driver, slot);
+          }
+          if (blade != 0 || setup.unknown1c) {
+            blades.push_back(blade);
+          }
+        }
+      }
+    }
+    break;
+  }
+  case 2:
+    for (u32 i = 0; i < GfDataMercenaries::getTeamNum(); i++) {
+      unknown120 *team = GfDataMercenaries::getTeamMember(i + 1);
+      // One loop for a missing team and a present one (the null copy at 0x71003d3e5c is the unswitched loop); two separate loops give 479 instructions.
+      for (u32 j = 0; j < 6; j++) {
+        u32 blade = 0;
+        if (team != nullptr) {
+          blade = team->unknown00[j];
+        }
+        if (blade != 0 || setup.unknown1c) {
+          blades.push_back(blade);
+        }
+      }
+    }
+    break;
+  case 3: {
+    if (!GfDataBlade::getListParty(blades)) {
+      return;
+    }
+    if (!GfDataMercenaries::getReserver(blades)) {
+      return;
+    }
+    // The game reads end() and calls isClearGame() at the top of each iteration, in this order (0x71003d4064, 0x71003d412c:
+    // `ldr x19, [sp, #0x370]` before `bl isClearGame`, the comparison after it) and tests the element after calls
+    // (three loads of *it). With the call at the top of the body 507 instructions, with the call at the end of the body 504
+    // (also with a cached end), against 506.
+    u16 *it = blades.begin();
+    for (;;) {
+      u16 *end = blades.end();
+      bool isClear = GfGameManager::isClearGame();
+      if (it == end) {
+        break;
+      }
+      if ((!isClear && *it != BLADE_SUZAKU && *it != BLADE_WADATSUMI && GfMenuObjUtil::isScenarioBlade(*it)) || (GfDataBlade::isActivateDriver(*it) && !GfMenuObjUtil::canRemoveBlade(*it, nullptr))) {
+        it = blades.erase(it);
+      } else {
+        it++;
+      }
+    }
+    if (setup.unknown1c) {
+      for (size_t count = blades.size(); count < GfDataMercenaries::getReserverMax(); count++) {
+        blades.push_back(0);
+      }
+    }
+    break;
+  }
+  }
+  // The creation of the list repeats the tail of setupFromBladeList and setupFromBook (ruling 8). Those read the creator with `blades.unknown001(i)`; here the game reads `blades[i]`
+  // (with `unknown001(i)` 505 instructions), so the three cannot share a helper. A file-local helper holding this tail for this function only gives 506 instructions and 74 differing
+  // lines (first difference at 0x71003d3a30).
+  UIListInfo<MenuBladeInfo>::setup(getAllocator(ALLOCATOR_UNKNOWN_0), param);
+  if (isValid()) {
+    MenuBladeInfo info = {};
+    for (u32 i = 0; i < blades.size(); i++) {
+      info.unknown00 = *blades.at(i);
+      info.unknown04 = GfDataBlade::getCreator(blades[i]);
+      addContents(info);
     }
   }
 }

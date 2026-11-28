@@ -166,7 +166,7 @@ public:
 
   int unknown24;  // Role and original member name unknown, cleared by the constructor.
   u32 unknown28;  // Role and original member name unknown, cleared by the constructor.
-  u32 unknown2c;  // Role and original member name unknown, cleared by the constructor.
+  int unknown2c;  // Role and original member name unknown, cleared by the constructor; compared signed (cmp #5, b.gt) by MercenariesSlotBlListener::reciveEvent (0x710040835c).
   u32 unknown30;  // Role and original member name unknown, cleared by the constructor.
   bool unknown34; // Role and original member name unknown, cleared by the constructor.
   bool unknown35; // Role and original member name unknown, set by the constructor.

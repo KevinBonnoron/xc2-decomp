@@ -425,11 +425,15 @@ class GfObjSetupFieldObj : public GfObjSetup {
 public:
   static mm::mtl::RTTI m_rtti;
 
-  GfObjSetupFieldObj(const GfInitParamFobj &param) : GfObjSetup(param, OBJECT_TYPE_FIELD_OBJ), unknown6c(-1), unknown70(0), unknown78(0), unknown7c(0), unknown80(0), unknown84(0), unknown88(0.0f) {}
+  GfObjSetupFieldObj(const GfInitParamFobj &param)
+      : GfObjSetup(param, OBJECT_TYPE_FIELD_OBJ), unknown6c(-1), unknown70(0.0f), unknown74(0.0f), unknown78(0), unknown7c(0), unknown80(0), unknown84(0), unknown88(0.0f) {}
   const mm::mtl::RTTI *getRTTI() const override;
 
   u32 unknown6c; // Inferred role: param id; original member name unknown.
-  u64 unknown70; // Role and original member name unknown; cleared by the constructor.
+  f32 unknown70; // Inferred role: copy of GfFobjDropitem::EmitInfo::unknown18, set by GfFobjDropitem::emitDropitems (`ldr w8, [x19, #0x18]; str w8, [x24, #0x70]`, 0x71002f8410); original member
+                 // name unknown. A float: GfFobjDropitem::initialize loads it with `ldr s8, [x22, #0x70]` (0x71002f8728), x22 being the setup of the object (`ldr w8, [x22, #0x6c]`).
+  f32 unknown74; // Inferred role: EmitInfo::unknown1c plus a random share of EmitInfo::unknown20, set by GfFobjDropitem::emitDropitems; original member name unknown. A float: emitDropitems stores it
+                 // with `str s0, [x24, #0x74]` (0x71002f8428) and GfFobjDropitem::initialize tests it with `ldr s0, [x22, #0x74]; fcmp s0, #0.0` (0x71002f88a0).
   u32 unknown78; // Inferred role: item list bdat of the dropitem, set by GfFobjDropitem::emitDropitem; original member name unknown.
   s32 unknown7c; // Inferred role: item id of the dropitem; original member name unknown.
   u32 unknown80; // Inferred role: gold of the dropitem, set by GfFobjDropitem::emitDropgold; original member name unknown.
@@ -440,6 +444,7 @@ public:
 
 static_assert(offsetof(GfObjSetupFieldObj, unknown6c) == 0x6c, "");
 static_assert(offsetof(GfObjSetupFieldObj, unknown70) == 0x70, "");
+static_assert(offsetof(GfObjSetupFieldObj, unknown74) == 0x74, "");
 static_assert(offsetof(GfObjSetupFieldObj, unknown78) == 0x78, "");
 static_assert(offsetof(GfObjSetupFieldObj, unknown7c) == 0x7c, "");
 static_assert(offsetof(GfObjSetupFieldObj, unknown80) == 0x80, "");

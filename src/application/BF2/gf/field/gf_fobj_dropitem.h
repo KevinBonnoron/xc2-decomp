@@ -15,14 +15,18 @@ namespace gf {
 struct GF_OBJ_HANDLE;
 
 struct GfDropitemInfo {
-  u32 unknown00; // Inferred role: item id; original member name unknown.
-  u16 unknown04; // Inferred role: number and percentage; original member name unknown.
+  s32 unknown00; // Inferred role: item id; original member name unknown. Signed: GfFobjDropitem::emitDropitems (0x71002f7cb4) tests it with `cmp #1; b.lt`.
+  u8 unknown04;  // Inferred role: number of drops; original member name unknown. A byte: emitDropitems loads it with `ldrb [x9, #4]`.
+  u8 unknown05;  // Inferred role: percentage; original member name unknown. A byte: emitDropitems loads it with `ldrb [x9, #5]`.
   u8 _06[0x08 - 0x06];
   u32 unknown08; // Inferred role: gold; original member name unknown.
-  u32 unknown0c; // Role and original member name unknown.
+  f32 unknown0c; // Inferred role: parameter of the dropitem, copied as a float into the drop list by emitDropitems (a u32 gives a conversion); original member name unknown.
 };
 
+static_assert(offsetof(GfDropitemInfo, unknown04) == 0x04, "");
+static_assert(offsetof(GfDropitemInfo, unknown05) == 0x05, "");
 static_assert(offsetof(GfDropitemInfo, unknown08) == 0x08, "");
+static_assert(offsetof(GfDropitemInfo, unknown0c) == 0x0c, "");
 static_assert(sizeof(GfDropitemInfo) == 0x10, "");
 
 class GfFobjDropitem {

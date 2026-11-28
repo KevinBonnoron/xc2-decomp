@@ -1,14 +1,23 @@
 #include "gf/menu/object/gf_menu_obj_common_text.h"
 
 #include "bdat.h"
+#include "gf/data/gf_bdat_cond.h"
 #include "gf/data/gf_bdat_id.h"
 #include "gf/data/gf_data_bdat.h"
+#include "gf/data/gf_data_blade.h"
+#include "gf/data/gf_data_driver.h"
 #include "gf/data/gf_data_item.h"
+#include "gf/data/gf_data_mercenaries.h"
+#include "gf/game/gf_game_cond.h"
+#include "gf/game/mercenaries/gf_game_mercenaries.h"
 #include "gf/gf_allocator.h"
 #include "gf/menu/adapter/gf_menu_adapter_manager.h"
 #include "gf/menu/adapter/gf_menu_char_data_adapter.h"
 #include "gf/menu/adapter/gf_menu_item_adapter.h"
+#include "gf/menu/adapter/gf_menu_mercenaries_adapter.h"
+#include "gf/menu/adapter/gf_menu_mission_adapter.h"
 #include "gf/menu/adapter/gf_menu_reference_adapter.h"
+#include "gf/menu/adapter/gf_menu_zone_adapter.h"
 #include "gf/menu/call/gf_menu_call_context.h"
 #include "gf/menu/gf_menu_common_window_param.h"
 #include "gf/menu/gf_menu_item_util.h"
@@ -40,6 +49,70 @@ namespace gf {
 
 // Inferred role: attached call id; original name unknown.
 constexpr u32 unknown001 = 0x64;
+
+constexpr u32 CONDITION_PT_CATEGORY_UNKNOWN_0 = 0; // Inferred role: party condition category listing the characters; original name unknown.
+constexpr u32 CONDITION_PT_CATEGORY_UNKNOWN_6 = 6; // Inferred role: party condition category naming a blade; original name unknown.
+constexpr u32 CONDITION_UNKNOWN_3 = 3;             // Inferred role: characters of a party condition; original name unknown.
+
+// Inferred role: docks the left and right cursor images beside a layout; original name unknown.
+static void unknown002(ui::UIObjectAcc &acc, const ui::UIObjectAcc &layout, const char *left, const char *right) {
+  GfMenuObjUtil::setDockPos(acc.searchChild(left), layout.unknown10, 1, true);
+  GfMenuObjUtil::addPos(acc.searchChild(left), -10, 0);
+  GfMenuObjUtil::setDockPos(acc.searchChild(right), layout.unknown10, 2, true);
+  GfMenuObjUtil::addPos(acc.searchChild(right), 10, 0);
+}
+
+// Inferred role: disables the input of a dialog and hides it; original name unknown.
+static void unknown003(ui::UIObjectAcc &acc) {
+  GfMenuObject::disableInput(acc.unknown10);
+  acc.setDisp(false);
+  acc.setSuspend(true);
+}
+
+// Inferred role: hides one part of a list item and shows the other; original name unknown.
+static void unknown004(ui::UIObjectAcc &acc, mm::mtl::FixStr<32> &name, u32 number, const char *hide, const char *show) {
+  name.format(hide, number);
+  acc.setDispChild(false, name.c_str());
+  name.format(show, number);
+  acc.setDispChild(true, name.c_str());
+}
+
+// Inferred role: fits the window image around a layout; original name unknown. Two users (MerListener, KizunaListener; 588 and 449 instructions with the helper, 0 differing lines).
+static void unknown005(ui::UIObjectAcc &acc, const char *image, const char *layout) {
+  GfMenuObjUtil::FitOption option;
+  option.unknown00 = true;
+  option.unknown01 = true;
+  GfMenuObjUtil::createFitPlugin(acc.searchChild(image), acc.searchChild(layout), 0, 0, option);
+}
+
+// Inferred role: reads the layout rectangles of two neighbouring items; original name unknown.
+static void unknown006(ui::UIObjectAcc &acc, const char *first, const char *second, mm::Rect<s16> &rect, mm::Rect<s16> &next) {
+  acc.getLayoutRect(first, rect);
+  acc.getLayoutRect(second, next);
+}
+
+// Inferred role: fills the fade parameter shared by the dialog fades; original name unknown.
+static void unknown007(GfMenuObjUtil::CtrlParam &param, int type) {
+  param.unknown00 = 0.25f;
+  param.unknown04 = type;
+  param.unknown08 = type;
+}
+
+// Inferred role: plays the cursor sound when the selection moves from a previous entry; original name unknown.
+static void unknown008(u32 index, u32 previous) {
+  if (previous != 0xffffffff && index != previous) {
+    GfMenuObjUtil::playSECommonCursor();
+  }
+}
+
+// Inferred role: enables the input of a dialog when it opens and tells whether it has closed; original name unknown.
+static bool unknown009(ui::UIObjectAcc &acc, const ui::EventData &event) {
+  if (event.unknown08 == 1) {
+    GfMenuObject::enableInput(acc.unknown10);
+    return false;
+  }
+  return event.unknown08 == 2;
+}
 
 GfMenuItemList *GfMenuObjCommonText::s_pItemList;
 GfMenuIDList *GfMenuObjCommonText::s_pSubMenuIDList;
@@ -730,6 +803,160 @@ void GfMenuObjCommonText::ErrorListener::reciveEvent(const ui::EventData &event,
   ui::UIObjectListener::reciveEvent(event, handle);
 }
 
+void GfMenuObjCommonText::MerListener::reciveEvent(const ui::EventData &event, u32 handle) {
+  ui::UIObjectAcc acc(handle);
+  switch (event.unknown00) {
+  case GfMenuTypes::unknown003_34:
+    GfMenuObjUtil::setCommonFadeOut(acc.unknown10, 2, 0);
+    m_menuObjCommonText->unknown38->setDisp(false);
+    GfMenuObject::disableInput(acc.unknown10);
+    unknown18 = 0;
+    break;
+  case 1: {
+    GfMenuAdapterManager::beginCategory(3);
+    GfMenuZoneAdapter::createFromReference(acc.searchChild("IMG_dialog_mer_info_flag"), 2, m_menuObjCommonText->unknown48, false);
+    GfMenuCharDataAdapter::createFromReferenceBlade(acc.searchChild("IMG_dialog_mer_info_bl_face"), 3, 4, false);
+    GfMenuMercenariesAdapter::createFromReferenceBlade(acc.searchChild("TXT_dialog_mer_info_unit_name"), 0, 4, false);
+    GfMenuMissionAdapter::createFromReference(acc.searchChild("TXT_dialog_mer_info_mis_name"), 0, m_menuObjCommonText->unknown40, false);
+    GfMenuMissionAdapter::createFromReference(acc.searchChild("TXT_dialog_mer_info_time"), 4, m_menuObjCommonText->unknown40, true);
+    GfMenuObjUtil::createSyncPlugin(acc.searchChild("TXT_dialog_mer_info_time_inf"), acc.searchChild("TXT_dialog_mer_info_time"), 0x40);
+    GfMenuAdapterManager::endCategory();
+    unknown005(acc, "IMG_dialog_mer_win", "LAY_dialog_mer_main");
+    // The scope of the list parameter is the game's: without it the function differs on 41 lines (measured).
+    {
+      ui::UISelectObjList::CreateParam createParam;
+      createParam.allocator = getAllocator(ALLOCATOR_UNKNOWN_0);
+      m_menuObjCommonText->unknown30 = ui::UISelectObjList::create(createParam);
+    }
+    ui::UICtrlCursorSelect::CursorSetting setting;
+    setting.setType(0);
+    setting.unknown18 = 0;
+    setting.unknown20 = false;
+    m_menuObjCommonText->unknown38 = ui::UICtrlCursorSelect::create(acc.searchChild("LAY_dialog_mer_cursor"), setting, m_menuObjCommonText->unknown30);
+    GfMenuObjUtil::createSyncPlugin(acc.searchChild("LAY_dialog_mer_cursor_base"), acc.searchChild("LAY_dialog_mer_cursor"), 2);
+    acc.setDisp(false);
+    acc.setSuspend(true);
+    unknown18 = 0;
+    break;
+  }
+  case 3:
+    if (event.unknown08 == 0) {
+      break;
+    }
+    if (event.unknown08 == 1) {
+      GfMenuObject::enableInput(acc.unknown10);
+    } else {
+      GfGameMercenaries::stopMissionTime(false);
+      GfMenuObject::termCallContext(acc.getParentHandle());
+      if (unknown18 == 0) {
+        acc.setSuspend(true);
+      }
+    }
+    ui::UIObjectListener::reciveEvent(event, handle);
+    break;
+  case 6:
+    if (event.unknown08 != 0xffffffff) {
+      // The game reads the event words into registers before the call (ruling 2): without the local of index 6 lines differ, without that of previous 3 (measured).
+      u32 index = event.unknown08;
+      u32 previous = event.unknown0c;
+      m_menuObjCommonText->unknown30->setIndex(index);
+      unknown008(index, previous);
+    }
+    break;
+  case 8: {
+    u32 input = event.unknown0c;
+    if (input == 1) {
+      // The game reads the selection before the call to getParentHandle (ruling 2; 2 differing lines without the local, measured).
+      int selected = event.unknown08;
+      GfMenuObject::addResultCallContext(acc.getParentHandle(), selected != 0, 0);
+      GfMenuObjCommonText::close();
+    } else if (input == 2) {
+      GfMenuObject::addResultCallContext(acc.getParentHandle(), 1, 0);
+      GfMenuObjCommonText::close();
+    }
+    GfMenuObjUtil::playSECommonFromInput(input);
+    break;
+  }
+  case GfMenuTypes::unknown003_33: {
+    // The accessors named timeInf stay per arm: they share the slot at sp + 104 with the event of the tail (0x710043e6c4).
+    // The event words are read into locals before the first call (ruling 2); at their uses the function has 85 (mission), 116 (select), 82 (text) and 102 (selected) differing lines (measured).
+    u32 mission = event.unknown08;
+    u16 text = event.unknown0c_u16;
+    u16 select = event.unknown0e;
+    s16 selected = event.unknown10_u16;
+    GfMenuObject::setText(acc.searchChild("TXT_dialog_mer_main_text"), text);
+    GfGameMercenaries::stopMissionTime(true);
+    if (mission == 0) {
+      GfMenuObject::termCallContext(acc.getParentHandle());
+    } else {
+      u32 team = GfDataMercenaries::getTeamID(mission);
+      u32 leader = GfDataMercenaries::getTeamLeader(team);
+      u32 teamMission = GfDataMercenaries::getTeamMission(team);
+      u32 zone = GfDataMercenaries::getMissionZoneID(teamMission);
+      if (team == 0 || teamMission == 0 || zone == 0) {
+        GfMenuObject::termCallContext(acc.getParentHandle());
+      } else {
+        m_menuObjCommonText->unknown40->unknown0c = teamMission;
+        m_menuObjCommonText->unknown48->unknown0c = zone;
+        GfMenuReference::setReferenceBladeID(4, leader);
+        bool isReward = GfDataMercenaries::isTeamStateReward(team);
+        m_menuObjCommonText->unknown30->clear();
+        if (select == 0) {
+          acc.setDispChild(true, "LAY_dialog_mer_ok_only");
+          acc.setDispChild(false, "LAY_dialog_mer_select");
+          m_menuObjCommonText->unknown30->addObject(acc.searchChild("TXT_dialog_mer_ok_only"));
+          m_menuObjCommonText->unknown30->setIndex(0);
+        } else {
+          acc.setDispChild(false, "LAY_dialog_mer_ok_only");
+          acc.setDispChild(true, "LAY_dialog_mer_select");
+          m_menuObjCommonText->unknown30->addObject(acc.searchChild("TXT_dialog_mer_ok"));
+          m_menuObjCommonText->unknown30->addObject(acc.searchChild("TXT_dialog_mer_cancel"));
+          m_menuObjCommonText->unknown30->setIndex(selected);
+        }
+        // The game writes the reward arm first: its four setAlpha temporaries sit at sp + 80 and sp + 56 (0x710043e504), the default arm's at sp + 32 and sp + 8.
+        if (isReward) {
+          GfMenuObjUtil::setColMulandAdd(acc.searchChild("TXT_dialog_mer_info_unit_name"), "txt_disable");
+          ui::UIObjectAcc(acc.searchChild("TXT_dialog_mer_info_unit_name")).setAlpha(0.5f);
+          GfMenuObjUtil::setColMulandAdd(acc.searchChild("TXT_dialog_mer_info_mis_name"), "txt_disable");
+          ui::UIObjectAcc(acc.searchChild("TXT_dialog_mer_info_mis_name")).setAlpha(0.5f);
+          GfMenuObjUtil::setColMulandAdd(acc.searchChild("TXT_dialog_mer_info_time"), "txt_disable");
+          GfMenuObjUtil::setChildAddColor(acc.unknown10, "IMG_dialog_mer_info_base", "black");
+          ui::UIObjectAcc timeInf(acc.unknown10, "TXT_dialog_mer_info_time_inf");
+          timeInf.setAlpha(0.0f);
+        } else {
+          GfMenuObjUtil::setColDefault(acc.searchChild("TXT_dialog_mer_info_unit_name"));
+          ui::UIObjectAcc(acc.searchChild("TXT_dialog_mer_info_unit_name")).setAlpha(1.0f);
+          GfMenuObjUtil::setColDefault(acc.searchChild("TXT_dialog_mer_info_mis_name"));
+          ui::UIObjectAcc(acc.searchChild("TXT_dialog_mer_info_mis_name")).setAlpha(1.0f);
+          GfMenuObjUtil::setColDefault(acc.searchChild("TXT_dialog_mer_info_time"));
+          GfMenuObjUtil::setColDefault(acc.searchChild("IMG_dialog_mer_info_base"));
+          ui::UIObjectAcc timeInf(acc.unknown10, "TXT_dialog_mer_info_time_inf");
+          timeInf.setAlpha(1.0f);
+        }
+        acc.setDispChild(isReward, "TXT_dialog_mer_come_back");
+        m_menuObjCommonText->unknown38->setDisp(true);
+        GfMenuObject::resetInputSelection(acc.unknown10);
+        GfMenuObject::setupInputSelectionFromList(acc.unknown10, *m_menuObjCommonText->unknown30);
+      }
+    }
+    // The game's tail is the class sender (inlined), whose event sets the type last; a hand-built event loads the UIManager instance before the stores (0x710043e6c4).
+    sendEvent(acc.unknown10, GfMenuTypes::unknown003_257, 0, 0.033333335f);
+    unknown18 = 1;
+    break;
+  }
+  case GfMenuTypes::unknown003_257: {
+    mm::Rect<s16> rect;
+    acc.getLayoutRect("dialog_top", rect);
+    acc.setPosCenter(mm::Pnt<s16>(rect.x + rect.width / 2, rect.y + rect.height / 2));
+    GfMenuObjUtil::setCommonFadeIn(acc.unknown10, 1, 0);
+    break;
+  }
+  default:
+    ui::UIObjectListener::reciveEvent(event, handle);
+    break;
+  }
+}
+
 void GfMenuObjCommonText::OwnerChangeListener::reciveEvent(const ui::EventData &event, u32 handle) {
   ui::UIObjectAcc acc(handle);
   switch (event.unknown00) {
@@ -740,9 +967,7 @@ void GfMenuObjCommonText::OwnerChangeListener::reciveEvent(const ui::EventData &
     unknown18 = 0;
     break;
   case 3:
-    if (event.unknown08 == 1) {
-      GfMenuObject::enableInput(acc.unknown10);
-    } else if (event.unknown08 == 2) {
+    if (unknown009(acc, event)) {
       acc.setDisp(false);
       acc.setAlpha(1.0f);
       if (unknown18 == 0) {
@@ -763,9 +988,7 @@ void GfMenuObjCommonText::OwnerChangeListener::reciveEvent(const ui::EventData &
     s16 owner = event.unknown08_u16;
     {
       GfMenuObjUtil::CtrlParam param;
-      param.unknown00 = 0.25f;
-      param.unknown04 = 1;
-      param.unknown08 = 1;
+      unknown007(param, 1);
       GfMenuObjUtil::startCtrl(acc.unknown10, param, nullptr);
     }
     acc.setDispChild(owner == 0, "TXT_owner_change_caption");
@@ -773,10 +996,7 @@ void GfMenuObjCommonText::OwnerChangeListener::reciveEvent(const ui::EventData &
     acc.setDispChild(owner == 2, "TXT_owner_change_caption_rex2");
     {
       ui::UIObjectAcc okOnly(acc.searchChild("LAY_owner_ch_ok_only"));
-      GfMenuObjUtil::setDockPos(acc.searchChild("IMG_owner_ch_cursor_l"), okOnly.unknown10, 1, true);
-      GfMenuObjUtil::addPos(acc.searchChild("IMG_owner_ch_cursor_l"), -10, 0);
-      GfMenuObjUtil::setDockPos(acc.searchChild("IMG_owner_ch_cursor_r"), okOnly.unknown10, 2, true);
-      GfMenuObjUtil::addPos(acc.searchChild("IMG_owner_ch_cursor_r"), 10, 0);
+      unknown002(acc, okOnly, "IMG_owner_ch_cursor_l", "IMG_owner_ch_cursor_r");
     }
     unknown18 = 1;
     break;
@@ -784,9 +1004,7 @@ void GfMenuObjCommonText::OwnerChangeListener::reciveEvent(const ui::EventData &
   case GfMenuTypes::unknown003_34: {
     GfMenuObject::disableInput(acc.unknown10);
     GfMenuObjUtil::CtrlParam param;
-    param.unknown00 = 0.25f;
-    param.unknown04 = 2;
-    param.unknown08 = 2;
+    unknown007(param, 2);
     GfMenuObjUtil::startCtrl(acc.unknown10, param, nullptr);
     unknown18 = 0;
     break;
@@ -807,9 +1025,7 @@ void GfMenuObjCommonText::GetItemListener::reciveEvent(const ui::EventData &even
     unknown18 = 0;
     break;
   case 3:
-    if (event.unknown08 == 1) {
-      GfMenuObject::enableInput(acc.unknown10);
-    } else if (event.unknown08 == 2) {
+    if (unknown009(acc, event)) {
       acc.setDisp(false);
       acc.setAlpha(1.0f);
       if (unknown18 == 0) {
@@ -837,15 +1053,11 @@ void GfMenuObjCommonText::GetItemListener::reciveEvent(const ui::EventData &even
     acc.setAlpha(0.0f);
     {
       ui::UIObjectAcc okOnly(acc.searchChild("LAY_get_item_ok_only"));
-      GfMenuObjUtil::setDockPos(acc.searchChild("IMG_get_item_cursor_l"), okOnly.unknown10, 1, true);
-      GfMenuObjUtil::addPos(acc.searchChild("IMG_get_item_cursor_l"), -10, 0);
-      GfMenuObjUtil::setDockPos(acc.searchChild("IMG_get_item_cursor_r"), okOnly.unknown10, 2, true);
-      GfMenuObjUtil::addPos(acc.searchChild("IMG_get_item_cursor_r"), 10, 0);
+      unknown002(acc, okOnly, "IMG_get_item_cursor_l", "IMG_get_item_cursor_r");
     }
     mm::Rect<s16> rect;
-    acc.getLayoutRect("item_3", rect);
     mm::Rect<s16> next;
-    acc.getLayoutRect("item_4", next);
+    unknown006(acc, "item_3", "item_4", rect, next);
     GfMenuObjUtil::placeObjectV(acc.unknown10, "LAY_get_item@%02d", s_pItemList->getSize(), mm::Pnt<s16>(rect.x + rect.width / 2, rect.y + rect.height / 2), next.y - rect.y);
     unknown18 = 1;
     break;
@@ -853,9 +1065,7 @@ void GfMenuObjCommonText::GetItemListener::reciveEvent(const ui::EventData &even
   case GfMenuTypes::unknown003_34: {
     GfMenuObject::disableInput(acc.unknown10);
     GfMenuObjUtil::CtrlParam param;
-    param.unknown00 = 0.25f;
-    param.unknown04 = 2;
-    param.unknown08 = 2;
+    unknown007(param, 2);
     GfMenuObjUtil::startCtrl(acc.unknown10, param, nullptr);
     unknown18 = 0;
     break;
@@ -866,13 +1076,169 @@ void GfMenuObjCommonText::GetItemListener::reciveEvent(const ui::EventData &even
   }
 }
 
+void GfMenuObjCommonText::SelectListener::reciveEvent(const ui::EventData &event, u32 handle) {
+  ui::UIObjectAcc acc(handle);
+  switch (event.unknown00) {
+  case GfMenuTypes::unknown003_34: {
+    // The parameter stays in the caller: a helper that also builds and starts it (handle, type) puts its CtrlParam above the accessor (acc moves from x29 - 104 to sp + 104, 0x710043f150; 496
+    // instructions, 92 differing lines, measured).
+    GfMenuObjUtil::CtrlParam param;
+    unknown007(param, 2);
+    GfMenuObjUtil::startCtrl(acc.unknown10, param, nullptr);
+    GfMenuObject::disableInput(acc.unknown10);
+    unknown18 = 0;
+    break;
+  }
+  case 1:
+    unknown003(acc);
+    unknown0c = 0;
+    unknown18 = 0;
+    break;
+  default:
+    ui::UIObjectListener::reciveEvent(event, handle);
+    break;
+  case 3:
+    if (event.unknown08 == 1) {
+      // The game loads the type before resetInputSelection (0x710043f2e4).
+      int type = unknown0c;
+      GfMenuObject::resetInputSelection(acc.unknown10);
+      if (type != 0) {
+        GfMenuObject::setupInputSelectionFromList(handle, *s_pItemList);
+      } else {
+        GfMenuObject::setupInputSelectionFromList(handle, *s_pSubMenuIDList);
+      }
+      GfMenuObject::enableInput(acc.unknown10);
+      acc.setDispChild(true, "LAY_select_cursor");
+    } else if (event.unknown08 == 2) {
+      if (unknown18 == 0) {
+        acc.setSuspend(true);
+      }
+    }
+    break;
+  case 6: {
+    int index = event.unknown08;
+    const char *format = unknown0c == 1 ? "TXT_sel_item_name@%02d" : "TXT_sel_item@%02d";
+    if (index != -1) {
+      int previous = event.unknown0c;
+      // The items and the layout end before the cursor sound (0x710043f884); without the scope 6 lines differ (measured).
+      {
+        mm::mtl::FixStr<32> name;
+        if (previous != -1) {
+          name.format(format, previous + 1);
+          ui::UIObjectAcc previousItem(acc.unknown10, name.c_str());
+          previousItem.loadDefColor();
+        }
+        name.format(format, index + 1);
+        ui::UIObjectAcc item(acc.unknown10, name.c_str());
+        GfMenuObjUtil::setColMulandAdd(item.unknown10, "txt_normal");
+        if (unknown0c == 0) {
+          name.format("LAY_sel_item_text@%02d", index + 1);
+        } else {
+          name.format("LAY_sel_item_item@%02d", index + 1);
+        }
+        ui::UIObjectAcc layout(acc.unknown10, name.c_str());
+        layout.updateLayoutSize();
+        unknown002(acc, layout, "IMG_select_cursor_l", "IMG_select_cursor_r");
+      }
+      // Written out, not unknown008 (ruling 8): the game keeps the previous-index compare as a value (cset eq, 0x710043f874) before the index compare; with the helper the function has 495
+      // instructions against 496 and 19 differing lines, the first at 0x710043f1a8 (measured). The reverse order of the compares has 495 instructions too.
+      if (previous != -1 && index != previous) {
+        GfMenuObjUtil::playSECommonCursor();
+      }
+    } else {
+      acc.setDispChild(false, "LAY_select_cursor");
+    }
+    break;
+  }
+  case 8: {
+    u32 input = event.unknown0c;
+    if (input == 1) {
+      GfMenuObject::addResultCallContext(acc.getParentHandle(), event.unknown08, 0);
+      acc.setDispChild(false, "LAY_select_cursor");
+      close();
+    } else if (input == 2) {
+      acc.setDispChild(false, "LAY_select_cursor");
+      close();
+    }
+    GfMenuObjUtil::playSECommonFromInput(input);
+    break;
+  }
+  case GfMenuTypes::unknown003_33: {
+    u32 type = event.unknown08;
+    // The game keeps the negated equality as a value before the branch (cset ne next to the compare, spilled together with the type, 0x710043f3a4) and compares the type again for the title item at
+    // the join; `type != 1` gives 496 instructions but 157 differing lines (measured).
+    bool isSubMenu = !(type == 1);
+    acc.setAlpha(1.0f);
+    // The scope of the parameter ends before the loops: without it the function has 497 instructions against 496, a 368 byte frame against 320 and 209 differing lines (measured).
+    {
+      GfMenuObjUtil::CtrlParam param;
+      unknown007(param, 1);
+      GfMenuObjUtil::startCtrl(acc.unknown10, param, nullptr);
+    }
+    if (isSubMenu) {
+      mm::mtl::FixStr<32> name;
+      for (u32 i = 0; i < s_pSubMenuIDList->getPageRowSize(); i++) {
+        name.format("TXT_sel_item@%02d", i + 1);
+        ui::UIObjectAcc item(acc.unknown10, name.c_str());
+        if (item.isValid()) {
+          u32 size = s_pSubMenuIDList->getSize();
+          if (i < size) {
+            // The game builds a default string before the message string and destroys it after (0x710043f5d4, 0x710043f6d0); nothing reads it, and 173 lines differ without it (measured).
+            ui::UIStr unused;
+            // Held in a local: written inside the setText call the function is 501 instructions against 496 (measured).
+            u16 messageId = GfMenuObjUtil::getMsgIDFromList(BDAT_MNU_MSG_SELECT, s_pSubMenuIDList->getContents(i).unknown00);
+            item.setText(ui::UIStr(GfDataBdat::getFP(BDAT_MENU_MS), messageId));
+            item.loadDefColor();
+            unknown004(acc, name, i + 1, "LAY_sel_item_item@%02d", "LAY_sel_item_text@%02d");
+          }
+          name.format("LAY_sel_item@%02d", i + 1);
+          acc.setDispChild(i < size, name.c_str());
+          if (i != 0) {
+            mm::mtl::FixStr<32> accent;
+            accent.format("IMG_sel_item_accent@%02d", i);
+            acc.setDispChild(i < size, accent.c_str());
+          }
+        }
+      }
+    } else {
+      mm::mtl::FixStr<32> name;
+      for (u32 i = 0; i < s_pSubMenuIDList->getPageRowSize(); i++) {
+        name.format("TXT_sel_item_name@%02d", i + 1);
+        ui::UIObjectAcc item(acc.unknown10, name.c_str());
+        if (item.isValid()) {
+          u32 size = s_pItemList->getSize();
+          if (i < size) {
+            item.loadDefColor();
+            unknown004(acc, name, i + 1, "LAY_sel_item_text@%02d", "LAY_sel_item_item@%02d");
+            name.format("LAY_sel_item_item@%02d", i + 1);
+            ui::UIObjectAcc layout(acc.unknown10, name.c_str());
+            name.format("IMG_sel_item_dummy@%02d", i + 1);
+            GfMenuObjUtil::setDockPos(layout.unknown10, acc.searchChild(name.c_str()), 0, false);
+          }
+          name.format("LAY_sel_item@%02d", i + 1);
+          acc.setDispChild(i < size, name.c_str());
+          if (i != 0) {
+            mm::mtl::FixStr<32> accent;
+            accent.format("IMG_sel_item_accent@%02d", i);
+            acc.setDispChild(i < size, accent.c_str());
+          }
+        }
+      }
+    }
+    acc.setDispChild(isSubMenu, "TXT_sel_title");
+    acc.setDispChild(type == 1, "TXT_sel_title_item");
+    unknown0c = event.unknown08;
+    unknown18 = 1;
+    break;
+  }
+  }
+}
+
 void GfMenuObjCommonText::DrChangeListener::reciveEvent(const ui::EventData &event, u32 handle) {
   ui::UIObjectAcc acc(handle);
   switch (event.unknown00) {
   case 1:
-    GfMenuObject::disableInput(acc.unknown10);
-    acc.setDisp(false);
-    acc.setSuspend(true);
+    unknown003(acc);
     unknown18 = 0;
     break;
   case 3:
@@ -890,9 +1256,7 @@ void GfMenuObjCommonText::DrChangeListener::reciveEvent(const ui::EventData &eve
     u32 previous = event.unknown0c;
     s_pChangeDrList->setIndex(index);
     m_menuObjCommonText->unknown68->setIndex(index);
-    if (previous != 0xffffffff && index != previous) {
-      GfMenuObjUtil::playSECommonCursor();
-    }
+    unknown008(index, previous);
     break;
   }
   case 8:
@@ -912,15 +1276,12 @@ void GfMenuObjCommonText::DrChangeListener::reciveEvent(const ui::EventData &eve
     acc.setAlpha(1.0f);
     {
       GfMenuObjUtil::CtrlParam param;
-      param.unknown00 = 0.25f;
-      param.unknown04 = 1;
-      param.unknown08 = 1;
+      unknown007(param, 1);
       GfMenuObjUtil::startCtrl(acc.unknown10, param, nullptr);
     }
     mm::Rect<s16> rect;
-    acc.getLayoutRect("dr_select", rect);
     mm::Rect<s16> next;
-    acc.getLayoutRect("dr_select_next", next);
+    unknown006(acc, "dr_select", "dr_select_next", rect, next);
     GfMenuObjUtil::placeObjectH(acc.unknown10, "LAY_dr_change@%02d", s_pChangeDrList->getSize(), mm::Pnt<s16>(rect.x + rect.width / 2, rect.y + rect.height / 2), next.x - rect.x);
     m_menuObjCommonText->unknown70->setDisp(false);
     GfMenuObject::resetInputSelection(acc.unknown10);
@@ -930,9 +1291,7 @@ void GfMenuObjCommonText::DrChangeListener::reciveEvent(const ui::EventData &eve
   }
   case GfMenuTypes::unknown003_34: {
     GfMenuObjUtil::CtrlParam param;
-    param.unknown00 = 0.25f;
-    param.unknown04 = 2;
-    param.unknown08 = 2;
+    unknown007(param, 2);
     GfMenuObjUtil::startCtrl(acc.unknown10, param, nullptr);
     GfMenuObject::disableInput(acc.unknown10);
     unknown18 = 0;
@@ -953,15 +1312,11 @@ void GfMenuObjCommonText::NumSelectListener::reciveEvent(const ui::EventData &ev
     GfMenuReferenceAdapter::create(acc.searchChild("TXT_num_select_value"), m_menuObjCommonText->unknown78, true);
     GfMenuReferenceAdapter::create(acc.searchChild("TXT_num_select_total_price"), m_menuObjCommonText->unknown80, true);
     GfMenuAdapterManager::endCategory();
-    GfMenuObject::disableInput(acc.unknown10);
-    acc.setDisp(false);
-    acc.setSuspend(true);
+    unknown003(acc);
     unknown18 = 0;
     break;
   case 3:
-    if (event.unknown08 == 1) {
-      GfMenuObject::enableInput(acc.unknown10);
-    } else if (event.unknown08 == 2) {
+    if (unknown009(acc, event)) {
       if (unknown18 == 0) {
         acc.setSuspend(true);
       }
@@ -1020,6 +1375,156 @@ void GfMenuObjCommonText::NumSelectListener::reciveEvent(const ui::EventData &ev
     ui::UIObjectListener::reciveEvent(event, handle);
     break;
   }
+}
+
+void GfMenuObjCommonText::KizunaListener::reciveEvent(const ui::EventData &event, u32 handle) {
+  // The owner accessor is built on entry: built in case 8 instead, 167 lines differ (measured).
+  ui::UIObjectAcc owner(m_menuObjCommonText->unknown18);
+  ui::UIObjectAcc acc(handle);
+  switch (event.unknown00) {
+  case 1: {
+    GfMenuAdapterManager::beginCategory(3);
+    // The scopes of name and bladeSetup are the game's: without them 6 and 4 lines differ (measured).
+    {
+      mm::mtl::FixStr<32> name;
+      u32 bladeCount = acc.countChild("LAY_dialog_kizuna_bl@%02d", 1);
+      {
+        ui::UIListInfoBase::SetupParam bladeSetup;
+        bladeSetup.unknown08 = bladeCount;
+        m_menuObjCommonText->m_menuBladeList->setup(getAllocator(ALLOCATOR_UNKNOWN_0), bladeSetup);
+      }
+      for (u32 i = 0; i < bladeCount; i++) {
+        name.format("IMG_dialog_kizuna_bl_face@%02d", i + 1);
+        GfMenuCharDataAdapter::createFromBladeList(acc.searchChild(name.c_str()), 3, m_menuObjCommonText->m_menuBladeList, i, false);
+      }
+      u32 driverCount = acc.countChild("LAY_dialog_kizuna_dr@%02d", 1);
+      ui::UIListInfoBase::SetupParam driverSetup;
+      driverSetup.unknown08 = driverCount;
+      m_menuObjCommonText->unknown58->setup(getAllocator(ALLOCATOR_UNKNOWN_0), driverSetup);
+      for (u32 i = 0; i < driverCount; i++) {
+        name.format("IMG_dialog_kizuna_dr_face@%02d", i + 1);
+        GfMenuCharDataAdapter::createFromDriverList(acc.searchChild(name.c_str()), 3, m_menuObjCommonText->unknown58, i, false);
+      }
+    }
+    GfMenuAdapterManager::endCategory();
+    // The scope of createParam is the game's: without it 2 lines differ (measured).
+    {
+      ui::UISelectObjList::CreateParam createParam;
+      createParam.allocator = getAllocator(ALLOCATOR_UNKNOWN_0);
+      m_menuObjCommonText->unknown60 = ui::UISelectObjList::create(createParam);
+    }
+    unknown005(acc, "IMG_kizuna_kizuna_win", "LAY_dialog_kizuna_main");
+    acc.setSuspend(true);
+    unknown18 = 0;
+    break;
+  }
+  case 3:
+    if (event.unknown08 == 0) {
+      return;
+    }
+    if (event.unknown08 == 1) {
+      GfMenuObject::enableInput(acc.unknown10);
+    } else {
+      GfMenuObject::termCallContext(acc.getParentHandle());
+      if (unknown18 == 0) {
+        acc.setSuspend(true);
+      }
+    }
+    break;
+  case 8: {
+    // The input is read into a local before the calls (ruling 2): 52 lines differ without it (measured).
+    u32 input = event.unknown0c;
+    GfMenuObject::addResultCallContext(owner.searchChild("LAY_main"), 0, 0);
+    GfMenuObject::disableInput(handle);
+    close();
+    GfMenuObjUtil::playSECommonFromInput(input);
+    break;
+  }
+  case GfMenuTypes::unknown003_33: {
+    u32 condition = event.unknown08;
+    // The title is read into a local before the calls (ruling 2): 51 lines differ without it (measured).
+    u32 title = event.unknown0c;
+    mm::mtl::FixStr<32> name;
+    GfMenuObject::setText(acc.searchChild("TXT_dialog_kizuna_title"), title);
+    m_menuObjCommonText->unknown58->clear();
+    m_menuObjCommonText->m_menuBladeList->clear();
+    m_menuObjCommonText->unknown60->clear();
+    GfBdatCond *bdatCond = GfBdatCond::get();
+    for (u32 index = 0; index < CONDITION_UNKNOWN_8; index++) {
+      if (bdatCond->getConditionListConditionType(condition, index) == CONDITION_TYPE_UNKNOWN_6) {
+        u32 partyCondition = bdatCond->getConditionListCondition(condition, index);
+        if (partyCondition != 0) {
+          if (bdatCond->getConditionPTCategory(partyCondition) == CONDITION_PT_CATEGORY_UNKNOWN_0) {
+            for (u32 member = 0; member < CONDITION_UNKNOWN_3; member++) {
+              u32 character = bdatCond->getConditionPTPCID(partyCondition, member);
+              if (character != 0) {
+                if (GfDataDriver::isDriver(character)) {
+                  MenuDriverInfo info;
+                  info.unknown00 = character;
+                  m_menuObjCommonText->unknown58->addContents(info);
+                  name.format("LAY_dialog_kizuna_dr@%02d", m_menuObjCommonText->unknown58->getSize());
+                } else if (GfDataBlade::isBladeID(character)) {
+                  MenuBladeInfo info;
+                  info.unknown00 = character;
+                  info.unknown04 = 0;
+                  m_menuObjCommonText->m_menuBladeList->addContents(info);
+                  name.format("LAY_dialog_kizuna_bl@%02d", m_menuObjCommonText->m_menuBladeList->getSize());
+                } else {
+                  continue;
+                }
+                m_menuObjCommonText->unknown60->addObject(acc.searchChild(name.c_str()));
+                acc.setDispChild(true, name.c_str());
+              }
+            }
+          } else if (bdatCond->getConditionPTCategory(partyCondition) == CONDITION_PT_CATEGORY_UNKNOWN_6) {
+            u32 blade = bdatCond->getConditionPTPCID(partyCondition, 0);
+            if (blade != 0) {
+              // The game clears the element before getCreator (str wzr, [sp, #40] at 0x710043eaa4): 38 lines differ without the initialiser (measured).
+              MenuDriverInfo info = {};
+              info.unknown00 = GfDataBlade::getCreator(blade);
+              if (info.unknown00 != 0) {
+                m_menuObjCommonText->unknown58->addContents(info);
+                name.format("LAY_dialog_kizuna_dr@%02d", m_menuObjCommonText->unknown58->getSize());
+                m_menuObjCommonText->unknown60->addObject(acc.searchChild(name.c_str()));
+                acc.setDispChild(true, name.c_str());
+              }
+            }
+          }
+        }
+      }
+    }
+    for (u32 i = m_menuObjCommonText->unknown58->getSize(); i < m_menuObjCommonText->unknown58->getPageRowSize(); i++) {
+      name.format("LAY_dialog_kizuna_dr@%02d", i + 1);
+      acc.setDispChild(false, name.c_str());
+    }
+    for (u32 i = m_menuObjCommonText->m_menuBladeList->getSize(); i < m_menuObjCommonText->m_menuBladeList->getPageRowSize(); i++) {
+      name.format("LAY_dialog_kizuna_bl@%02d", i + 1);
+      acc.setDispChild(false, name.c_str());
+    }
+    // The scopes of the rectangles and of the ok accessor are the game's: without them 90 and 4 lines differ (measured).
+    {
+      mm::Rect<s16> rect;
+      mm::Rect<s16> next;
+      unknown006(acc, "kizuna_blade", "kizuna_blade_next", rect, next);
+      GfMenuObjUtil::placeObjectH(m_menuObjCommonText->unknown60, mm::Pnt<s16>(rect.x + rect.width / 2, rect.y + rect.height / 2), next.x - rect.x);
+    }
+    {
+      ui::UIObjectAcc okOnly(acc.unknown10, "LAY_dialog_kizuna_ok_only");
+      mm::Pnt<s16> center;
+      okOnly.getPosCenter(center);
+      ui::UIObjectAcc cursor(acc.unknown10, "LAY_dialog_kizuna_cursor");
+      cursor.setPosCenter(center);
+    }
+    setFadeIn(handle);
+    unknown18 = 1;
+    break;
+  }
+  case GfMenuTypes::unknown003_34:
+    setFadeOut(handle);
+    unknown18 = 0;
+    break;
+  }
+  ui::UIObjectListener::reciveEvent(event, handle);
 }
 
 } // namespace gf

@@ -27,4 +27,15 @@ void AiScriptDataManager::_init() {
   }
 }
 
+const char *AiScriptDataManager::getScriptName(int id) {
+  AiScriptDataManager *manager = getPtr();
+  for (mm::mtl::FixedList<unknown001, unknown002>::iterator it = manager->unknown08.begin(); it != manager->unknown08.end(); ++it) {
+    unknown001 &row = *it;
+    if (row.unknown00 == id) {
+      return row.unknown08;
+    }
+  }
+  return nullptr;
+}
+
 } // namespace ai

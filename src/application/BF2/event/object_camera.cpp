@@ -12,6 +12,7 @@
 #include "event/seq_info.h"
 #include "event/seq_manager.h"
 #include "ml/dev_graph.h"
+#include "mm_math/mm_mat44.h"
 #include "mm_mtl/singleton.h"
 
 namespace event {
@@ -107,7 +108,7 @@ bool ObjectCamera::isFollowTar() const { return m_camObj->activateHands()->isFol
 bool ObjectCamera::OnBouRectSelect(const IBouCallback::SelectParam &param) { return false; }
 
 void ObjectCamera::OnBouRender(const IBouCallback::RenderParam &param) {
-  if (static_cast<int>(mm::mtl::Singleton<SeqManager>::getPtr()->unknown001().unknown54) < 3 && unknown70 == 0) {
+  if (mm::mtl::Singleton<SeqManager>::getPtr()->unknown001().unknown54 < 3 && unknown70 == 0) {
     int x = ml::DevGraph::getRootWidth() - 415;
     const mm::Vec3 &pos = m_camObj->getPos();
     const mm::Vec3 &target = m_camObj->getTarget();
@@ -127,6 +128,25 @@ mm::Vec3 ObjectCamera::calcRot() const {
   rot.x = atan2f(dy, sqrtf(dx * dx + dz * dz));
   rot.z = m_camObj->getRoll();
   return rot;
+}
+
+// 0x71001158c4, 108 instructions. The point is transformed by the products written out: through DataManager::unknown001 (as ObjectChara::OnManiSetPos does)
+// the two integer copies of the position come before the first product and the registers of x and y swap (ldp w21, w22 against the game's ldp w22, w21).
+void ObjectCamera::OnManiSetPos(IManiCallback::SetParam &param) {
+  if (mm::mtl::Singleton<SeqManager>::getPtr()->unknown001().unknown54 < 3) {
+    mm::Vec3 pos = param.matrix.unknown004();
+    PosAxis axis = unknowna0[unknown4e0];
+    mm::Mat44 inverse = axis.calcOrigMatInv();
+    f32 x = pos.x * inverse.rows[0][0] + pos.y * inverse.rows[1][0] + pos.z * inverse.rows[2][0] + inverse.rows[3][0];
+    f32 y = pos.x * inverse.rows[0][1] + pos.y * inverse.rows[1][1] + pos.z * inverse.rows[2][1] + inverse.rows[3][1];
+    f32 z = pos.x * inverse.rows[0][2] + pos.y * inverse.rows[1][2] + pos.z * inverse.rows[2][2] + inverse.rows[3][2];
+    axis.set(axis.getAxis(), x, y, z);
+    if (unknown4e0 == 0) {
+      m_posAxis = axis;
+    }
+    unknowna0[unknown4e0] = axis;
+    m_camObj->getHands()->insertAnmPos(unknown4e0, axis);
+  }
 }
 
 } // namespace event

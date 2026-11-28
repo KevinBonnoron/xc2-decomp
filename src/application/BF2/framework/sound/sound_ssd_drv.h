@@ -104,6 +104,7 @@ struct SoundPoolMemory {
   static const u32 STATE_UNKNOWN_3 = 3; // Inferred role: detached; original name unknown.
 
   SoundPoolMemory(void *memory, u32 size) : unknown00(memory), unknown10(size), unknown14(STATE_UNKNOWN_1) {}
+  ~SoundPoolMemory();
 
   // Inferred role: reset after the release of the memory pool; original name unknown.
   void unknown006() {
@@ -157,7 +158,7 @@ public:
   static nn::audio::AudioRendererConfig *unknown004();
 
   // Inferred helper: requests the detach of an attached pool memory, or marks a pool without memory as detached; original name unknown.
-  void unknown005(SoundPoolMemory *pool);
+  static void unknown005(SoundPoolMemory *pool);
 
   SoundSsdDriver(mm::mtl::IAllocator *allocator, u32 capacity);
   ~SoundSsdDriver() override;
@@ -406,7 +407,10 @@ static_assert(offsetof(SoundSsdSource, unknown238) == 0x238, "");
 static_assert(offsetof(SoundSsdSource, unknown240) == 0x240, "");
 static_assert(sizeof(SoundSsdSource) == 0x248, "");
 
-class SoundSsdPlayer : public ssd::SoundActor3D {
+// The actor is a member at offset 0, not a base: the game has no vtable of its own for fw::SoundSsdPlayer, its constructor and destructor (1.0.0:
+// 0x71001a3e10, 0x71001a3f20) store no vtable pointer and call ssd::SoundActor3D's constructor, SoundActor::Quit and ~SoundActor3D directly on `this`, and
+// stop (0x71001a4874) calls Stop through the vptr at offset 0, which clang 3.9 does not devirtualize on a member object.
+class SoundSsdPlayer {
 public:
   static const u32 FLAG_UNKNOWN_1 = 1 << 1; // Inferred role: released; original name unknown.
   static const u32 FLAG_UNKNOWN_2 = 1 << 2; // Inferred role: stream; original name unknown.
@@ -445,6 +449,7 @@ public:
   void setHandle(u32 handle);
   void stop(f32 time);
 
+  ssd::SoundActor3D m_soundActor3D;                // Inferred role: actor of the player, at offset 0; original member name unknown (type-derived, decision 58).
   SoundSsdBank *m_soundSsdBank;                    // Inferred role: bank; original member name unknown.
   mm::mtl::IntrusivePtr<SoundSsdSource> unknown80; // Inferred role: source; original member name unknown.
   ssd::SoundHandle *unknown88;                     // Inferred role: handle; original member name unknown.
@@ -464,6 +469,7 @@ public:
   int unknownc8; // Inferred role: pause count; original member name unknown.
 };
 
+static_assert(offsetof(SoundSsdPlayer, m_soundActor3D) == 0x00, "");
 static_assert(offsetof(SoundSsdPlayer, m_soundSsdBank) == 0x78, "");
 static_assert(offsetof(SoundSsdPlayer, unknown88) == 0x88, "");
 static_assert(offsetof(SoundSsdPlayer, unknown98) == 0x98, "");

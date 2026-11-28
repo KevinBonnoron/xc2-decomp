@@ -14,6 +14,7 @@
 #include "ml/scn.h"
 #include "ml/scn_cam_util.h"
 #include "mm_math/mm_col4.h"
+#include "mm_math/mm_mat44.h"
 #include "mm_math/mm_math.h"
 #include "mm_math/mm_rect.h"
 #include "mm_math/mm_vec3.h"
@@ -122,6 +123,17 @@ bool ObjectUtil::isNumber(int character) {
     return true;
   }
   return character == '+' || character == '-' || character == '.';
+}
+
+// 0x710010dc28, 80 instructions. The position is copied before it is stored into the matrix: the game loads x and z together (ldr x8, ldr w10 at
+// 0x710010dd1c and 0x710010dd20) and stores y and z as a pair; written through the reference the z load comes after the stores of the matrix (81 instructions).
+void ObjectUtil::drawObject(const mm::Vec3 &position, const mm::Vec3 &rotation, const mm::Col4 &color) {
+  mm::Mat44 matrix;
+  matrix.unknown015(rotation);
+  mm::Vec3 pos = position;
+  matrix.setTrans(pos);
+  mm::Vec3 size(0.25f, 0.25f, 0.25f);
+  fw::debug::drawBoxLine(matrix, size, color);
 }
 
 void ObjectUtil::drawCameraInfo(int x, int y, const mm::Vec3 &position, const mm::Vec3 &target, const mm::Vec3 &rotation, f32 lens, bool isFocal) {

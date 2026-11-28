@@ -514,6 +514,24 @@ inline void SoundSsdDriver::unknown005(SoundPoolMemory *pool) {
   }
 }
 
+// The game has no symbol for this destructor: it is inlined into SsdObjectAllocator::deleteObject<SoundPoolMemory> (1.0.0: 0x71001a6a04).
+inline SoundPoolMemory::~SoundPoolMemory() {
+  SoundSsdDriver::unknown005(this);
+  if (unknown14 == STATE_UNKNOWN_2) {
+    if (nn::audio::GetMemoryPoolState(&unknown08) == nn::audio::MemoryPoolState_UNKNOWN_3) {
+      nn::audio::ReleaseMemoryPool(SoundSsdDriver::unknown004(), &unknown08);
+      unknown006();
+    }
+  }
+
+  unknown14 = STATE_UNKNOWN_3;
+}
+
+template <typename T> void SsdObjectAllocator::deleteObject(T *object) {
+  object->~T();
+  mtl::MemManager::deallocate(object, 0, false);
+}
+
 void SoundSsdDriver::detachPoolMemory(void *memory, u32 size) {
   ml::CS lock(unknownc0);
   SoundPoolMemory *pool = findPoolMemory(memory, size);
@@ -659,6 +677,9 @@ int SoundSsdSource::getSourceRefCount() const {
   return 0;
 }
 
+// The game calls SoundActor::Quit (1.0.0: 0x710098df8c), not the SoundActor3D override.
+SoundSsdPlayer::~SoundSsdPlayer() { m_soundActor3D.SoundActor::Quit(); }
+
 bool SoundSsdPlayer::getTotalTime(f32 &time) const {
   time = 0.0f;
   if ((unknownc4 & FLAG_UNKNOWN_2) != 0 && isValid()) {
@@ -773,11 +794,11 @@ void SoundSsdPlayer::setListener(ssd::SoundListener *listener) {
   }
 
   this->unknown90 = listener;
-  SetListener(listener);
+  m_soundActor3D.SetListener(listener);
 }
 
 bool SoundSsdPlayer::play() {
-  long result = ssd::SoundActor3D::Play(unknown88, unknown80->unknown18, unknown9c, 0.0f);
+  long result = m_soundActor3D.Play(unknown88, unknown80->unknown18, unknown9c, 0.0f);
   if (isValid()) {
     unknown88->SetCategoryId(unknown98);
   }
@@ -797,7 +818,7 @@ bool SoundSsdPlayer::prepare() {
 
 bool SoundSsdPlayer::start() {
   if (unknown88->GetState() == 8) {
-    return unknown88->Start(this, unknown9c, unknowna0) >= 0;
+    return unknown88->Start(&m_soundActor3D, unknown9c, unknowna0) >= 0;
   }
 
   return false;
@@ -846,18 +867,18 @@ void SoundSsdPlayer::setPan(f32 pan, f32 time) {
 
 void SoundSsdPlayer::setPos(const mm::Vec3 &position) {
   ssd::Vec3 actorPosition(position.x, position.y, position.z);
-  SetPosition(actorPosition);
+  m_soundActor3D.SetPosition(actorPosition);
 }
 
 void SoundSsdPlayer::setPos(f32 x, f32 y, f32 z) {
   ssd::Vec3 actorPosition(x, y, z);
-  SetPosition(actorPosition);
+  m_soundActor3D.SetPosition(actorPosition);
 }
 
 void SoundSsdPlayer::getPos(mm::Vec3 &position) const {
-  position.x = this->unknown44.x;
-  position.y = this->unknown44.y;
-  position.z = this->unknown44.z;
+  position.x = m_soundActor3D.unknown44.x;
+  position.y = m_soundActor3D.unknown44.y;
+  position.z = m_soundActor3D.unknown44.z;
 }
 
 int SoundSsdPlayer::getState() const {
@@ -903,7 +924,7 @@ void SoundSsdPlayer::stop(f32 time) {
     unknown9c = 0.0f;
     unknownc8 = 0;
     unknown88->Stop(time);
-    Stop(time);
+    m_soundActor3D.Stop(time);
   }
 }
 
@@ -1297,6 +1318,10 @@ SoundSsdBank::~SoundSsdBank() {
 } // namespace fw
 
 template mm::mtl::FixedList<fw::SoundPoolMemory *, 256>::iterator mm::mtl::FixedList<fw::SoundPoolMemory *, 256>::erase(mm::mtl::FixedList<fw::SoundPoolMemory *, 256>::iterator);
+
+// 1.0.0: the out-of-line copies at 0x71001a6a04 (SoundPoolMemory, destructor inlined, 64 instructions) and 0x71001a829c (SoundSsdPlayer, 36 instructions).
+template void fw::SsdObjectAllocator::deleteObject<fw::SoundPoolMemory>(fw::SoundPoolMemory *);
+template void fw::SsdObjectAllocator::deleteObject<fw::SoundSsdPlayer>(fw::SoundSsdPlayer *);
 
 template mm::mtl::PtrSingleton<fw::SoundSsdDriver>::~PtrSingleton();
 

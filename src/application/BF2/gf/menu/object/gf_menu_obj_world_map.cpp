@@ -16,6 +16,7 @@
 #include "gf/field/gf_gmk_locator_atlas.h"
 #include "gf/game/gf_game_cond.h"
 #include "gf/game/gf_game_manager.h"
+#include "gf/game/sequential_play/gf_play_factory.h"
 #include "gf/gf_allocator.h"
 #include "gf/menu/adapter/gf_menu_world_map_adapter.h"
 #include "gf/menu/adapter/gf_menu_zone_map_adapter.h"
@@ -24,10 +25,12 @@
 #include "gf/menu/gf_menu_location.h"
 #include "gf/menu/gf_menu_map_info.h"
 #include "gf/menu/gf_menu_reference.h"
+#include "gf/menu/gf_menu_sound_manager.h"
 #include "gf/menu/gf_menu_types.h"
 #include "gf/menu/list/gf_menu_field_skill_list.h"
 #include "gf/menu/list/gf_menu_id_list.h"
 #include "gf/menu/list/gf_menu_zone_map_list.h"
+#include "gf/menu/object/gf_menu_obj_common_text.h"
 #include "gf/menu/object/gf_menu_obj_mainmenu2.h"
 #include "gf/menu/object/gf_menu_obj_operation_info.h"
 #include "gf/menu/object/gf_menu_obj_util.h"
@@ -37,6 +40,7 @@
 #include "mm_math/mm_pnt.h"
 #include "mm_math/mm_vec2.h"
 #include "mm_math/mm_vec3.h"
+#include "mm_mtl/delegate.h"
 #include "mm_mtl/reference_object.h"
 #include "ui/ctrl/ui_ctrl_cursor_select.h"
 #include "ui/ctrl/ui_ctrl_object.h"
@@ -945,6 +949,155 @@ int GfMenuObjWorldMap::ctrlGroupReturn(ui::UISelectObjList *objects, u32 count) 
     acc.setDispPriority(8);
   }
   return ctrl;
+}
+
+// Inferred name; kept as an exception to the unknown-name rule (AGENTS.md): single-user helper whose existence only the match proves; rename if a sibling build gives a symbol.
+// Used by event 0x41 of PointSelectListener::reciveEvent (0x71004e9dd8): the game tests event.unknown10 (cbnz), then loads the context, event.unknown08 and
+// context->unknown0c (cmp c0c, e08) in that order, with a tail laid out as for ONE 50% branch, i.e. an IR `and` of the two compares. SimplifyCFG only makes the `and` when
+// every operand is already loaded, and a helper whose three operands are plain arguments keeps the compare as `id == call` (an argument against a load would be swapped by
+// InstCombine's complexity order). Forms tried without it (measured with check on the unit, 632 instructions each like the game): the plain `event.unknown10 == 0 && context->unknown0c ==
+// event.unknown08` (91 lines differ from +0x60, 0x71004e9b08: the 0x41 tail is laid out after the case 8 tail instead of before the event 6 tail) and with the compare operands swapped (88
+// lines); locals holding both ids (87, InstCombine sinks them into the second test: two branches); a helper taking `const GfMenuCallContext &` (87, the loads stay in the second test); helpers
+// taking the event, by reference (3 lines differ from +0x33c) and by value (1 line from +0x348), and the id: the `and` is made but the compare is `event.unknown08 == id`, two swapped operands.
+static bool isCallDecided(u32 result, u32 call, u32 id) { return result == 0 && id == call; }
+
+// Ruling 8: the prologue (the owner and handle accessors, then the switch on the event) is written out in every listener of this class; a file-local struct that builds both accessors in its
+// constructor gives 632 instructions like the game with 313 lines differing from +0x24 (0x71004e9acc).
+void GfMenuObjWorldMap::PointSelectListener::reciveEvent(const ui::EventData &event, u32 handle) {
+  ui::UIObjectAcc owner(m_menuObjWorldMap->unknown18);
+  ui::UIObjectAcc acc(handle);
+  switch (event.unknown00) {
+  case 1:
+    acc.setDisp(false);
+    setupPointSelect(acc, m_menuObjWorldMap->unknown2f0);
+    GfMenuObject::disableInput(handle);
+    unknown0c = 0;
+    return;
+  case 6: {
+    u32 index = event.unknown08;
+    u32 previous = event.unknown0c;
+    if (index != 0xffffffff) {
+      m_menuObjWorldMap->unknown2f0->setIndex(index);
+      // The game calls getIndex(true) and drops the result (without the call 628 instructions, 119 lines differ from +0x60); the id local places the load of the entry before the call of
+      // refreshPointSelect (inlined into the call 631 instructions, 134 lines).
+      m_menuObjWorldMap->unknown2f0->getIndex(true);
+      u32 id = m_menuObjWorldMap->unknown2f0->getContents(index).unknown00;
+      refreshPointSelect(acc, m_menuObjWorldMap->unknown2f0, m_menuObjWorldMap->unknown2f8, id);
+      m_menuObjWorldMap->loadTex();
+      if (m_menuObjWorldMap->unknown50.unknown00.empty()) {
+        sendEvent(owner.searchChild("LAY_zonemap"), GfMenuTypes::unknown003_257, 0, 0);
+      } else if (previous != 0xffffffff) {
+        GfMenuObjUtil::playSECommonCursor();
+      }
+      unknown0c = 1;
+    }
+    return;
+  }
+  case 8:
+    if (event.unknown0c == 1) {
+      if (m_menuObjWorldMap->unknown2f0->getSize() != 0) {
+        if (isEnableJump(m_menuObjWorldMap->unknown2f0->getContents(m_menuObjWorldMap->unknown2f0->getIndex(false))) && unknown0c == 1) {
+          GfMenuObjCommonText::open(m_menuObjWorldMap->m_menuCallContext, 0x3d, 0);
+          GfMenuObject::setCallContextEventHandler(m_menuObjWorldMap->m_menuCallContext, acc.unknown10);
+          return;
+        }
+      }
+      GfMenuObjUtil::playSECommon(2);
+    } else if (event.unknown0c == 2) {
+      m_menuObjWorldMap->clearTex();
+      m_menuObjWorldMap->unknown2f80 = 0;
+      sendEvent(owner.searchChild("LAY_zonemap"), GfMenuTypes::unknown003_260, 0, 0);
+      sendEvent(owner.searchChild("LAY_icon_filter"), GfMenuTypes::unknown003_260, 0, 0);
+      sendEvent(owner.searchChild("LAY_zone_sellect"), GfMenuTypes::unknown003_259, 0, 0);
+      sendEvent(owner.searchChild("LAY_worldmap"), GfMenuTypes::unknown003_259, 0, 0);
+      sendEvent(handle, GfMenuTypes::unknown003_260, 0, 0);
+      ctrlScrollBar(acc.searchChild("LAY_zone_scroll_bar"), true);
+      GfMenuObject::disableFSInput();
+      GfMenuObjOperationInfo::remove(acc.unknown10, 0, 0, 0);
+      GfMenuObjUtil::playSECommonCancel();
+    }
+    return;
+  case 0xc:
+    GfMenuObject::resetInputSelection(handle);
+    GfMenuObject::setupInputSelectionFromList(handle, *m_menuObjWorldMap->unknown2f0);
+    GfMenuObject::enableFSInput(2);
+    GfMenuObjOperationInfo::add(acc.unknown10, 0, 0, 0);
+    GfMenuObject::hookAnimationEvent(0, m_menuObjWorldMap->unknown318);
+    return;
+  case 0x41:
+    if (isCallDecided(event.unknown10, event.unknown08, m_menuObjWorldMap->m_menuCallContext->unknown0c)) {
+      u32 id = m_menuObjWorldMap->unknown2f0->getContents(m_menuObjWorldMap->unknown2f0->getIndex(false)).unknown00;
+      if (m_menuObjWorldMap->unknown2f0->m_groupMode) {
+        id = Bdat::getVal(m_menuObjWorldMap->unknown2f78, "MAPJUMPID", id).valueU16;
+      }
+      GfPlayFactory::createSkipTravel(id);
+      GfMenuObjUtil::playSE(0x17);
+      GfMenuSoundManager::fadeInFieldBgm(1.0f);
+      GfMenuObject::closeFSLayer(owner.unknown10, false, true);
+      GfMenuObjMainMenu2::execMapJump();
+    }
+    return;
+  case GfMenuTypes::unknown003_257: {
+    int icon = event.unknown08;
+    unknown0c = 0;
+    if (icon == -1) {
+      return;
+    }
+    for (u32 i = 0; i < m_menuObjWorldMap->unknown2f0->getSize(); i++) {
+      const MenuZoneMapInfo &info = m_menuObjWorldMap->unknown2f0->getContents(i);
+      if (info.unknown10 == icon) {
+        m_menuObjWorldMap->unknown2f0->setIndex(i);
+        refreshPointSelect(acc, m_menuObjWorldMap->unknown2f0, m_menuObjWorldMap->unknown2f8, info.unknown00);
+        m_menuObjWorldMap->refreshZoneMap(i);
+        GfMenuObject::resetInputSelection(handle);
+        GfMenuObject::setupInputSelection(handle, m_menuObjWorldMap->unknown2f0->getIndex(false), m_menuObjWorldMap->unknown2f0->getSize());
+        unknown0c = 1;
+        break;
+      }
+    }
+    break;
+  }
+  case GfMenuTypes::unknown003_259:
+    if (m_menuObjWorldMap->unknown2f0->getSize() != 0) {
+      mm::mtl::FixStr<32> name;
+      acc.setDisp(true);
+      refreshPointText(acc, m_menuObjWorldMap->unknown2f0, m_menuObjWorldMap->unknown2f8);
+      u32 anime = 0;
+      for (u32 i = 0; i < m_menuObjWorldMap->unknown2f8->getSize() && i < m_menuObjWorldMap->unknown2f0->getSize(); i++) {
+        name.format("IMG_point_base_@%02d", i + 1);
+        ui::UIObjectAcc base(m_menuObjWorldMap->unknown2f8->getObject(i), name.c_str());
+        if (base.isValid()) {
+          base.startAnimation("open", false);
+          anime = base.unknown10;
+        }
+        name.format("TXT_pointname_@%02d", i + 1);
+        ui::UIObjectAcc text(m_menuObjWorldMap->unknown2f8->getObject(i), name.c_str());
+        // The fade in block (ruling 8) also appears, with other targets and parameters, in functions of other files. A file-local helper holding it (taking the handle, or the text accessor with
+        // the setDisp) gives 632 instructions with 0 differing lines, but this is its only user in this file (the other fade in blocks of the file set unknown04 and a target name), so it is not used.
+        text.setDisp(true);
+        GfMenuObjUtil::CtrlParam param;
+        param.unknown004("fade_in_l");
+        param.unknown11 = true;
+        param.unknown00 = 0.3f;
+        param.unknown14 = 8;
+        GfMenuObjUtil::startCtrl(text.unknown10, param, nullptr);
+      }
+      if (anime != 0) {
+        GfMenuObject::hookAnimationEvent(acc.unknown10, anime);
+        m_menuObjWorldMap->unknown318 = anime;
+      }
+      m_menuObjWorldMap->unknown2f0->setIndex(0);
+      m_menuObjWorldMap->loadTex();
+      ctrlScrollBar(acc.searchChild("LAY_zone_scroll_bar"), false);
+    } else if (!m_menuObjWorldMap->unknown2f0->m_groupMode) {
+      m_menuObjWorldMap->loadTex();
+    }
+    return;
+  case GfMenuTypes::unknown003_260:
+    acc.setDisp(false);
+    return;
+  }
+  ui::UIObjectListener::reciveEvent(event, handle);
 }
 
 void GfMenuObjWorldMap::setupPointSelect(ui::UIObjectAcc &acc, GfMenuZoneMapList *list) {

@@ -94,7 +94,8 @@ private:
   mm::mtl::FixedVector<ObjectList *, SCENE_UNKNOWN_16> unknown18; // Inferred role: scenes; original member name unknown.
   mm::mtl::FixStr<64> unknowna0;                                  // Inferred role: scene name; original member name unknown.
   mm::mtl::FixStr<64> unknowne4;                                  // Inferred role: next scene name; original member name unknown.
-  ObjectList *m_objectList;                                       // Inferred role: current; original member name unknown.
+public:
+  ObjectList *m_objectList; // Inferred role: current; original member name unknown.
 };
 
 static_assert(sizeof(ObjectManager) == 0x130, "");

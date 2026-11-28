@@ -22,7 +22,7 @@ public:
   int unknown48;                 // Inferred role: id; original member name unknown.
   u32 unknown4c;                 // Inferred role: chg st id; original member name unknown.
   u32 unknown50;                 // Inferred role: chg ed id; original member name unknown.
-  u32 unknown54;                 // Inferred role: category; original member name unknown.
+  int unknown54;                 // Inferred role: category; original member name unknown.
   const char *unknown58;         // Inferred role: mstxt; original member name unknown.
   bool unknown60;                // Inferred role: text; original member name unknown.
   u32 unknown64;                 // Inferred role: weather; original member name unknown.
@@ -33,7 +33,7 @@ public:
   int unknown7c;                 // Inferred role: op fade out; original member name unknown.
   u32 unknown80;                 // Inferred role: op fade wait; original member name unknown.
   bool unknown84;                // Inferred role: op fade in enable; original member name unknown.
-  u32 unknown88;                 // Inferred role: op fade in; original member name unknown.
+  int unknown88;                 // Inferred role: op fade in; original member name unknown.
   u32 unknown8c;                 // Inferred role: op fade col r; original member name unknown.
   u32 unknown90;                 // Inferred role: op fade col g; original member name unknown.
   u32 unknown94;                 // Inferred role: op fade col b; original member name unknown.
@@ -65,8 +65,8 @@ public:
   u32 unknownec;                 // Inferred role: next i dtheater; original member name unknown.
   bool unknownf0;                // Inferred role: jiji disp; original member name unknown.
   u32 unknownf4;                 // Inferred role: wpn disp; original member name unknown.
-  u32 unknownf8;                 // Inferred role: col filter near; original member name unknown.
-  u32 unknownfc;                 // Inferred role: col filter far; original member name unknown.
+  int unknownf8;                 // Inferred role: col filter near; original member name unknown.
+  int unknownfc;                 // Inferred role: col filter far; original member name unknown.
   u32 unknown100;                // Inferred role: env seam; original member name unknown.
   const char *unknown108;        // Inferred role: evt light; original member name unknown.
   u32 unknown110;                // Inferred role: hood; original member name unknown.

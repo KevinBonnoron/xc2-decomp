@@ -1,5 +1,8 @@
 #include "dr/dr_shd_lgt_global_ibl.h"
 
+#include <algorithm> // IWYU pragma: keep
+#include <string.h>
+
 #include "dr/dr_light_obj_global_ibl.h"
 #include "dr/dr_man.h"
 #include "dr/dr_pixl_man.h"
@@ -13,7 +16,6 @@
 #include "mm_mtl/fixed_array.h"
 #include "mm_mtl/fixed_list.h" // IWYU pragma: keep
 #include "types.h"
-#include <string.h>
 
 namespace ml {
 
@@ -170,3 +172,10 @@ void DrShdLgtGlobalIBL::removeObj(DrLightObjGlobalIBL *obj, int viewNum) {
 
 template mm::mtl::FixedList<ml::DrShdLgtGlobalIBL::SlotCandidate, 32>::iterator
     mm::mtl::FixedList<ml::DrShdLgtGlobalIBL::SlotCandidate, 32>::erase(mm::mtl::FixedList<ml::DrShdLgtGlobalIBL::SlotCandidate, 32>::iterator);
+
+// Temporary device: the game emits this instantiation in this unit, from the std::sort of DrShdLgtGlobalIBL::updateView (1.0.0: 0x710089428c, `bl` at 0x7100894a1c), which is not
+// reconstructed yet. It also instantiates __sort4, __insertion_sort_3 and __insertion_sort_incomplete. Measured: __sort (0x710089a214) 388 instructions, __sort4 (0x710089a824) 95,
+// __insertion_sort_3 76 and __insertion_sort_incomplete 203, all MATCH. Replace it with the std::sort call when updateView is reconstructed in this file, and delete this line.
+template void std::__sort<bool (*&)(const ml::DrLightObjGlobalIBL *, const ml::DrLightObjGlobalIBL *), ml::DrLightObjGlobalIBL **>(ml::DrLightObjGlobalIBL **, ml::DrLightObjGlobalIBL **,
+                                                                                                                                   bool (*&)(const ml::DrLightObjGlobalIBL *,
+                                                                                                                                             const ml::DrLightObjGlobalIBL *));

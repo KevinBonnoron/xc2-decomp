@@ -43,11 +43,12 @@ private:
   CharaLensPlayer *m_charaLensPlayer; // Inferred role: lens player; original member name unknown.
   IAttachActor *m_iAttachActor;       // Inferred role: attach actor; original member name unknown.
   mm::Vec3 unknown40;                 // Inferred role: lens direction; original member name unknown.
-  mm::Vec3 unknown50;                 // Inferred role: head position; original member name unknown.
-  f32 unknown60;                      // Inferred role: life; original member name unknown.
-  const char *unknown68;              // Inferred role: bdat name; original member name unknown.
-  mm::Vec2 unknown70;                 // Inferred role: lens; original member name unknown.
-  ObjectChara *m_objectChara;         // Inferred role: target; original member name unknown.
+public:
+  mm::Vec3 unknown50;         // Inferred role: head position; original member name unknown.
+  f32 unknown60;              // Inferred role: life; original member name unknown.
+  const char *unknown68;      // Inferred role: bdat name; original member name unknown.
+  mm::Vec2 unknown70;         // Inferred role: lens; original member name unknown.
+  ObjectChara *m_objectChara; // Inferred role: target; original member name unknown.
 
   friend struct CharaPlayWinkLayout;
 };

@@ -66,6 +66,15 @@ public:
     GfMenuObjMercenaries *m_menuObjMercenaries; // Inferred role: owner; original member name unknown.
   };
 
+  class MissionDetailListener : public ui::UIObjectListener {
+  public:
+    MissionDetailListener(GfMenuObjMercenaries *owner) : _0c(), m_menuObjMercenaries(owner) {}
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x20 - 0x0c];
+    GfMenuObjMercenaries *m_menuObjMercenaries; // Inferred role: owner; original member name unknown.
+  };
+
   class MissionRewardListener : public ui::UIObjectListener {
   public:
     MissionRewardListener(GfMenuObjMercenaries *owner) : _0c(), m_menuObjMercenaries(owner) {}

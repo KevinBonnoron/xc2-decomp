@@ -239,13 +239,19 @@ void GfMenuObjPouch2::updateItemList(GfMenuItemList *list, ui::UISelectObjList *
   setup.m_setupParam.unknown10 = true;
   setup.unknown28 = false;
   setup.unknown29 = false;
-  GfMenuItemList::FiltertInfo info;
+  // The game keeps this function (0x71004b81d4) out of line at the callers with a variable filter (ItemListListener::reciveEvent event 0x101, FilterListener2) and
+  // inlines it at the constant site of event 1. With `setupFromBox` called once after the `if`, the inline cost at a variable site is 270 against the threshold 275 (measured
+  // with -Rpass-analysis=inline) and the callers inline it (929 instructions for ItemListListener::reciveEvent against the game's 895, 338 against 268 for FilterListener2);
+  // written in both arms the cost is 310, the two calls tail merge back into the game's single call and the constant site is still inlined (threshold 412, cost 235).
   if (filter != 0) {
+    GfMenuItemList::FiltertInfo info;
     info.unknown00 = 8;
     info.unknown06 = unknown002[filter];
     setup.m_filtertInfo = &info;
+    list->setupFromBox(setup);
+  } else {
+    list->setupFromBox(setup);
   }
-  list->setupFromBox(setup);
   list->sort(GfMenuObjSort::getSortID(0x10, sort), false);
   list->setIndex(0);
 }
@@ -663,6 +669,13 @@ bool GfMenuObjPouch2::seqFavClose() {
   return true;
 }
 
+// Inferred role: plays the cursor sound when the selection moved from a valid previous index; original name unknown.
+static void unknown009(u32 index, u32 previous) {
+  if (previous != 0xffffffff && index != previous) {
+    GfMenuObjUtil::playSECommonCursor();
+  }
+}
+
 void GfMenuObjPouch2::SlotListener::reciveEvent(const ui::EventData &event, u32 handle) {
   ui::UIObjectAcc owner(m_menuObjPouch2->unknown18);
   ui::UIObjectAcc acc(handle);
@@ -726,9 +739,7 @@ void GfMenuObjPouch2::SlotListener::reciveEvent(const ui::EventData &event, u32 
       ui::UIObjectAcc cursor(acc.searchChild("IMG_slotcursor"));
       cursor.setImageIndex(pouch.unknown04 != 0);
     }
-    if (previous != 0xffffffff && index != previous) {
-      GfMenuObjUtil::playSECommonCursor();
-    }
+    unknown009(index, previous);
     break;
   }
   case 8:
@@ -812,6 +823,392 @@ void GfMenuObjPouch2::SlotListener::reciveEvent(const ui::EventData &event, u32 
     GfMenuObject::disableInput(handle);
     setFadeOut(handle, 1);
     break;
+  default:
+    ui::UIObjectListener::reciveEvent(event, handle);
+    break;
+  }
+}
+
+// Ruling 8: the prologue (the owner and handle accessors, then the switch on the event) is written out in every listener of this class; a file-local struct that builds both accessors in its
+// constructor gives 899 instructions against the game's 895 here (482 lines differ from +0x8, 0x71004b73e0).
+void GfMenuObjPouch2::ItemListListener::reciveEvent(const ui::EventData &event, u32 handle) {
+  ui::UIObjectAcc owner(m_menuObjPouch2->unknown18);
+  ui::UIObjectAcc acc(handle);
+  switch (event.unknown00) {
+  case 1: {
+    updateItemList(m_menuObjPouch2->unknown40, m_menuObjPouch2->unknown48, 0, 0);
+    setupItemList(acc, m_menuObjPouch2->unknown40);
+    m_menuObjPouch2->unknown48->pickupObject(handle, "LAY_fvstock_listtag@%02d", 1);
+    GfMenuObjUtil::createVScrollBarPlugin(acc.searchChild("IMG_fvstock_scpoint"), m_menuObjPouch2->unknown40, "IMG_fvstock_scline", true);
+    // The game reloads the list and the select list for the call after the getContents asserts (0x71004b7c60); written as the argument of
+    // refreshItemList the item is read after both pointers, which are then loaded together before the asserts (ldp x21, x22 at the top of the case).
+    u32 item = m_menuObjPouch2->unknown40->getContents(0).unknown04;
+    refreshItemList(acc, m_menuObjPouch2->unknown40, m_menuObjPouch2->unknown48, item);
+    GfMenuObject::disableInput(handle);
+    acc.setDisp(false);
+    GfMenuObjSort::setSortLabelText(GfMenuObjSort::getSortID(0x10, 0), owner.searchChild("TXT_item_sort_label"));
+    m_menuObjPouch2->unknown3d8 = 0;
+    break;
+  }
+  case 3:
+    if (event.unknown08 == 1) {
+      GfMenuObject::enableInput(handle);
+    }
+    break;
+  case 6: {
+    u32 index = event.unknown08;
+    u32 previous = event.unknown0c;
+    m_menuObjPouch2->unknown40->setIndex(index);
+    u32 item = m_menuObjPouch2->unknown40->getContents(index).unknown04;
+    refreshItemList(acc, m_menuObjPouch2->unknown40, m_menuObjPouch2->unknown48, item);
+    unknown001(owner.searchChild("LAY_chr_fevinfo"), 0x103, item, 0);
+    unknown009(index, previous);
+    break;
+  }
+  case 8:
+    switch (event.unknown0c) {
+    case 1: {
+      u32 driver = GfMenuReference::getReferenceDriverID(0);
+      u32 slot = m_menuObjPouch2->unknown38->unknown0c;
+      // Bare call: the game calls getPouch (0x71004b7774) and never reads the result.
+      GfPouchUtil::getPouch(driver, slot);
+      if (m_menuObjPouch2->unknown40->getSize() != 0) {
+        u32 item = m_menuObjPouch2->unknown40->getContents(m_menuObjPouch2->unknown40->getIndex(false)).unknown04;
+        m_menuObjPouch2->unknown50->reset();
+        if (GfPouchUtil::isEnableSetItem(driver, slot, item)) {
+          // Inferred role: common text id of each pouch slot, written to unknown58 (0x7100f722a8; the result event compares the same ids); original name unknown.
+          static const u32 unknown008[] = {0x17, 0xa1, 0xa2};
+          m_menuObjPouch2->unknown58 = unknown008[slot];
+          GfMenuObjCommonText::open(m_menuObjPouch2->unknown50, m_menuObjPouch2->unknown58, 0);
+          GfMenuObject::setCallContextEventHandler(m_menuObjPouch2->unknown50, handle);
+          break;
+        }
+        m_menuObjPouch2->unknown58 = 0x18;
+        GfMenuObjCommonText::openError(m_menuObjPouch2->unknown50, m_menuObjPouch2->unknown58, 0);
+      }
+      GfMenuObjUtil::playSECommon(2);
+      break;
+    }
+    case 2:
+      sendEvent(handle, 0x22, 0);
+      unknown001(owner.searchChild("LAY_stock_filter2"), 0x22, 0, 0);
+      unknown001(owner.searchChild("LAY_chr_fevinfo"), 0x102, 0, 0);
+      unknown001(owner.searchChild("LAY_eqp_fevitem"), 0x101, 0, 0);
+      GfMenuObjUtil::playSECommonCancel();
+      break;
+    case 10:
+      sendEvent(handle, 0x102, 0);
+      unknown001(owner.searchChild("LAY_result"), 0x101, 0, 0);
+      setFadeOut(handle, 1);
+      setFadeOut(owner.searchChild("LAY_chr_fevinfo"), 2);
+      m_menuObjPouch2->unknown64 = 1;
+      GfMenuObjUtil::playSECommonOpenSubMenu();
+      break;
+    case 12:
+      GfMenuObjSort::open(acc.unknown10, owner.searchChild("TXT_item_sort_label"), 0x10, m_menuObjPouch2->unknown3d8);
+      GfMenuObject::disableInput(handle);
+      GfMenuObjOperationInfo::remove(handle, 0, 0, 0);
+      break;
+    }
+    break;
+  case 0x21:
+    GfMenuObjCharSelect::dispOffChar(0);
+    setFadeIn(handle, 1);
+    unknown001(handle, 0x101, 0, 0);
+    GfMenuObject::disableInput(handle);
+    break;
+  case 0x22:
+    GfMenuObjCharSelect::dispOnChar(0);
+    setFadeOut(handle, 1);
+    unknown001(handle, 0x102, 0, 0);
+    break;
+  case 0x41:
+    if (m_menuObjPouch2->unknown50 != nullptr && m_menuObjPouch2->unknown50->unknown0c == event.unknown08) {
+      // The game loads the result (ldrh) before the compares of the call context id (0x71004b7968): the local places that load, and the switch keeps
+      // it there (`id == 0xa1 || id == 0xa2 || id == 0x17 && result == 0` and `event.unknown10_u16 == 0` in the case body both load it after the
+      // compares: 6 differing instructions, same count).
+      u16 result = event.unknown10_u16;
+      switch (m_menuObjPouch2->unknown58) {
+      case 0x17:
+      case 0xa1:
+      case 0xa2:
+        if (result == 0) {
+          u32 driver = GfMenuReference::getReferenceDriverID(0);
+          u32 slot = m_menuObjPouch2->unknown38->unknown0c;
+          SDataPouch pouch = GfPouchUtil::getPouch(driver, slot);
+          u32 item = m_menuObjPouch2->unknown40->getContents(m_menuObjPouch2->unknown40->getIndex(false)).unknown04;
+          setFavFlag(driver, item, m_menuObjPouch2->unknown70, m_menuObjPouch2->m_menuBladeList);
+          pouch.unknown04 = item;
+          GfPouchUtil::setPouch(driver, slot, pouch);
+          GfDataDriver::setUsedFavoriteItemForPouch(driver, item);
+          setFavFlag(driver, item, m_menuObjPouch2->unknownd0, m_menuObjPouch2->m_menuBladeList);
+          m_menuObjPouch2->unknown130.unknown005();
+          m_menuObjPouch2->unknown130.unknown002(&GfMenuObjPouch2::seqFavOpen);
+          m_menuObjPouch2->unknown130.unknown002(&GfMenuObjPouch2::seqFavLoop);
+          m_menuObjPouch2->unknown130.unknown002(&GfMenuObjPouch2::seqFavClose);
+          m_menuObjPouch2->unknown130.unknown002(&GfMenuObjPouch2::seqFavPouchIn);
+          GfMenuObject::disableInput(handle);
+          m_menuObjPouch2->unknown30->setAlpha(0.0f);
+        }
+        break;
+      }
+    }
+    break;
+  case 0x101:
+    GfMenuObjOperationInfo::setGuideText(0x17, 0);
+    GfMenuObjOperationInfo::add(handle, 0, 0, 0);
+    m_menuObjPouch2->unknown5c = 0;
+    m_menuObjPouch2->unknown3d8 = 0;
+    sendEvent(owner.searchChild("LAY_stock_filter2"), 0x101, 0);
+    unknown001(handle, 0x104, 0, 0);
+    GfMenuObjSort::setSortLabelText(GfMenuObjSort::getSortID(0x10, m_menuObjPouch2->unknown3d8), owner.searchChild("TXT_item_sort_label"));
+    // The select list is the game's erased argument: x1 is not set at 0x71004b7b18 (the parameter is never read).
+    updateItemList(m_menuObjPouch2->unknown40, m_menuObjPouch2->unknown48, m_menuObjPouch2->unknown5c, m_menuObjPouch2->unknown3d8);
+    break;
+  case 0x102:
+    GfMenuObjOperationInfo::remove(handle, 0, 0, 0);
+    unknown001(owner.searchChild("LAY_stock_filter2"), 0x102, 0, 0);
+    refreshItemList(acc, m_menuObjPouch2->unknown40, m_menuObjPouch2->unknown48, 0);
+    GfMenuObject::disableInput(handle);
+    break;
+  case 0x104: {
+    m_menuObjPouch2->unknown40->setIndex(0);
+    // Reloads of the list and of the select list after the index load (0x71004b7c2c); the call form with the item as an argument loads them before it and the
+    // function has an ldp of both pointers at the top of the case instead.
+    u32 item = m_menuObjPouch2->unknown40->getContents(m_menuObjPouch2->unknown40->getIndex(false)).unknown04;
+    refreshItemList(acc, m_menuObjPouch2->unknown40, m_menuObjPouch2->unknown48, item);
+    GfMenuObject::resetInputSelection(handle);
+    GfMenuObject::setupInputSelectionFromList(handle, *m_menuObjPouch2->unknown40);
+    break;
+  }
+  case 0x148:
+    GfMenuObject::enableInput(handle);
+    GfMenuObjOperationInfo::add(handle, 0, 0, 0);
+    if (m_menuObjPouch2->unknown3d8 != event.unknown08) {
+      // The game calls getSortID (0x71004b7634) before the discarded getIndex of the slot list (0x71004b7648, result unused) and the sort, which the local places.
+      u16 sort = GfMenuObjSort::getSortID(0x10, event.unknown08);
+      m_menuObjPouch2->unknown28->getIndex(true);
+      m_menuObjPouch2->unknown40->sort(sort, false);
+      m_menuObjPouch2->unknown3d8 = event.unknown08;
+    }
+    break;
+  default:
+    ui::UIObjectListener::reciveEvent(event, handle);
+    break;
+  }
+}
+
+// Ruling 8: same prologue as ItemListListener; the accessor struct gives 270 instructions against the game's 268 (185 lines differ from +0x0, 0x71004b9f10).
+void GfMenuObjPouch2::FilterListener2::reciveEvent(const ui::EventData &event, u32 handle) {
+  ui::UIObjectAcc owner(m_menuObjPouch2->unknown18);
+  ui::UIObjectAcc acc(handle);
+  switch (event.unknown00) {
+  case 1:
+    setupFilter(acc, m_menuObjPouch2->unknown5c);
+    GfMenuObject::disableInput(handle);
+    acc.setDisp(false);
+    break;
+  case 6: {
+    int index = event.unknown08;
+    int previous = event.unknown0c;
+    mm::mtl::FixStr<32> name;
+    if (previous >= 0) {
+      name.format("IMG_ficon@%02d", previous + 1);
+      ui::UIObjectAcc icon(acc.searchChild(name.c_str()));
+      icon.loadDefColor();
+    }
+    if (index >= 0) {
+      name.format("IMG_ficon@%02d", index + 1);
+      ui::UIObjectAcc icon(acc.searchChild(name.c_str()));
+      icon.setMulColor("sys_select");
+    }
+    ui::UIStr text;
+    getFilterText(index, text);
+    ui::UIObjectAcc label(acc.searchChild("TXT_fvstock_index"));
+    label.setText(text);
+    m_menuObjPouch2->unknown5c = index;
+    updateItemList(m_menuObjPouch2->unknown40, m_menuObjPouch2->unknown48, m_menuObjPouch2->unknown5c, m_menuObjPouch2->unknown3d8);
+    u32 item = m_menuObjPouch2->unknown40->getContents(m_menuObjPouch2->unknown40->getIndex(false)).unknown04;
+    unknown001(owner.searchChild("LAY_chr_fevinfo"), 0x103, item, 0);
+    unknown001(owner.searchChild("LAY_fvstock_fevitem"), 0x104, 0, 0);
+    if (previous != -1 && index != previous) {
+      GfMenuObjUtil::playSECommonTab();
+    }
+    break;
+  }
+  case 0x21:
+    acc.setDisp(true);
+    break;
+  case 0x22:
+    acc.setDisp(false);
+    GfMenuObject::disableInput(handle);
+    m_menuObjPouch2->unknown5c = 0;
+    updateItemList(m_menuObjPouch2->unknown40, m_menuObjPouch2->unknown48, m_menuObjPouch2->unknown5c, m_menuObjPouch2->unknown3d8);
+    break;
+  case 0x101: {
+    m_menuObjPouch2->unknown5c = 0;
+    m_menuObjPouch2->unknown60 = m_menuObjPouch2->unknown5c;
+    u32 list = acc.searchChild("LAY_iconlist");
+    GfMenuObject::hookCtrlEvent(list, GfMenuObjUtil::unknown002(list));
+    GfMenuObject::setupInputSelection(handle, m_menuObjPouch2->unknown5c, 13);
+    GfMenuObject::enableInput(handle);
+    break;
+  }
+  case 0x102: {
+    u32 list = acc.searchChild("LAY_iconlist");
+    GfMenuObject::hookCtrlEvent(list, GfMenuObjUtil::unknown003(list));
+    GfMenuObject::disableInput(handle);
+    break;
+  }
+  default:
+    ui::UIObjectListener::reciveEvent(event, handle);
+    break;
+  }
+}
+
+// Inferred role: shows a favorite icon with the image index `imageIndex` when `isFavorite`, hides it otherwise; original name unknown. The `like` accessor is the caller's: a helper that builds
+// its own gives 575 instructions with 148 differing lines from +0x24 (0x71004ba5a0: the inlined copies get three `like` stack slots where the game has two), and a plain `static` one is not
+// inlined (413 instructions). The favorite test stays in the caller: a helper that takes the compared value and calls getFavoriteStat/getFavorite itself (one per driver and blade) gives 575
+// instructions with 8 differing lines from +0x138 (0x71004ba6b4: the operands of the favorite compare are swapped).
+static void unknown011(ui::UIObjectAcc &like, bool isFavorite, u32 imageIndex) {
+  if (isFavorite) {
+    like.setImageIndex(imageIndex);
+    like.setDisp(true);
+  } else {
+    like.setDisp(false);
+  }
+}
+
+// Inferred role: hides the favorite icon of an empty blade slot; the game reads the stat of blade 0 and drops it; original name unknown.
+static void unknown010(ui::UIObjectAcc &like, FAVORITE favorite) {
+  GfMenuObjUtil::getFavoriteStat(OBJECT_TYPE_BLADE, 0, favorite);
+  like.setDisp(false);
+}
+
+// 0x71004ba57c, 575 insns. The favorite icon blocks go through unknown011 and unknown010 (the two-line `like2` blocks below stay written out: a helper holding `like.setDisp(false)` also matches
+// but only wraps one call). Ruling 8: same prologue as ItemListListener; the accessor struct gives 581 instructions (313 lines differ from +0x20, 0x71004ba59c).
+void GfMenuObjPouch2::PartyInfoListener::reciveEvent(const ui::EventData &event, u32 handle) {
+  ui::UIObjectAcc owner(m_menuObjPouch2->unknown18);
+  ui::UIObjectAcc acc(handle);
+  switch (event.unknown00) {
+  case 1:
+    setupPartyInfo(acc);
+    GfMenuObject::disableInput(handle);
+    acc.setDisp(false);
+    break;
+  case GfMenuTypes::unknown003_257:
+    setFadeIn(handle, 2);
+    break;
+  case GfMenuTypes::unknown003_258:
+    setFadeOut(handle, 2);
+    break;
+  case GfMenuTypes::unknown003_259: {
+    u32 driver = GfMenuReference::getReferenceDriverID(0);
+    u32 item = event.unknown08;
+    int category = GfDataItem::getCategory(item);
+    mm::mtl::FixStr<32> name;
+    name.format("IMG_chr_fvicon%02dlike@01", 1);
+    {
+      ui::UIObjectAcc like(acc.searchChild(name.c_str()));
+      unknown011(like, GfMenuObjUtil::getFavoriteStat(OBJECT_TYPE_PC, driver, FAVORITE_UNKNOWN_0) == 0 && category == GfDataDriver::getFavorite(driver, FAVORITE_UNKNOWN_0), 0);
+    }
+    name.format("IMG_chr_fvicon%02dlike@01", 2);
+    {
+      ui::UIObjectAcc like(acc.searchChild(name.c_str()));
+      unknown011(like, GfMenuObjUtil::getFavoriteStat(OBJECT_TYPE_PC, driver, FAVORITE_UNKNOWN_1) == 0 && category == GfDataDriver::getFavorite(driver, FAVORITE_UNKNOWN_1), 0);
+    }
+    name.format("IMG_chr_fviconit%02dlike@01", 1);
+    {
+      ui::UIObjectAcc like(acc.searchChild(name.c_str()));
+      unknown011(like, GfMenuObjUtil::getFavoriteStat(OBJECT_TYPE_PC, driver, FAVORITE_UNKNOWN_2) == 0 && item == GfDataDriver::getFavorite(driver, FAVORITE_UNKNOWN_2), 1);
+    }
+    name.format("IMG_chr_fviconit%02dlike@01", 2);
+    {
+      ui::UIObjectAcc like(acc.searchChild(name.c_str()));
+      unknown011(like, GfMenuObjUtil::getFavoriteStat(OBJECT_TYPE_PC, driver, FAVORITE_UNKNOWN_3) == 0 && item == GfDataDriver::getFavorite(driver, FAVORITE_UNKNOWN_3), 1);
+    }
+    name.format("IMG_chr_fviconit%02dlike2@01", 1);
+    {
+      ui::UIObjectAcc like(acc.searchChild(name.c_str()));
+      like.setDisp(false);
+    }
+    name.format("IMG_chr_fviconit%02dlike2@01", 2);
+    {
+      ui::UIObjectAcc like(acc.searchChild(name.c_str()));
+      like.setDisp(false);
+    }
+    // Unused, but the game builds it here (ruling 5): without it 568 instructions and the frame differs from +0x0.
+    DataParamAcc param(OBJECT_TYPE_PC, driver, GIMMICK_TYPE_UNKNOWN_0);
+    // The loop keeps three induction values (0x71004ba964, 0x71004ba9bc): the slot x22 from 2 with the exit compare `cmp x22, #5`, the index x25 and the
+    // 8 byte list offset x23. Both counters are 64 bit (`mov x25, xzr`, `add x25, x25, #1`) and the size test is the 64 bit `sub x21, x22, #2`. `number`
+    // is the slot of the else arm: the slot itself on the out of range edge (`mov x26, x22`, 0x71004ba9e0) and `i + 2` on the blade == 0 edge
+    // (`add x26, x25, #2`, 0x71004bac68), while the blade arm and the tail use `i + 2` directly (`mov w26, w22`, 0x71004bac60). One value for every use
+    // (`u32 slot = i + 2`) gives 563 instructions with the single index counter and `cmp #3`. The `static_cast<u32>` narrow the 64 bit values to the 32 bit format argument: passed as
+    // `u64` the format calls give 563 instructions (`i + 2`) and 4 differing lines (`number`).
+    u64 i = 0;
+    for (u32 slot = 2; slot < 5; i++, slot++) {
+      u32 blade = 0;
+      u64 number = slot;
+      if (i < m_menuObjPouch2->m_menuBladeList->getSize()) {
+        blade = m_menuObjPouch2->m_menuBladeList->getContents(i).unknown00;
+        number = i + 2;
+      }
+      if (blade != 0) {
+        name.format("IMG_chr_fvicon%02dlike@%02d", 1, static_cast<u32>(i + 2));
+        {
+          ui::UIObjectAcc like(acc.searchChild(name.c_str()));
+          unknown011(like, GfMenuObjUtil::getFavoriteStat(OBJECT_TYPE_BLADE, blade, FAVORITE_UNKNOWN_0) == 0 && category == GfDataBlade::getFavorite(blade, FAVORITE_UNKNOWN_0), 0);
+        }
+        name.format("IMG_chr_fvicon%02dlike@%02d", 2, static_cast<u32>(i + 2));
+        {
+          ui::UIObjectAcc like(acc.searchChild(name.c_str()));
+          unknown011(like, GfMenuObjUtil::getFavoriteStat(OBJECT_TYPE_BLADE, blade, FAVORITE_UNKNOWN_1) == 0 && category == GfDataBlade::getFavorite(blade, FAVORITE_UNKNOWN_1), 0);
+        }
+        name.format("IMG_chr_fviconit%02dlike@%02d", 1, static_cast<u32>(i + 2));
+        {
+          ui::UIObjectAcc like(acc.searchChild(name.c_str()));
+          unknown011(like, GfMenuObjUtil::getFavoriteStat(OBJECT_TYPE_BLADE, blade, FAVORITE_UNKNOWN_2) == 0 && item == GfDataBlade::getFavorite(blade, FAVORITE_UNKNOWN_2), 1);
+        }
+        name.format("IMG_chr_fviconit%02dlike@%02d", 2, static_cast<u32>(i + 2));
+        {
+          ui::UIObjectAcc like(acc.searchChild(name.c_str()));
+          unknown011(like, GfMenuObjUtil::getFavoriteStat(OBJECT_TYPE_BLADE, blade, FAVORITE_UNKNOWN_3) == 0 && item == GfDataBlade::getFavorite(blade, FAVORITE_UNKNOWN_3), 1);
+        }
+      } else {
+        name.format("IMG_chr_fvicon%02dlike@%02d", 1, static_cast<u32>(number));
+        {
+          ui::UIObjectAcc like(acc.searchChild(name.c_str()));
+          unknown010(like, FAVORITE_UNKNOWN_0);
+        }
+        name.format("IMG_chr_fvicon%02dlike@%02d", 2, static_cast<u32>(number));
+        {
+          ui::UIObjectAcc like(acc.searchChild(name.c_str()));
+          unknown010(like, FAVORITE_UNKNOWN_1);
+        }
+        name.format("IMG_chr_fviconit%02dlike@%02d", 1, static_cast<u32>(number));
+        {
+          ui::UIObjectAcc like(acc.searchChild(name.c_str()));
+          unknown010(like, FAVORITE_UNKNOWN_2);
+        }
+        name.format("IMG_chr_fviconit%02dlike@%02d", 2, static_cast<u32>(number));
+        {
+          ui::UIObjectAcc like(acc.searchChild(name.c_str()));
+          unknown010(like, FAVORITE_UNKNOWN_3);
+        }
+      }
+      name.format("IMG_chr_fviconit%02dlike2@%02d", 1, static_cast<u32>(i + 2));
+      {
+        ui::UIObjectAcc like(acc.searchChild(name.c_str()));
+        like.setDisp(false);
+      }
+      name.format("IMG_chr_fviconit%02dlike2@%02d", 2, static_cast<u32>(i + 2));
+      {
+        ui::UIObjectAcc like(acc.searchChild(name.c_str()));
+        like.setDisp(false);
+      }
+    }
+    break;
+  }
   default:
     ui::UIObjectListener::reciveEvent(event, handle);
     break;

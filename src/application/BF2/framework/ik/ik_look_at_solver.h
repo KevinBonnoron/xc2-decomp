@@ -49,6 +49,10 @@ public:
   void calcIK(const UpdateInfo &info) override;
   const mm::mtl::RTTI *getRTTI() const override;
 
+  // Inferred helper: fade state; original name unknown. Evidence: gf::GfFieldLookIk::updateIkSolver<fw::LookAtIkSolver> (1.0.0: 0x7100341f2c) reads it where the
+  // fw::LookIkSolver instantiation (0x7100341e08) reads LookIkSolver::unknown001.
+  unknown002 unknown001() const { return unknown24; }
+
   u8 _34[0x40 - 0x34];
   mm::Vec3 unknown40; // Inferred role: front of the bone, in the space of the bone; original member name unknown.
   mm::Vec3 unknown50; // Inferred role: zero offset; original member name unknown.

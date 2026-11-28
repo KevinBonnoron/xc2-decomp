@@ -148,10 +148,13 @@ public:
   u8 _24[0x28 - 0x24];
   ui::UICtrlCursorSelect *unknown28;    // Inferred role: contents cursor; original member name unknown.
   GfMenuCallContext *m_menuCallContext; // Inferred role: call context; original member name unknown.
-  u16 unknown38;                        // Inferred role: unused; original member name unknown.
+  // Inferred role: a contents item was already selected (the cursor moved once); original member name unknown. ContentsListener::reciveEvent writes unknown38 and unknown39 with two
+  // strb (0x7100485ee0, 0x7100485ef0), so they are bytes.
+  bool unknown38;
+  bool unknown39; // Inferred role: cleared whenever the contents list opens or the cursor moves; original member name unknown.
   u8 _3a[0x3c - 0x3a];
-  int unknown3c;                                   // Inferred role: unused, -1 at start; original member name unknown.
-  int unknown40;                                   // Inferred role: unused, -1 at start; original member name unknown.
+  int unknown3c;                                   // Inferred role: selected contents index, -1 at start; original member name unknown.
+  int unknown40;                                   // Inferred role: previous contents index, -1 at start; original member name unknown.
   u32 unknown44;                                   // Inferred role: open menu; original member name unknown.
   GfMenuDriverList *m_menuDriverList;              // Inferred role: driver list; original member name unknown.
   GfMenuBladeList *m_menuBladeList;                // Inferred role: blade list; original member name unknown.
@@ -166,6 +169,7 @@ public:
 static_assert(offsetof(GfMenuObjMainMenu2, unknown28) == 0x28, "");
 static_assert(offsetof(GfMenuObjMainMenu2, m_menuCallContext) == 0x30, "");
 static_assert(offsetof(GfMenuObjMainMenu2, unknown38) == 0x38, "");
+static_assert(offsetof(GfMenuObjMainMenu2, unknown39) == 0x39, "");
 static_assert(offsetof(GfMenuObjMainMenu2, unknown3c) == 0x3c, "");
 static_assert(offsetof(GfMenuObjMainMenu2, unknown40) == 0x40, "");
 static_assert(offsetof(GfMenuObjMainMenu2, unknown44) == 0x44, "");

@@ -241,7 +241,7 @@ void Manager::drawInfo() {
   int seconds = frames % 1800 / 30;
   int rest = frames % 30;
   mm::mtl::FixStr<64> text;
-  text.format("%s %s  %02d:%02d:%02d [%.1f]", unknown033[static_cast<int>(mm::mtl::Singleton<SeqManager>::getPtr()->m_seqInfo.unknown54)], unknown254.c_str(), minutes, seconds, rest, frame);
+  text.format("%s %s  %02d:%02d:%02d [%.1f]", unknown033[mm::mtl::Singleton<SeqManager>::getPtr()->m_seqInfo.unknown54], unknown254.c_str(), minutes, seconds, rest, frame);
   fw::debug::drawFont(x - 159, 61, mm::Col4::black, text.c_str());
   fw::debug::drawFont(left, 60, mm::Col4::white, text.c_str());
   if (mm::mtl::Singleton<FrameManager>::getPtr()->isWaiting()) {

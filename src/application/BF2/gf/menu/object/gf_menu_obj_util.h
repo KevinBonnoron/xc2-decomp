@@ -69,7 +69,10 @@ public:
   struct unknown001 {
     f32 unknown00; // Inferred role: preset control time; original member name unknown.
     f32 unknown04; // Inferred role: preset control time of preset 6; original member name unknown.
-    u8 _08[0x14 - 0x08];
+    u8 _08[0x0c - 0x08];
+    f32 unknown0c; // Inferred role: float stored into the second parameter of the main menu background move event, read by GfMenuObjMainMenu2::ContentsListener::reciveEvent (0x710048642c);
+                   // original member name unknown.
+    u8 _10[0x14 - 0x10];
     f32 unknown14; // Inferred role: seconds the field skill total info is shown, read by GfMenuFieldSkill::StateTotalNext::onStep (0x71003bb310); original member name unknown.
     f32 unknown18; // Inferred role: delay of the blade change opening; original member name unknown.
   };

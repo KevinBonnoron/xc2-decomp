@@ -13,6 +13,7 @@
 #include "gf/menu/gf_menu_types.h"
 #include "gf/menu/list/gf_menu_blade_list.h"
 #include "gf/menu/object/gf_menu_obj_common_detail.h"
+#include "gf/menu/object/gf_menu_obj_common_text.h"
 #include "gf/menu/object/gf_menu_obj_operation_info.h"
 #include "gf/menu/object/gf_menu_obj_util.h"
 #include "mm_math/mm_rect.h"
@@ -20,9 +21,11 @@
 #include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/fixstr.h"
 #include "mm_mtl/reference_object.h"
+#include "mm_mtl/vector.h"
 #include "ui/ctrl/ui_ctrl_cursor_select.h"
 #include "ui/event/ui_event_data.h"
 #include "ui/event/ui_event_manager.h"
+#include "ui/list/ui_list_info.h"
 #include "ui/ui_object_acc.h"
 
 namespace gf {
@@ -691,6 +694,187 @@ void GfMenuObjBladeSet::MercenariesListener::reciveEvent(const ui::EventData &ev
     unknown164(owner.searchChild("LAY_mer_slot"), GfMenuTypes::unknown003_34);
     unknown163(owner.searchChild("LAY_mer_preview"), GfMenuTypes::unknown003_34, 0);
     GfMenuObjOperationInfo::close();
+    break;
+  }
+}
+
+// Inferred name; kept as an exception to the unknown-name rule (AGENTS.md): single-user helper whose existence only the match proves; rename if a sibling build gives a symbol.
+// Role: copy of a blade entry with its blade cleared. Its user is MercenariesSlotBlListener::reciveEvent event 0x41 (0x7100408a04: `and x9, x21, #0xffffffff00000000; str x9, [x8, x22, lsl #3]`
+// after the bounds asserts of the vector; FormSlotListener::reciveEvent has the same store at 0x7100406bf8 and is not written yet): the game loads the whole 8 byte entry and writes it back with
+// the blade masked. Forms tried without the helper, in the case (measured with check on the unit): `info.unknown00 = 0;` after the copy (before or after the second getIndex), a cleared copy
+// (`MenuBladeInfo cleared = info; cleared.unknown00 = 0;`) and `MenuBladeInfo{0, info.unknown04}` give 651 instructions like the game but 3 lines differ from +0x998 (0x7100408994: the entry is
+// loaded as `ldr w21, [x8, #4]` instead of `ldr x21, [x8]`); two member stores into the vector give 671; the helper applied to the loaded entry (`MenuBladeInfo info = clearBlade(...)`) gives 651
+// with 45 lines differing. The entry only stays one 8 byte value when the clear is a by-value function applied at the store.
+static MenuBladeInfo clearBlade(MenuBladeInfo info) {
+  info.unknown00 = 0;
+  return info;
+}
+
+// Ruling 8: the prologue (the handle and owner accessors, then the switch on the event) is written out in every listener of this class; a file-local struct that builds both accessors in its
+// constructor gives 654 instructions against the game's 651 (662 lines differ from +0x20, 0x710040801c).
+void GfMenuObjBladeSet::MercenariesSlotBlListener::reciveEvent(const ui::EventData &event, u32 handle) {
+  ui::UIObjectAcc acc(handle);
+  ui::UIObjectAcc owner(m_menuObjBladeSet->unknown18);
+  switch (event.unknown00) {
+  case 1: {
+    // Written out like the cursor setup of GfMenuObjMercenaries::MissionListListener, GfMenuObjMainMenu2::ContentsListener and GfMenuObjPouch2::SlotListener (ruling 8): a file-local helper taking
+    // the handle, the cursor object and the format gives 650 instructions against the game's 651 (211 lines differ from +0x2c, 0x7100408028: the CursorParam gets another stack slot); one taking
+    // the handle, the owner accessor and both names gives 651 with 47 lines differing from the same address. The game stores unknown1a after unknown04 and before unknown08
+    // (`strh wzr, [sp, #0x22]` at 0x7100408168), as MissionListListener does.
+    GfMenuObjUtil::CursorParam param;
+    param.unknown00 = handle;
+    param.unknown04 = owner.searchChild("IMG_mer_slot_cursor");
+    param.unknown1a = 0;
+    param.unknown08 = "LAY_mer_bl@%02d";
+    param.m_cursorSetting.unknown18 = 5;
+    m_menuObjBladeSet->unknown88 = GfMenuObjUtil::createCursor(param);
+    GfMenuReference::setReferenceNumber(0, 1);
+    GfMenuObject::disableInput(handle);
+    break;
+  }
+  case 6: {
+    u32 index = event.unknown08;
+    m_menuObjBladeSet->unknown2c = index;
+    m_menuObjBladeSet->unknown80->setIndex(index);
+    // The game reads the selected slot before it reloads the cursor (0x71004082a4): with the call written in the argument the cursor and the list load together (`ldp x0, x21`).
+    u32 selected = m_menuObjBladeSet->unknown80->getIndex(true);
+    if (m_menuObjBladeSet->unknown88->inputChange(selected)) {
+      // The game forms the compare before the call of setCompleteBtnStat (`cset w21, ne` at 0x71004082a0).
+      bool isDisp = index != 6;
+      setCompleteBtnStat(index, m_menuObjBladeSet->unknown28, m_menuObjBladeSet->unknown80);
+      m_menuObjBladeSet->unknown88->setDisp(isDisp);
+      GfMenuReference::setReferenceBladeID(0, m_menuObjBladeSet->unknown80->getContents(m_menuObjBladeSet->unknown80->getIndex(false)).unknown00);
+    }
+    break;
+  }
+  case 8:
+    switch (event.unknown0c) {
+    case 1:
+      if (m_menuObjBladeSet->unknown2c <= 5) {
+        unknown164(owner.searchChild("LAY_bl_select"), GfMenuTypes::unknown003_33);
+        m_menuObjBladeSet->unknown88->setMulColor("cmm_cursorB");
+        GfMenuReference::setReferenceNumber(0, 1);
+        m_menuObjBladeSet->unknown35 = false;
+        break;
+      }
+      {
+        u32 team = GfMenuReference::getReferenceTeamID();
+        if (team != 0) {
+          u32 mission = m_menuObjBladeSet->unknown28;
+          if (mission != 0) {
+            GfGameMercenaries::clearTeamMember(team);
+            for (u32 i = 0; i < m_menuObjBladeSet->unknown80->getSize(); i++) {
+              if (m_menuObjBladeSet->unknown80->getContents(i).unknown00 != 0) {
+                GfGameMercenaries::addTeamMember(team, m_menuObjBladeSet->unknown80->getContents(i).unknown00);
+              }
+            }
+            if (GfGameMercenaries::isTeamEnableMission(team, mission)) {
+              unknown164(owner.searchChild("LAY_bl_form"), GfMenuTypes::unknown003_34);
+            } else {
+              GfGameMercenaries::clearTeamMember(team);
+            }
+          }
+        }
+      }
+      return;
+    case 2:
+      GfMenuReference::setReferenceTeamID(0);
+      unknown164(owner.searchChild("LAY_main"), GfMenuTypes::unknown003_34);
+      break;
+    case 10:
+      unknown164(owner.searchChild("LAY_mer_slot_menu"), GfMenuTypes::unknown003_33);
+      m_menuObjBladeSet->unknown88->setDisp(false);
+      GfMenuReference::setReferenceNumber(0, 1);
+      break;
+    case 0xd:
+      if (m_menuObjBladeSet->unknown80->getContents(m_menuObjBladeSet->unknown80->getIndex(false)).unknown00 == 0) {
+        return;
+      }
+      m_menuObjBladeSet->unknown40->reset();
+      GfMenuObjCommonText::open(m_menuObjBladeSet->unknown40, 0x13, 0);
+      GfMenuObject::setCallContextEventHandler(m_menuObjBladeSet->unknown40, handle);
+      break;
+    default:
+      return;
+    }
+    GfMenuObject::disableInput(handle);
+    break;
+  case GfMenuTypes::unknown003_33:
+    m_menuObjBladeSet->unknown35 = true;
+    m_menuObjBladeSet->unknown88->open(0);
+    m_menuObjBladeSet->unknown2c = 0;
+    GfMenuObject::setupInputSelection(handle, 0, 7);
+    GfMenuObject::enableInput(handle);
+    GfMenuObjOperationInfo::open(handle, 0, 0, 0);
+    acc.setDisp(true);
+    break;
+  case GfMenuTypes::unknown003_34:
+    m_menuObjBladeSet->unknown35 = false;
+    GfMenuObject::disableInput(handle);
+    acc.setDisp(false);
+    break;
+  case GfMenuTypes::unknown003_257: {
+    ui::UIListInfoBase::SetupParam param;
+    param.unknown08 = 6;
+    m_menuObjBladeSet->unknown80->setup(getAllocator(ALLOCATOR_UNKNOWN_0), param);
+    while (m_menuObjBladeSet->unknown80->getSize() < 6) {
+      MenuBladeInfo info = {};
+      info.unknown04 = m_menuObjBladeSet->unknown28;
+      m_menuObjBladeSet->unknown80->addContents(info);
+    }
+    setupMercenariesSlotBl(acc, m_menuObjBladeSet->unknown80);
+    break;
+  }
+  case GfMenuTypes::unknown003_258: {
+    m_menuObjBladeSet->unknown88->setMulColor(nullptr);
+    GfMenuReference::setReferenceNumber(0, 1);
+    GfMenuReference::setReferenceBladeID(0, m_menuObjBladeSet->unknown80->getContents(m_menuObjBladeSet->unknown80->getIndex(false)).unknown00);
+    ui::UIObjectAcc preview(owner.searchChild("LAY_mer_prev_bl"));
+    preview.setMulColor("white");
+    m_menuObjBladeSet->unknown35 = true;
+    GfMenuObject::enableInput(handle);
+    break;
+  }
+  case GfMenuTypes::unknown003_259: {
+    GfMenuBladeList *list = m_menuObjBladeSet->unknown50;
+    GfMenuBladeList *slotList = m_menuObjBladeSet->unknown80;
+    // The game loads the selected blade entry before the index of the slot list (inlined into the store: 651 instructions, 128 lines differ from +0x64).
+    const MenuBladeInfo &info = list->getContents(list->getIndex(false));
+    u32 index = slotList->getIndex(false);
+    if (index < slotList->contents.size()) {
+      slotList->contents[index] = info;
+    }
+    break;
+  }
+  case GfMenuTypes::unknown003_260:
+    m_menuObjBladeSet->unknown35 = true;
+    m_menuObjBladeSet->unknown88->open(0);
+    m_menuObjBladeSet->unknown2c = 6;
+    m_menuObjBladeSet->unknown80->setIndex(6);
+    GfMenuReference::setReferenceNumber(0, 3);
+    m_menuObjBladeSet->unknown88->setDisp(false);
+    GfMenuObject::setupInputSelection(handle, 6, 7);
+    GfMenuObject::enableInput(handle);
+    break;
+  case 0x41:
+    if (m_menuObjBladeSet->unknown40 == nullptr || m_menuObjBladeSet->unknown40->unknown0c != event.unknown08) {
+      break;
+    }
+    if (event.unknown10_u16 == 0) {
+      GfMenuBladeList *blades = m_menuObjBladeSet->unknown80;
+      MenuBladeInfo info = blades->getContents(blades->getIndex(false));
+      // The game loads the list again after the copy (0x7100408998), as GfMenuObjMercenaryForm does before its erase.
+      blades = m_menuObjBladeSet->unknown80;
+      u32 index = blades->getIndex(false);
+      if (index < blades->contents.size()) {
+        blades->contents[index] = clearBlade(info);
+      }
+      GfMenuReference::setReferenceBladeID(0, 0);
+    }
+    GfMenuObject::enableInput(handle);
+    break;
+  default:
+    ui::UIObjectListener::reciveEvent(event, handle);
     break;
   }
 }

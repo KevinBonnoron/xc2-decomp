@@ -168,6 +168,144 @@ SDataBlade &GfDataBlade::getSDataBlade(u32 blade) {
   return GfDataManager::getDataGame()->unknown5a2c[index];
 }
 
+void GfDataBlade::setupSDataBlade(SDataBlade &dataBlade, u32 blade, bool unknown001) {
+  GfBdatChrBl *bdatChrBl = GfBdatChrBl::get();
+  if (blade >= bdatChrBl->getChrBlStart() && blade < bdatChrBl->getChrBlEnd()) {
+    dataBlade.unknown06 = blade;
+    u16 name = bdatChrBl->getChrBlName(blade);
+    dataBlade.unknown832 = name;
+    dataBlade.unknown834 = 0;
+    dataBlade.unknown858 = getName(blade, name);
+    dataBlade.m_race = bdatChrBl->getChrBlRace(blade);
+    dataBlade.m_gender = bdatChrBl->getChrBlGender(blade);
+    dataBlade.unknown846 = bdatChrBl->getChrBlQuestRace(blade);
+    dataBlade.unknown70c = bdatChrBl->getChrBlModel(blade);
+    dataBlade.unknown82a = bdatChrBl->getChrBlCondition(blade);
+    dataBlade.unknown720 = bdatChrBl->getChrBlModel2(blade);
+    dataBlade.m_iconData = bdatChrBl->getChrBlStill(blade);
+    dataBlade.unknown734 = bdatChrBl->getChrBlMotion(blade);
+    dataBlade.unknown748 = bdatChrBl->getChrBlMotion2(blade);
+    if (bdatChrBl->getChrBlAddMotion(blade) == nullptr) {
+      dataBlade.unknown75c.clear();
+    } else {
+      dataBlade.unknown75c = bdatChrBl->getChrBlAddMotion(blade);
+    }
+    dataBlade.unknown770 = bdatChrBl->getChrBlVoice(blade);
+    dataBlade.unknown784 = bdatChrBl->getChrBlClipEvent(blade);
+    dataBlade.unknown798 = bdatChrBl->getChrBlCom_SE(blade);
+    dataBlade.unknown7fc = bdatChrBl->getChrBlSePack(blade);
+    dataBlade.m_effectResourceName = bdatChrBl->getChrBlCom_Eff(blade);
+    dataBlade.unknown7c0 = bdatChrBl->getChrBlCom_Vo(blade);
+    dataBlade.m_centerBone = bdatChrBl->getChrBlCenterBone(blade);
+    dataBlade.m_camBone = bdatChrBl->getChrBlCamBone(blade);
+    dataBlade.m_weaponType = bdatChrBl->getChrBlWeaponType(blade);
+    dataBlade.unknown822 = bdatChrBl->getChrBlOrbNum(blade);
+    dataBlade.unknown823 = bdatChrBl->getChrBlAtr(blade);
+    dataBlade.m_personality = bdatChrBl->getChrBlPersonality(blade);
+    dataBlade.m_coolTime = bdatChrBl->getChrBlCoolTime(blade);
+    if (!unknown001) {
+      dataBlade.m_equipWeapon = bdatChrBl->getChrBlDefWeapon(blade);
+    }
+    dataBlade.m_chestHeight = bdatChrBl->getChrBlChestHeight(blade);
+    dataBlade.m_landingHeight = bdatChrBl->getChrBlLandingHeight(blade);
+    dataBlade.unknown836 = bdatChrBl->getChrBlScale(blade);
+    dataBlade.unknown838 = bdatChrBl->getChrBlWpnScale(blade);
+    dataBlade.unknown83e = bdatChrBl->getChrBlPArmor(blade);
+    dataBlade.unknown83f = bdatChrBl->getChrBlEArmor(blade);
+    dataBlade.unknown840 = bdatChrBl->getChrBlHpMaxRev(blade);
+    dataBlade.unknown841 = bdatChrBl->getChrBlStrengthRev(blade);
+    dataBlade.unknown842 = bdatChrBl->getChrBlPowEtherRev(blade);
+    dataBlade.unknown843 = bdatChrBl->getChrBlDexRev(blade);
+    dataBlade.unknown844 = bdatChrBl->getChrBlAgilityRev(blade);
+    dataBlade.unknown845 = bdatChrBl->getChrBlLuckRev(blade);
+    dataBlade.unknown84a = bdatChrBl->getChrBlBKLSet(blade);
+    dataBlade.m_createEvent = bdatChrBl->getChrBlCreateEventID(blade);
+    dataBlade.m_normalTalk = bdatChrBl->getChrBlNormalTalk(blade);
+    dataBlade.unknown83a = bdatChrBl->getChrBlOffsetID(blade);
+    dataBlade.unknown820 = bdatChrBl->getChrBlBladeSize(blade);
+    dataBlade.unknown83c = bdatChrBl->getChrBlCollisionId(blade);
+    dataBlade.unknown847 = bdatChrBl->getChrBlReleaseLock(blade);
+    dataBlade.m_footStep = bdatChrBl->getChrBlFootStep(blade);
+    dataBlade.m_footStepEffect = bdatChrBl->getChrBlFootStepEffect(blade);
+    dataBlade.m_eyeRotControl = bdatChrBl->getChrBlEyeRot(blade);
+    dataBlade.unknown825 = 0;
+    for (u32 i = 0; i < 4; i++) {
+      if (bdatChrBl->getChrBlExtraParts(blade, i) != 0) {
+        dataBlade.unknown825 |= 1 << i;
+      }
+    }
+    for (u32 i = 0; i < 3; i++) {
+      dataBlade.unknown3c[i].unknown00 = bdatChrBl->getChrBlBArts(blade, i);
+      if (!unknown001) {
+        dataBlade.unknown3c[i].unknown06 = 1;
+        dataBlade.unknown3c[i].m_bladeArtsLevel = 1;
+      }
+    }
+    for (u32 i = 0; i < 3; i++) {
+      dataBlade.unknown60[i].unknown00 = bdatChrBl->getChrBlNArts(blade, i);
+      dataBlade.unknown60[i].unknown02 = bdatChrBl->getChrBlNArtsRecastRev(blade, i);
+      if (!unknown001) {
+        dataBlade.unknown60[i].unknown06 = 1;
+        dataBlade.unknown60[i].m_bladeArtsLevel = 1;
+      }
+    }
+    dataBlade.unknown84.unknown00 = bdatChrBl->getChrBlBartsEx(blade);
+    dataBlade.unknown90.unknown00 = bdatChrBl->getChrBlBartsEx2(blade);
+    for (u32 i = 0; i < 3; i++) {
+      dataBlade.unknown9c[i].unknown00 = bdatChrBl->getChrBlBSkill(blade, i);
+      if (!unknown001) {
+        dataBlade.unknown9c[i].unknown02 = 1;
+        dataBlade.unknown9c[i].unknown03 = 1;
+      }
+    }
+    QuestListAcc *questListAcc = QuestListAcc::get();
+    for (u32 i = 0; i < 3; i++) {
+      u32 fieldSkill = bdatChrBl->getChrBlFSkill(blade, i);
+      dataBlade.unknownae[i].m_fieldSkill = fieldSkill;
+      if (!unknown001) {
+        dataBlade.unknownae[i].m_fieldSkillLevel = fieldSkill != 0;
+      }
+      if (fieldSkill != 0) {
+        dataBlade.unknownae[i].unknown04 = questListAcc->getFLD_FieldSkillListMaxLevel(fieldSkill);
+      }
+    }
+    if (!unknown001) {
+      for (u32 idea = 0; idea < SDataIdea::IDEA_UNKNOWN_4; idea++) {
+        dataBlade.m_idea.setLevel(idea, bdatChrBl->getChrBlIdea(blade, idea));
+      }
+      dataBlade.m_trustPoint = 0;
+    }
+    // The game calls QuestListAcc::get() a second time before the achievement loops (0x71002972a0); with the first pointer reused the function has 948 instructions.
+    questListAcc = QuestListAcc::get();
+    if (!unknown001) {
+      for (u32 i = 0; i < 3; i++) {
+        dataBlade.unknownc4[i].unknown00 = bdatChrBl->getChrBlArtsAchievement(blade, i);
+        if (dataBlade.unknownc4[i].unknown00 != 0) {
+          dataBlade.unknown3c[i].unknown08 = questListAcc->getFLD_AchievementSetAbilityLevel(dataBlade.unknownc4[i].unknown00);
+        }
+      }
+      for (u32 i = 0; i < 3; i++) {
+        dataBlade.unknown274[i].unknown00 = bdatChrBl->getChrBlSkillAchievement(blade, i);
+        if (dataBlade.unknown274[i].unknown00 != 0) {
+          dataBlade.unknown9c[i].unknown04 = questListAcc->getFLD_AchievementSetAbilityLevel(dataBlade.unknown274[i].unknown00);
+        }
+      }
+      for (u32 i = 0; i < 3; i++) {
+        dataBlade.unknown424[i].unknown00 = bdatChrBl->getChrBlFskillAchievement(blade, i);
+        if (dataBlade.unknown424[i].unknown00 != 0) {
+          dataBlade.unknownae[i].unknown04 = questListAcc->getFLD_AchievementSetAbilityLevel(dataBlade.unknown424[i].unknown00);
+        }
+      }
+      dataBlade.m_achievInfo.unknown00 = bdatChrBl->getChrBlKeyAchievement(blade);
+    }
+    for (u32 i = 0; i < 2; i++) {
+      dataBlade.unknown666[i].unknown00 = bdatChrBl->getChrBlFavoriteCategory(blade, i);
+      dataBlade.unknown666[i].unknown02 = bdatChrBl->getChrBlFavoriteItem(blade, i);
+    }
+  }
+  setupSDataBladeAchievement(dataBlade, unknown001);
+}
+
 u32 GfDataBlade::getBladeID(u32 index) {
   if (index < BLADE_UNKNOWN_20) {
     u32 blade = index + BLADE_UNKNOWN_1001;

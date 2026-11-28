@@ -18,6 +18,7 @@ class ReferenceObject;
 } // namespace mm
 
 namespace ui {
+class UICtrlCursorColor;
 class UIObjectAcc;
 class UISelectObjList;
 } // namespace ui
@@ -34,6 +35,14 @@ class GfMenuReferenceNumber;
 class GfMenuObjHanaCustom : public GfMenuObject {
 public:
   class MainListener : public ui::UIObjectListener {
+  public:
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x20 - 0x0c];
+    GfMenuObjHanaCustom *m_menuObjHanaCustom; // Inferred role: owner; original member name unknown.
+  };
+
+  class ItemListListener : public ui::UIObjectListener {
   public:
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
@@ -104,20 +113,21 @@ public:
   u32 unknown84;                                     // Role and original member name unknown, cleared by the constructor.
   GfMenuItemList *m_menuItemList;                    // Inferred role: items; original member name unknown.
   ui::UISelectObjList *unknown90;                    // Inferred role: list objects; original member name unknown.
-  mm::mtl::ReferenceObject *unknown98;               // Inferred role: reference-counted object; type and original member name unknown.
+  ui::UICtrlCursorColor *unknown98;                  // Inferred role: item cursor; original member name unknown.
   GfMenuCallContext *m_menuCallContext;              // Inferred role: call context; original member name unknown.
   GfMenuSequence<GfMenuObjHanaCustom, 8> unknown0a8; // Inferred role: queued steps; original member name unknown.
   u32 unknown338;                                    // Role and original member name unknown.
   u8 _33c[0x340 - 0x33c];
   GfMenuReferenceItem *m_menuReferenceItem; // Inferred role: reference item; original member name unknown.
   void *unknown348;                         // Role, type and original member name unknown, cleared by the constructor.
-  u32 unknown350;                           // Role and original member name unknown, cleared by the constructor.
+  u32 unknown350;                           // Inferred role: selected sort of the item list; original member name unknown.
   u8 _354[0x358 - 0x354];
   mm::mtl::IntrusivePtr<GfMenuReferenceNumber> unknown358; // Inferred role: reference number; original member name unknown.
 };
 
 static_assert(offsetof(GfMenuObjHanaCustom::MainListener, m_menuObjHanaCustom) == 0x20, "");
 static_assert(offsetof(GfMenuObjHanaCustom::EquipListListener, m_menuObjHanaCustom) == 0x20, "");
+static_assert(offsetof(GfMenuObjHanaCustom::ItemListListener, m_menuObjHanaCustom) == 0x20, "");
 static_assert(offsetof(GfMenuObjHanaCustom::PlanListener, m_menuObjHanaCustom) == 0x20, "");
 static_assert(offsetof(GfMenuObjHanaCustom, unknown28) == 0x28, "");
 static_assert(offsetof(GfMenuObjHanaCustom, unknown30) == 0x30, "");

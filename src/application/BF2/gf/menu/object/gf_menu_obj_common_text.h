@@ -93,8 +93,8 @@ public:
     int unknown18;                            // Inferred role: open flag; original member name unknown.
     GfMenuObjCommonText *m_menuObjCommonText; // Inferred role: owner; original member name unknown.
   };
-  // The next three listeners are declared for the constructors inlined in GfMenuObjCommonText::initialize (zeroed range 0x0c to 0x1c, owner at 0x20); their reciveEvent is not matched yet. The members
-  // that MerListener::reciveEvent (0x710043ddf4) and SelectListener::reciveEvent (0x710043f124) read or write are named, KizunaListener::reciveEvent (0x710043e724) reads none of the zeroed range.
+  // The next three listeners are declared for the constructors inlined in GfMenuObjCommonText::initialize (zeroed range 0x0c to 0x1c, owner at 0x20). The members that their reciveEvent read or write
+  // are named (open flag at 0x18 in all three, the event parameter at 0x0c in SelectListener); the rest of the zeroed range is only stored by the constructor.
   class MerListener : public ui::UIObjectListener {
   public:
     MerListener(GfMenuObjCommonText *owner) : _0c(), unknown18(0), m_menuObjCommonText(owner) {}
@@ -106,10 +106,11 @@ public:
   };
   class KizunaListener : public ui::UIObjectListener {
   public:
-    KizunaListener(GfMenuObjCommonText *owner) : _0c(), m_menuObjCommonText(owner) {}
+    KizunaListener(GfMenuObjCommonText *owner) : _0c(), unknown18(0), m_menuObjCommonText(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
-    u8 _0c[0x1c - 0x0c];                      // Actively zero-initialized unknown byte range, NOT padding; original name/role unknown.
+    u8 _0c[0x18 - 0x0c];
+    int unknown18;                            // Inferred role: open flag; original member name unknown.
     GfMenuObjCommonText *m_menuObjCommonText; // Inferred role: owner; original member name unknown.
   };
   class SelectListener : public ui::UIObjectListener {

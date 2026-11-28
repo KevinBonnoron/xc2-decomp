@@ -18,6 +18,26 @@ const s32 BgmManager::unknown001[7] = {15, 20, 23, 25, 23, 20, 15};
 
 BgmManager::BgmManager() : unknown10(0), unknown14(0), unknown7c(0.0f) {}
 
+void BgmManager::clear() {
+  if (unknown10 & (FLAG_UNKNOWN_1 | FLAG_UNKNOWN_5)) {
+    gf::EventBgmSetup setup;
+    // The game (0x71000aa2d0) calls FrameManager::getPtr() and loads the flag word again after the first flag test, and stores the fade last; the two
+    // locals place the call (ruling 1) and the load (ruling 2) before the stores. Without both 41 instructions against 42, and with only one of them too.
+    // unknown63 = false repeats the default, as the store at 0x71000aa338 does (P3).
+    f32 fadeSeconds = mm::mtl::Singleton<FrameManager>::getPtr()->isPause(FrameManager::PAUSE_TYPE_UNKNOWN_17_2) ? 0.0f : 10.0f * TO_SEC;
+    bool isHandOver = unknown10 & FLAG_UNKNOWN_0;
+    setup.unknown4c = fadeSeconds;
+    setup.unknown62 = true;
+    setup.unknown63 = false;
+    setup.unknown61 = isHandOver;
+    gf::GfGameEvent::stopBgm(setup);
+    unknown10 &= ~(FLAG_UNKNOWN_1 | FLAG_UNKNOWN_5);
+  }
+  unknown18 = "";
+  unknown7c = 0.0f;
+  unknown10 = 0;
+}
+
 void BgmManager::render() {
   if (!(unknown14 & DISP_FLAG_UNKNOWN_0) || !(unknown10 & FLAG_UNKNOWN_1)) {
     return;

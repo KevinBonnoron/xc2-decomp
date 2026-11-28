@@ -31,6 +31,7 @@ public:
   static bool isExistOpenItem();
   static bool getEffect(mm::mtl::FixedVector<PouchEffect, 3> &effects, u32 driver);
   static bool getEffect(mm::mtl::FixedVector<PouchEffect, 3> &effects, u32 driver, u32 slot);
+  static bool isEnableSetItem(u32 driver, u32 slot, u32 item);
 };
 
 static_assert(offsetof(PouchEffect, unknown04) == 0x4, "");

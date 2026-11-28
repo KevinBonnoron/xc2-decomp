@@ -27,10 +27,12 @@ public:
 
   class ComboReqListener : public ui::UIObjectListener {
   public:
-    ComboReqListener(GfMenuObjPartyStatus *owner) : _0c(), m_menuObjPartyStatus(owner) {}
+    ComboReqListener(GfMenuObjPartyStatus *owner) : unknown0c(0), unknown10(0), _14(), m_menuObjPartyStatus(owner) {}
     void reciveEvent(const ui::EventData &event, u32 handle) override;
 
-    u8 _0c[0x1c - 0x0c];                        // Actively zero-initialized unknown byte range, NOT padding; original name/role unknown.
+    int unknown0c;                              // Role unknown, set to -1 by event 1 of reciveEvent (0x71004aed7c, one 64-bit store with unknown10); original member name unknown.
+    u32 unknown10;                              // Inferred role: bit set of the shown combo request slots; original member name unknown.
+    u8 _14[0x1c - 0x14];                        // Actively zero-initialized unknown byte range, NOT padding; original name/role unknown.
     GfMenuObjPartyStatus *m_menuObjPartyStatus; // Inferred role: owner; original member name unknown.
   };
 
@@ -60,18 +62,21 @@ public:
   void setupComboReq(const ui::UIObjectAcc &acc, u16 index, u16 combo, bool isEnable, u16 effect, u32 button);
 
   u8 _24[0x30 - 0x24];
-  int unknown30[2]; // Inferred role: unused, -1 at start; original member name unknown.
-  int unknown38;    // Inferred role: unused, -1 at start; original member name unknown.
+  int unknown30[3]; // Inferred role: handle of the effect control of each combo request slot, -1 when none; original member name unknown.
   bool unknown3c;   // Role and original member name unknown, cleared by the constructor.
-  u8 _3d[0x50 - 0x3d];
+  u8 _3d[0x40 - 0x3d];
+  int unknown40[3]; // Inferred role: handle of the fade control of each combo request slot, -1 when none; original member name unknown.
+  u8 _4c[0x50 - 0x4c];
 };
 
 static_assert(offsetof(GfMenuObjPartyStatus, unknown30) == 0x30, "");
-static_assert(offsetof(GfMenuObjPartyStatus, unknown38) == 0x38, "");
 static_assert(offsetof(GfMenuObjPartyStatus, unknown3c) == 0x3c, "");
+static_assert(offsetof(GfMenuObjPartyStatus, unknown40) == 0x40, "");
 static_assert(sizeof(GfMenuObjPartyStatus) == 0x50, "");
 static_assert(offsetof(GfMenuObjPartyStatus::MainListener, m_menuObjPartyStatus) == 0x20, "");
 static_assert(sizeof(GfMenuObjPartyStatus::MainListener) == 0x28, "");
+static_assert(offsetof(GfMenuObjPartyStatus::ComboReqListener, unknown0c) == 0x0c, "");
+static_assert(offsetof(GfMenuObjPartyStatus::ComboReqListener, unknown10) == 0x10, "");
 static_assert(offsetof(GfMenuObjPartyStatus::ComboReqListener, m_menuObjPartyStatus) == 0x20, "");
 static_assert(sizeof(GfMenuObjPartyStatus::ComboReqListener) == 0x28, "");
 

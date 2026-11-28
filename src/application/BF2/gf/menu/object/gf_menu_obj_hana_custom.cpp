@@ -20,13 +20,16 @@
 #include "gf/menu/list/gf_menu_id_list.h"
 #include "gf/menu/list/gf_menu_item_list.h"
 #include "gf/menu/object/gf_menu_obj_char_select.h"
+#include "gf/menu/object/gf_menu_obj_common_text.h"
 #include "gf/menu/object/gf_menu_obj_mainmenu2.h"
 #include "gf/menu/object/gf_menu_obj_operation_info.h"
+#include "gf/menu/object/gf_menu_obj_sort.h"
 #include "gf/menu/object/gf_menu_obj_util.h"
 #include "mm_math/mm_pnt.h"
 #include "mm_math/mm_rect.h"
 #include "mm_mtl/fixstr.h"
 #include "mm_mtl/reference_object.h"
+#include "ui/ctrl/ui_ctrl_cursor_color.h"
 #include "ui/event/ui_event_data.h"
 #include "ui/list/ui_select_obj_list.h"
 #include "ui/ui_object_acc.h"
@@ -841,6 +844,140 @@ u32 GfMenuObjHanaCustom::searchIdList(GfMenuIDList *list, u32 id) {
     }
   }
   return 0xffffffff;
+}
+
+void GfMenuObjHanaCustom::ItemListListener::reciveEvent(const ui::EventData &event, u32 handle) {
+  ui::UIObjectAcc owner(m_menuObjHanaCustom->unknown18);
+  ui::UIObjectAcc acc(handle);
+  // The game reads the reference blade before the switch (0x710046de44) and uses it in case 8 (equip parts); read inside that case 15 lines differ (measured).
+  u32 blade = GfMenuReference::getReferenceBladeID(0);
+  switch (event.unknown00) {
+  case 1: {
+    m_menuObjHanaCustom->unknown90->clear();
+    m_menuObjHanaCustom->unknown90->pickupObject(acc.unknown10, "LAY_hpsub_tag@%02d", 1);
+    setupItemList(acc, m_menuObjHanaCustom->m_menuItemList, m_menuObjHanaCustom->unknown90);
+    ui::UICtrlCursorColor::CursorSetting setting;
+    setting.unknown00 = "IMG_hpsub_sltag@%02d";
+    setting.unknown08 = "TXT_sbpartsname@%02d";
+    m_menuObjHanaCustom->unknown98 = ui::UICtrlCursorColor::create(handle, setting, m_menuObjHanaCustom->unknown90);
+    m_menuObjHanaCustom->unknown98->open(0);
+    GfMenuObjUtil::createVScrollBarPlugin(acc.searchChild("IMG_hpsub_scr_point"), m_menuObjHanaCustom->m_menuItemList, "IMG_hpsub_scr_line", true);
+    ui::UIObjectAcc info(owner.searchChild("LAY_sub_window"));
+    refreshItemInfo(info, m_menuObjHanaCustom->m_menuItemList, 0, 1);
+    GfMenuObject::disableInput(handle);
+    acc.setDisp(false);
+    GfMenuObjSort::setSortLabelText(GfMenuObjSort::getSortID(0x12, 0), owner.searchChild("TXT_item_sort_label"));
+    m_menuObjHanaCustom->unknown350 = 0;
+    break;
+  }
+  case 6: {
+    // The event words are read before the first call (ruling 2): at their uses the function has 696 instructions and 153 differing lines (measured).
+    u32 index = event.unknown08;
+    u32 previous = event.unknown0c;
+    m_menuObjHanaCustom->m_menuItemList->setIndex(index);
+    // The game reloads the owner after getIndex before it reads the cursor (0x710046e18c to 0x710046e1a4); a call written inside the condition loads the cursor first (2 lines differ, measured).
+    u32 cursor = m_menuObjHanaCustom->m_menuItemList->getIndex(true);
+    if (m_menuObjHanaCustom->unknown98->inputChange(cursor)) {
+      u32 type = m_menuObjHanaCustom->getPartsId();
+      refreshItemList(m_menuObjHanaCustom->m_menuItemList, m_menuObjHanaCustom->unknown90, type);
+      ui::UIObjectAcc info(owner.searchChild("LAY_sub_window"));
+      // The game never sets x1 for the list of refreshItemInfo (0x710046e4ec onward), which never reads it (ruling 6); the owner's item list is the plausible one.
+      refreshItemInfo(info, m_menuObjHanaCustom->m_menuItemList, type, 1);
+      // The cursor sound test as a file-local helper (previous, index) gives the same function: 695 instructions, 0 differing lines (measured); it stays written out because this is its only user in
+      // this file.
+      if (previous != 0xffffffff && index != previous) {
+        GfMenuObjUtil::playSECommonCursor();
+      }
+    }
+    break;
+  }
+  case 8:
+    switch (event.unknown0c) {
+    case 1: {
+      u32 item = m_menuObjHanaCustom->m_menuItemList->getContents(m_menuObjHanaCustom->m_menuItemList->getIndex(false)).unknown04;
+      u32 type = m_menuObjHanaCustom->getPartsId();
+      GfItemHandle itemHandle = m_menuObjHanaCustom->m_menuItemList->getContents(m_menuObjHanaCustom->m_menuItemList->getIndex(false)).m_itemHandle;
+      // The game does not initialise the result: an initialiser adds a store (1 line differs, measured); isEquipParts sets it for every type of the list.
+      RESULT_HANA result;
+      if (GfMenuItemUtil::searchEquipHanaParts(type, item, itemHandle) != 0) {
+        // The game stores 8 to the result slot (0x710046e6ac) and goes on to the shared error 0x12 (0x710046e6b4).
+        result = RESULT_HANA_UNKNOWN_8;
+      } else if (GfMenuHanaAdapter::isEquipParts(blade, type, item, result)) {
+        equipParts(blade, type, item, itemHandle);
+        refreshPartsList(owner, m_menuObjHanaCustom->unknown48);
+        ui::UIObjectAcc info(owner.searchChild("LAY_sub_window"));
+        refreshItemInfo(info, m_menuObjHanaCustom->m_menuItemList, 0, 1);
+        MenuItemInfo equip;
+        getEquipItem(blade, type, equip);
+        m_menuObjHanaCustom->m_menuReferenceItem->m_menuItemInfo = equip;
+        refreshEquipList(owner, blade);
+        unknown164(handle, GfMenuTypes::unknown003_258);
+        unknown163(owner.searchChild("LAY_parts_window"), GfMenuTypes::unknown003_257, 0);
+        GfMenuObjUtil::playSE(0x13);
+        break;
+      }
+      // The error code is held in a local: written inside the call it costs 697 instructions and 6 lines differ (measured).
+      u32 error;
+      if (result == RESULT_HANA_UNKNOWN_8) {
+        error = 0x12;
+      } else if (result == RESULT_HANA_UNKNOWN_12) {
+        error = 0x17;
+      } else {
+        error = result == RESULT_HANA_UNKNOWN_13 ? 10 : 0xd;
+      }
+      GfMenuObjCommonText::openError(m_menuObjHanaCustom->m_menuCallContext, error, 0);
+      GfMenuObjUtil::playSECommon(2);
+      break;
+    }
+    case 2: {
+      ui::UIObjectAcc info(owner.searchChild("LAY_sub_window"));
+      refreshItemInfo(info, m_menuObjHanaCustom->m_menuItemList, 0, 1);
+      unknown164(handle, GfMenuTypes::unknown003_258);
+      unknown163(owner.searchChild("LAY_parts_window"), GfMenuTypes::unknown003_257, 0);
+      GfMenuObjUtil::playSECommonCancel();
+      break;
+    }
+    case 0x11: {
+      u32 table = GfMenuHanaAdapter::getSortTableId(m_menuObjHanaCustom->getPartsId());
+      if (table != 0) {
+        GfMenuObjSort::open(acc.unknown10, owner.searchChild("TXT_item_sort_label"), table, m_menuObjHanaCustom->unknown350);
+        GfMenuObject::disableInput(handle);
+        GfMenuObjOperationInfo::remove(handle, 0, 0, 0);
+      }
+      break;
+    }
+    }
+    break;
+  case GfMenuTypes::unknown003_257:
+    GfMenuObjOperationInfo::add(handle, 0, 0, 0);
+    setFadeIn(handle, 0);
+    GfMenuObject::setupInputSelectionFromList(handle, *m_menuObjHanaCustom->m_menuItemList);
+    GfMenuObject::enableInput(handle);
+    break;
+  case GfMenuTypes::unknown003_258:
+    GfMenuObjOperationInfo::remove(handle, 0, 0, 0);
+    setFadeOut(handle, 0);
+    GfMenuObject::disableInput(handle);
+    break;
+  case 0x148:
+    GfMenuObject::enableInput(handle);
+    GfMenuObjOperationInfo::add(handle, 0, 0, 0);
+    if (m_menuObjHanaCustom->unknown350 != event.unknown08) {
+      u32 type = m_menuObjHanaCustom->getPartsId();
+      u32 table = GfMenuHanaAdapter::getSortTableId(type);
+      if (table != 0) {
+        // The id is held in a 16 bit local: written inside the call 3 lines differ (measured).
+        u16 sortId = GfMenuObjSort::getSortID(table, event.unknown08);
+        m_menuObjHanaCustom->m_menuItemList->sort(sortId, false);
+        m_menuObjHanaCustom->unknown350 = event.unknown08;
+        refreshItemList(m_menuObjHanaCustom->m_menuItemList, m_menuObjHanaCustom->unknown90, type);
+      }
+    }
+    break;
+  default:
+    ui::UIObjectListener::reciveEvent(event, handle);
+    break;
+  }
 }
 
 void GfMenuObjHanaCustom::MainListener::reciveEvent(const ui::EventData &event, u32 handle) {

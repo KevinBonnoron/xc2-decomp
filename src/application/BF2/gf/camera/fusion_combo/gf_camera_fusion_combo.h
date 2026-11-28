@@ -2,6 +2,10 @@
 #include <stddef.h>
 
 #include "fw/fw_camera.h"
+#include "fw/fw_coli_check.h"
+#include "fw/fw_param_manager.h"
+#include "mm_math/mm_vec3.h"
+#include "mm_mtl/intrusive_ptr.h"
 #include "types.h"
 
 namespace fw {
@@ -10,7 +14,6 @@ class Reflection;
 
 namespace mm {
 struct Quat;
-struct Vec3;
 
 namespace mtl {
 class RTTI;
@@ -18,6 +21,8 @@ class RTTI;
 } // namespace mm
 
 namespace gf {
+
+struct GF_OBJ_HANDLE;
 
 class FusionComboCamera : public fw::Camera {
 public:
@@ -42,7 +47,14 @@ public:
     u32 flags;
   };
 
+  enum Mode {
+    MODE_UNKNOWN_0, // Inferred role: zoom from the position of the object to the target; original name unknown.
+    MODE_UNKNOWN_1, // Inferred role: turn around the object; original name unknown.
+  };
+
   static mm::mtl::RTTI m_rtti;
+
+  FusionComboCamera(GF_OBJ_HANDLE *handle, GF_OBJ_HANDLE *target, Mode mode);
 
   ~FusionComboCamera() override;
   static void createReflection(fw::Reflection *reflection, const char *name, u32 index);
@@ -59,10 +71,26 @@ public:
   const mm::mtl::RTTI *getRTTI() const override;
   const char *getName() const override;
 
-  u8 _a8[0x120 - 0xa8];
-  f32 unknown120; // Inferred role: play time; original member name unknown.
-  f32 unknown124; // Inferred role: play duration; original member name unknown.
-  u8 _128[0x160 - 0x128];
+  static mm::mtl::IntrusivePtr<fw::Camera> create(GF_OBJ_HANDLE *handle, Mode mode);
+  static mm::mtl::IntrusivePtr<fw::Camera> create(GF_OBJ_HANDLE *handle, GF_OBJ_HANDLE *target, Mode mode);
+  void calcSpeedTypeSlowInSlowOut(const f32 &start, const f32 &end, f32 t, f32 &result);
+  static f32 slowInSlowOut(f32 t);
+
+  mm::Vec3 unknownb0;  // Inferred role: position; original member name unknown.
+  mm::Vec3 unknownc0;  // Inferred role: cleared by the constructor; original member name unknown.
+  f32 unknownd0;       // Inferred role: set to 45 by the constructor; original member name unknown.
+  mm::Vec3 unknowne0;  // Inferred role: start position; original member name unknown.
+  mm::Vec3 unknownf0;  // Inferred role: end position; original member name unknown.
+  mm::Vec3 unknown100; // Inferred role: rotation axis; original member name unknown.
+  mm::Vec3 unknown110; // Inferred role: center; original member name unknown.
+  f32 unknown120;      // Inferred role: play duration; original member name unknown.
+  f32 unknown124;      // Inferred role: play time; original member name unknown.
+  f32 unknown128;      // Inferred role: total rotation angle; original member name unknown.
+  Mode unknown12c;     // Inferred role: mode; original member name unknown.
+  bool unknown130;     // Inferred role: collision enabled; original member name unknown.
+  bool unknown131;     // Inferred role: slow in and out; original member name unknown.
+  fw::ParamAdapter m_paramAdapter;
+  fw::ColiCheckConfig m_coliCheckConfig;
 };
 
 static_assert(offsetof(FusionComboCamera, unknown120) == 0x120, "");

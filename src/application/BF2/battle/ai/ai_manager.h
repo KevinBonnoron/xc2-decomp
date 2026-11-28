@@ -90,7 +90,6 @@ public:
   static void init();
   static void destroy();
   static void update(const fw::UpdateInfo &info);
-  // The game defines start and end out of line; not reconstructed yet.
   static bool start(const char *name);
   static bool end(const char *name);
   static bool reload(const char *name);
@@ -157,7 +156,6 @@ public:
   void regist(gf::GF_OBJ_HANDLE *handle, int id);
   void unregist(gf::GF_OBJ_HANDLE *handle);
   AiData *getDataFromHandle(gf::GF_OBJ_HANDLE *handle);
-  // The game defines it out of line; not reconstructed yet.
   AiData *getDataFromId(int id, int index);
   int getNumFromId(int id);
   void listenerGfObj(OBJEVT event, gf::GF_OBJ_HANDLE *handle, u32 objectType) override;

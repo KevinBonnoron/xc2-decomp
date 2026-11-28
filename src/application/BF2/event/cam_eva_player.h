@@ -15,7 +15,7 @@ public:
   virtual ~CamEvaPlayer();
   void stop();
   void update(f32 deltaFrame);
-  bool getCamLook_roll(const mm::Vec3 &pos, const mm::Vec3 &target, u32 rotOrder, mm::Vec3 &look, f32 &roll) const;
+  void getCamLook_roll(const mm::Vec3 &pos, const mm::Vec3 &rot, u32 rotOrder, mm::Vec3 &look, f32 &roll) const;
   void setNearfar(EVT_nearfar nearfar);
   void play(CamBase *cam, void *data, const mm::Vec3 &offset);
 

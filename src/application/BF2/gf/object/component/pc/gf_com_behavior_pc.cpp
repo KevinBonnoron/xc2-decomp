@@ -8,10 +8,15 @@
 #include "anm/anm_asm_listener.h"
 #include "framework/coli/coli_charactor_proxy.h"
 #include "framework/coli/coli_object.h"
+#include "framework/ik/ik_placement_ground_solver.h"
+#include "framework/ik/ik_slope_ground_solver.h"
+#include "framework/ik/ik_two_chara_ground_solver.h"
 #include "framework/memory/allocator.h"
 #include "framework/object/updatable_object.h"
 #include "framework/reference_frame.h"
+#include "fw/fw_coli_check.h"
 #include "fw/fw_param_manager.h"
+#include "gf/field/gf_field_lod.h"
 #include "gf/game/gf_game_player_formation.h"
 #include "gf/gf_allocator.h"
 #include "gf/object/component/animation/gf_com_asm.h"
@@ -26,8 +31,10 @@
 #include "gf/object/component/env_sensor/gf_com_env_sensor.h"
 #include "gf/object/component/gf_com_collider.h"
 #include "gf/object/component/gf_com_dynamics.h"
+#include "gf/object/component/gf_com_ik.h"
 #include "gf/object/component/gf_com_sound.h"
 #include "gf/object/component/gf_com_transform.h"
+#include "gf/object/component/gimmick/gf_com_behavior_gmk.h"
 #include "gf/object/component/model/gf_com_model.h"
 #include "gf/object/component/pc/battle/gf_pc_battle_states.h"
 #include "gf/object/component/pc/field/gf_pc_field_states.h"
@@ -59,14 +66,17 @@
 #include "gf/object/component/property/gf_com_property.h"
 #include "gf/object/gf_obj.h"
 #include "gf/object/gf_obj_handle.h"
+#include "gf/object/gf_obj_util.h"
 #include "gf/request/gf_req_scom.h"
 #include "idcoli/idcoli.h"
 #include "idcoli/idcoli_util_coli.h"
 #include "mm_math/mm_mat44.h"
 #include "mm_math/mm_plane.h"
+#include "mm_math/mm_pnt.h"
 #include "mm_math/mm_quat.h"
 #include "mm_math/mm_vec3.h"
 #include "mm_mtl/delegate.h"
+#include "mm_mtl/fixed_vector.h"
 #include "mm_mtl/vector.h"
 
 namespace fw {
@@ -251,6 +261,20 @@ void GfComBehaviorPc::procMsgObjectGetVelocity(fw::MessageObject *sender, MsgObj
   }
 }
 
+void GfComBehaviorPc::onWarpBeforeTransform(GfComPropertyPc &property) {
+  pc::AttachPlugin *plugin = unknown001<pc::AttachPlugin>(12);
+  if (plugin != nullptr) {
+    plugin->setActivate(false);
+  }
+}
+
+void GfComBehaviorPc::onWarpAfterTransform(GfComPropertyPc &property) {
+  pc::AttachPlugin *plugin = unknown001<pc::AttachPlugin>(12);
+  if (plugin != nullptr) {
+    plugin->setActivate(true);
+  }
+}
+
 bool GfComBehaviorPc::warpWall(GfComPropertyPc &property) {
   const pc::WarpParam *param = property.unknown006();
   EnviromentSensor::HorizonPacket packet;
@@ -337,20 +361,6 @@ void GfComBehaviorPc::onWarp(GfComPropertyPc &property) {
   }
 }
 
-void GfComBehaviorPc::onWarpBeforeTransform(GfComPropertyPc &property) {
-  pc::AttachPlugin *plugin = unknown001<pc::AttachPlugin>(12);
-  if (plugin != nullptr) {
-    plugin->setActivate(false);
-  }
-}
-
-void GfComBehaviorPc::onWarpAfterTransform(GfComPropertyPc &property) {
-  pc::AttachPlugin *plugin = unknown001<pc::AttachPlugin>(12);
-  if (plugin != nullptr) {
-    plugin->setActivate(true);
-  }
-}
-
 void GfComBehaviorPc::procMsgObjectNotifyDamage(fw::MessageObject *sender, MsgObjectNotifyDamage &message) {
   const MsgObjectDamage *damage = message.m_msgObjectDamage;
   if (damage != nullptr && damage->unknown10 == 0 && damage->unknown2a) {
@@ -434,6 +444,129 @@ void GfComBehaviorPc::procMsgPcFieldNotifyWallJumpStart(fw::MessageObject *sende
   }
 }
 
+// 1.0.0: 0x710056b96c; recieveMessage inlines it.
+void GfComBehaviorPc::procMsgPcFieldWarp(fw::MessageObject *sender, MsgPcFieldWarp &message) {
+  GfComPropertyPc *property = unknown08->getComponent<GfComPropertyPc>();
+  if (property->unknown110_0) {
+    if (!message.unknown30) {
+      property->unknown003(message.m_transform, 0);
+    } else {
+      warpExternal(*property, message.m_transform);
+      onWarpNormal(*property);
+    }
+    message.unknown31 = true;
+  }
+}
+
+void GfComBehaviorPc::procMsgPcFieldChangeControlMode(fw::MessageObject *sender, MsgPcFieldChangeControlMode &message) {
+  GfComPropertyPc *property = unknown08->getComponent<GfComPropertyPc>();
+  GfComAsm *comAsm = unknown08->getComponent<GfComAsm>();
+  u32 mode = getMode(*property);
+  if (mode == message.unknown08) {
+    return;
+  }
+  property->unknown113_2 = false;
+  m_hfsm.clearState();
+  switch (mode) {
+  case 0:
+    if (unknown98) {
+      unknown98->cleanup(*property);
+      unknown98.reset();
+    }
+    m_pluginManager.destroyPlugin<pc::DeadColCheckPlugin>();
+    m_pluginManager.destroyPlugin<pc::TerrainDamagePlugin>();
+    m_pluginManager.destroyPlugin<pc::AccessPlugin>();
+    m_pluginManager.destroyPlugin<pc::FallIntoColiPlugin>();
+    m_pluginManager.destroyPlugin<pc::FallDamagePlugin>();
+    m_pluginManager.destroyPlugin<pc::FadePlugin>();
+    m_pluginManager.destroyPlugin<pc::LurePlugin>();
+    m_pluginManager.destroyPlugin<pc::FallDistanceAchievPlugin>();
+    property->setPadControl(false);
+    break;
+  case 2: {
+    fw::ColiObject *coli = unknown08->getComponent<GfComCollider>()->unknown001();
+    if (coli != nullptr) {
+      coli->setActivate(true);
+    }
+    property->unknown111_1 = false;
+    pc::AttachPlugin *attach = unknown001<pc::AttachPlugin>(12);
+    if (attach != nullptr) {
+      attach->setActivate(true);
+    }
+    comAsm->setState("S_idle", ANIM_LAYER_UNKNOWN_0);
+    break;
+  }
+  case 1:
+    if (unknown98) {
+      unknown98->cleanup(*property);
+      unknown98.reset();
+    }
+    break;
+  }
+  switch (message.unknown08) {
+  case 0:
+// __LINE__ must be 2094 as in the original file: it is the line argument of operator new.
+#line 2094 "gf/object/component/pc/gf_com_behavior_pc.cpp"
+    unknown98.reset(new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) pc::PadAgent(0));
+    unknown98->setup(*property);
+    property->setPadControl(true);
+    m_pluginManager.createPlugin<pc::AccessPlugin>();
+    m_pluginManager.createPlugin<pc::FallIntoColiPlugin>();
+    m_pluginManager.createPlugin<pc::FallDamagePlugin>();
+    m_pluginManager.createPlugin<pc::FadePlugin>();
+    m_pluginManager.createPlugin<pc::LurePlugin>();
+    m_pluginManager.createPlugin<pc::TerrainDamagePlugin>();
+    m_pluginManager.createPlugin<pc::DeadColCheckPlugin>();
+    m_pluginManager.createPlugin<pc::FallDistanceAchievPlugin>();
+    m_hfsm.setState(pc::STATE_ID_UNKNOWN_3);
+    comAsm->setState("S_idle", ANIM_LAYER_UNKNOWN_0);
+    unknown002(m_pluginManager, 16);
+    unknown002(m_pluginManager, 19);
+    return;
+  case 2: {
+    fw::ColiObject *coli = unknown08->getComponent<GfComCollider>()->unknown001();
+    if (coli != nullptr) {
+      coli->setActivate(false);
+    }
+    property->unknown111_1 = true;
+    GfComIK *ik = unknown08->getComponent<GfComIK>();
+    if (ik != nullptr) {
+      fw::PlacementGroundSolver *placement = ik->unknown003<fw::PlacementGroundSolver>(unknown002_2);
+      if (placement != nullptr) {
+        placement->setEnablePlacement(false);
+        placement->unknown65 = false;
+      }
+      fw::SlopeGroundSolver *slope = ik->unknown003<fw::SlopeGroundSolver>(unknown002_2);
+      if (slope != nullptr) {
+        slope->setEnablePlacement(false);
+        slope->unknown88 = false;
+      }
+      fw::TwoCharaGroundSolver *twoChara = ik->unknown003<fw::TwoCharaGroundSolver>(unknown002_2);
+      if (twoChara != nullptr) {
+        twoChara->setEnablePlacement(false);
+        twoChara->unknownb9 = false;
+      }
+    }
+    pc::AttachPlugin *attach = unknown001<pc::AttachPlugin>(12);
+    if (attach != nullptr) {
+      attach->setActivate(false);
+    }
+    comAsm->setState("S_ride", ANIM_LAYER_UNKNOWN_0);
+    m_hfsm.setState(pc::STATE_ID_UNKNOWN_57);
+    return;
+  }
+  case 1:
+// __LINE__ must be 2129 as in the original file: it is the line argument of operator new.
+#line 2129 "gf/object/component/pc/gf_com_behavior_pc.cpp"
+    unknown98.reset(new (getAllocator(ALLOCATOR_UNKNOWN_0), __FILE__, __LINE__, 8) pc::AIAgent());
+    unknown98->setup(*property);
+    m_hfsm.setState(pc::STATE_ID_UNKNOWN_3);
+    return;
+  default:
+    return;
+  }
+}
+
 void GfComBehaviorPc::procMsgPcFieldNotifyWaterWarp(fw::MessageObject *sender, MsgPcFieldNotifyWaterWarp &message) {
   if (unknown98) {
     GfComPropertyPc *property = unknown08->getComponent<GfComPropertyPc>();
@@ -455,6 +588,103 @@ void GfComBehaviorPc::procMsgPcFieldReqFallDeadMotion(fw::MessageObject *sender,
     comAsm->setState("S_fall", ANIM_LAYER_UNKNOWN_0);
   }
   comAsm->execCmd("C_falldead", ANIM_LAYER_UNKNOWN_0);
+}
+
+// 1.0.0: 0x710056ca00. The game inlines it into procMsgPcFieldElvWarp (no call), so it is defined in this unit before its users.
+bool isSameElv(GF_OBJ_HANDLE *handle, const MsgPcGetElvLift &lift) {
+  if (handle != unknown020 && !lift.unknown08.empty()) {
+    for (GF_OBJ_HANDLE *const *it = lift.unknown08.begin(); it != lift.unknown08.end(); it++) {
+      if (*it == handle) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+// 1.0.0: 0x710056ca58. The game inlines it into procMsgPcFieldChangeControlMode (0x710056bab8, no call) and keeps this copy after isSameElv, so it is defined in this unit and not in
+// gf_com_property_pc.cpp.
+u32 getMode(GfComPropertyPc &property) {
+  if (property.unknown111_1) {
+    return 2;
+  }
+
+  if (property.unknown111_2) {
+    return 0;
+  }
+
+  return 1;
+}
+
+void GfComBehaviorPc::procMsgPcFieldElvWarp(fw::MessageObject *sender, MsgPcFieldElvWarp &message) {
+  GfComPropertyPc *property = unknown08->getComponent<GfComPropertyPc>();
+  if (property->unknown111_1) {
+    return;
+  }
+  const MsgPcGetElvLift *lift = message.m_msgPcGetElvLift;
+  pc::AttachPlugin *attach = unknown001<pc::AttachPlugin>(12);
+  if (attach != nullptr && isSameElv(attach->m_GF_OBJ_HANDLE, *lift)) {
+    return;
+  }
+  GfObj *elevator = GfObjUtil::getObj(message.m_GF_OBJ_HANDLE);
+  if (elevator == nullptr) {
+    return;
+  }
+  GfComTransform *comTransform = elevator->getComponent<GfComTransform>();
+  const mm::Vec3 &position = comTransform->getPosition();
+  const mm::Quat &rotation = comTransform->getRotation();
+  const fw::ParamList *paramList = fw::ParamManager::get()->unknown408[6].operator->();
+  // The local `param` places the load of unknown38 after the list lookup (0x710056c6f4); with the lookup written in the expression of `offset` the index is loaded first (first difference at
+  // 0x710056c6f4). The null test of the ternary folds away, as the game's code has none.
+  const FormationParam *param = paramList->unknown0c > 3 ? static_cast<const FormationParam *>(paramList->unknown10[3].param) : nullptr;
+  const mm::Pnt<f32> &offset = param->offsets[property->unknown38 - 1];
+  fw::Transform target;
+  // Ruling 8: the statements of mm::unknown011 written out again (1.0.0: 0x710056c560, 296 instructions). Measured: the call form `mm::unknown011(rotation, vector, target.unknown00)`
+  // matches this function but breaks gf::GfComBehaviorPc::warpWall (259 instructions, 30 differing lines: a second user of the helper changes how it is simplified); the statements
+  // written out here keep both functions at 0 differing lines.
+  mm::Vec3 vector(offset.x, 0.0f, offset.y);
+  f32 tx = rotation.y * vector.z - rotation.z * vector.y + rotation.w * vector.x;
+  f32 ty = rotation.z * vector.x - vector.z * rotation.x + vector.y * rotation.w;
+  f32 tz = vector.y * rotation.x - rotation.y * vector.x + vector.z * rotation.w;
+  f32 tw = -vector.x * rotation.x - rotation.y * vector.y - vector.z * rotation.z;
+  target.unknown00.x = -(rotation.z * ty) + rotation.y * tz - rotation.x * tw + rotation.w * tx;
+  target.unknown00.y = -(rotation.x * tz) + rotation.z * tx - rotation.y * tw + rotation.w * ty;
+  target.unknown00.z = -(rotation.y * tx) + rotation.x * ty - rotation.z * tw + rotation.w * tz;
+  target.unknown00 += position;
+  target.unknown10 = rotation;
+  // ColiCheckConfig block. A file-local helper taking the three differing values (`(config, flags, mask, mode)`) also matches (296 instructions, 0 differing lines), but this is its only
+  // user in gf_com_behavior_pc.cpp and gf_com_property_pc.cpp, so the helper has no proof of existence (AGENTS.md, ruling 9). The same block is written out by the matching functions of
+  // main (GfGamePlayerPicker::movePlayer in gf_game_player_picker.cpp, StateFieldIdle::checkSpace in gf_pc_state_field_idle.cpp, EnviromentSensor::searchHorizon in
+  // gf_environment_sensor.cpp, and GfComEnvSensor::flushGroundSingle, GmkClimbing::updateIcon...), and no helper of the tree sets it.
+  fw::ColiCheckConfig config;
+  config.unknown08 = 0.0f;
+  config.unknown0c = 0.0f;
+  config.unknown14 = false;
+  config.unknown15 = false;
+  config.unknown10 = 1;
+  config.unknown04 = 0x800000f6;
+  config.unknown00 = 9;
+  // `start` and `end` stay named locals: the same two sums as arguments of the call give other stack slots (first difference at 0x710056c6f8).
+  mm::Vec3 start = target.unknown00 + mm::Vec3::unitY * 3.0f;
+  mm::Vec3 end = target.unknown00 - mm::Vec3::unitY * 3.0f;
+  fw::TColiCheckResult<256> result;
+  fw::ColiCheck::testLine(result, start, end, config);
+  bool isElevator = false;
+  if (result.getCount() != 0) {
+    fw::ColiUserData *userData = static_cast<fw::ColiUserData *>(result.unknown003(0));
+    if (userData != nullptr) {
+      GfFieldLodColiAnim::ColiUserData *lodUserData = mm::mtl::dynamicCast<GfFieldLodColiAnim::ColiUserData>(userData);
+      isElevator = lodUserData != nullptr && isSameElv(lodUserData->m_GF_OBJ_HANDLE, *lift);
+    }
+  }
+  if (isElevator) {
+    target.unknown00 = result.getPosition(0);
+  } else {
+    GfGamePlayerFormation *formation = GfGamePlayerFormation::get();
+    target = formation->unknowne0[formation->unknown1a0[property->unknown38].unknown00];
+  }
+  warpExternal(*property, target);
+  onWarpNormal(*property);
 }
 
 bool GfComBehaviorPc::warp() {

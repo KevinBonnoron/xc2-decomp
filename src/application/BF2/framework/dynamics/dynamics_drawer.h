@@ -19,6 +19,7 @@ namespace fw {
 // `*(u32 *)(this + (bit >> 5) * 4 + 4) & (1 << (bit & 31))`.
 class DynamicsDrawer {
 public:
+  DynamicsDrawer();
   void draw(const mm::Mat44 &matrix, const skd::Dynamics &dynamics);
 
   u32 unknown00;                      // Inferred role: flags, bit 1 enables draw and the constructor clears them; original member name unknown.

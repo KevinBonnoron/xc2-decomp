@@ -25,6 +25,7 @@ public:
     FLAG_UNKNOWN_1 = 1 << 1, // Inferred role: end flag; original name unknown.
     FLAG_UNKNOWN_2 = 1 << 2, // Inferred role: next flag; original name unknown.
     FLAG_UNKNOWN_3 = 1 << 3, // Inferred role: login flag; original name unknown.
+    FLAG_UNKNOWN_9 = 1 << 9, // Inferred role: new game wait flag; original name unknown.
   };
 
   enum {
@@ -268,7 +269,8 @@ private:
   CmdQueue<QUEUE_UNKNOWN_32, 0> unknown200; // Inferred role: queue; original member name unknown.
   SeqInfo m_seqInfo;                        // Inferred role: info; original member name unknown.
   int unknown2840;                          // Inferred role: next event; original member name unknown.
-  u8 _2844[0x2850 - 0x2844];
+  int unknown2844;                          // Inferred role: previous category; original member name unknown.
+  u8 _2848[0x2850 - 0x2848];
   u32 unknown2850; // Inferred role: login state; original member name unknown.
   u8 _2854[0x2858 - 0x2854];
 };

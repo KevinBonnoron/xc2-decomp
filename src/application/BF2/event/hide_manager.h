@@ -24,8 +24,27 @@ public:
     OBJ_TYPE_UNKNOWN_6, // Inferred role: map lod; original name unknown.
   };
 
+  // Bit i of the group is the entry i of HideManager::s_tbl (the game symbol _ZN5event11HideManager5s_tblE, read by hideGroup, which tests `(1 << i) & m_group`).
+  // Derivation of the names: each enumerator is the string of its entry without the EVTDISP_ prefix ("EVTDISP_PC_WEAPON" gives GRP_TYPE_PC_WEAPON).
   enum GRP_TYPE {
-    GRP_TYPE_UNKNOWN_0, // Inferred role: none; original name unknown.
+    GRP_TYPE_UNKNOWN_0 = 0, // Inferred role: none; original name unknown.
+    GRP_TYPE_PC = 1 << 0,
+    GRP_TYPE_PC_WEAPON = 1 << 1,
+    GRP_TYPE_BLADE = 1 << 2,
+    GRP_TYPE_ENEMY = 1 << 3,
+    GRP_TYPE_EN_WEAPON = 1 << 4,
+    GRP_TYPE_NPC = 1 << 5,
+    GRP_TYPE_MOB = 1 << 6,
+    GRP_TYPE_FIELD_OBJ = 1 << 7,
+    GRP_TYPE_MAP = 1 << 8,
+    GRP_TYPE_COLLECTION = 1 << 9,
+    GRP_TYPE_SALVAGE = 1 << 10,
+    GRP_TYPE_PRECIOUS = 1 << 11,
+    GRP_TYPE_TBOX = 1 << 12,
+    GRP_TYPE_JUMP = 1 << 13,
+    GRP_TYPE_WARP = 1 << 14,
+    GRP_TYPE_DMG_EFFECT = 1 << 15,
+    GRP_TYPE_DMG_SE = 1 << 16,
   };
 
   enum {

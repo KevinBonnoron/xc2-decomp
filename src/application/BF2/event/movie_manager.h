@@ -43,7 +43,7 @@ public:
   void pause(bool isPause);
   virtual void OnEventProc(MSG_TYPE type);
 
-private:
+public:
   u32 unknown10;                   // Inferred role: flags; original member name unknown.
   mm::mtl::FixStr<256> unknown14;  // Inferred role: preload path; original member name unknown.
   bool unknown118;                 // Inferred role: is preload full size; original member name unknown.

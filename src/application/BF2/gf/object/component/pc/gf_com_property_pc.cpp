@@ -213,18 +213,6 @@ void GfComPropertyPc::procMsgPcFieldNotifyChangePlayerID(fw::MessageObject *obje
 
 void GfComPropertyPc::procMsgPcFieldWarpCancel(fw::MessageObject *object, MsgPcFieldWarpCancel &message) { unknown113_2 = false; }
 
-u32 getMode(GfComPropertyPc &property) {
-  if (property.unknown111_1) {
-    return 2;
-  }
-
-  if (property.unknown111_2) {
-    return 0;
-  }
-
-  return 1;
-}
-
 } // namespace gf
 
 template void mm::mtl::UniquePtr<gf::pc::Agent>::_safe_bool_helper::safe_bool_function() const;

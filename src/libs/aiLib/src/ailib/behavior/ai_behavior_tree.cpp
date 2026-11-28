@@ -45,6 +45,21 @@ void BehaviorTree::beginSetup(u32 nodeNum, mm::mtl::IAllocator *allocator) {
 
 void BehaviorTree::endSetup() { m_setup = false; }
 
+void BehaviorTree::cleanup() {
+  for (u32 i = 0; i < m_pNodes.size(); i++) {
+    if (m_pNodes[i].get() != nullptr) {
+      if ((m_pNodes[i]->unknown34 & 4) != 0) {
+        DestroyEvent event;
+        m_pNodes[i]->onEvent(*unknown40, event);
+      }
+    }
+  }
+  m_pNodes.clear();
+  unknown40.reset();
+  m_pNodes.setAllocator(nullptr);
+  m_pAllocator = nullptr;
+}
+
 void BehaviorTree::attachRoot(u32 nodeID) {
   BehaviorNode *pNode = m_pNodes[nodeID].get();
 #line 88
@@ -97,6 +112,43 @@ void BehaviorTree::queryNode(mm::mtl::IAllocator *allocator, BehaviorNodeInfo *i
   info->unknown18 = pChildNode->unknown30;
   info->unknown20.setAllocator(allocator);
   collectChildNode(pChildNode, allocator, info);
+}
+
+// Inferred helper: creates the info record of a child node, appends it to the list of the parent and collects the children of the child; original name unknown. The game
+// inlines it into both arms of collectChildNode (1.0.0: 0x7100942450, 321 instructions). Without `inline` it stays a call (110 instructions, cost above the threshold of 275); the
+// block written out in both arms also gives the game's 321, so ruling 8 does not apply and the block is written once (P4).
+static inline void unknown002(const BehaviorTree *tree, BehaviorNode *pChildNode, mm::mtl::IAllocator *allocator, BehaviorNodeInfo *info) {
+  void *buffer = allocator->allocate(sizeof(BehaviorNodeInfo), alignof(BehaviorNodeInfo));
+  mm::mtl::IntrusivePtr<BehaviorNodeInfo> childInfo(new (buffer) BehaviorNodeInfo);
+  info->unknown20.push_back(childInfo);
+  BehaviorNodeInfo &childInfoRef = *childInfo;
+  childInfoRef.unknown10 = pChildNode->unknown0c.c_str();
+  childInfoRef.unknown18 = pChildNode->unknown30;
+  childInfoRef.unknown20.setAllocator(allocator);
+  tree->collectChildNode(pChildNode, allocator, &childInfoRef);
+}
+
+void BehaviorTree::collectChildNode(BehaviorNode *node, mm::mtl::IAllocator *allocator, BehaviorNodeInfo *info) const {
+  if (node == nullptr) {
+    return;
+  }
+  if (node->getRTTI()->isKindOf(&CompositeNode::m_rtti)) {
+    const CompositeNode *pComposite = static_cast<CompositeNode *>(node);
+    u32 childNum = pComposite->m_childNodes.size();
+    info->unknown20.reserve(childNum);
+    for (u32 i = 0; i < childNum; i++) {
+      BehaviorNode *pChildNode = pComposite->m_childNodes[i];
+      if (pChildNode != nullptr) {
+        unknown002(this, pChildNode, allocator, info);
+      }
+    }
+  } else if (node->getRTTI()->isKindOf(&DecoratorNode::m_rtti)) {
+    DecoratorNode *pDecorator = static_cast<DecoratorNode *>(node);
+    BehaviorNode *pChildNode = pDecorator->m_pChildNode;
+    if (pChildNode != nullptr) {
+      unknown002(this, pChildNode, allocator, info);
+    }
+  }
 }
 
 } // namespace ai

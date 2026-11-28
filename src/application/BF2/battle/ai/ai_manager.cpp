@@ -49,6 +49,24 @@ AiData *AiManager::getDataFromHandle(gf::GF_OBJ_HANDLE *handle) {
   return nullptr;
 }
 
+// The game keeps `cmp w25, w19; cinc w25, w25, ne; b.eq` (the count increment speculated into the match block) only with the result written after the loop (0x7100002ea0): `return data` inside the
+// loop keeps the increment in a block of its own (46 instructions, first difference at +0x7c), as do `num++ == index`, `if (num != index) num++; else return data;` and a `continue` (56).
+AiData *AiManager::getDataFromId(int id, int index) {
+  AiData *result = nullptr;
+  int num = 0;
+  for (mm::mtl::FixedList<AiData *, unknown001>::iterator it = unknown10.begin(); it != unknown10.end(); ++it) {
+    AiData *data = *it;
+    if (data->getId() == id) {
+      if (num == index) {
+        result = data;
+        break;
+      }
+      num++;
+    }
+  }
+  return result;
+}
+
 int AiManager::getNumFromId(int id) {
   int num = 0;
   for (mm::mtl::FixedList<AiData *, unknown001>::iterator it = unknown10.begin(); it != unknown10.end(); ++it) {

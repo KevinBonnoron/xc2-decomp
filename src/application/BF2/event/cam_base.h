@@ -45,14 +45,24 @@ public:
     unknown34 = 0.0f;
   }
 
+  // Inferred name; kept as an exception to the unknown-name rule (AGENTS.md): single-user helper whose existence only the match proves; rename if a sibling build gives a symbol.
+  // Role: stores the roll. Its user is CamEvaPlayer::update (1.0.0: 0x71000ad62c, 646 instructions). Form tried without the helper: `m_camBase->unknown34 = roll;` through a public member gives
+  // 646 instructions with 3 differing lines: the assignment loads `roll` before the camera pointer, the game loads the camera pointer first (the call evaluates the object first).
+  void setRoll(f32 roll) { unknown34 = roll; }
+
 protected:
-  bool unknown08;     // Inferred role: is focal; original member name unknown.
+  bool unknown08; // Inferred role: is focal; original member name unknown.
+
+public:
+  // Public because CamEvaPlayer::update stores the position, the target and the fov through the camera pointer.
   mm::Vec3 unknown10; // Inferred role: pos; original member name unknown.
   mm::Vec3 unknown20; // Inferred role: target; original member name unknown.
   f32 unknown30;      // Inferred role: fov; original member name unknown.
-  f32 unknown34;      // Inferred role: roll; original member name unknown.
-  f32 unknown38;      // Inferred role: near; original member name unknown.
-  f32 unknown3c;      // Inferred role: far; original member name unknown.
+
+protected:
+  f32 unknown34; // Inferred role: roll; original member name unknown.
+  f32 unknown38; // Inferred role: near; original member name unknown.
+  f32 unknown3c; // Inferred role: far; original member name unknown.
 };
 
 static_assert(sizeof(CamBase) == 0x40, "");

@@ -195,6 +195,112 @@ void PlayerCamera::updateViewMatrix() {
   Camera::updateViewMatrix();
 }
 
+// Inferred helper: distance from the end of a collision ray to its hit, zero without a hit; original name unknown. Evidence: inlined four times in gf::PlayerCamera::updateCollision2 (1.0.0:
+// 0x71001d9ba8).
+static f32 unknown008(PlayerCamera &camera, const mm::Vec3 &start, const mm::Vec3 &end) {
+  mm::Vec3 hit;
+  if (!camera.getHitPosition(camera.unknown12c, start, end, hit)) {
+    return 0.0f;
+  }
+  mm::Vec3 delta = end - hit;
+  return sqrtf(delta.x * delta.x + delta.y * delta.y + delta.z * delta.z);
+}
+
+// Form of updateCollision2() (1.0.0: 0x71001d9ba8, 796 instructions) that no other spelling gave: the shift is built from the three components of the normalised axis,
+// `mm::Vec3(shiftAxis.x, shiftAxis.y, shiftAxis.z) * shift`, in each arm. The game reads the three components with `fmov s, w` together before the three `fmul`
+// (0x71001da258, 0x71001da2b4); `shiftAxis * shift`, `delta = shiftAxis * shift`, a `delta = shiftAxis; delta *= shift` copy (an integer copy) and `Vec3 axis = shiftAxis` all read each
+// component right before its product, which is 10 differing lines: the three phi registers of the axis (normalised or `Vec3::zero`) come out as x w10, y w8, z w9 where the game
+// has x w9, y w8, z w10 (greedy allocation takes the live ranges by size, and the copies of the three components sit further apart in each arm).
+void PlayerCamera::updateCollision2(mm::Vec3 &position, mm::Vec3 &target) {
+  const unknown002 *param = m_paramAdapter.get<unknown002>();
+  mm::Vec3 direction = position - target;
+  f32 distance = sqrtf(direction.x * direction.x + direction.y * direction.y + direction.z * direction.z);
+  direction.unknown001();
+  mm::Vec3 right;
+  right.unknown004(direction, mm::Vec3::unitY);
+  if (!right.unknown003()) {
+    right.unknown001();
+  }
+  mm::Vec3 up;
+  up.unknown004(right, direction);
+  if (!up.unknown003()) {
+    up.unknown001();
+  }
+  right *= unknown52cc;
+  up *= unknown52d0;
+  // `size` is kept: with the member read at its use the function has 794 instructions (first difference at the start).
+  f32 size = param->collision_size;
+  mm::Vec3 side = right;
+  side.unknown001();
+  side *= unknown52cc + 0.1f;
+  mm::Vec3 start = up + target;
+  mm::Vec3 end = side + start;
+  f32 rightTop = unknown008(*this, start, end);
+  start = target - up;
+  end = side + start;
+  f32 rightBottom = unknown008(*this, start, end);
+  start = up + target;
+  end = start - side;
+  f32 leftTop = unknown008(*this, start, end);
+  start = target - up;
+  end = start - side;
+  f32 leftBottom = unknown008(*this, start, end);
+  f32 hitRight = mm::max(rightTop, rightBottom);
+  f32 hitLeft = mm::max(leftTop, leftBottom);
+  f32 length = distance + size;
+  mm::Vec3 forward = direction * length;
+  mm::Vec3 shiftAxis = side;
+  shiftAxis.unknown001();
+  if (hitRight < hitLeft) {
+    f32 shift = hitLeft - hitRight;
+    mm::Vec3 delta = mm::Vec3(shiftAxis.x, shiftAxis.y, shiftAxis.z) * shift;
+    position += delta;
+    target += delta;
+  } else {
+    f32 shift = hitRight - hitLeft;
+    mm::Vec3 delta = mm::Vec3(shiftAxis.x, shiftAxis.y, shiftAxis.z) * shift;
+    position -= delta;
+    target -= delta;
+  }
+  unknown5200[0].start = (up + target) - right;
+  unknown5200[1].start = right + (up + target);
+  unknown5200[2].start = (target - up) - right;
+  unknown5200[3].start = right + (target - up);
+  unknown5200[0].end = forward + unknown5200[0].start;
+  unknown5200[1].end = forward + unknown5200[1].start;
+  unknown5200[2].end = forward + unknown5200[2].start;
+  unknown5200[3].end = forward + unknown5200[3].start;
+  bool isHit = false;
+  f32 nearest = 0.0f;
+  for (unknown006 *ray = unknown5200; ray != &unknown5200[4]; ray++) {
+    mm::Vec3 hit;
+    if (getHitPosition(unknown12c, ray->start, ray->end, hit)) {
+      mm::Vec3 delta = hit - ray->start;
+      f32 rayDistance = sqrtf(delta.x * delta.x + delta.y * delta.y + delta.z * delta.z);
+      if (!isHit) {
+        nearest = rayDistance;
+      } else if (rayDistance < nearest) {
+        nearest = rayDistance;
+      }
+      isHit = true;
+    }
+  }
+  if (!isHit) {
+    return;
+  }
+  // `origin` is kept: with `target` read directly the function has 799 instructions.
+  const mm::Vec3 origin = target;
+  mm::Vec3 back = position - origin;
+  back.unknown001();
+  mm::Vec3 offset = position + back * param->collision_size - origin;
+  f32 ratio = nearest / sqrtf(offset.x * offset.x + offset.y * offset.y + offset.z * offset.z);
+  mm::Vec3 delta = direction;
+  delta *= distance;
+  delta *= ratio;
+  position = target + delta;
+  unknownd0 = distance * ratio;
+}
+
 // __LINE__ must be 233 as in the original file: it is the line argument of the allocation.
 mm::mtl::IntrusivePtr<fw::Camera> PlayerCamera::create() {
   const fw::ParamList *paramList = fw::ParamManager::get()->unknown408[19].operator->();

@@ -81,6 +81,14 @@ public:
     void reciveEvent(const ui::EventData &event, u32 handle) override;
   };
 
+  class CharListener : public ui::UIObjectListener {
+  public:
+    void reciveEvent(const ui::EventData &event, u32 handle) override;
+
+    u8 _0c[0x20 - 0x0c];
+    GfMenuObjCharSelect *m_menuObjCharSelect; // Inferred role: owner; original member name unknown.
+  };
+
   ~GfMenuObjCharSelect() override;
 
   struct OpenCustomizeParam {
@@ -136,6 +144,8 @@ public:
   bool seqSpHomuraToHikari();
   bool seqSpUpdateParty();
   bool seqConfSpecial();
+  void refreshCharSelect(u32 index);
+  void updateSpecialOperation();
   static void setupCharSubMenu(ui::UIObjectAcc &acc, mm::mtl::FixedVector<u32, 5> &drivers, mm::mtl::FixedVector<u32, 3> &blades, mm::mtl::FixedVector<u32, 4> &hanas);
   u32 refreshDriver(ui::UIObjectAcc acc, u32 driver);
   void update() override;
@@ -184,7 +194,8 @@ public:
   u8 _42a[0x430 - 0x42a];
   GfMenuSequence<GfMenuObjCharSelect, 8> unknown430; // Inferred role: character select steps; original member name unknown.
   bool unknown6c0;                                   // Inferred role: character select steps request flag; original member name unknown.
-  u8 _6c1[0x6d4 - 0x6c1];
+  u8 _6c1[0x6c4 - 0x6c1];
+  u32 unknown6c4[4];       // Inferred role: display priorities of the layers of the driver and the three blades; read by CharListener::reciveEvent (0x710042ca30); original member name unknown.
   mm::Pnt<s16> unknown6d4; // Inferred role: position of the status layer saved by StatusListener; original member name unknown.
   u32 unknown6d8;          // Role and original member name unknown, cleared by the constructor.
   u8 _6dc[0x6e0 - 0x6dc];
@@ -216,6 +227,7 @@ static_assert(offsetof(GfMenuObjCharSelect::CharDrListener, m_menuObjCharSelect)
 static_assert(offsetof(GfMenuObjCharSelect::CharDrSoloListener, m_menuObjCharSelect) == 0x20, "");
 static_assert(offsetof(GfMenuObjCharSelect::SubMenuListener, unknown0c) == 0x0c, "");
 static_assert(offsetof(GfMenuObjCharSelect::SubMenuListener, m_menuObjCharSelect) == 0x20, "");
+static_assert(offsetof(GfMenuObjCharSelect::CharListener, m_menuObjCharSelect) == 0x20, "");
 static_assert(sizeof(GfMenuObjCharSelect::unknown003) == 0x08, "");
 static_assert(offsetof(GfMenuObjCharSelect, m_menuDriverList) == 0x28, "");
 static_assert(offsetof(GfMenuObjCharSelect, unknown30) == 0x30, "");
@@ -227,6 +239,7 @@ static_assert(offsetof(GfMenuObjCharSelect, unknown400) == 0x400, "");
 static_assert(offsetof(GfMenuObjCharSelect, unknown428) == 0x428, "");
 static_assert(offsetof(GfMenuObjCharSelect, unknown430) == 0x430, "");
 static_assert(offsetof(GfMenuObjCharSelect, unknown6c0) == 0x6c0, "");
+static_assert(offsetof(GfMenuObjCharSelect, unknown6c4) == 0x6c4, "");
 static_assert(offsetof(GfMenuObjCharSelect, unknown6d4) == 0x6d4, "");
 static_assert(offsetof(GfMenuObjCharSelect, unknown6d8) == 0x6d8, "");
 static_assert(offsetof(GfMenuObjCharSelect, m_menuCallContext) == 0x6e0, "");

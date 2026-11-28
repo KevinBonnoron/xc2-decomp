@@ -10,6 +10,7 @@
 #include "event/chara_util.h"
 #include "event/cmd_param.h"
 #include "event/cmd_variable.h"
+#include "event/data_manager.h"
 #include "event/debug_manager.h"
 #include "event/group_manager.h"
 #include "event/i_attach_actor.h"
@@ -20,6 +21,7 @@
 #include "event/offscr_manager.h"
 #include "event/skip_manager.h"
 #include "event/tar_axis.h"
+#include "fw/fw_transform.h"
 #include "gf/event/gf_evt_model.h"
 #include "gf/object/component/gf_com_transform.h"
 #include "gf/object/gf_obj.h"
@@ -201,6 +203,94 @@ void CharaObj::playWink(int type, f32 frame, bool isLoop, f32 lensX, f32 lensY, 
   unknown2088.push_back(&m_charaPlayWink, param);
 }
 
+// 0x71000c00e0, 665 instructions.
+void CharaObj::update(const FrameInfo &info) {
+  if (!unknownca0.test(FLAG_UNKNOWN_3)) {
+    initModel();
+  }
+  if (unknownca4 == STATE_UNKNOWN_1) {
+    gf::GfObj *obj = gf::GfObjUtil::getObj(unknownd40);
+    if (obj != nullptr) {
+      gf::GfComTransform *transform = obj->getComponent<gf::GfComTransform>();
+      m_pos = transform->getPosition();
+      // The copies of the quaternion are the game's, as in createGfObj (without the two copies of this function: 663 instructions against 665).
+      mm::Quat rotation = transform->getRotation();
+      mm::quatToEuler(rotation, m_rot);
+      unknown2fc0 = m_pos;
+      unknown2fe0 = m_rot;
+    }
+  }
+  unknown2ff0.unknown011(m_rot);
+  // The game loads the position as one 64-bit and one 32-bit word before the first store of the translation row (0x71000c0398): this copy places those
+  // loads (ruling 2). With setTrans(m_pos) the loads come after the rotation stores: 665 instructions, first difference at +0x29c (fneg against fmul).
+  mm::Vec3 position = m_pos;
+  unknown2ff0.setTrans(position);
+  if (m_iAttachActor != nullptr) {
+    if (unknownca0.test(FLAG_UNKNOWN_0)) {
+      static_cast<AttachActorBase *>(m_iAttachActor)->setTransform(unknown2ff0);
+    }
+    if (unknownca0.test(FLAG_UNKNOWN_1)) {
+      static_cast<AttachActorBase *>(m_iAttachActor)->setTransform(unknown2ff0);
+    }
+  }
+  if (unknownca0.test(FLAG_UNKNOWN_3)) {
+    gf::GfObj *obj = nullptr;
+    if (unknownd40 != gf::unknown020) {
+      obj = gf::GfObjUtil::getObj(unknownd40);
+    }
+    if (obj != nullptr) {
+      if (unknownca0.test(FLAG_UNKNOWN_4)) {
+        gf::GfComTransform *transform = obj->getComponent<gf::GfComTransform>();
+        m_pos = transform->getPosition();
+        mm::Quat rotation = transform->getRotation();
+        mm::quatToEuler(rotation, m_rot);
+      }
+      if ((unknownca4 & ~1) == STATE_UNKNOWN_4) {
+        fw::Transform bone;
+        if (gf::GfObjAcc(unknownd40).getBoneTransform(bone, 0)) {
+          mm::Mat44 matrix;
+          bone.unknown001(matrix);
+          m_pos = matrix.unknown004();
+          mm::unknown002(matrix, m_rot);
+          m_rot.x = -m_rot.x;
+          m_rot.y = -m_rot.y;
+          m_rot.z = -m_rot.z;
+        }
+      }
+      int head = gf::GfObjAcc(unknownd40).getBoneIdx("JU_head");
+      if (head >= 0) {
+        fw::Transform bone;
+        if (gf::GfObjAcc(unknownd40).getBoneTransform(bone, head)) {
+          mm::Mat44 boneMatrix;
+          bone.unknown001(boneMatrix);
+          mm::Vec3 headPos = boneMatrix.unknown004();
+          mm::Mat44 inverse = unknown2ff0;
+          inverse.unknown012();
+          // Only the y of the transformed point is kept (0x71000c0a00): the point goes through DataManager::unknown001 (the product rows first), and its
+          // x and z are dead. Written as pos.x * inverse.rows[0][1] + ... the copies of the head position are scheduled differently.
+          m_eyeOffset = DataManager::unknown001(inverse, headPos.x, headPos.y, headPos.z).y;
+        }
+      }
+    }
+    // The not ready path of the game (tbz at 0x71000c0460) leaves the function: the eye position, the frame info and the queues are in this block.
+    mm::Vec3 eye = m_pos + mm::Vec3(0.0f, m_eyeOffset, 0.0f);
+    m_charaSetTar.unknown50 = eye;
+    m_charaPlayWink.unknown50 = eye;
+    m_frameInfo = info;
+    if (!isCharaObjPause(info)) {
+      unknown1738.update();
+      unknown2088.update();
+      if (unknownca0.test(FLAG_UNKNOWN_6)) {
+        unknown3044 -= m_frameInfo.unknown04;
+        if (unknown3044 < 0.0f) {
+          exitModelStream();
+          unknownca0.set(FLAG_UNKNOWN_6, false);
+        }
+      }
+    }
+  }
+}
+
 const mm::Vec3 &CharaObj::getPos() const { return m_pos; }
 
 // The routine at 0x71000c19cc reads GfObjSetup::unknown0c (the layer copied from
@@ -249,10 +339,10 @@ void CharaObj::renderIK() { m_charaIKUpdater.render(m_pos, m_eyeOffset); }
 // bits 0 and 1 at +0xca0, then calls AttachActorBase::render for each set bit.
 void CharaObj::renderBone() {
   if (m_iAttachActor != nullptr) {
-    if ((unknownca0 & 1) != 0) {
+    if (unknownca0.test(FLAG_UNKNOWN_0)) {
       static_cast<AttachActorBase *>(m_iAttachActor)->render();
     }
-    if ((unknownca0 & 2) != 0) {
+    if (unknownca0.test(FLAG_UNKNOWN_1)) {
       static_cast<AttachActorBase *>(m_iAttachActor)->render();
     }
   }
@@ -532,6 +622,15 @@ f32 CharaObj::getActionLastFrame() const {
   return 0.0f;
 }
 
+// Inferred helper: the first four variables of the motion, eva and eva effect commands; original name unknown. Three users in playMotion
+// (0x71000c5d50, 228 instructions): with the helper the function matches (228 instructions, no differing line).
+static void unknown001(CmdParam &param, CharaObj *chara, const char *name, f32 frame, f32 blend) {
+  param.val(0).setUserdata(chara);
+  param.val(1).setStr(name);
+  param.val(2).setF32(frame);
+  param.val(3).setF32(blend);
+}
+
 void CharaObj::playMotion(const char *name, f32 frame, f32 blend, f32 speed) {
   if (mm::mtl::Singleton<SkipManager>::getPtr()->isSkipFast()) {
     return;
@@ -541,31 +640,22 @@ void CharaObj::playMotion(const char *name, f32 frame, f32 blend, f32 speed) {
   }
   if ((unknownca4 & ~1) == 4) {
     initModelStream();
-    unknownca0 |= FLAG_UNKNOWN_6;
+    unknownca0.set(FLAG_UNKNOWN_6);
     unknown3044 = frame;
   }
   unknown2088.erase(&m_charaPlayMotion);
   unknown2088.erase(&m_charaPlayMotionABC);
   CmdParam param;
-  param.val(0).setUserdata(this);
-  param.val(1).setStr(name);
-  param.val(2).setF32(frame);
-  param.val(3).setF32(blend);
+  unknown001(param, this, name, frame, blend);
   param.val(4).setF32(speed);
   unknown2088.push_back(&m_charaPlayMotion, param);
   if (mm::mtl::Singleton<CharaManager>::getPtr()->isStreamMode()) {
     unknown2088.erase(&m_charaPlayEva);
     unknown2088.erase(&m_charaPlayEvaEff);
     unknown2088.erase(&m_charaHideWpn);
-    param.val(0).setUserdata(this);
-    param.val(1).setStr(name);
-    param.val(2).setF32(frame);
-    param.val(3).setF32(blend);
+    unknown001(param, this, name, frame, blend);
     unknown2088.push_back(&m_charaPlayEva, param);
-    param.val(0).setUserdata(this);
-    param.val(1).setStr(name);
-    param.val(2).setF32(frame);
-    param.val(3).setF32(blend);
+    unknown001(param, this, name, frame, blend);
     unknown2088.push_back(&m_charaPlayEvaEff, param);
     param.val(0).setUserdata(this);
     param.val(1).setF32(frame);
@@ -695,26 +785,18 @@ void CharaObj::mount(CharaObj *target, const char *bone, const mm::Vec3 &pos, co
     CmdParam param;
     param.val(0).setUserdata(nullptr);
     param.val(1).setStr("");
-    param.val(2).setF32(0.0f);
-    param.val(3).setF32(0.0f);
-    param.val(4).setF32(0.0f);
-    param.val(5).setF32(0.0f);
-    param.val(6).setF32(0.0f);
-    param.val(7).setF32(0.0f);
+    param.unknown001(2, mm::Vec3(0.0f, 0.0f, 0.0f));
+    param.unknown001(5, mm::Vec3(0.0f, 0.0f, 0.0f));
     unknown2088.push_back(&m_charaMount, param);
-    unknownca0 &= ~FLAG_UNKNOWN_4;
+    unknownca0.unknown004(FLAG_UNKNOWN_4);
   } else {
     CmdParam param;
     param.val(0).setUserdata(target->unknownd48);
     param.val(1).setStr(bone);
-    param.val(2).setF32(pos.x);
-    param.val(3).setF32(pos.y);
-    param.val(4).setF32(pos.z);
-    param.val(5).setF32(rot.x);
-    param.val(6).setF32(rot.y);
-    param.val(7).setF32(rot.z);
+    param.unknown001(2, pos);
+    param.unknown001(5, rot);
     unknown2088.push_back(&m_charaMount, param);
-    unknownca0 |= FLAG_UNKNOWN_4;
+    unknownca0.set(FLAG_UNKNOWN_4);
   }
 }
 
@@ -730,14 +812,10 @@ void CharaObj::playFade(bool isOut, f32 frame) {
   param.val(1).setBool(isOut);
   param.val(2).setF32(frame);
   unknown2088.push_back(&m_charaFade, param);
-  if (isOut) {
-    unknownca0 |= FLAG_UNKNOWN_5;
-  } else {
-    unknownca0 &= ~FLAG_UNKNOWN_5;
-  }
+  unknownca0.set(FLAG_UNKNOWN_5, isOut);
 }
 
-bool CharaObj::isFadeOut() const { return (unknownca0 & FLAG_UNKNOWN_5) != 0; }
+bool CharaObj::isFadeOut() const { return unknownca0.test(FLAG_UNKNOWN_5); }
 
 void CharaObj::playVolumeFade(CharaEffectPlayer::VF_TYPE type, int id, const mm::Vec3 &position, const mm::Vec3 &scale, f32 frame, f32 rate, int mode, f32 speed) {
   m_charaEffectPlayer.playVolumeFade(type, id, position, scale, frame, rate, mode, speed);
@@ -790,17 +868,13 @@ void CharaObj::setDispJiji(bool isDisp) {
   if (mm::mtl::Singleton<SkipManager>::getPtr()->isSkipFast()) {
     return;
   }
-  if (isDisp) {
-    unknownca0 |= FLAG_UNKNOWN_7;
-  } else {
-    unknownca0 &= ~FLAG_UNKNOWN_7;
-  }
+  unknownca0.set(FLAG_UNKNOWN_7, isDisp);
   updateDispJiji();
 }
 
 void CharaObj::updateDispJiji() {
   if (unknownd48 != nullptr && unknownd48->unknown18 == gf::GF_EVT_MODEL_UNKNOWN_0) {
-    bool isDisp = (unknownca0 & FLAG_UNKNOWN_7) != 0;
+    bool isDisp = unknownca0.test(FLAG_UNKNOWN_7);
     if (gf::GfObjAcc(unknownd48->m_GF_OBJ_HANDLE).getBdatId() == 1 && unknownd48 != nullptr) {
       static_cast<gf::GfEvtModelDriver *>(unknownd48)->setDispJiji(isDisp);
     }

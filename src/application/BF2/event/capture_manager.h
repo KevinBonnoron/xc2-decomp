@@ -50,6 +50,7 @@ public:
 private:
   bool isJpegMode() const { return static_cast<u32>(unknown14 - MODE_UNKNOWN_3) < 3; }
 
+public:
   // Inferred role: flags; original member name unknown. A bit set like AgelogManager, MotstmManager and OutsiderManager at the same offset
   // 0x10 (decision 48): the game tests single bits with byte loads (clear, update, OnEventProc 0x710010583c) and, through a plain u32 member,
   // clang widens the flag load of start (0x7100105628) with the mode load at 0x14 into one ldp where the game has a plain ldr.

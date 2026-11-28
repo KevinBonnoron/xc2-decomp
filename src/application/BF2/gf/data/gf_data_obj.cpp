@@ -995,7 +995,7 @@ const char *DataObjBlade::getModelResourceName() const { return get(false)->unkn
 
 const char *DataObjBlade::getMotionResourceName() const { return get(false)->unknown734.c_str(); }
 
-const char *DataObjBlade::getEffectResourceName() const { return get(false)->m_effectResourceName; }
+const char *DataObjBlade::getEffectResourceName() const { return get(false)->m_effectResourceName.c_str(); }
 
 const char *DataObjBlade::getSeResourceName() const { return get(false)->unknown7fc.c_str(); }
 
@@ -1152,9 +1152,9 @@ bool DataObjBlade::isEnbaleTarget() const { return false; }
 
 u32 DataObjBlade::getMenuOffset() const { return GfDataBlade::getOffsetID(getBdatId()); }
 
-const char *DataObjBlade::getCenterBone() const { return get(false)->m_centerBone; }
+const char *DataObjBlade::getCenterBone() const { return get(false)->m_centerBone.c_str(); }
 
-const char *DataObjBlade::getCamBone() const { return get(false)->m_camBone; }
+const char *DataObjBlade::getCamBone() const { return get(false)->m_camBone.c_str(); }
 
 u32 DataObjBlade::getEyeRotControl() const { return get(false)->m_eyeRotControl; }
 
@@ -1642,7 +1642,7 @@ const char *DataObjEnemyBlade::getModelResourceName() const { return m_blade->un
 
 const char *DataObjEnemyBlade::getMotionResourceName() const { return m_blade->unknown734.c_str(); }
 
-const char *DataObjEnemyBlade::getEffectResourceName() const { return m_blade->m_effectResourceName; }
+const char *DataObjEnemyBlade::getEffectResourceName() const { return m_blade->m_effectResourceName.c_str(); }
 
 u32 DataObjEnemyBlade::getWeaponType(bool, int) const { return m_blade->m_weaponType; }
 
