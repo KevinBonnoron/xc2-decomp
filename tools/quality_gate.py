@@ -41,6 +41,26 @@ ALWAYS_INLINE_OK = ("include/mm_math/mm_mat44.h", "include/mm_math/mm_math.h", "
 # reproduced from its public source in the dlmalloc code Monolith embedded.
 DLMALLOC_FILE = ("src/libs/monolib_mm/source/mtl/mtl_mem_manager.cpp", "src/libs/monolib_mm/source/mtl/dlmalloc.inl")
 DLMALLOC_VOLATILE = re.compile(r"\(\*\(volatile size_t \*\)\(&\(?[\w.]+\)?\)\) = \w+;")
+# Public third-party libraries that Monolith embedded and whose functions the game reproduces from the library's own
+# source (decision 59 in docs/decisions.md). The only accepted attribute is utf8.h's own `utf8_weak` definition, and
+# the only accepted gotos are those of the library files listed here (FastLZ 0.1.0's `goto literal` / `goto match`,
+# zlib 1.2.8's `goto inf_leave` in inflate.c and `goto dolen` / `goto dodist` in inffast.c); nothing else of these
+# files is exempt.
+UTF8_FILE = "include/utf8.h"
+UTF8_WEAK = re.compile(r"#define utf8_weak __attribute__\(\(weak\)\)")
+EMBEDDED_GOTO = (
+    "src/libs/monolib_mm/source/util/fastlz_level.inl",
+    "src/libs/monolib_mm/source/zlib/inflate.cpp",
+    "src/libs/monolib_mm/source/zlib/inffast.cpp",
+)
+# Library files whose repeated source blocks are the library's own (the three crc32 update blocks of zlib's inflate,
+# the three bit-buffer refills of inflate_fast, utf8.h's repeated UTF-8 encoders and range tests): the duplicate-block
+# rules skip these files.
+EMBEDDED_DUPLICATES = (
+    "src/libs/monolib_mm/source/zlib/inflate.cpp",
+    "src/libs/monolib_mm/source/zlib/inffast.cpp",
+    "src/libs/monolib_mm/source/util/utf8.cpp",
+)
 # The one inline assembly statement accepted: the trap instruction the game executes after a failed assertion.
 # Anything else containing asm is reported. (#line directives that pin the __LINE__ passed to an assertion or an
 # operator new are not reported: the game's source locations cannot be reproduced otherwise.)
@@ -162,8 +182,12 @@ def main():
             code = code.replace("__attribute__((always_inline))", "")
         if path in DLMALLOC_FILE:
             code = DLMALLOC_VOLATILE.sub("", code)
+        if path == UTF8_FILE:
+            code = UTF8_WEAK.sub("", code)
         code = ASSERT_TRAP.sub("", code)
         for label, pattern in FORBIDDEN:
+            if label == "goto" and path.startswith(EMBEDDED_GOTO):
+                continue
             if pattern.search(code):
                 print(f"{path}:{at}: {label}: {text.strip()[:140]}")
                 problems += 1
@@ -184,7 +208,7 @@ def main():
         for name, first, last, body in functions(path, text):
             key = (path, name, first)
             where[key] = f"{path}:{first} {name}"
-            if any(first <= n <= last for n in added.get(path, ())):
+            if not path.startswith(EMBEDDED_DUPLICATES) and any(first <= n <= last for n in added.get(path, ())):
                 changed.add(key)
             bodies[key] = statements(body)
 

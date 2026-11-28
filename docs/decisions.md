@@ -8,7 +8,7 @@ Source comments cite these texts: `ruling 2`, `P2`, `decision 48`, `decision 202
 
 - **Rulings 1 to 9** are the base rules, about single-use locals, scopes, orders, statements without effect, erased arguments, bit helpers, duplicated source and one-user helpers. Each decision cites them as `ruling N`.
 - **Principles P1 to P5** generalise the rulings. A question that a ruling answers is answered by the ruling; a question that only a principle covers is answered by the principle.
-- **Decisions 1 to 58** apply the rulings and principles to a specific form in a specific function, or settle a case that no ruling covers.
+- **Decisions 1 to 59** apply the rulings and principles to a specific form in a specific function, or settle a case that no ruling covers.
 - A form that no ruling, principle or decision covers is not extended from the nearest one by analogy: it is reported with its evidence (assembly, addresses, forms tried).
 - **Reserved areas.** The `ui` namespace (see [CONTRIBUTING.md](../CONTRIBUTING.md)) and the libraries `battle`, `eflib`, `grlib`, `anmlib`, `wnd` and the SDK declarations of `nn` are reserved for the contributor who works on them. A function that needs a change there is left alone and the needed change is reported to that contributor; no file of a reserved area is edited for a match, because the edit would conflict with that work (principle P5).
 
@@ -80,6 +80,7 @@ Derived from rulings 1 to 9; they cover every question after them.
 - Helpers, names and written-out code: 25 to 32, 41, 42, 50, 58.
 - Devices kept out of the tree (declared but undefined specialisations, `inline` under the real name): 41, 51.
 - Refusals: 9, 43, 46, 53.
+- Embedded public libraries (zlib, utf8.h, FastLZ): 59.
 - Changes needed in a reserved area: 22, 37, 52.
 
 ## The decisions
@@ -421,6 +422,18 @@ The seven `mm::mtl::Queue<T>::erase` instantiations of the `GfMenuObj...Info` cl
 - **Why.** The type name is a game name (it is in a mangled symbol of the game or of Torna or Xenoblade DE) and the derivation is written down, like the BDAT ids. Most members will never get an accessor or a string, so without the derivation they stay `unknownXX` while their type is known. The name is a derivation, not the original name.
 - **Scope.** Excluded, the member stays `unknownXX`: template types and instantiations (`FixedVector<...>`, `IntrusivePtr<...>`, `PtrSingleton<...>`), the `mm` math types (`Vec3`, `Quat`, `Mat44`, `Col4`), the base and SDK types, types whose own name is inferred (`unknownNNN`; the class that declares the member may have an inferred name), and any class with two or more members of the same type (`T`, pointers and references to `T` of any depth, `const T`, a typedef of `T` and arrays of any of these count as one type, static data members included). Reserved areas are not renamed (P5); the proposals are reported to their contributor.
 - **Evidence.** `SDataDriver::unknown00` and `SDataBlade::unknown0c` (now `m_idea`) are `SDataIdea`, the only member of that type in their class; the accessors `DataObjDriver::getIdea()` and `DataObjBlade::getIdea()` return their address, so the accessor rule gives `m_idea` first and the type rule gives the same name. 2183 members outside the reserved areas follow the type rule (commits `refactor(gf)`, `refactor(gmk)`, `refactor(event)`, `refactor(layer)`, `refactor(ml)`); a member of type `ml::_wkSeamReadCall` is `m_wkSeamReadCall`, not `m__wkSeamReadCall`.
+
+### 59. Embedded public libraries: the library's own macros, attributes and gotos
+
+- **Rule.** Where the game embeds a public third-party library and its functions only match with a construct of that library's own source, the construct is written as the library writes it, in that library's files only, and nowhere else:
+  - utf8.h (public domain): `utf8_weak` (`__attribute__((weak))`) and `utf8_restrict` (`__restrict__`) in `include/utf8.h`; the repeated blocks of `src/libs/monolib_mm/source/util/utf8.cpp` (the library repeats its UTF-8 encoder in `utf8chr`, `utf8rchr` and `utf8catcodepoint`, its lower-casing test in three functions and its codepoint scan in `utf8cspn`, `utf8pbrk` and `utf8spn`).
+  - FastLZ 0.1.0 (MIT licence): the `goto literal` and `goto match` statements of `util/fastlz_level.inl`, and the `FASTLZ_EXPECT_CONDITIONAL` and `FASTLZ_UNEXPECT_CONDITIONAL` macros (`__builtin_expect`, which the library enables for GNU C compilers) of `util/fastlz.cpp`.
+  - zlib 1.2.8 (zlib licence): the gotos (`goto inf_leave`, `goto dolen`, `goto dodist`) and the repeated blocks of `zlib/inflate.cpp` and `zlib/inffast.cpp`.
+
+  The names, macros and constants keep the library's own spelling, and each file starts with a provenance comment (project, licence, revision proven by the binary). `tools/quality_gate.py` exempts exactly these and no more: the `#define utf8_weak` line of `include/utf8.h` (`UTF8_WEAK`), the gotos of `util/fastlz_level.inl`, `zlib/inflate.cpp` and `zlib/inffast.cpp` (`EMBEDDED_GOTO`), and the duplicate-block rules for `zlib/inflate.cpp`, `zlib/inffast.cpp` and `util/utf8.cpp` (`EMBEDDED_DUPLICATES`). dlmalloc 2.8 keeps the exception it already has in CONTRIBUTING (the `volatile` store of `init_mparams`).
+- **Why.** The binary contains the library as its authors wrote it, so the library's own constructs are original source, not constructs added to steer the compiler, like the `volatile` store of dlmalloc's `init_mparams` (CONTRIBUTING). Nothing else of these files is exempt, and no other file may use them: the same `goto` or macro in a game function stays refused.
+- **Scope.** Only the libraries above and only the constructs their public source contains. A new library, or a construct the library's source does not have, needs its own decision.
+- **Evidence.** utf8.h (early 2017 revision, 26 functions at 0x7100758bd4-0x71007597e8): without `utf8_weak` clang inlines `utf8str` into `utf8chr` and `utf8size` into `utf8dup` where the game calls them (weak definitions are not inlined); with it all 26 functions match, and `utf8ncat` and `utf8ncpy` only get the game's load and store order with `utf8_restrict` on destination and source. FastLZ (0.1.0, the library's fastlz.c of 19 June 2007; `fastlz_compress`, `fastlz1_compress` 270 instructions, `fastlz2_compress` 355, `fastlz_decompress` 366 with both decompressors inlined, `fastlz_compress_level`): the blocks of `fastlz_decompress` are laid out as in the game only with `__builtin_expect` in the library's two macros (363 instructions and a different order without). zlib 1.2.8 (Nintendo SDK build, `zlibVersion()` returns `1.2.8.f-NINTENDO-SDK-v1`; 31 functions and 2 local statics at 0x71009a5e4c-0x71009a9cb8, one root source per C file because the game links one object per C file): all match written as the library's own source, with the tables byte for byte.
 
 ### Everything else
 
