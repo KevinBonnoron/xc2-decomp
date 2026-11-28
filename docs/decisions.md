@@ -261,7 +261,7 @@ The seven `mm::mtl::Queue<T>::erase` instantiations of the `GfMenuObj...Info` cl
 
 - **Rule.** Accepted (P3) when the assembly shows the store.
 - **Why.** It does: `strb wzr, [sp, #107]` after the zeroing `stur xzr` of the `EventBgmSetup`, 0x71000aa2d0.
-- **Scope.** The function still does not match with it (42 instructions against 42, only the scheduling of `cmp`/`adrp`/`fcsel` and of the byte stores 62/63 differs); `OnEventProc` is 59 against 60. The store is kept; the functions stay blocked until the scheduling is explained.
+- **Scope.** `BgmManager::clear` matches with the store (42 instructions) since the `oc-dec-untouchedgf` integration: the flag and fade values are read into the locals `fadeSeconds` (the `FrameManager` call, ruling 1) and `isHandOver` (the flag load, ruling 2) before the four stores, in the order `4c, 62, 63, 61`, as the comment of the function says (41 instructions without both locals, and with only one of them). `OnEventProc` (59 against 60 at the time) is not written.
 
 ### 34. `found.unknown00 == m_end`
 
