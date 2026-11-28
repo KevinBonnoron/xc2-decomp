@@ -28,17 +28,14 @@ public:
     mBits[wordIndex(index)] |= bit(index);
   }
 
-  // The word is looked up before the mask is computed: FixedObjectAllocator<MemManager::Region, 512>::deallocate (1.0.0: 0x710077f460) has `lsr; add` of the word address before the `and; orr; lsl`
-  // of the mask (86 instructions; both in one expression `mBits[wordIndex(index)] &= ~bit(index)` compute the mask first, and a reference to the word moves the `add #0xa9000` before the mask).
   // The assert line of the game (169): its constant changes the instruction encoding.
 #line 168
   void set(unsigned int index, bool value) {
     MM_ASSERT(index < Size);
-    unsigned int word = wordIndex(index);
     if (value) {
-      mBits[word] |= bit(index);
+      mBits[wordIndex(index)] |= bit(index);
     } else {
-      mBits[word] &= ~bit(index);
+      mBits[wordIndex(index)] &= ~bit(index);
     }
   }
 

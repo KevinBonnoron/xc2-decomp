@@ -28,11 +28,7 @@ public:
   struct OpenMainMenuBg {
     u32 unknown00; // Inferred role: first event parameter; original member name unknown.
     u32 unknown04; // Inferred role: third event parameter; original member name unknown.
-    union {
-      u32 unknown08;     // Inferred role: second event parameter; original member name unknown.
-      f32 unknown08_f32; // Float view of the second event parameter, in the style of EventData::unknown08_f32: GfMenuObjMainMenu2::ContentsListener::reciveEvent stores it with str s0 (0x7100486740)
-                         // and move() copies it as a word; original member name unknown.
-    };
+    f32 unknown08; // Inferred role: second event parameter, a float (ContentsListener::reciveEvent stores it with str s0); original member name unknown.
   };
 
   GfMenuObjMainMenu2BG(u32 handle);

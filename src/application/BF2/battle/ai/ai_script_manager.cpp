@@ -119,52 +119,6 @@ void AiScriptManager::destroy() { getPtr()->_clear(); }
 
 void AiScriptManager::update(const fw::UpdateInfo &) { getPtr()->_update(); }
 
-// The game's loop pointer of the inlined _searchData stays on the state field of the slot (start 0x71000038fc: `add x21, x20, #20`, count at [x21, #-4], state at [x21]; end
-// 0x7100003ab8). `state` is a reference to that field declared first, as the local alias of the slot's state: written as `manager->unknown08[index].unknown0c` at each use, the loop pointer is the
-// address of the count field (`add x21, x20, #16`, 73 and 61 instructions against the game's 74 and 63); a copy `int state = slot.unknown0c;` before the increment pairs the two loads in one ldp.
-bool AiScriptManager::start(const char *name) {
-  AiScriptManager *manager = getPtr();
-  int index = manager->_searchData(name);
-  if (index != -1) {
-    unknown002 &slot = manager->unknown08[index];
-    int &state = slot.unknown0c;
-    slot.unknown08++;
-    if (state == UNKNOWN001_UNKNOWN_4) {
-      state = UNKNOWN001_UNKNOWN_2;
-    }
-    return true;
-  }
-  index = manager->_searchEmpty();
-  if (index == -1) {
-    return false;
-  }
-  manager->unknown08[index].unknown00 = name;
-  manager->unknown08[index].unknown08 = 1;
-  manager->unknown08[index].unknown0c = UNKNOWN001_UNKNOWN_1;
-  return true;
-}
-
-bool AiScriptManager::end(const char *name) {
-  AiScriptManager *manager = getPtr();
-  int index = manager->_searchData(name);
-  if (index == -1) {
-    return false;
-  }
-  unknown002 &slot = manager->unknown08[index];
-  int &state = slot.unknown0c;
-  slot.unknown08--;
-  if (slot.unknown08 <= 0) {
-    if (state == UNKNOWN001_UNKNOWN_1) {
-      slot.unknown08 = 0;
-      state = UNKNOWN001_UNKNOWN_0;
-      slot.unknown00 = nullptr;
-    } else {
-      state = UNKNOWN001_UNKNOWN_4;
-    }
-  }
-  return true;
-}
-
 bool AiScriptManager::reload(const char *name) {
   AiScriptManager *manager = getPtr();
   int index = manager->_searchData(name);

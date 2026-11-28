@@ -12,7 +12,6 @@
 #include "mm_mtl/fixed_list.h"
 #include "mm_mtl/fixed_vector.h" // IWYU pragma: keep
 #include "mm_mtl/fixstr.h"
-#include "mm_mtl/internal/fixed_object_allocator.h"
 #include "mm_mtl/internal/heap_allocator.h"
 #include "mm_mtl/noncopyable.h" // IWYU pragma: keep
 #include "mtl/alloc_handle.h"
@@ -1163,9 +1162,6 @@ const char *MemHandlebaseAllocator::getName() const { return "MemHandlebaseAlloc
 template mm::mtl::Noncopyable<mtl::MemManager>::~Noncopyable();
 
 template mm::mtl::FixedVector<mtl::MemManager::HandleRegion, 512>::~FixedVector();
-
-// Instantiated here: the game emits it (1.0.0: 0x710077f460) with its users MemManager::clear and terminate, which are not decompiled yet.
-template void mm::mtl::FixedObjectAllocator<::mtl::MemManager::Region, 512>::deallocate(::mtl::MemManager::Region *);
 
 // Inferred helper: allocates with the size, the alignment and the line as ints; original name unknown. Users: operator new (1.0.0: 0x7100783dfc) and operator new[] (0x7100783e40), whose
 // size parameter is a size_t that the game passes as an int sign extended to 64 bits (sxtw x1, w0 at 0x7100783e14 and 0x7100783e58, the alignment likewise: sxtw x2, w4). With the size passed

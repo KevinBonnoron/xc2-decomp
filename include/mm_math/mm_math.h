@@ -74,9 +74,7 @@ inline f32 asin(f32 r) {
 }
 
 __attribute__((always_inline)) inline void matrixToEuler(const Mat44 &matrix, Vec3 &euler) {
-  // asin is the helper above (its assert is the __LINE__ 581 of the game): the call form, optimised before it is inlined, gives
-  // the game's block order in event::CamEvaPlayer::getCamLook_roll (745 instructions: look stored by two `str`); with the body
-  // of asin written out here the function has 744 (one `stp`).
+  // asin is the helper above (its assert is the __LINE__ 581 of the game).
   euler.x = mm::asin(-matrix.rows[2][1]);
   if (euler.x < 1.5707964f) {
     if (euler.x > -1.5707964f) {

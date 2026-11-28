@@ -90,6 +90,7 @@ public:
   static void init();
   static void destroy();
   static void update(const fw::UpdateInfo &info);
+  // The game defines start and end out of line; not reconstructed yet.
   static bool start(const char *name);
   static bool end(const char *name);
   static bool reload(const char *name);

@@ -126,7 +126,7 @@ void GfMenuObjMainMenu2BG::move(GfMenuCallContext *, u32 index, const OpenMainMe
       ui::EventData event;
       event.unknown00 = 0x101;
       event.unknown08 = param.unknown00;
-      event.unknown0c = param.unknown08;
+      event.unknown0c_f32 = param.unknown08;
       event.unknown10 = param.unknown04;
       event.unknown14 = index;
       ui::UIManager::get()->requestObjectEvent(handle, event, 0.0f);

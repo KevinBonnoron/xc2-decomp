@@ -2,7 +2,7 @@
   {
     "name": "gf",
     "code": {
-      "total": 4320776,
+      "total": 4321668,
       "matching": 3523696,
       "non_matching": 0
     }
@@ -10,8 +10,8 @@
   {
     "name": "monolib_mm",
     "code": {
-      "total": 1752168,
-      "matching": 947984,
+      "total": 1751824,
+      "matching": 947640,
       "non_matching": 0
     }
   },
@@ -19,7 +19,7 @@
     "name": "event",
     "code": {
       "total": 725424,
-      "matching": 565844,
+      "matching": 560280,
       "non_matching": 0
     }
   },
@@ -42,8 +42,8 @@
   {
     "name": "battle",
     "code": {
-      "total": 575656,
-      "matching": 136492,
+      "total": 575108,
+      "matching": 135944,
       "non_matching": 0
     }
   },

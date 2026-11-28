@@ -830,7 +830,7 @@ void GfMenuObjMainMenu2::ContentsListener::reciveEvent(const ui::EventData &even
       GfMenuObjMainMenu2BG::OpenMainMenuBg move;
       move.unknown00 = next;
       move.unknown04 = unknown006;
-      move.unknown08_f32 = menu != nullptr ? menu->unknown0c : 0.0f;
+      move.unknown08 = menu != nullptr ? menu->unknown0c : 0.0f;
       GfMenuObjMainMenu2BG::move(m_menuObjMainMenu2->m_menuCallContext, handle, move);
       mm::mtl::FixStr<32> arrow;
       if (next > previous) {

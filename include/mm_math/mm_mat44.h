@@ -62,7 +62,7 @@ struct alignas(16) Mat44 {
   }
 
   // Inferred helper: rotation about X, the counterpart of setRotY (sin at [1][2], -sin at [2][1]); original name unknown.
-  // Evidence: the single-axis products of event::CamEvaPlayer::getCamLook_roll (1.0.0: 0x71000ae044).
+  // Evidence: the pitch matrix of ml::DrCalcViewWork::begin (1.0.0: 0x71008aa6a4).
   void unknown016(f32 rotX) {
     f32 sinX = sinf(rotX);
     f32 cosX = cosf(rotX);
@@ -85,7 +85,7 @@ struct alignas(16) Mat44 {
   }
 
   // Inferred helper: rotation about Z, the counterpart of setRotY (sin at [0][1], -sin at [1][0]); original name unknown.
-  // Evidence: the single-axis products of event::CamEvaPlayer::getCamLook_roll (1.0.0: 0x71000ae044).
+  // Evidence: the yaw matrix of ml::DrCalcViewWork::begin (1.0.0: 0x71008aa6a4).
   void unknown017(f32 rotZ) {
     f32 sinZ = sinf(rotZ);
     f32 cosZ = cosf(rotZ);
@@ -105,54 +105,6 @@ struct alignas(16) Mat44 {
     rows[3][1] = 0.0f;
     rows[3][2] = 0.0f;
     rows[3][3] = 1.0f;
-  }
-
-  // Inferred helpers: rotation matrix of Euler angles as the product of the single-axis rotations in the order named
-  // (Y, Z, X; X, Z, Y; Y, X, Z; Z, Y, X), the first product formed before the third rotation is built; original names
-  // unknown. Evidence: the four product cases of event::CamEvaPlayer::getCamLook_roll (1.0.0: 0x71000ae044), whose
-  // rotation is read as a whole before the first sinf.
-  __attribute__((always_inline)) void unknown018(Vec3 rotation) {
-    Mat44 rotY;
-    rotY.setRotY(rotation.y);
-    Mat44 rotZ;
-    rotZ.unknown017(rotation.z);
-    *this = rotY * rotZ;
-    Mat44 rotX;
-    rotX.unknown016(rotation.x);
-    *this = *this * rotX;
-  }
-
-  __attribute__((always_inline)) void unknown019(Vec3 rotation) {
-    Mat44 rotX;
-    rotX.unknown016(rotation.x);
-    Mat44 rotZ;
-    rotZ.unknown017(rotation.z);
-    *this = rotX * rotZ;
-    Mat44 rotY;
-    rotY.setRotY(rotation.y);
-    *this = *this * rotY;
-  }
-
-  __attribute__((always_inline)) void unknown020(Vec3 rotation) {
-    Mat44 rotY;
-    rotY.setRotY(rotation.y);
-    Mat44 rotX;
-    rotX.unknown016(rotation.x);
-    *this = rotY * rotX;
-    Mat44 rotZ;
-    rotZ.unknown017(rotation.z);
-    *this = *this * rotZ;
-  }
-
-  __attribute__((always_inline)) void unknown021(const Vec3 &rotation) {
-    Mat44 rotZ;
-    rotZ.unknown017(rotation.z);
-    Mat44 rotY;
-    rotY.setRotY(rotation.y);
-    *this = rotZ * rotY;
-    Mat44 rotX;
-    rotX.unknown016(rotation.x);
-    *this = *this * rotX;
   }
 
   // Inferred helper: perspective projection of a vertical fov (radians), aspect, near and far clip; original name unknown. Evidence: the projection of ml::DrCalcViewWork::begin (1.0.0:
