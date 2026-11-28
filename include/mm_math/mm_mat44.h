@@ -155,6 +155,33 @@ struct alignas(16) Mat44 {
     *this = *this * rotX;
   }
 
+  // Inferred helper: perspective projection of a vertical fov (radians), aspect, near and far clip; original name unknown. Evidence: the projection of ml::DrCalcViewWork::begin (1.0.0:
+  // 0x71008aa6a4), where the game computes the address of unknown180 (`add x21, x19, #384`) before the second tanf, as the argument of an inlined call, and loads fov, aspect, near and far as
+  // its arguments; ml::ScnCamUtil::getPerspective (0x7100743494) is the same formula with the values read from the camera. The body written out in begin gives 3260 instructions against 3248
+  // (first difference at 0x71008aaa4c); a function local to dr_calc_view_work.cpp with the same body matches too.
+  void unknown022(f32 fov, f32 aspect, f32 nearClip, f32 farClip) {
+    f32 inverseTan = 1.0f / tanf(fov * 0.5f);
+    f32 scaleX = inverseTan / aspect;
+    f32 depthScale = -(nearClip + farClip) / (farClip - nearClip);
+    f32 depthOffset = (nearClip * -2.0f * farClip) / (farClip - nearClip);
+    rows[0][0] = scaleX;
+    rows[0][1] = 0.0f;
+    rows[0][2] = 0.0f;
+    rows[0][3] = 0.0f;
+    rows[1][0] = 0.0f;
+    rows[1][1] = inverseTan;
+    rows[1][2] = 0.0f;
+    rows[1][3] = 0.0f;
+    rows[2][0] = 0.0f;
+    rows[2][1] = 0.0f;
+    rows[2][2] = depthScale;
+    rows[2][3] = -1.0f;
+    rows[3][0] = 0.0f;
+    rows[3][1] = 0.0f;
+    rows[3][2] = depthOffset;
+    rows[3][3] = 0.0f;
+  }
+
   void setTrans(const Vec3 &pos) {
     rows[3][0] = pos.x;
     rows[3][1] = pos.y;
@@ -444,6 +471,14 @@ struct alignas(16) Mat44 {
     Vec3 position;
     memcpy(&position, rows[3], sizeof(f32) * 3);
     return Vec3(position);
+  }
+
+  // Inferred role: point transformed by this matrix (row vector times the 3x3 part, plus the translation); original name unknown.
+  // Evidence: inlined in mm::Cylinder::chkCircleLine (1.0.0: 0x71009b29e4) and the other collision tests of mm::Cylinder.
+  Vec3 unknown023(const Vec3 &point) const {
+    return Vec3((point.x * rows[0][0] + point.y * rows[1][0] + point.z * rows[2][0]) + rows[3][0],
+                (point.x * rows[0][1] + point.y * rows[1][1] + point.z * rows[2][1]) + rows[3][1],
+                (point.x * rows[0][2] + point.y * rows[1][2] + point.z * rows[2][2]) + rows[3][2]);
   }
 
   // Copy with an alignment check of the source (1.0.0: assert at line 195 of the original header).

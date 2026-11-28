@@ -36,10 +36,10 @@ struct wkPixlManRes {
   f32 unknown188;                             // Inferred role: tone strength, first value of setToneStr; original member name unknown.
   f32 unknown18c; // Inferred role: second tone value, sent with the tone strength by DrPixlPostObjBloom::calculateDownScaleImpl; original member name unknown. `str s1, [x8, #0x18c]` in
                   // DrPixlMan::setToneStr 0x710083df60; also read as the high half of the 64-bit load at 0x7100854524.
-  u8 _190[0x194 - 0x190];
+  f32 unknown190; // Inferred role: third value of setToneStr; original member name unknown. `str s2, [x8, #0x190]` in DrPixlMan::setToneStr 0x710083df60.
   f32 unknown194; // Inferred role: tone ave min; original member name unknown.
   f32 unknown198; // Inferred role: tone ave max; original member name unknown.
-  u8 _19c[0x1a0 - 0x19c];
+  f32 unknown19c; // Inferred role: tone value computed by setToneStr from the post parm (clamped); original member name unknown. `str w8, [x9, #0x19c]` in 0x710083df60.
   grlib::CGLibDepthTarget *unknown1a0[2]; // Inferred role: depth objs; original member name unknown.
   grlib::CGLibDepthTarget *unknown1b0;    // Inferred role: separate trans depth object; original member name unknown.
   grlib::CGLibDepthTarget *unknown1b8;    // Inferred role: light depth object; original member name unknown.
@@ -71,6 +71,8 @@ static_assert(offsetof(wkPixlManRes, unknown1a0) == 0x1a0, "");
 static_assert(offsetof(wkPixlManRes, unknown1b0) == 0x1b0, "");
 static_assert(offsetof(wkPixlManRes, unknown1b8) == 0x1b8, "");
 static_assert(offsetof(wkPixlManRes, unknown1c0) == 0x1c0, "");
+static_assert(offsetof(wkPixlManRes, unknown190) == 0x190, "");
+static_assert(offsetof(wkPixlManRes, unknown19c) == 0x19c, "");
 static_assert(offsetof(wkPixlManRes, unknown1c8) == 0x1c8, "");
 static_assert(offsetof(wkPixlManRes, unknown1cc) == 0x1cc, "");
 static_assert(offsetof(wkPixlManRes, unknown1d0) == 0x1d0, "");
@@ -85,6 +87,7 @@ class DrPixlShadowObj;
 class DrPixlMan {
 public:
   DrPixlMan(DrMan *drMan);
+  void setToneStr(f32 toneStr, f32 unknown1, f32 unknown2);
   void createColorBuffer();
   void calcColorBuffer(wkPixlManRes *res, f32 width, f32 height, f32 unknown1, f32 unknown2);
   void resetColorBuff(bool isMain);

@@ -231,7 +231,8 @@ public:
   mtl::ALLOC_HANDLE unknown18; // Inferred role: mem; original member name unknown.
   mtl::ALLOC_HANDLE unknown1c; // Inferred role: mem data ("DrData"); original member name unknown.
   mtl::ALLOC_HANDLE unknown20; // Inferred role: mem; original member name unknown.
-  u8 _0024[0x0070 - 0x0024];
+  u8 _0024[0x0068 - 0x0024];
+  Scn *unknown68;                                        // Inferred role: scn passed to the constructor, DrCalcViewWork::begin (1.0.0: 0x71008aa6e0) takes its camera; original member name unknown.
   DrIniSys *m_drIniSys;                                  // Inferred role: ini sys; original member name unknown.
   DrPixlMan *m_drPixlMan;                                // Inferred role: pixl man; original member name unknown.
   DrShdMan *m_drShdMan;                                  // Inferred role: shd man; original member name unknown.
@@ -348,7 +349,9 @@ public:
   bool unknown1d7e;   // Inferred role: skips GBuffRender; original member name unknown.
   u8 _1d7f[0x1d80 - 0x1d7f];
   bool m_clip; // Inferred role: clip; named after the game accessor ml::ScnRenderDrSysParmAcc::setClip.
-  u8 _1d81[0x1d8c - 0x1d81];
+  u8 _1d81[0x1d86 - 0x1d81];
+  bool unknown1d86; // Inferred role: keeps the camera position of DrCalcViewWork::begin and skips its view clip setup (1.0.0: 0x71008aa70c); original member name unknown.
+  u8 _1d87[0x1d8c - 0x1d87];
   bool unknown1d8c; // Inferred role: flag, copied to unknown1d8d at the end of the setup; original member name unknown.
   bool unknown1d8d; // Inferred role: copy of unknown1d8c; original member name unknown.
   bool unknown1d8e; // Inferred role: skips the env coli parameters; original member name unknown.
@@ -384,6 +387,7 @@ static_assert(offsetof(DrMan, unknown14) == 0x0014, "");
 static_assert(offsetof(DrMan, unknown18) == 0x0018, "");
 static_assert(offsetof(DrMan, unknown1c) == 0x001c, "");
 static_assert(offsetof(DrMan, unknown20) == 0x0020, "");
+static_assert(offsetof(DrMan, unknown68) == 0x0068, "");
 static_assert(offsetof(DrMan, m_drIniSys) == 0x0070, "");
 static_assert(offsetof(DrMan, m_drPixlMan) == 0x0078, "");
 static_assert(offsetof(DrMan, m_drShdMan) == 0x0080, "");
@@ -473,6 +477,7 @@ static_assert(offsetof(DrMan, m_mdlDblPause) == 0x1d7b, "");
 static_assert(offsetof(DrMan, unknown1d7d) == 0x1d7d, "");
 static_assert(offsetof(DrMan, unknown1d7e) == 0x1d7e, "");
 static_assert(offsetof(DrMan, m_clip) == 0x1d80, "");
+static_assert(offsetof(DrMan, unknown1d86) == 0x1d86, "");
 static_assert(offsetof(DrMan, unknown1d8c) == 0x1d8c, "");
 static_assert(offsetof(DrMan, unknown1d8d) == 0x1d8d, "");
 static_assert(offsetof(DrMan, unknown1d8e) == 0x1d8e, "");

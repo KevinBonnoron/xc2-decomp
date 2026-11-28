@@ -5,8 +5,13 @@
 
 struct LMSColor;
 
-// C interface of the message library the game links, declared from the symbols LMS_* of the executable and from the
-// calls of ms::MsWrapper. The project is an opaque handle here: its type name is unknown.
+// C interface of the message library the game links, as ms::MsWrapper sees it: declared from the symbols LMS_* of the
+// executable and from the calls of ms::MsWrapper. The project is an opaque handle here. The wrapper passes 32-bit
+// values and tail calls the functions (`b LMS_GetTagNum`, 0x710069c968), while the library itself takes u16 group, tag
+// and parameter numbers and returns u16 counts: a u16 prototype in the wrapper's unit would add a zero extension, so
+// the library's own prototypes (src/libs/monolib_mm/source/lms/lms_impl.h) differ and the two declarations are never
+// seen by one unit. LMS_InitProject receives the message project binary already loaded in memory (the library stores
+// the pointer and reads its header), not a path.
 extern "C" {
 void LMS_SetMemFuncs(void *(*allocate)(size_t size), void (*deallocate)(void *pointer));
 void *LMS_InitProject(const char *path);

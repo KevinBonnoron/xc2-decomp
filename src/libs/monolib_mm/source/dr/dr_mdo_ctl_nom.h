@@ -62,6 +62,7 @@ static_assert(offsetof(unknown099, unknown28) == 0x28, "");
 class DrMdoCtlNom : public DrMdlObj, public DrMdoNomClone {
 public:
   DrMdoCtlNom(const void *data, const char *path, DrMan *drMan, int viewNum);
+  void setupWorkMdl();
   ~DrMdoCtlNom() override;
   void update() override;
   void dispOffUpdate() override;

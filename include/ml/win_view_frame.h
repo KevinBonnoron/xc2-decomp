@@ -26,8 +26,9 @@ enum MCURSOR {
 class WinViewFrame {
 public:
   // Name from the game symbol ml::WinViewFrame::getMove2MCursor(ml::WinViewFrame::FMOVE). Inferred role: frame part
-  // under the mouse, 8 being none; original enumerator names unknown.
-  enum FMOVE {
+  // under the mouse, 8 being none; original enumerator names unknown. The underlying type is int: evtMousePickOn returns
+  // `unknown38 < 8` as a signed compare (cset lt, 0x710076ade8).
+  enum FMOVE : int {
     FMOVE_UNKNOWN_0,
     FMOVE_UNKNOWN_1,
     FMOVE_UNKNOWN_2,
@@ -43,6 +44,7 @@ public:
   };
 
   WinViewFrame();
+  bool evtMousePickOn(EventView *event);
   void setInfo(WinView *info);
   bool evtFocusOn();
   bool evtFocusOff();

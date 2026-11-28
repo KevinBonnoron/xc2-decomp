@@ -7,6 +7,8 @@
 
 namespace mm {
 
+struct Line2;
+
 class Cylinder : public PrimBase {
 public:
   Cylinder(const Mat44 &matrix) : PrimBase(PRIM_CYLINDER) {
@@ -21,6 +23,11 @@ public:
   bool isCollideCylinder(const PrimBase &prim) const;
   bool isCollideCube(const PrimBase &prim) const;
   bool isCollideSphere(const PrimBase &prim) const;
+
+private:
+  // Tests the 32 points of the top (or bottom) circle against the line segment (distance to the line <= radius and the foot between the
+  // end points). Evidence: mm::Cylinder::chkCircleLine (1.0.0: 0x71009b29e4).
+  static bool chkCircleLine(const Line2 &line, f32 radius, const Cylinder &cylinder, bool top);
 };
 
 } // namespace mm

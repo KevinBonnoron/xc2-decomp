@@ -31,6 +31,7 @@ class DrMdoNode : public DrMdoAnim {
 public:
   void updateMdlPos();
   void nodeInfoSetup(u32 &size);
+  void nodeInfoWorkSetup(u8 *work, u32 &size);
   void calcOfsMat();
   const char *getNodeName(int index) const;
   int getNodeIdx(const char *name) const;

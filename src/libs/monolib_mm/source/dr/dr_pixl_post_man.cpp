@@ -46,6 +46,7 @@
 #include "grlib/cglib_state.h"
 #include "grlib/cglib_uni_base_utility.h"
 #include "mm_math/mm_mat44.h"
+#include "mm_math/mm_vec2.h"
 #include "mm_math/mm_vec3.h"
 #include "mm_math/mm_vec4.h"
 #include "mm_mtl/fixed_array.h"
@@ -637,8 +638,8 @@ void DrPixlPostMan::renderDeferredTemporal() {
   matrix.unknown009(matrix, viewWork->unknown280 * viewWork->unknown380);
   psUniform.setMat44SetMat44(toPrevScreen, matrix);
   mm::Vec4 jitterValue;
-  jitterValue.x = viewWork->unknownac0[0] - viewWork->unknownad0[0];
-  jitterValue.y = -(viewWork->unknownac0[1] - viewWork->unknownad0[1]);
+  jitterValue.x = viewWork->unknownac0.x - viewWork->unknownad0.x;
+  jitterValue.y = -(viewWork->unknownac0.y - viewWork->unknownad0.y);
   jitterValue.z = 0.0f;
   jitterValue.w = 0.0f;
   psUniform.setVec4SetVec4(jitter, jitterValue);
@@ -983,8 +984,8 @@ void DrPixlPostMan::renderDownDepth(bool isDepth, bool isTemporal, bool isEtc) {
   uniform.setMat44SetMat44(toPrevScreen, matrix);
   u32 jitter = uniform.unknown001("gJitter");
   mm::Vec4 jitterValue;
-  jitterValue.x = viewWork->unknownac0[0] - viewWork->unknownad0[0];
-  jitterValue.y = -(viewWork->unknownac0[1] - viewWork->unknownad0[1]);
+  jitterValue.x = viewWork->unknownac0.x - viewWork->unknownad0.x;
+  jitterValue.y = -(viewWork->unknownac0.y - viewWork->unknownad0.y);
   jitterValue.z = 0.0f;
   jitterValue.w = 0.0f;
   uniform.setVec4SetVec4(jitter, jitterValue);

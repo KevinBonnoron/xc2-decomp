@@ -24,7 +24,11 @@ class DrShdLgtObj;
 class DrShdLgtMan {
 public:
   enum COMP_SHADER_TYPE {};
-  enum GIBL_SHADER_TYPE {};
+  // Inferred roles from the user DrShdLgtGlobalIBL::renderDirect; original names unknown.
+  enum GIBL_SHADER_TYPE {
+    GIBL_SHADER_TYPE_UNKNOWN_0 = 0, // Inferred role: proxy volume depth and pixel counter pass.
+    GIBL_SHADER_TYPE_UNKNOWN_3 = 3, // Inferred role: proxy volume pass applying the lighting directly.
+  };
   enum DECLARATION {};
   enum RENDER_DEBUG_TYPE {
     RENDER_DEBUG_TYPE_UNKNOWN_0 = 0, // Inferred role: point light.

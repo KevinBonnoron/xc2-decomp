@@ -1184,6 +1184,12 @@ void *operator new(size_t size, const char *, size_t) { return malloc(size); }
 
 void *operator new[](size_t size, const char *, size_t) { return malloc(size); }
 
+void operator delete[](void *pointer) noexcept { mtl::MemManager::deallocate(pointer, 0, false); }
+
+void operator delete(void *pointer, const std::nothrow_t &) noexcept { mtl::MemManager::deallocate(pointer, 0, false); }
+
+void operator delete[](void *pointer, const std::nothrow_t &) noexcept { mtl::MemManager::deallocate(pointer, 0, false); }
+
 void operator delete(void *pointer) noexcept { mtl::MemManager::deallocate(pointer, 0, false); }
 
 void operator delete(void *pointer, mtl::ALLOC_HANDLE, const char *, size_t, int, bool) noexcept { mtl::MemManager::deallocate(pointer, 0, false); }

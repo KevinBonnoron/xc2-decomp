@@ -78,6 +78,25 @@ void SoundCore::GetVersion(int *major, int *minor, int *revision, int *build, ch
 
 bool SoundCore::IsInit() { return m_init; }
 
+Result SoundCore::Init(const InitParam &param) {
+  Debug::SetMessageMethod(param.unknown38);
+  Debug::SetTimeStampType(param.unknown40);
+  Result result = static_cast<SystemCore *>(this)->Init(param);
+  if (result >= 0) {
+    int major;
+    int minor;
+    int revision;
+    int build;
+    char16_t configuration[16];
+    GetVersion(&major, &minor, &revision, &build, configuration);
+    log_message(u"Version %d.%d.%d.%d.%s %dbit Initialized", major, minor, revision, build, configuration, 64);
+  } else {
+    log_message(u"SoundCore::Init() : Failure");
+  }
+  m_init = true;
+  return result;
+}
+
 Result SoundCore::Quit(bool isForce) {
   if (!m_init) {
     return static_cast<Result>(-1);

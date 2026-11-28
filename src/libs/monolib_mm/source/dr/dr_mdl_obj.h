@@ -27,13 +27,14 @@ struct unknown091 {
   f32 unknown0c;      // Inferred role: power; original member name unknown.
   f32 unknown10;      // Inferred role: black ratio; original member name unknown.
   f32 unknown14;      // Inferred role: emissive; original member name unknown.
-  u8 _18[0x1c - 0x18];
-  u32 unknown1c; // Inferred role: flags; original member name unknown.
+  s32 unknown18;      // Inferred role: index of the DECL_RIM_BLOOM_CALC decoded shader; original member name unknown.
+  u32 unknown1c;      // Inferred role: flags; original member name unknown.
 };
 
 static_assert(offsetof(unknown091, unknown0c) == 0x0c, "");
 static_assert(offsetof(unknown091, unknown10) == 0x10, "");
 static_assert(offsetof(unknown091, unknown14) == 0x14, "");
+static_assert(offsetof(unknown091, unknown18) == 0x18, "");
 static_assert(offsetof(unknown091, unknown1c) == 0x1c, "");
 static_assert(sizeof(unknown091) == 0x20, "");
 

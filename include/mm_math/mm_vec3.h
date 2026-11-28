@@ -114,6 +114,11 @@ struct alignas(16) Vec3 {
     x = cx;
   }
 
+  // Inferred role: dot product of this and vector; original name unknown.
+  // Evidence: inlined in mm::Line2::getNearest (1.0.0: 0x71009b270c, 182 matching instructions): the products load the components in the order of
+  // the expression (x, y, z of both operands) and the sums keep the order left to right.
+  f32 unknown005(const Vec3 &vector) const { return x * vector.x + y * vector.y + z * vector.z; }
+
   f32 x;
   f32 y;
   f32 z;

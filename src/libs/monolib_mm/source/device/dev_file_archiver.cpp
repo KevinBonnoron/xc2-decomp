@@ -77,6 +77,10 @@ void DevFileArchiver::finalize() {
 
 template class ml::DevFileDictionary<int, ml::DevFileDicAllocator, -1, -2, true>;
 
+template void ml::DevFileDictionary<int, ml::DevFileDicAllocator, -1, -2, true>::reallocArray(ninfo *&array, int size, int from);
+
 template void ml::DevFileDictionary<int, ml::DevFileDicAllocator, -1, -2, true>::reallocArray(block *&array, int size, int from);
+
+template size_t ml::DevFileDictionary<int, ml::DevFileDicAllocator, -1, -2, true>::commonPrefixPredict(const char *key, result_triple_type *result, size_t resultLength);
 
 template mm::mtl::PtrSingleton<ml::DevFileArchiver>::~PtrSingleton();

@@ -118,11 +118,15 @@ f32 DrPixlPostParm::getToonDirLightScale() const {
 }
 
 void DrPixlPostParm::getRanDropLayerInfo(u32 layer, stRainDropLayerInfo &info) const {
-  info.unknown00 = unknown40c[layer];
-  info.unknown04 = unknown418[layer];
-  info.unknown08 = unknown424[layer];
-  info.unknown0c = unknown43c[layer];
-  info.unknown10 = unknown430[layer];
+  // The game forms `this + layer * 4` once and reads the five values with immediate offsets (0x40c, 0x418, 0x424, 0x430, 0x43c; 0x710085cc7c). The five
+  // arrays of three are the rows 12 to 26 of unknown3dc (the one array that DrEnvColiParameter::calcParams blends); `unknown3dc[12 + layer]` adds the
+  // constant to the index for each value (17 instructions), a shared row pointer keeps the single `add` (12).
+  const f32 *layerValues = &unknown3dc[layer];
+  info.unknown00 = layerValues[12];
+  info.unknown04 = layerValues[15];
+  info.unknown08 = layerValues[18];
+  info.unknown0c = layerValues[24];
+  info.unknown10 = layerValues[21];
 }
 
 void DrPixlPostParm::OnCloseAttriMenu() { unknown10fc = true; }

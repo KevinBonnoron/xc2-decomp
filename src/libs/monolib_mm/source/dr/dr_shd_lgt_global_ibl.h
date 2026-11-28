@@ -8,10 +8,12 @@
 
 namespace mm {
 struct Vec3;
+struct Vec4;
 } // namespace mm
 
 namespace grlib {
 class CGLibDblUniformBlock;
+class CGLibUniformEtcUtility;
 } // namespace grlib
 
 namespace ml {
@@ -19,6 +21,7 @@ namespace ml {
 class DrLightObjGlobalIBL;
 class DrMan;
 class DrShdLgtMan;
+class DrShdLgtObj;
 
 namespace _dr_shd_lgt_glb_ibl {
 bool CompareByPriority(const DrLightObjGlobalIBL *a, const DrLightObjGlobalIBL *b);
@@ -43,7 +46,11 @@ public:
     unknown002 unknown40[32];                                     // Inferred role: slots; original member name unknown.
     mm::Mat44 unknown340[0x60];                                   // Inferred role: sh matrices; original member name unknown.
     mm::mtl::FixedVector<DrLightObjGlobalIBL *, 128> unknown1b40; // Inferred role: sorted light objects; original member name unknown.
-    u8 _1f48[0x2048 - 0x1f48];
+    u32 unknown1f48[64];                                          // Inferred role: index of each sorted light object for the shader parameters (renderDirect); original member name unknown.
+
+    // Inferred role: shader parameter index of a sorted light object; original name unknown. The u32 parameter gives the zero extended index (add x8, x8, w21, uxtw #2,
+    // 0x71008983bc) of the 64 bit loop counter that the game's loops over the sorted light objects use.
+    u32 unknown003(u32 index) const { return unknown1f48[index]; }
     grlib::CGLibDblUniformBlock *unknown2048; // Inferred role: uniform block; original member name unknown.
     bool unknown2050;                         // Inferred role: reset color buffer request; original member name unknown.
     u8 _2051[0x2060 - 0x2051];
@@ -69,6 +76,11 @@ public:
   void renderIndexTable();
   void renderLinkList(DrShdLgtMan *man);
   void renderByLinkList(DrShdLgtMan *man);
+  void setShaderGlobalIBLListFadeParameter(DrShdLgtObj *shader, u32 index, const mm::Mat44 &world, const mm::Vec4 &fadeMul, const mm::Vec4 &fadeCenter, grlib::CGLibDblUniformBlock &block,
+                                           u32 blockIndex);
+  void renderDirect(DrShdLgtMan *man);
+  void setShaderGlobalIBLDirectFadeParameter(DrShdLgtObj *shader, u32 index, const mm::Mat44 &world, const mm::Vec4 &fadeMul, const mm::Vec4 &fadeCenter, grlib::CGLibUniformEtcUtility &viewUniform,
+                                             grlib::CGLibUniformEtcUtility &fadeUniform);
   void resetColorBuff(int index);
   void delViewInfo(int viewNum);
   bool isEnable() const;
@@ -97,6 +109,7 @@ static_assert(sizeof(DrShdLgtGlobalIBL::SlotCandidate) == 0x10, "");
 static_assert(offsetof(DrShdLgtGlobalIBL::unknown001, unknown40) == 0x40, "");
 static_assert(offsetof(DrShdLgtGlobalIBL::unknown001, unknown340) == 0x340, "");
 static_assert(offsetof(DrShdLgtGlobalIBL::unknown001, unknown1b40) == 0x1b40, "");
+static_assert(offsetof(DrShdLgtGlobalIBL::unknown001, unknown1f48) == 0x1f48, "");
 static_assert(offsetof(DrShdLgtGlobalIBL::unknown001, unknown2048) == 0x2048, "");
 static_assert(offsetof(DrShdLgtGlobalIBL::unknown001, unknown2050) == 0x2050, "");
 static_assert(sizeof(DrShdLgtGlobalIBL::unknown001) == 0x2060, "");

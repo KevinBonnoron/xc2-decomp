@@ -1,8 +1,12 @@
 #include "dr/dr_mdo_ctl_nom.h"
 
+#include <new>
+
 #include "cloud/cloud_mdl_data_obj.h"
 #include "dr/dr_ap_cache.h"
+#include "dr/dr_calc_man.h"
 #include "dr/dr_calc_stm_list_obj.h"
+#include "dr/dr_calc_view_work.h"
 #include "dr/dr_light_obj.h"
 #include "dr/dr_man.h"
 #include "dr/dr_mdl_base.h"
@@ -27,8 +31,13 @@
 #include "dr/dr_res_mdo_sort.h"
 #include "dr/dr_res_mdo_vertex.h"
 #include "dr/dr_res_mdo_vtx_mesh_obj.h"
+#include "dr/dr_shd_uniform_block_man.h"
 #include "grlib/cglib_ctl_shader.h"
+#include "grlib/cglib_tri_uniform_block.h"
+#include "grlib/cglib_uniform_array.h"
+#include "grlib/shd_util.h"
 #include "mm_math/mm_col3.h"
+#include "mm_math/mm_mat44.h"
 #include "mm_math/mm_vec3.h"
 #include "mtl/alloc_handle.h"
 #include "mtl/mem_manager.h"
@@ -37,6 +46,240 @@ namespace ml {
 
 // Inferred role: weight vertex render type of each render type; original name unknown.
 static const u8 unknown135[] = {0, 3, 2, 4, 1, 1};
+
+// Sums the size of the work area of the model, allocates it and carves the parts out of it in the order of the sizes (0x71008044c8, 653 instructions).
+// Measured forms: `(0x10 - x % 0x10) % 0x10` folds the repeated aligns of an aligned offset (`-x & 0xf` does not); the three list sizes are the
+// signed one-bit masks `(s32)(flags << n) >> 31 & count * 8` (a select gives csel); `new (p) CGLibOneUniformArray;` without `()` (a value
+// initialisation adds a memset).
+void DrMdoCtlNom::setupWorkMdl() {
+  u32 sortSize = 0x20;
+  if (unknown30->unknown20->unknown00 & (unknown022::FLAG_UNKNOWN_4 | unknown022::FLAG_UNKNOWN_7 | unknown022::FLAG_UNKNOWN_20)) {
+    u32 flags = unknown30->unknown20->unknown00;
+    sortSize = ((flags >> 4 & 1) << 5) | 0x50;
+    if (flags & unknown022::FLAG_UNKNOWN_7) {
+      sortSize += 0x20;
+    }
+    if (flags & unknown022::FLAG_UNKNOWN_20) {
+      sortSize += 0x20;
+    }
+  }
+  u32 size = sortSize + 0x18;
+  if (unknown30->unknown20->unknown68 != 0) {
+    size += (0x10 - size % 0x10) % 0x10;
+    size += DrResMdoMeshObj::calcWorkSize(unknown30->unknown18);
+  }
+  if (unknown30->unknown20->unknown54 != 0) {
+    s32 count = unknown30->unknown170;
+    u32 flags = unknown30->unknown20->unknown00;
+    // The game computes the size of the last alpha list (bit 4) before it adds `count * 0x40`: its shift sequence (0x7100804584) sits between the
+    // adds of `unknown54 * 4` and of `count * 0x40`, and the add of the second and third list follows the shifts of the second (the same sequence
+    // without the local, in one left to right sum, computes all three shifts before the first add).
+    u32 lastListSize = static_cast<s32>(flags << 27) >> 31 & count * 8;
+    size = size + unknown30->unknown20->unknown54 * 4 + count * 0x40 + lastListSize + (static_cast<s32>(flags << 24) >> 31 & count * 8) + (static_cast<s32>(flags << 11) >> 31 & count * 8);
+  }
+  if (unknown30->unknown20->unknown00 & unknown022::FLAG_UNKNOWN_11) {
+    size += DrResEtcPamObj::calcWorkSize(unknown30->unknown18);
+  }
+  if (unknown30->unknown20->unknown00 & unknown022::FLAG_UNKNOWN_18) {
+    size += DrResMdoAlpTbl::calcWorkSize(unknown30->unknown18);
+  }
+  if (unknown30->unknown20->unknown00 & unknown022::FLAG_UNKNOWN_10) {
+    size += DrResMdoMorpObj::calcWorkSize(unknown30->unknown18);
+  }
+  if (unknown30->unknown20->unknown00 & unknown022::FLAG_UNKNOWN_13) {
+    size += (0x10 - size % 0x10) % 0x10;
+    size += getVanishEffectMax() * sizeof(MdoWrkVanishEffect) * 3;
+  }
+  if (unknown30->unknown20->unknown00 & unknown022::FLAG_UNKNOWN_14) {
+    size += 0x60;
+  }
+  if (unknown30->unknown20->unknown00 & unknown022::FLAG_UNKNOWN_12) {
+    size += DrResMdoShdObj::calcWorkSize(unknown30->unknown18);
+  }
+  if (unknown30->unknown20->unknown00 & unknown022::FLAG_UNKNOWN_19) {
+    size += DrResMdoVtxMeshObj::calcWorkSize(unknown30->unknown18);
+  }
+  size += (0x10 - size % 0x10) % 0x10;
+  size += DrResMdoLodObj::calcWorkSize(unknown30->unknown18);
+  size += (0x10 - size % 0x10) % 0x10;
+  if (unknown30->unknown20->unknown00 & unknown022::FLAG_UNKNOWN_15) {
+    nodeInfoSetup(size);
+    if (unknown30->unknown20->unknown00 & unknown022::FLAG_UNKNOWN_16) {
+      size += DrResMdoLight::calcWorkSize(unknown30->unknown18);
+    }
+  }
+  size += (unknown30->unknown20->unknown00 & unknown022::FLAG_UNKNOWN_10) == 0 ? 0x28 : 0x50;
+  if (unknown30->unknown20->unknown00 & unknown022::FLAG_UNKNOWN_13) {
+    size += 0x28;
+  }
+  if (unknown30->unknown20->unknown00 & unknown022::FLAG_UNKNOWN_14) {
+    size += 0x28;
+  }
+  unknown1a8 = mtl::MemManager::allocate(m_drMan->unknown14, size, 0x10, false, "no name", 0);
+  if (unknown1a8 == nullptr) {
+    unknown1a8 = mtl::MemManager::allocate(m_drMan->unknown20, size, 0x10, false, "no name", 0);
+  }
+  u32 offset = 0;
+  m_drResMdoSortNom = static_cast<DrResMdoSortNom *>(unknown1a8);
+  new (m_drResMdoSortNom) DrResMdoSortNom(this);
+  offset += 0x20;
+  if (unknown30->unknown20->unknown00 & (unknown022::FLAG_UNKNOWN_4 | unknown022::FLAG_UNKNOWN_7 | unknown022::FLAG_UNKNOWN_20)) {
+    unknown1b8 = static_cast<unknown099 *>(static_cast<void *>(static_cast<u8 *>(unknown1a8) + offset));
+    offset += 0x30;
+    unknown1b8->m_drResMdoSortNomFastApha = nullptr;
+    unknown1b8->m_drResMdoSortNomLastApha = nullptr;
+    unknown1b8->m_drResMdoSortNomCldBackApha = nullptr;
+    if (unknown30->unknown20->unknown00 & unknown022::FLAG_UNKNOWN_4) {
+      unknown1b8->m_drResMdoSortNomLastApha = static_cast<DrResMdoSortNomLastApha *>(static_cast<void *>(static_cast<u8 *>(unknown1a8) + offset));
+      new (unknown1b8->m_drResMdoSortNomLastApha) DrResMdoSortNomLastApha(this);
+      offset += 0x20;
+    }
+    if (unknown30->unknown20->unknown00 & unknown022::FLAG_UNKNOWN_7) {
+      unknown1b8->m_drResMdoSortNomFastApha = static_cast<DrResMdoSortNomFastApha *>(static_cast<void *>(static_cast<u8 *>(unknown1a8) + offset));
+      new (unknown1b8->m_drResMdoSortNomFastApha) DrResMdoSortNomFastApha(this);
+      offset += 0x20;
+    }
+    if (unknown30->unknown20->unknown00 & unknown022::FLAG_UNKNOWN_20) {
+      unknown1b8->m_drResMdoSortNomCldBackApha = static_cast<DrResMdoSortNomCldBackApha *>(static_cast<void *>(static_cast<u8 *>(unknown1a8) + offset));
+      new (unknown1b8->m_drResMdoSortNomCldBackApha) DrResMdoSortNomCldBackApha(this);
+      offset += 0x20;
+    }
+  }
+  m_drResClip = static_cast<DrResClip *>(static_cast<void *>(static_cast<u8 *>(unknown1a8) + offset));
+  new (m_drResClip) DrResClip();
+  offset += 0x18;
+  if (unknown30->unknown20->unknown68 != 0) {
+    offset += (0x10 - offset % 0x10) % 0x10;
+    m_drResMdoMeshObj = static_cast<DrResMdoMeshObj *>(static_cast<void *>(static_cast<u8 *>(unknown1a8) + offset));
+    offset += DrResMdoMeshObj::create(static_cast<u8 *>(unknown1a8) + offset, unknown30->unknown18);
+  }
+  if (unknown30->unknown20->unknown54 != 0) {
+    unknown198 = static_cast<DrResChkList *>(static_cast<void *>(static_cast<u8 *>(unknown1a8) + offset));
+    unknown190 = static_cast<DrResChkList **>(static_cast<void *>(static_cast<u8 *>(unknown1a8) + (offset + unknown30->unknown20->unknown54 * sizeof(DrResChkList))));
+    offset += unknown30->unknown20->unknown54 * 4 + unknown30->unknown170 * 0x40;
+    if (unknown30->unknown20->unknown00 & unknown022::FLAG_UNKNOWN_4) {
+      unknown1b8->unknown20 = static_cast<DrResChkList **>(static_cast<void *>(static_cast<u8 *>(unknown1a8) + offset));
+      offset += unknown30->unknown170 * 8;
+    }
+    if (unknown30->unknown20->unknown00 & unknown022::FLAG_UNKNOWN_7) {
+      unknown1b8->unknown18 = static_cast<DrResChkList **>(static_cast<void *>(static_cast<u8 *>(unknown1a8) + offset));
+      offset += unknown30->unknown170 * 8;
+    }
+    if (unknown30->unknown20->unknown00 & unknown022::FLAG_UNKNOWN_20) {
+      unknown1b8->unknown28 = static_cast<DrResChkList **>(static_cast<void *>(static_cast<u8 *>(unknown1a8) + offset));
+      offset += unknown30->unknown170 * 8;
+    }
+  }
+  if (unknown30->unknown20->unknown00 & unknown022::FLAG_UNKNOWN_11) {
+    m_drResEtcPamObj = static_cast<DrResEtcPamObj *>(static_cast<void *>(static_cast<u8 *>(unknown1a8) + offset));
+    offset += DrResEtcPamObj::create(static_cast<u8 *>(unknown1a8) + offset, unknown30->unknown18);
+  }
+  if (unknown30->unknown20->unknown00 & unknown022::FLAG_UNKNOWN_10) {
+    m_drResMdoMorpObj = static_cast<DrResMdoMorpObj *>(static_cast<void *>(static_cast<u8 *>(unknown1a8) + offset));
+    offset += DrResMdoMorpObj::create(static_cast<u8 *>(unknown1a8) + offset, unknown30->unknown18);
+  }
+  if (unknown30->unknown20->unknown00 & unknown022::FLAG_UNKNOWN_18) {
+    m_drResMdoAlpTbl = static_cast<DrResMdoAlpTbl *>(static_cast<void *>(static_cast<u8 *>(unknown1a8) + offset));
+    offset += DrResMdoAlpTbl::create(static_cast<u8 *>(unknown1a8) + offset, unknown30->unknown18);
+  }
+  if (unknown30->unknown20->unknown00 & unknown022::FLAG_UNKNOWN_12) {
+    m_drResMdoShdObj = static_cast<DrResMdoShdObj *>(static_cast<void *>(static_cast<u8 *>(unknown1a8) + offset));
+    offset += DrResMdoShdObj::create(static_cast<u8 *>(unknown1a8) + offset, unknown30->unknown18);
+  }
+  if (unknown30->unknown20->unknown00 & unknown022::FLAG_UNKNOWN_19) {
+    m_drResMdoVtxMeshObj = static_cast<DrResMdoVtxMeshObj *>(static_cast<void *>(static_cast<u8 *>(unknown1a8) + offset));
+    offset += DrResMdoVtxMeshObj::create(static_cast<u8 *>(unknown1a8) + offset, unknown30->unknown18);
+  }
+  offset += (0x10 - offset % 0x10) % 0x10;
+  m_drResMdoLodObj = static_cast<DrResMdoLodObj *>(static_cast<void *>(static_cast<u8 *>(unknown1a8) + offset));
+  offset += DrResMdoLodObj::create(static_cast<u8 *>(unknown1a8) + offset, unknown30->unknown18);
+  offset += (0x10 - offset % 0x10) % 0x10;
+  if (unknown30->unknown20->unknown00 & unknown022::FLAG_UNKNOWN_13) {
+    offset += (0x10 - offset % 0x10) % 0x10;
+    u32 vanishMax = getVanishEffectMax();
+    MdoWrkVanishEffect *effects = static_cast<MdoWrkVanishEffect *>(static_cast<void *>(static_cast<u8 *>(unknown1a8) + offset));
+    offset += vanishMax * sizeof(MdoWrkVanishEffect) * 3;
+    unknown30->m_mdoWrkVanishEffect = effects;
+    MdoWrkVanishEffect *effectPtr = effects;
+    for (u32 i = 0; i < vanishMax * 3; i++, effectPtr++) {
+      MdoWrkVanishEffect &effect = *effectPtr;
+      effect.unknown40 = mm::Vec3(1.0f, 1.0f, 1.0f);
+      effect.unknown50 = mm::Vec3::zero;
+      effect.unknown00[0] = mm::Col3(0.0f, 0.0f, 0.0f);
+      effect.unknown00[1] = mm::Col3(1.0f, 0.0f, 0.0f);
+      effect.unknown00[2] = mm::Col3(1.0f, 1.0f, 0.5f);
+      effect.unknown00[3] = mm::Col3(1.0f, 0.0f, 0.0f);
+      effect.unknown00[4] = mm::Col3(0.05f, 0.05f, 0.05f);
+      // The game's `stp` of unknown74[4] and unknown88[0] (0x7100804bbc) comes right after the zero of unknown50, before the stores of unknown60:
+      // written in address order (unknown88[0] after unknown74[4]) clang puts that pair after the store of unknown74[3].
+      effect.unknown88[0] = 0.0f;
+      effect.unknown60[0] = 0.01f;
+      effect.unknown60[1] = 0.02f;
+      effect.unknown60[2] = 0.03f;
+      effect.unknown60[3] = 0.04f;
+      effect.unknown60[4] = 0.05f;
+      effect.unknown74[0] = 0.06f;
+      effect.unknown74[1] = 0.07f;
+      effect.unknown74[2] = 0.08f;
+      effect.unknown74[3] = 0.09f;
+      effect.unknown74[4] = 0.1f;
+      effect.unknown88[1] = 1.0f;
+      effect.unknown88[2] = 1.0f;
+      effect.unknown88[3] = 1.0f;
+      effect.unknown88[4] = 0.0f;
+      effect.unknown9c = 1.0f;
+      effect.unknowna0 = 0.5f;
+      effect.unknowna4 = 0.0f;
+      effect.unknownd0 = 0.0f;
+      effect.unknowncc = m_drResMdoShdObj->getDecShdIdx("DECL_VOLTEX_CALC");
+      effect.unknowna8 = 0;
+      effect.unknownd4 = 0;
+    }
+  }
+  if (unknown30->unknown20->unknown00 & unknown022::FLAG_UNKNOWN_14) {
+    unknown091 *rimBloom = static_cast<unknown091 *>(static_cast<void *>(static_cast<u8 *>(unknown1a8) + offset));
+    offset += 0x60;
+    for (int i = 0; i < 3; i++) {
+      rimBloom[i].unknown00 = mm::Col3::orange;
+      rimBloom[i].unknown14 = 0.0f;
+      rimBloom[i].unknown0c = 0.3f;
+      rimBloom[i].unknown10 = 0.0f;
+      rimBloom[i].unknown18 = m_drResMdoShdObj->getDecShdIdx("DECL_RIM_BLOOM_CALC");
+      rimBloom[i].unknown1c = 0;
+    }
+    unknown30->unknown158 = rimBloom;
+  }
+  if (m_nodeMax != 0) {
+    nodeInfoWorkSetup(static_cast<u8 *>(unknown1a8), offset);
+    if (unknown30->unknown20->unknown00 & unknown022::FLAG_UNKNOWN_16) {
+      m_drResMdoLight = static_cast<DrResMdoLight *>(static_cast<void *>(static_cast<u8 *>(unknown1a8) + offset));
+      offset += DrResMdoLight::create(static_cast<u8 *>(unknown1a8) + offset, unknown30->unknown18, static_cast<const u8 *>(unknown50));
+    }
+  }
+  unknown30->unknowna0 = static_cast<grlib::CGLibTriUniformArray *>(static_cast<void *>(static_cast<u8 *>(unknown1a8) + offset));
+  offset += 0x28;
+  DrShdUniformBlockMan::createUniformMdlObj(unknown30->unknowna0, unknown30->unknown20->unknown70 + 1);
+  if (unknown30->unknown20->unknown00 & unknown022::FLAG_UNKNOWN_10) {
+    unknown30->unknowna8 = static_cast<grlib::CGLibOneUniformArray *>(static_cast<void *>(static_cast<u8 *>(unknown1a8) + offset));
+    offset += 0x28;
+    new (unknown30->unknowna8) grlib::CGLibOneUniformArray;
+  }
+  if (unknown30->unknown20->unknown00 & unknown022::FLAG_UNKNOWN_13) {
+    u32 vanishMax = getVanishEffectMax();
+    unknown30->unknownb0 = static_cast<grlib::CGLibDblUniformArray *>(static_cast<void *>(static_cast<u8 *>(unknown1a8) + offset));
+    offset += 0x28;
+    DrShdUniformBlockMan::createUniformVolTexCalcObj(unknown30->unknownb0, vanishMax);
+  }
+  if (unknown30->unknown20->unknown00 & unknown022::FLAG_UNKNOWN_14) {
+    unknown30->unknownb8 = static_cast<grlib::CGLibDblUniformArray *>(static_cast<void *>(static_cast<u8 *>(unknown1a8) + offset));
+    offset += 0x28;
+    DrShdUniformBlockMan::createUniformRimBloomCalcObj(unknown30->unknownb8);
+  }
+  if (unknown30->unknown20->unknown00 & unknown022::FLAG_UNKNOWN_6) {
+    m_drMdoSmlShadowObj = m_drMan->m_drMdlMan->m_drMdoSmlShadowMan->createObj(unknown1a, unknown30->unknown18 + unknown30->unknown20->unknown7c);
+    unknownfc |= unknown027_10;
+  }
+}
 
 DrMdoCtlNom::~DrMdoCtlNom() {
   if ((unknownfc & unknown027_8) && unknown1a == 0) {
@@ -471,6 +714,53 @@ void DrMdoCtlNom::calcMdlUniformBlock() {
     }
     updateMdlUniformBlock();
     unknown168 |= 8;
+  }
+}
+
+// Fills the model uniform block (0x710080d468): the model view matrix is the rotation part of the model matrix times the view, with the translation of the model position through the view.
+void DrMdoCtlNom::updateMdlUniformBlock() {
+  DrCalcViewWork *view = m_drMan->m_drCalcMan->m_drCalcViewWork;
+  grlib::CGLibTriUniformBlock *block = &(*unknown30->unknowna0)[0];
+  f32 *buff = static_cast<f32 *>(block->getBuff());
+  mm::Vec3 position = (unknownc0 - view->unknown400) + m_offsetPos;
+  f32 x = position.x;
+  f32 y = position.y;
+  f32 z = position.z;
+  f32 translationX = x * view->unknown80.rows[0][0] + y * view->unknown80.rows[1][0] + z * view->unknown80.rows[2][0] + view->unknown80.rows[3][0];
+  f32 translationY = x * view->unknown80.rows[0][1] + y * view->unknown80.rows[1][1] + z * view->unknown80.rows[2][1] + view->unknown80.rows[3][1];
+  f32 translationZ = x * view->unknown80.rows[0][2] + y * view->unknown80.rows[1][2] + z * view->unknown80.rows[2][2] + view->unknown80.rows[3][2];
+  mm::Mat44 matrix(m_matrix);
+  matrix.rows[3][0] = matrix.rows[3][1] = matrix.rows[3][2] = 0.0f;
+  mm::Mat44 modelView;
+  modelView.unknown009(matrix, view->unknown80);
+  modelView.rows[3][0] = translationX;
+  modelView.rows[3][1] = translationY;
+  modelView.rows[3][2] = translationZ;
+  mm::Mat44 viewProj;
+  // The projection is selected through a pointer: `flag ? a : b` and the ternary on references give the game's csel with the other polarity.
+  const mm::Mat44 *proj = &view->unknown380;
+  if ((unknownf8 & unknown028_19) == 0) {
+    proj = &view->unknown180;
+  }
+  viewProj.unknown009(modelView, *proj);
+  f32 params[4] = {0.0f, 0.0f, 0.0f, 0.0f};
+  params[0] = unknowne0;
+  params[1] = unknowne8;
+  grlib::ShdMat44TransposeMat44(buff, viewProj);
+  grlib::ShdMat44TransposeMat34(buff + 0x10, m_matrix);
+  grlib::ShdMat44TransposeMat34(buff + 0x1c, modelView);
+  grlib::ShdF32SetVec4(buff + 0x28, params);
+  block->updateData();
+  if (!(unknownfc & unknown027_26)) {
+    buff = static_cast<f32 *>(block->getOldBuff());
+    grlib::ShdMat44TransposeMat44(buff, viewProj);
+    grlib::ShdMat44TransposeMat34(buff + 0x10, m_matrix);
+    grlib::ShdMat44TransposeMat34(buff + 0x1c, modelView);
+    grlib::ShdF32SetVec4(buff + 0x28, params);
+    block->updateOldData();
+  }
+  if (m_drResMdoMeshObj != nullptr) {
+    m_drResMdoMeshObj->updateUniforom(unknown30->unknowna0, (unknownfc & unknown027_26) == 0);
   }
 }
 

@@ -2,6 +2,8 @@
 
 #include "ml/cache_draw.h"
 #include "ml/dev_graph.h"
+#include "ml/event_view.h"
+#include "ml/msg_param.h"
 #include "ml/win_view.h"
 #include "mm_mtl/fixstr.h"
 
@@ -177,6 +179,50 @@ void WinViewFrame::renderTitle(DebDraw *draw) const {
   draw->setZComp(false);
   draw->setZWrite(false);
   renderFrame(draw, mm::Rect<int>(0, 0, width, static_cast<s16>(unknown60 * 2 + 0x16)));
+}
+
+// 1.0.0: 0x710076a8e4. The frame is picked at the mouse position and the offsets from the pick to the frame edges are kept for evtMouseMove. The `unknown3c` and `unknown48`
+// offsets each read a frame rect of their own (WinView::getFrameRect(true) is inlined twice: its fullscreen test calls DevGraph::getRootWidth/getRootHeight each time).
+// Forms measured: the flags test written first (`!(unknown3bc & 0x400) && !isChild`) is what keeps the game's `tbnz` on the child flag and the full word load of
+// unknown3bc (the child test first gives `cbnz` and `ldrb`); `isChild` as the `|` of two booleans, each read through the parent again (the game reloads the parent after
+// every call), gives the game's cset/orr.
+bool WinViewFrame::evtMousePickOn(EventView *event) {
+  if (event->unknown20 != 1) {
+    return false;
+  }
+  unknown38 = getFramePick(event->pos);
+  mm::Rect<int> frameRect = m_info->getFrameAbsRect(true);
+  int dx = event->pos.x - frameRect.x;
+  int dy = event->pos.y - frameRect.y;
+  unknown40 = static_cast<f32>(dx);
+  unknown44 = static_cast<f32>(dy);
+  unknown3c = static_cast<f32>(dx - m_info->getFrameRect(true).width);
+  unknown48 = static_cast<f32>(dy - m_info->getFrameRect(true).height);
+  bool isChild = false;
+  if (m_info->getParentView() != nullptr) {
+    bool isFirst = m_info->getParentView()->getSplitView1() == m_info;
+    bool isSecond = m_info->getParentView()->getSplitView2() == m_info;
+    isChild = isFirst || isSecond;
+  }
+  if (!(m_info->unknown3bc & 0x400) && !isChild) {
+    mm::Rect<int> close;
+    getRectClose(close);
+    if (dx >= close.x && dx < close.x + close.width && dy >= close.y && dy < close.y + close.height) {
+      m_info->unknown3c0.add(9);
+    }
+  }
+  if (m_info->isSplit(false)) {
+    mm::Pnt<int> absPos = m_info->getAbsPos(true);
+    int offset;
+    if (m_info->isSplitHolizon()) {
+      offset = event->pos.y - absPos.y - m_info->getSplitLine(true);
+    } else {
+      offset = event->pos.x - absPos.x - m_info->getSplitLine(true);
+    }
+    unknown4c = static_cast<f32>(offset);
+  }
+  unknown50 = event->pos;
+  return unknown38 < FMOVE_UNKNOWN_8;
 }
 
 } // namespace ml

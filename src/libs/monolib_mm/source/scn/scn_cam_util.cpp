@@ -94,26 +94,7 @@ void ScnCamUtil::getPerspective(mm::Mat44 &matrix, const ScnObjCam *cam) {
   f32 aspect = info->unknown1f0;
   f32 nearClip = info->unknown1f4;
   f32 farClip = info->unknown1f8;
-  f32 inverseTan = 1.0f / tanf(info->unknown1e8 * 0.5f);
-  f32 scaleX = inverseTan / aspect;
-  f32 depthScale = -(nearClip + farClip) / (farClip - nearClip);
-  f32 depthOffset = (nearClip * -2.0f * farClip) / (farClip - nearClip);
-  matrix.rows[0][0] = scaleX;
-  matrix.rows[0][1] = 0.0f;
-  matrix.rows[0][2] = 0.0f;
-  matrix.rows[0][3] = 0.0f;
-  matrix.rows[1][0] = 0.0f;
-  matrix.rows[1][1] = inverseTan;
-  matrix.rows[1][2] = 0.0f;
-  matrix.rows[1][3] = 0.0f;
-  matrix.rows[2][0] = 0.0f;
-  matrix.rows[2][1] = 0.0f;
-  matrix.rows[2][2] = depthScale;
-  matrix.rows[2][3] = -1.0f;
-  matrix.rows[3][0] = 0.0f;
-  matrix.rows[3][1] = 0.0f;
-  matrix.rows[3][2] = depthOffset;
-  matrix.rows[3][3] = 0.0f;
+  matrix.unknown022(info->unknown1e8, aspect, nearClip, farClip);
 }
 
 bool ScnCamUtil::isDispScreen(const ScnObjCam *cam, const mm::Vec3 &position) {

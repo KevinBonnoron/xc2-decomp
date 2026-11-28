@@ -23,9 +23,11 @@
 #include "dr/dr_shd_mdo_man.h"
 #include "dr/dr_shd_uniform_block_man.h"
 #include "grlib/cglib_dbl_uniform_block.h" // IWYU pragma: keep
+#include "grlib/cglib_mem_handle.h"
 #include "grlib/cglib_one_uniform_block.h" // IWYU pragma: keep
 #include "grlib/cglib_tri_uniform_block.h" // IWYU pragma: keep
 #include "grlib/cglib_uniform_array.h"
+#include "ml/rand.h"
 #include "mm_math/mm_col4.h"
 #include "mm_math/mm_math.h"
 #include "mm_mtl/fixed_array.h"
@@ -63,6 +65,26 @@ int DrMdoMat::getNodeAnmWrkRes(const u8 *data, u8 *work, MdoWrkMatRes *matRes) {
     matRes->unknown148 = nodeAnm;
   }
   return sizeof(unknown702);
+}
+
+// 0x71008287f0, 26 instructions. The game builds the 0x50 term as `lsl #30; and w0, w11, w10, asr #31`: the flag bit sign extended and masked. Every select form
+// (`flags & 2 ? 0x50 : 0`, `* 0x50`, `-(bit) & 0x50`) gives a csel or one more instruction; the shift pair is the only form measured that matches. The table offset is read before the
+// mask, so the table is formed first.
+u32 DrMdoMat::calcBillMdlInfo(const u8 *data, int, bool isInstance) {
+  const unknown022 *header = reinterpret_cast<const unknown022 *>(data);
+  if (!(header->unknown00 & (unknown022::FLAG_UNKNOWN_1 | unknown022::FLAG_UNKNOWN_2))) {
+    return 0;
+  }
+  const unknown714 *table = reinterpret_cast<const unknown714 *>(data + header->unknown74);
+  u32 size = static_cast<s32>(header->unknown00 << 30) >> 31 & 0x50;
+  if (header->unknown00 & unknown022::FLAG_UNKNOWN_2) {
+    if (isInstance) {
+      return size + 0x18;
+    }
+    s32 count = table->unknown14;
+    size = (size + 0x40 | 0x28) + count * 0x40 + (count + count / 32) * 4 + 0xc;
+  }
+  return size;
 }
 
 void DrMdoMat::resetNodeAnmWrkRes(const u8 *data, MdoWrkMatRes *matRes) {
@@ -445,6 +467,54 @@ void DrMdoMat::resetFurShaderRes(const u8 *data, u32 offset, MdoWrkMatRes *matRe
   const unknown008 *table = reinterpret_cast<const unknown008 *>(data + offset);
   matRes->unknown138->unknown08 = reinterpret_cast<const unknown005 *>(data + table->unknown04);
   matRes->unknown138->unknown00 = reinterpret_cast<const u16 *>(data + table->unknown00);
+}
+
+// Inferred helpers of the uniform arrays (original names unknown): the game works through the array pointer it loads once per call, which the members of
+// CGLibUniformArray do not give (getFlagWaveRes 0x71008285e0; the billboard setup of createBillMdlInfo 0x7100828888 does the same).
+template <typename T> static void unknown901(grlib::CGLibUniformArray<T> *array) {
+  grlib::CGLibMemHandle::free(array->unknown18);
+  if (array->unknown0c != 0) {
+    grlib::CGLibMemHandle::allocUniform(array->unknown18, array->unknown0c);
+    array->unknown10 = array->unknown0c;
+    array->unknown0c = 0;
+  }
+}
+
+template <typename T> static void unknown902(grlib::CGLibUniformArray<T> *array, u32 index, int size) { array->unknown0c += (*array)[index].setupArray(size, array->unknown18, array->unknown0c); }
+
+// 0x71008285e0, 109 instructions. `s64 uniformOffset = size;` is declared before the null test: the game sign extends the offset on the work path only, and the add of
+// the size stays above the test (written inside the test, the add is sunk below it and the three first instructions are in another order).
+int DrMdoMat::getFlagWaveRes(const u8 *data, u32 offset, u8 *work, MdoWrkMatRes *matRes) {
+  const unknown019 *table = reinterpret_cast<const unknown019 *>(data + offset);
+  u32 count = table->unknown08;
+  int size = count * 4 + 0x28;
+  int total = size + 0x28;
+  s64 uniformOffset = size;
+  if (work != nullptr) {
+    unknown009 *flagWave = reinterpret_cast<unknown009 *>(work);
+    flagWave->unknown08 = data + table->unknown04;
+    flagWave->unknown00 = reinterpret_cast<const u16 *>(data + table->unknown00);
+    flagWave->unknown10 = table->unknown08;
+    flagWave->unknown14 = 1;
+    flagWave->unknown20 = reinterpret_cast<f32 *>(work + 0x28);
+    for (int i = 0; i < table->unknown08; i++) {
+      flagWave->unknown20[i] = mtRandf1(0.0f, 100.0f);
+    }
+    flagWave->unknown18 = static_cast<grlib::CGLibUniformArray<grlib::CGLibTriUniformBlock> *>(static_cast<void *>(work + uniformOffset));
+    new (flagWave->unknown18) grlib::CGLibTriUniformArray;
+    flagWave->unknown18->setupArray(table->unknown08);
+    flagWave->unknown18->unknown0c = 0;
+    for (int i = 0; i < table->unknown08; i++) {
+      flagWave->unknown18->unknown0c += 0x300;
+    }
+    unknown901(flagWave->unknown18);
+    flagWave->unknown18->unknown0c = 0;
+    for (int i = 0; i < table->unknown08; i++) {
+      unknown902(flagWave->unknown18, i, 0x30);
+    }
+    matRes->unknown140 = flagWave;
+  }
+  return total;
 }
 
 void DrMdoMat::releaseBaseMapSeamMat(MdoWrkMatRes *matRes) {

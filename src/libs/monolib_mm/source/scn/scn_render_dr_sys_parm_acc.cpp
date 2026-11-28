@@ -95,7 +95,7 @@ void ScnRenderDrSysParmAcc::setBlmStr(f32 x, f32 y, f32 z) {
 }
 
 void ScnRenderDrSysParmAcc::setBlmGauss(f32 x, f32 y, f32 z) {
-  f32 *blmGauss = m_drPixlPostParm->m_blmGauss;
+  f32 *blmGauss = &m_drPixlPostParm->m_blmStr[5];
   blmGauss[0] = x;
   blmGauss[1] = y;
   blmGauss[2] = z;
@@ -115,7 +115,7 @@ const f32 *ScnRenderDrSysParmAcc::getBlmWeight() const { return m_drPixlPostParm
 
 const f32 *ScnRenderDrSysParmAcc::getBlmStr() const { return m_drPixlPostParm->m_blmStr; }
 
-const f32 *ScnRenderDrSysParmAcc::getBlmGauss() const { return m_drPixlPostParm->m_blmGauss; }
+const f32 *ScnRenderDrSysParmAcc::getBlmGauss() const { return &m_drPixlPostParm->m_blmStr[5]; }
 
 void ScnRenderDrSysParmAcc::setLensFlare(bool lensFlare) { m_drPixlPostParm->m_lensFlare = lensFlare; }
 
@@ -470,9 +470,9 @@ void ScnRenderDrSysParmAcc::setShadowStr(f32 shadowStr) { m_drPixlPostParm->m_sh
 
 f32 ScnRenderDrSysParmAcc::getShadowStr() const { return m_drPixlPostParm->m_shadowStr; }
 
-void ScnRenderDrSysParmAcc::setShadowChacheAngle(f32 shadowChacheAngle) { m_drPixlPostParm->m_shadowChacheAngle = shadowChacheAngle; }
+void ScnRenderDrSysParmAcc::setShadowChacheAngle(f32 shadowChacheAngle) { m_drPixlPostParm->m_shadowChacheAngle[0] = shadowChacheAngle; }
 
-f32 ScnRenderDrSysParmAcc::getShadowChacheAngle() const { return m_drPixlPostParm->m_shadowChacheAngle; }
+f32 ScnRenderDrSysParmAcc::getShadowChacheAngle() const { return m_drPixlPostParm->m_shadowChacheAngle[0]; }
 
 void ScnRenderDrSysParmAcc::callCubeMapRender(const DR_CAPCUBE_PARAM &param) { m_drMan->callCubeMapRender(param); }
 

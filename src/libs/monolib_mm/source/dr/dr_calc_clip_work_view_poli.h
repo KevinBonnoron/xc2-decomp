@@ -5,12 +5,19 @@
 #include "mm_math/mm_vec3.h"
 #include "types.h"
 
+namespace mm {
+struct Mat44;
+} // namespace mm
+
 namespace ml {
 
 class DrCalcClipWorkViewPoli : public DrCalcClipWork {
 public:
   DrCalcClipWorkViewPoli();
   ~DrCalcClipWorkViewPoli();
+  // Game symbol _ZN2ml22DrCalcClipWorkViewPoli9setMatrixERKN2mm5Mat44EffRKNS1_4Vec3E (0x71008a8cec), called by DrCalcViewWork::begin with the view matrix, the field of view, the
+  // aspect and the view position; the roles of the two floats are inferred from that call; declared, not defined yet.
+  void setMatrix(const mm::Mat44 &matrix, f32 fov, f32 aspect, const mm::Vec3 &position);
   // The second argument is a direction, not an end point: the game's clipLineTest (0x71008a9db0) intersects start + direction * t with the
   // planes and scales it by 2000 for checkLineNeraPointGet. It is declared but not defined: every natural form matches except four register
   // numbers (see the `registers` blocker), so the vtable of this class is not emitted by this unit until it is defined.

@@ -127,6 +127,28 @@ void unknown010(DrEnvColiObj *&first, DrEnvColiObj *&last) {
   last = nullptr;
 }
 
+// Inferred role: copies the leading parameters (0x00 to 0x53: tone map, border blm and blm parameter groups) of a post parameter record, the same in the versions 10003 to 10006; original name
+// unknown.
+template <int From, int To> void unknown020(const EnvColiPostParameterVer<From> &from, EnvColiPostParameterVer<To> &to) {
+  to.unknown00 = from.unknown00;
+  to.unknown04 = from.unknown04;
+  to.unknown08 = from.unknown08;
+  to.unknown0c = from.unknown0c;
+  to.unknown10 = from.unknown10;
+  to.unknown14 = from.unknown14;
+  to.unknown18 = from.unknown18;
+  to.unknown1c = from.unknown1c;
+  to.unknown20 = from.unknown20;
+  to.unknown24 = from.unknown24;
+  to.unknown28 = from.unknown28;
+  for (int i = 0; i < 5; i++) {
+    to.unknown2c[i] = from.unknown2c[i];
+  }
+  for (int i = 0; i < 5; i++) {
+    to.unknown40[i] = from.unknown40[i];
+  }
+}
+
 } // namespace
 
 DrEnvColiObj::COLITEST DrEnvColiObj::s_pColiTest[5] = {
@@ -248,27 +270,14 @@ void DrEnvColiParameter::updateBloomParams() {
   postParm->m_borderBlmSecSub = defaultParm.m_borderBlmSecSub;
   postParm->m_borderBlmSecMul = defaultParm.m_borderBlmSecMul;
   postParm->m_borderBlmMax = defaultParm.m_borderBlmMax;
-  for (int i = 0; i < 3; i++) {
+  for (int i = 0; i < 10; i++) {
     postParm->m_blmWeight[i] = defaultParm.m_blmWeight[i];
   }
-  for (int i = 0; i < 7; i++) {
-    postParm->unknown60[i] = defaultParm.unknown60[i];
-  }
-  for (int i = 0; i < 3; i++) {
+  for (int i = 0; i < 15; i++) {
     postParm->m_blmStr[i] = defaultParm.m_blmStr[i];
   }
-  for (int i = 0; i < 2; i++) {
-    postParm->unknown88[i] = defaultParm.unknown88[i];
-  }
-  for (int i = 0; i < 3; i++) {
-    postParm->m_blmGauss[i] = defaultParm.m_blmGauss[i];
-  }
-  for (int i = 0; i < 7; i++) {
-    postParm->unknown9c[i] = defaultParm.unknown9c[i];
-  }
-  for (int i = 0; i < 2; i++) {
-    postParm->unknownc0[i] = defaultParm.unknownc0[i];
-  }
+  postParm->unknownc0[0] = defaultParm.unknownc0[0];
+  postParm->unknownc4 = defaultParm.unknownc4;
   postParm->m_blmLensSub = defaultParm.m_blmLensSub;
   postParm->m_blmLensMul = defaultParm.m_blmLensMul;
   postParm->m_blmLensMax = defaultParm.m_blmLensMax;
@@ -892,6 +901,166 @@ bool DrEnvColiObj::envcoli_notrot_cylinder(const u8 *data, const mm::Vec3 &posit
   f32 dz = position.z - center->z;
   f32 radius = cylinder->unknown0c + margin;
   return dx * dx + dz * dz <= radius * radius;
+}
+
+template <> void convertEnvColiPostParameterVer<10003, 10004>(const EnvColiPostParameterVer<10003> &from, EnvColiPostParameterVer<10004> &to) {
+  unknown020(from, to);
+  to.unknowna4 = from.unknowna4;
+  to.unknowna8 = from.unknownb0;
+  to.unknownac[0] = from.unknownb4[0];
+  to.unknownac[1] = from.unknownb4[1];
+  to.unknownb4 = from.unknownbc;
+  for (int i = 0; i < 6; i++) {
+    to.unknownb8[i] = from.unknownc0[i];
+  }
+  to.unknownd0[0] = from.unknownd8[0];
+  to.unknownd0[1] = from.unknownd8[1];
+  to.unknownd0[2] = from.unknownd8[2];
+  for (int i = 0; i < 6; i++) {
+    to.unknowndc[i] = from.unknowne4[i];
+  }
+  for (int i = 0; i < 8; i++) {
+    to.unknownf4[i] = from.unknownfc[i];
+  }
+  for (int i = 0; i < 6; i++) {
+    to.unknown114[i] = from.unknown11c[i];
+  }
+  to.unknown12c[0] = from.unknown134[0];
+  to.unknown12c[1] = from.unknown134[1];
+  to.unknown134[0] = from.unknown13c[0];
+  to.unknown134[1] = from.unknown13c[1];
+  to.unknown13c[0] = from.unknown144[0];
+  to.unknown13c[1] = from.unknown144[1];
+  to.unknown154 = from.unknown15c;
+  to.unknown158[0] = from.unknown160[0];
+  to.unknown158[1] = from.unknown160[1];
+  to.unknown158[2] = from.unknown160[2];
+  to.unknown17c = 0.0f;
+  to.unknown180[0] = 0.69f;
+  to.unknown180[1] = 2.49f;
+  to.unknown180[2] = 28.88f;
+  to.unknown180[3] = -0.000004f;
+  to.unknown190.unknown00[0] = 0.675f;
+  to.unknown190.unknown00[1] = 0.7005f;
+  to.unknown190.unknown00[2] = 0.75f;
+  to.unknown190.unknown00[3] = 0.6f;
+  to.unknown190.unknown00[4] = 0.630588f;
+  to.unknown190.unknown00[5] = 0.660147f;
+  to.unknown190.unknown00[6] = 0.67f;
+  to.unknown190.unknown00[7] = 0.76f;
+  to.unknown190.unknown00[8] = 0.506479f;
+  to.unknown190.unknown00[9] = 0.567606f;
+  to.unknown190.unknown00[10] = 0.62f;
+  to.unknown190.unknown00[11] = 0.88f;
+  to.unknown1c0[0].unknown00[0] = 0.94f;
+  to.unknown1c0[0].unknown00[1] = 12.69f;
+  to.unknown1c0[0].unknown00[2] = 15.67f;
+  to.unknown1c0[1].unknown00[0] = 9.7f;
+  to.unknown1c0[1].unknown00[1] = 22.39f;
+  to.unknown1c0[1].unknown00[2] = 25.37f;
+  to.unknown1c0[2].unknown00[0] = 6.64f;
+  to.unknown1c0[2].unknown00[1] = 7.31f;
+  to.unknown1c0[2].unknown00[2] = 10.0f;
+  to.unknown1c0[3].unknown00[0] = -3.36f;
+  to.unknown1c0[3].unknown00[1] = -2.69f;
+  to.unknown1c0[3].unknown00[2] = 3.36f;
+  to.unknown1c0[4].unknown00[0] = 2.25f;
+  to.unknown1c0[4].unknown00[1] = 0.9f;
+  to.unknown1c0[4].unknown00[2] = 0.47f;
+}
+
+template <> void convertEnvColiPostParameterVer<10004, 10005>(const EnvColiPostParameterVer<10004> &from, EnvColiPostParameterVer<10005> &to) {
+  unknown020(from, to);
+  to.unknowna4 = from.unknowna4;
+  to.unknowna8 = from.unknowna8;
+  to.unknownac[0] = from.unknownac[0];
+  to.unknownac[1] = from.unknownac[1];
+  to.unknownb4 = from.unknownb4;
+  for (int i = 0; i < 6; i++) {
+    to.unknownb8[i] = from.unknownb8[i];
+  }
+  to.unknownd0[0] = from.unknownd0[0];
+  to.unknownd0[1] = from.unknownd0[1];
+  to.unknownd0[2] = from.unknownd0[2];
+  for (int i = 0; i < 6; i++) {
+    to.unknowndc[i] = from.unknowndc[i];
+  }
+  to.unknown1ec &= ~(EnvColiPostParameterVer<10005>::FLAG_UNKNOWN_0 | EnvColiPostParameterVer<10005>::FLAG_UNKNOWN_1 | EnvColiPostParameterVer<10005>::FLAG_UNKNOWN_2);
+  for (int i = 0; i < 6; i++) {
+    to.unknownf4[i] = from.unknown114[i];
+  }
+  to.unknown10c[0] = from.unknown12c[0];
+  to.unknown10c[1] = from.unknown12c[1];
+  to.unknown114[0] = from.unknown134[0];
+  to.unknown114[1] = from.unknown134[1];
+  // The game stores the two default pairs as two 64-bit immediates (0x71007d22e0). Written as four float stores in any of the 24 orders
+  // (and interleaved with the neighbouring copies, 840 orders measured), the stores merge differently (best: 6 differing lines); the
+  // copy of a constant pair is what gives the two immediates.
+  const unknown303 first = {{8.0f, 50.0f}};
+  const unknown303 second = {{1.0f, 1.0f}};
+  to.unknown11c[0] = first;
+  to.unknown11c[1] = second;
+  to.unknown12c[0] = from.unknown13c[0];
+  to.unknown12c[1] = from.unknown13c[1];
+  to.unknown144 = from.unknown154;
+  to.unknown148[0] = from.unknown158[0];
+  to.unknown148[1] = from.unknown158[1];
+  to.unknown148[2] = from.unknown158[2];
+  to.unknown16c[0] = from.unknown17c;
+  for (int i = 0; i < 4; i++) {
+    to.unknown16c[i + 1] = from.unknown180[i];
+  }
+  to.unknown180 = from.unknown190;
+  for (int i = 0; i < 5; i++) {
+    to.unknown1b0[i] = from.unknown1c0[i];
+  }
+}
+
+template <> void convertEnvColiPostParameterVer<10005, 10006>(const EnvColiPostParameterVer<10005> &from, EnvColiPostParameterVer<10006> &to) {
+  unknown020(from, to);
+  to.unknowna4 = from.unknowna4;
+  to.unknowna8 = from.unknowna8;
+  to.unknownac[0] = from.unknownac[0];
+  to.unknownac[1] = from.unknownac[1];
+  to.unknownb4 = from.unknownb4;
+  for (int i = 0; i < 6; i++) {
+    to.unknownb8[i] = from.unknownb8[i];
+  }
+  to.unknownd0[0] = from.unknownd0[0];
+  to.unknownd0[1] = from.unknownd0[1];
+  to.unknownd0[2] = from.unknownd0[2];
+  for (int i = 0; i < 6; i++) {
+    to.unknowndc[i] = from.unknowndc[i];
+  }
+  // The game loads the destination flag word before the source (`ldr w8, [x19, #496]; ldr w9, [x20, #492]; bfxil`, 0x71007d25b8), which
+  // the bit-field assignments `to.f = from.f` (source loaded first) do not give: 215 instructions, first difference at 0x71007d25b8.
+  to.unknown1f0 = (to.unknown1f0 & ~EnvColiPostParameterVer<10006>::FLAG_UNKNOWN_0) | (from.unknown1ec & EnvColiPostParameterVer<10005>::FLAG_UNKNOWN_0);
+  to.unknown1f0 = (to.unknown1f0 & ~EnvColiPostParameterVer<10006>::FLAG_UNKNOWN_1) | (from.unknown1ec & EnvColiPostParameterVer<10005>::FLAG_UNKNOWN_1);
+  to.unknown1f0 = (to.unknown1f0 & ~EnvColiPostParameterVer<10006>::FLAG_UNKNOWN_2) | (from.unknown1ec & EnvColiPostParameterVer<10005>::FLAG_UNKNOWN_2);
+  for (int i = 0; i < 6; i++) {
+    to.unknownf4[i] = from.unknownf4[i];
+  }
+  to.unknown10c[0] = from.unknown10c[0];
+  to.unknown10c[1] = from.unknown10c[1];
+  to.unknown114[0] = from.unknown114[0];
+  to.unknown114[1] = from.unknown114[1];
+  for (int i = 0; i < 4; i++) {
+    to.unknown11c[i] = from.unknown11c[i / 2].unknown00[i % 2];
+  }
+  to.unknown12c[0] = from.unknown12c[0];
+  to.unknown12c[1] = from.unknown12c[1];
+  to.unknown144 = from.unknown144;
+  to.unknown148[0] = from.unknown148[0];
+  to.unknown148[1] = from.unknown148[1];
+  to.unknown148[2] = from.unknown148[2];
+  for (int i = 0; i < 5; i++) {
+    to.unknown16c[i] = from.unknown16c[i];
+  }
+  to.unknown180 = from.unknown180;
+  for (int i = 0; i < 5; i++) {
+    to.unknown1b0[i] = from.unknown1b0[i];
+  }
+  to.unknown1ec = 0.0f;
 }
 
 } // namespace ml

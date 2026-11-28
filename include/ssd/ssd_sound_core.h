@@ -135,6 +135,7 @@ public:
   static bool IsInstance();
   static SoundCore *GetInstance();
   void GetVersion(int *major, int *minor, int *revision, int *build, char16_t *configuration);
+  Result Init(const InitParam &param);
   bool IsInit();
   Result Quit(bool isForce);
   Result GetCategory(int id, SoundCategory *category) const;
@@ -324,6 +325,7 @@ public:
   Result AddSoundEffecter(u8 bus, SoundEffecter *effecter) override;
   Result RemoveSoundEffecter(SoundEffecter *effecter) override;
   bool IsActiveEffect(u8 bus) override;
+  Result Init(const InitParam &param);
   Result Quit();
   void StopSound(f32 fadeTime);
   void PauseSound(bool isPause, f32 fadeTime);

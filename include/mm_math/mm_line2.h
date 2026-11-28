@@ -7,6 +7,10 @@
 namespace mm {
 
 struct Line2 {
+  // Nearest points of two lines (the segments' directions are unit vectors, the lines pass through `end`): the distance goes to length, the
+  // points to position and otherPosition when they are not null. Returns 2 for parallel lines, 1 when a nearest point lies outside its
+  // segment, else 0. Evidence: mm::Line2::getNearest (1.0.0: 0x71009b270c).
+  static u32 getNearest(const Line2 &line, const Line2 &other, f32 &length, Vec3 *position, Vec3 *otherPosition);
   static f32 getNearestLength(const Line2 &line, const Line2 &other);
   static f32 getNearestLength(const Line2 &line, const Vec3 &position);
 

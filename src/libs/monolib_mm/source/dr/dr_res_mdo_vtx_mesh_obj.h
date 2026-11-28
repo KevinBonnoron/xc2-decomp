@@ -28,7 +28,8 @@ public:
   void alpRender();
   void stmRender(bool isNode);
   u32 setup(const u8 *, u8 *);
-  u32 calcWorkSize(const u8 *);
+  static u32 calcWorkSize(const u8 *resource);
+  static int create(u8 *work, const u8 *resource);
   void resourceInit(DrResMdoVertex *vertex);
   void releaseWork();
   bool isRender() const;

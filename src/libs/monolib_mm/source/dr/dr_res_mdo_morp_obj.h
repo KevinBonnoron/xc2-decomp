@@ -39,6 +39,7 @@ public:
   ~DrResMdoMorpObj();
   void update(MdoWrkMatRes *matRes, DrResEtcPamObj *pamObj);
   static u32 calcWorkSize(const u8 *resource);
+  static int create(u8 *work, const u8 *resource);
   static void release(DrResMdoMorpObj *&morpObj);
 
   u8 unknown00; // Inferred role: state; original member name unknown.

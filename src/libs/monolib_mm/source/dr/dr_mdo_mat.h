@@ -14,6 +14,7 @@ class CGLibDblUniformBlock;
 class CGLibOneUniformBlock;
 class CGLibTextureBuffer;
 class CGLibTriUniformBlock;
+class CGLibTriUniformArray;
 class CGLibOneUniformArray;
 } // namespace grlib
 
@@ -249,7 +250,19 @@ struct unknown022 {
     FLAG_UNKNOWN_1 = 1 << 1, // Inferred role: has billboard uniforms; original name unknown.
     FLAG_UNKNOWN_2 = 1 << 2, // Inferred role: has billboard work; original name unknown.
     FLAG_UNKNOWN_3 = 1 << 3,
+    FLAG_UNKNOWN_4 = 1 << 4,   // Inferred role: has the last alpha sort object; original name unknown.
+    FLAG_UNKNOWN_6 = 1 << 6,   // Inferred role: has the small shadow data; original name unknown.
+    FLAG_UNKNOWN_7 = 1 << 7,   // Inferred role: has the fast alpha sort object; original name unknown.
+    FLAG_UNKNOWN_10 = 1 << 10, // Inferred role: has the morph object; original name unknown.
+    FLAG_UNKNOWN_11 = 1 << 11, // Inferred role: has the etc parameters; original name unknown.
+    FLAG_UNKNOWN_12 = 1 << 12, // Inferred role: has the shader object; original name unknown.
     FLAG_UNKNOWN_13 = 1 << 13, // Inferred role: vanish effect; original name unknown.
+    FLAG_UNKNOWN_14 = 1 << 14, // Inferred role: rim bloom; original name unknown.
+    FLAG_UNKNOWN_15 = 1 << 15, // Inferred role: has nodes; original name unknown.
+    FLAG_UNKNOWN_16 = 1 << 16, // Inferred role: has the light; original name unknown.
+    FLAG_UNKNOWN_18 = 1 << 18, // Inferred role: has the alpha table; original name unknown.
+    FLAG_UNKNOWN_19 = 1 << 19, // Inferred role: has the vertex mesh object; original name unknown.
+    FLAG_UNKNOWN_20 = 1 << 20, // Inferred role: has the cld back alpha sort object; original name unknown.
   };
 
   u32 unknown00; // Inferred role: flags; original member name unknown.
@@ -261,12 +274,17 @@ struct unknown022 {
   u8 _2c[0x30 - 0x2c];
   u32 unknown30; // Inferred role: offset of the second table; original member name unknown.
   s32 unknown34; // Inferred role: count of the second table; original member name unknown.
-  u8 _38[0x64 - 0x38];
+  u8 _38[0x54 - 0x38];
+  u32 unknown54; // Inferred role: render list entry count; original member name unknown.
+  u8 _58[0x64 - 0x58];
   u32 unknown64; // Inferred role: parts info offset; original member name unknown.
-  u8 _68[0x74 - 0x68];
+  u32 unknown68; // Inferred role: mesh parts info count, nonzero when the mesh object exists; original member name unknown.
+  u8 _6c[0x70 - 0x6c];
+  u32 unknown70; // Inferred role: count of mdl uniforms minus one; original member name unknown.
   u32 unknown74; // Inferred role: offset of the billboard table; original member name unknown.
   u32 unknown78; // Inferred role: offset of the node animation table; original member name unknown.
-  u8 _7c[0x94 - 0x7c];
+  u32 unknown7c; // Inferred role: offset of the small shadow data; original member name unknown.
+  u8 _80[0x94 - 0x80];
   u8 unknown94; // Inferred role: vanish effect num; original member name unknown.
 };
 
@@ -279,6 +297,10 @@ static_assert(offsetof(unknown022, unknown64) == 0x64, "");
 static_assert(offsetof(unknown022, unknown78) == 0x78, "");
 static_assert(offsetof(unknown022, unknown74) == 0x74, "");
 static_assert(offsetof(unknown022, unknown94) == 0x94, "");
+static_assert(offsetof(unknown022, unknown54) == 0x54, "");
+static_assert(offsetof(unknown022, unknown68) == 0x68, "");
+static_assert(offsetof(unknown022, unknown70) == 0x70, "");
+static_assert(offsetof(unknown022, unknown7c) == 0x7c, "");
 
 // Inferred role: node animation table header; original type name unknown.
 struct unknown701 {
@@ -515,14 +537,31 @@ static_assert(offsetof(MdsMdlTopHeader, unknown18) == 0x18, "");
 static_assert(offsetof(MdsMdlTopHeader, unknown28) == 0x28, "");
 static_assert(sizeof(MdsMdlTopHeader) == 0x44, "");
 
-// Inferred role: flag wave uniform table; original type name unknown.
+// Inferred role: flag wave uniform table; original type name unknown. Layout evidence: the stores of DrMdoMat::getFlagWaveRes (0x71008285e0).
 struct unknown009 {
   const u16 *unknown00; // Inferred role: uniform index per wave; original member name unknown.
-  u8 _08[0x18 - 0x08];
+  const u8 *unknown08;  // Inferred role: wave data in the material data; original member name unknown.
+  s32 unknown10;        // Inferred role: wave count; original member name unknown.
+  u8 unknown14;         // Inferred role: set by the material init; original member name unknown.
+  u8 _15[0x18 - 0x15];
   grlib::CGLibUniformArray<grlib::CGLibTriUniformBlock> *unknown18; // Inferred role: uniforms; original member name unknown.
+  f32 *unknown20;                                                   // Inferred role: random offset of each wave; original member name unknown.
 };
 
+static_assert(offsetof(unknown009, unknown08) == 0x08, "");
+static_assert(offsetof(unknown009, unknown10) == 0x10, "");
+static_assert(offsetof(unknown009, unknown14) == 0x14, "");
 static_assert(offsetof(unknown009, unknown18) == 0x18, "");
+static_assert(offsetof(unknown009, unknown20) == 0x20, "");
+
+// Inferred role: flag wave table header of the material data; original type name unknown.
+struct unknown019 {
+  u32 unknown00; // Inferred role: offset of the uniform indices; original member name unknown.
+  u32 unknown04; // Inferred role: offset of the wave data; original member name unknown.
+  s32 unknown08; // Inferred role: wave count; original member name unknown.
+};
+
+static_assert(sizeof(unknown019) == 0x0c, "");
 
 // Inferred role: material callback table header; original type name unknown.
 struct unknown010 {
@@ -616,12 +655,14 @@ struct unknown714 {
   u32 unknown08; // Inferred role: offset of the billboard positions; original member name unknown.
   u8 _0c[0x10 - 0x0c];
   u32 unknown10; // Inferred role: offset of the matrices; original member name unknown.
-  u8 _14[0x18 - 0x14];
+  s32 unknown14; // Inferred role: count of the matrices; original member name unknown.
 };
 
 static_assert(offsetof(unknown714, unknown00) == 0x00, "");
 static_assert(offsetof(unknown714, unknown08) == 0x08, "");
 static_assert(offsetof(unknown714, unknown10) == 0x10, "");
+static_assert(offsetof(unknown714, unknown14) == 0x14, "");
+static_assert(sizeof(unknown714) == 0x18, "");
 
 // Inferred role: billboard matrix work of the base map; original type name unknown.
 struct unknown715 {
@@ -691,32 +732,32 @@ struct MdoWrkMatRes {
     const MdsMatInfoHeader *unknown28;      // Inferred role: mat data; original member name unknown.
     const MdsMpfMatInfoHeader *unknown28_1; // Inferred role: mat data of the mpf material; original member name unknown.
   };
-  s32 unknown30;                                                    // Inferred role: mat count; original member name unknown.
-  u32 unknown34;                                                    // Inferred role: value copied from the mpf material header; original member name unknown.
-  const f32 *unknown38;                                             // Inferred role: base values; original member name unknown.
-  const unknown010 *unknown40;                                      // Inferred role: material callbacks; original member name unknown.
-  const u8 *unknown48;                                              // Inferred role: avatar map color indices; original member name unknown.
-  const u8 *unknown50;                                              // Inferred role: fixed anim data; original member name unknown.
-  const MdsFixAnmInf *m_mdsFixAnmInf;                               // Inferred role: fixed anim infos; original member name unknown.
-  const unknown013 *unknown60;                                      // Inferred role: fixed anim keys; original member name unknown.
-  const u8 *unknown68;                                              // Inferred role: fixed anim arrays; original member name unknown.
-  const MdsMatTechnique *m_mdsMatTechnique;                         // Inferred role: techniques; original member name unknown.
-  const u8 *unknown78;                                              // Inferred role: variable tables; original member name unknown.
-  DrShdMdoDecShdObj *m_drShdMdoDecShdObj;                           // Inferred role: dec shader object; original member name unknown.
-  DrShdMdoExtTblObj *m_drShdMdoExtTblObj;                           // Inferred role: shader extension tables; original member name unknown.
-  grlib::CGLibDblUniformArray *unknown90;                           // Inferred role: material uniforms; original member name unknown.
-  grlib::CGLibTriUniformBlock *unknown98;                           // Inferred role: unknown uniform block released by DrMdoMat::releaseMat (0x71007f937c); original member name unknown.
-  grlib::CGLibUniformArray<grlib::CGLibTriUniformBlock> *unknowna0; // Inferred role: mdl uniforms; original member name unknown.
-  grlib::CGLibOneUniformArray *unknowna8;                           // Inferred role: mof blend uniforms; original member name unknown.
-  grlib::CGLibUniformArray<grlib::CGLibDblUniformBlock> *unknownb0; // Inferred role: vol tex uniforms; original member name unknown.
-  grlib::CGLibUniformArray<grlib::CGLibDblUniformBlock> *unknownb8; // Inferred role: rim bloom uniforms; original member name unknown.
-  DrResMdoMat *m_materialRes;                                       // Inferred role: mat entries; named after the game accessor ml::DrMdlObj::getMaterialRes.
-  DrResMdoVertex *m_drResMdoVertex;                                 // Inferred role: vertex; original member name unknown.
-  DrResMdoTexList *m_drResMdoTexList;                               // Inferred role: texture list; original member name unknown.
-  DrResMdoSampler *m_drResMdoSampler;                               // Inferred role: samplers; original member name unknown.
-  DrResMpfSampler *m_drResMpfSampler;                               // Inferred role: mpf samplers, one per material; original member name unknown.
-  grlib::CGLibTextureBuffer **unknowne8;                            // Inferred role: textures; original member name unknown.
-  s32 unknownf0;                                                    // Inferred role: texture count; original member name unknown.
+  s32 unknown30;                            // Inferred role: mat count; original member name unknown.
+  u32 unknown34;                            // Inferred role: value copied from the mpf material header; original member name unknown.
+  const f32 *unknown38;                     // Inferred role: base values; original member name unknown.
+  const unknown010 *unknown40;              // Inferred role: material callbacks; original member name unknown.
+  const u8 *unknown48;                      // Inferred role: avatar map color indices; original member name unknown.
+  const u8 *unknown50;                      // Inferred role: fixed anim data; original member name unknown.
+  const MdsFixAnmInf *m_mdsFixAnmInf;       // Inferred role: fixed anim infos; original member name unknown.
+  const unknown013 *unknown60;              // Inferred role: fixed anim keys; original member name unknown.
+  const u8 *unknown68;                      // Inferred role: fixed anim arrays; original member name unknown.
+  const MdsMatTechnique *m_mdsMatTechnique; // Inferred role: techniques; original member name unknown.
+  const u8 *unknown78;                      // Inferred role: variable tables; original member name unknown.
+  DrShdMdoDecShdObj *m_drShdMdoDecShdObj;   // Inferred role: dec shader object; original member name unknown.
+  DrShdMdoExtTblObj *m_drShdMdoExtTblObj;   // Inferred role: shader extension tables; original member name unknown.
+  grlib::CGLibDblUniformArray *unknown90;   // Inferred role: material uniforms; original member name unknown.
+  grlib::CGLibTriUniformBlock *unknown98;   // Inferred role: unknown uniform block released by DrMdoMat::releaseMat (0x71007f937c); original member name unknown.
+  grlib::CGLibTriUniformArray *unknowna0;   // Inferred role: mdl uniforms; original member name unknown.
+  grlib::CGLibOneUniformArray *unknowna8;   // Inferred role: mof blend uniforms; original member name unknown.
+  grlib::CGLibDblUniformArray *unknownb0;   // Inferred role: vol tex uniforms; original member name unknown.
+  grlib::CGLibDblUniformArray *unknownb8;   // Inferred role: rim bloom uniforms; original member name unknown.
+  DrResMdoMat *m_materialRes;               // Inferred role: mat entries; named after the game accessor ml::DrMdlObj::getMaterialRes.
+  DrResMdoVertex *m_drResMdoVertex;         // Inferred role: vertex; original member name unknown.
+  DrResMdoTexList *m_drResMdoTexList;       // Inferred role: texture list; original member name unknown.
+  DrResMdoSampler *m_drResMdoSampler;       // Inferred role: samplers; original member name unknown.
+  DrResMpfSampler *m_drResMpfSampler;       // Inferred role: mpf samplers, one per material; original member name unknown.
+  grlib::CGLibTextureBuffer **unknowne8;    // Inferred role: textures; original member name unknown.
+  s32 unknownf0;                            // Inferred role: texture count; original member name unknown.
   u8 _0f4[0x0f8 - 0x0f4];
   f32 *unknownf8;         // Inferred role: values; original member name unknown.
   f32 *unknown100;        // Inferred role: fixed anim frames; original member name unknown.
@@ -808,9 +849,9 @@ struct MdoWrkVanishEffect {
   u32 unknowna8;         // Inferred role: volume texture index offset; original member name unknown.
   f32 unknownac[4];      // Inferred role: first group of four floats; original member name unknown.
   f32 unknownbc[4];      // Inferred role: second group of four floats; original member name unknown.
-  u8 _cc[0xd0 - 0xcc];
-  f32 unknownd0; // Inferred role: base ratio; original member name unknown.
-  u32 unknownd4; // Inferred role: flags; original member name unknown.
+  s32 unknowncc;         // Inferred role: index of the DECL_VOLTEX_CALC decoded shader; original member name unknown.
+  f32 unknownd0;         // Inferred role: base ratio; original member name unknown.
+  u32 unknownd4;         // Inferred role: flags; original member name unknown.
   u8 _d8[0xe0 - 0xd8];
 };
 
@@ -825,6 +866,7 @@ static_assert(offsetof(MdoWrkVanishEffect, unknowna4) == 0xa4, "");
 static_assert(offsetof(MdoWrkVanishEffect, unknowna8) == 0xa8, "");
 static_assert(offsetof(MdoWrkVanishEffect, unknownac) == 0xac, "");
 static_assert(offsetof(MdoWrkVanishEffect, unknownbc) == 0xbc, "");
+static_assert(offsetof(MdoWrkVanishEffect, unknowncc) == 0xcc, "");
 static_assert(offsetof(MdoWrkVanishEffect, unknownd0) == 0xd0, "");
 static_assert(offsetof(MdoWrkVanishEffect, unknownd4) == 0xd4, "");
 static_assert(sizeof(MdoWrkVanishEffect) == 0xe0, "");
@@ -992,14 +1034,14 @@ public:
   mm::Mat44 *unknown60[2];                        // Inferred role: matrix of each buffer; original member name unknown.
   mm::Mat44 m_matrix;
   mm::Vec3 m_offsetPos;
-  u8 _c0[0xd0 - 0xc0];
-  f32 unknownd0[2]; // Inferred role: alphas; original member name unknown.
-  f32 m_bloom;      // Inferred role: bloom; named after the game accessor ml::ScnObjAccResMdlInfo::getBloom.
-  f32 m_frameSpd;   // Inferred role: frame spd; named after the game accessor ml::ScnObjAccResMdlInfo::setFrameSpd.
-  f32 unknowne0;    // Inferred role: alpha; original member name unknown.
-  f32 unknowne4;    // Inferred role: outline value time; original member name unknown.
-  f32 unknowne8;    // Inferred role: scale; original member name unknown.
-  u32 unknownec;    // Inferred role: screen share limit that keeps the gpu render flag on; original member name unknown.
+  mm::Vec3 unknownc0; // Inferred role: model position, the view position is subtracted and the offset position added by DrMdoCtlNom::updateMdlUniformBlock; original member name unknown.
+  f32 unknownd0[2];   // Inferred role: alphas; original member name unknown.
+  f32 m_bloom;        // Inferred role: bloom; named after the game accessor ml::ScnObjAccResMdlInfo::getBloom.
+  f32 m_frameSpd;     // Inferred role: frame spd; named after the game accessor ml::ScnObjAccResMdlInfo::setFrameSpd.
+  f32 unknowne0;      // Inferred role: alpha; original member name unknown.
+  f32 unknowne4;      // Inferred role: outline value time; original member name unknown.
+  f32 unknowne8;      // Inferred role: scale; original member name unknown.
+  u32 unknownec;      // Inferred role: screen share limit that keeps the gpu render flag on; original member name unknown.
   bool m_gpuRender;
   u8 _f1;
   s16 unknownf2; // Inferred role: render pass id; original member name unknown.
@@ -1030,6 +1072,7 @@ static_assert(offsetof(DrMdoMat, unknown50) == 0x50, "");
 static_assert(offsetof(DrMdoMat, m_drMdoSmlShadowObj) == 0x58, "");
 static_assert(offsetof(DrMdoMat, m_matrix) == 0x70, "");
 static_assert(offsetof(DrMdoMat, m_offsetPos) == 0xb0, "");
+static_assert(offsetof(DrMdoMat, unknownc0) == 0xc0, "");
 static_assert(offsetof(DrMdoMat, unknownd0) == 0xd0, "");
 static_assert(offsetof(DrMdoMat, m_bloom) == 0xd8, "");
 static_assert(offsetof(DrMdoMat, m_frameSpd) == 0xdc, "");

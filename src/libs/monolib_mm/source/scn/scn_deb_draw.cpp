@@ -1499,6 +1499,94 @@ void DebDraw::renderRealSphere(f32 radius, int division) {
   }
 }
 
+// Wire frame of a camera (1.0.0: 0x710070c494, 771 instructions, every point is a Vec3 local whose address goes to the virtual add(const Vec3 &, const Vec3 &) calls, so the
+// points are loaded again for each later use while the arguments of a point's first use are folded into constants). The body, the lens box, the lens profile and the hood are four
+// groups of points; z = -0.0f stores 0x80000000 (orr w20, wzr, #0x80000000 at 0x710070c4f0).
+// Written out (ruling 8): the game folds the first use of each point into constants (0x710070c718-0x710070c75c keep the constants of points 1 to 3 in registers
+// before they are stored) while later uses reload the stack object, which a loop over an array cannot give (the first call lets the whole array escape).
+// Helper forms measured (P4, file-local functions taking the points by const reference and the DebDraw): (a) one helper per group shape (the four verticals `add(p, p + o)`, the
+// ring `add(p, q)`, the ring of sums `add(p + o, q + o)`, the five-edge lens profile with and without the offset), all inlined: 782 instructions against 771, because the inlined
+// callee's allocas for the `p + o` temporaries land before the caller's point locals, so the two temporary slots sit at x29-112/-128 where the game has them after the four body points
+// (x29-176/-192) and every later stack offset and `stur`/`str` form moves; (b) one helper holding the verticals and both rings of the lens box and the hood (12 calls): not
+// inlined, 516 instructions in the function and a call at each use. The gate's report of the repeated `add(V + V, V + V)` blocks is therefore kept.
+void DebDraw::renderCamera() {
+  mm::Vec3 body0(0.1f, 0.1f, -0.0f);
+  mm::Vec3 body1(0.1f, -0.1f, -0.0f);
+  mm::Vec3 body2(-0.1f, -0.1f, -0.0f);
+  mm::Vec3 body3(-0.1f, 0.1f, -0.0f);
+  begin(2, 0x30);
+  mm::Vec3 bodyDepth(0.0f, 0.0f, 0.2f);
+  add(body0, body0 + bodyDepth);
+  add(body1, body1 + bodyDepth);
+  add(body2, body2 + bodyDepth);
+  add(body3, body3 + bodyDepth);
+  add(body0 + bodyDepth, body1 + bodyDepth);
+  add(body1 + bodyDepth, body2 + bodyDepth);
+  add(body2 + bodyDepth, body3 + bodyDepth);
+  add(body3 + bodyDepth, body0 + bodyDepth);
+  mm::Vec3 box0(0.15f, 0.4f, 0.2f);
+  mm::Vec3 box1(0.15f, -0.2f, 0.2f);
+  mm::Vec3 box2(-0.15f, -0.2f, 0.2f);
+  mm::Vec3 box3(-0.15f, 0.4f, 0.2f);
+  mm::Vec3 boxDepth(0.0f, 0.0f, 0.7f);
+  add(box0, box0 + boxDepth);
+  add(box1, box1 + boxDepth);
+  add(box2, box2 + boxDepth);
+  add(box3, box3 + boxDepth);
+  add(box0, box1);
+  add(box1, box2);
+  add(box2, box3);
+  add(box3, box0);
+  add(box0 + boxDepth, box1 + boxDepth);
+  add(box1 + boxDepth, box2 + boxDepth);
+  add(box2 + boxDepth, box3 + boxDepth);
+  add(box3 + boxDepth, box0 + boxDepth);
+  mm::Vec3 lens0(0.15f, 0.4f, 0.5f);
+  mm::Vec3 lens1(0.15f, 0.6f, 0.7f);
+  mm::Vec3 lens2(0.15f, 0.6f, 1.0f);
+  mm::Vec3 lens3(0.15f, 0.5f, 1.1f);
+  mm::Vec3 lens4(0.15f, 0.2f, 1.1f);
+  mm::Vec3 lens5(0.15f, 0.1f, 0.9f);
+  mm::Vec3 lensWidth(-0.3f, 0.0f, 0.0f);
+  add(lens0, lens1);
+  add(lens1, lens2);
+  add(lens2, lens3);
+  add(lens3, lens4);
+  add(lens4, lens5);
+  add(lens0 + lensWidth, lens1 + lensWidth);
+  add(lens1 + lensWidth, lens2 + lensWidth);
+  add(lens2 + lensWidth, lens3 + lensWidth);
+  add(lens3 + lensWidth, lens4 + lensWidth);
+  add(lens4 + lensWidth, lens5 + lensWidth);
+  add(lens0, lens0 + lensWidth);
+  add(lens1, lens1 + lensWidth);
+  add(lens2, lens2 + lensWidth);
+  add(lens3, lens3 + lensWidth);
+  add(lens4, lens4 + lensWidth);
+  add(lens5, lens5 + lensWidth);
+  mm::Vec3 hood0(0.125f, 0.125f, -0.0f);
+  mm::Vec3 hood1(0.125f, -0.125f, -0.0f);
+  mm::Vec3 hood2(-0.125f, -0.125f, -0.0f);
+  mm::Vec3 hood3(-0.125f, 0.125f, -0.0f);
+  mm::Vec3 hoodOffset0(0.1f, 0.01f, -0.1f);
+  mm::Vec3 hoodOffset1(0.1f, -0.01f, -0.1f);
+  mm::Vec3 hoodOffset2(-0.1f, -0.01f, -0.1f);
+  mm::Vec3 hoodOffset3(-0.1f, 0.01f, -0.1f);
+  add(hood0, hood0 + hoodOffset0);
+  add(hood1, hood1 + hoodOffset1);
+  add(hood2, hood2 + hoodOffset2);
+  add(hood3, hood3 + hoodOffset3);
+  add(hood0, hood1);
+  add(hood1, hood2);
+  add(hood2, hood3);
+  add(hood3, hood0);
+  add(hood0 + hoodOffset0, hood1 + hoodOffset1);
+  add(hood1 + hoodOffset1, hood2 + hoodOffset2);
+  add(hood2 + hoodOffset2, hood3 + hoodOffset3);
+  add(hood3 + hoodOffset3, hood0 + hoodOffset0);
+  end();
+}
+
 template class fixed_size_alloc<DebDraw::PRM_DATA>;
 template class reslist<DebDraw::PRM_DATA *>;
 

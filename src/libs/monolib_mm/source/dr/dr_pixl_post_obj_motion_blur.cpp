@@ -12,10 +12,14 @@
 #include "dr/dr_shd_data_list.h"
 #include "dr/dr_shd_data_obj.h"
 #include "dr/dr_shd_man.h"
+#include "grlib/cglib_depth_target.h"
 #include "grlib/cglib_render_target.h"
 #include "grlib/cglib_shader.h"
 #include "grlib/cglib_uni_base_utility.h"
 #include "grlib/shd_util.h"
+#include "mm_math/mm_col4.h"
+#include "mm_math/mm_mat44.h"
+#include "mm_math/mm_vec4.h"
 #include "mm_mtl/fixed_array.h"
 #include "mtl/alloc_handle.h"
 
@@ -55,6 +59,69 @@ void DrPixlPostObjMotionBlur::render() {
   calcObjMotionBlur();
   renderCalcBlur();
   lastRender();
+}
+
+// Inferred helper: texture location of a shader by name; original name unknown. Evidence: with the helper calcBlurWork matches (757 instructions, internal linkage), as with the three
+// lookups written out, and the quality gate no longer reports calcBlurWork as a copy of the lookup blocks of the post process functions (13 findings against 11).
+static int unknown901(DrShdDataObj *shader, const char *name) { return (shader->unknown38 + shader->unknown58)->getTextureLocation(name); }
+
+// Same body shape as DrPixlPostObjMotionBlur2::calcBlurWork for the matrix block (1.0.0: 0x7100857e28, 757 instructions). The stencil texture is read through getDepthObj(): the game
+// loads the address and value of s_nDblIdx before the unknown7f0 chain of the depth object (0x7100858938), which `unknown7f0->unknown1a0[DrMan::s_nDblIdx]` written out, with a local
+// for the chain or the row, orders the other way (the registers of the two loads swap, 757 instructions, 4 to 8 lines differ). The flag is read from its own post parm local
+// (the game reloads unknown120[unknown1c98] after setRenderTarget) and the TMAA depth target has its own setTexture call in each arm.
+void DrPixlPostObjMotionBlur::calcBlurWork() {
+  DrCalcViewWork *viewWork = m_drMan->m_drCalcMan->m_drCalcViewWork;
+  DrAPGxType::setupBlend(0);
+  DrPixlPostParm *flagParm = m_drMan->unknown120[m_drMan->unknown1c98];
+  unknown28->setRenderTarget();
+  if (flagParm->unknown1cc) {
+    DrPixlPostParm *postParm = m_drMan->unknown120[m_drMan->unknown1c98];
+    DrShdDataList *shdList = m_drMan->m_drShdMan->m_drShdDataList;
+    DrShdDataObj *shader = shdList->getPostShdObj(0xd);
+    shader->setDeclarationIdx(shader->getDeclarationOfs("DECL_CAM_VEL"), 1);
+    u32 highLevel = postParm->unknown1cf ? 1 : 2;
+    shader->setDeclarationIdx(shader->getDeclarationOfs("DECL_HLV"), highLevel);
+    shdList->bindTriangleTex();
+    shader->setupShader(0u);
+    grlib::CGLibUniformEtcUtility uniform(shader);
+    uniform.setUseUniformBlock("U_POST");
+    int velocityLocation = unknown901(shader, "gTVelocity");
+    int stencilLocation = unknown901(shader, "gTStencil");
+    int depthLocation = unknown901(shader, "gTDep");
+    u32 dpch = uniform.unknown001("dpch");
+    u32 param = uniform.unknown001("gParam");
+    u32 projInv = uniform.unknown001("gProjInv");
+    u32 toPrevScreen = uniform.unknown001("gToPrevScreen");
+    DrAPCache *apCache = m_drMan->m_drAPCache;
+    f32 blurParam[4] = {postParm->unknown1e0, 0.0f, postParm->unknown1e4, postParm->unknown1e8};
+    uniform.setF32SetVec4(dpch, blurParam);
+    uniform.setMat44SetMat44(projInv, viewWork->unknown3c0);
+    {
+      mm::Mat44 matrix = viewWork->unknown00;
+      matrix.unknown009(matrix, viewWork->unknown280 * viewWork->unknown380);
+      uniform.setMat44SetMat44(toPrevScreen, matrix);
+    }
+    mm::Vec4 value;
+    value.x = postParm->unknown1f4;
+    value.y = postParm->unknown1f8 * m_drMan->m_drCalcMan->m_drCalcViewWork->unknown798;
+    value.z = 0.0f;
+    value.w = 0.0f;
+    uniform.setVec4SetVec4(param, value);
+    apCache->beginTexSampling(2, 0);
+    apCache->setTexture(*m_drPixlMan->unknown7f0->unknown00[3][0]->unknown70, velocityLocation);
+    apCache->setTexture(*m_drPixlMan->getDepthObj()->unknown130, stencilLocation);
+    wkPixlManRes *res = m_drPixlMan->unknown7f0;
+    if (postParm->m_TMAAOn) {
+      apCache->setTexture(*res->unknown00[13][DrMan::s_nDblIdx]->unknown70, depthLocation);
+    } else {
+      apCache->setTexture(*res->unknown00[4][0]->unknown70, depthLocation);
+    }
+    uniform.updateData();
+    uniform.setUniformBlock();
+    shdList->renderTriangle();
+  } else {
+    unknown28->clearTexture(mm::Col4(0.5f, 0.5f, 0.0f, 0.0f), static_cast<GrlClaerMask>(0xf));
+  }
 }
 
 void DrPixlPostObjMotionBlur::calcObjMotionBlur() {

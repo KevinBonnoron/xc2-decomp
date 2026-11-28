@@ -42,6 +42,7 @@
 #include "grlib/cglib_uniform_array.h"
 #include "mm_math/mm_col4.h"
 #include "mm_math/mm_mat44.h"
+#include "mm_math/mm_math.h"
 #include "mm_math/mm_vec4.h"
 #include "mm_mtl/fixed_array.h"
 #include "mtl/alloc_handle.h"
@@ -680,6 +681,30 @@ void DrPixlMan::releaseColorBuff() {
   res->unknown1c0->release();
   res->unknown1e0->releaseTexture();
   res->unknown1e8->releaseTexture();
+}
+
+// 0x710083df60, 53 instructions. The locals follow the game's order of operations: `tone` goes through memory until the inliner
+// (the clamp takes it by const reference), so its load stays a plain copy (`ldr w8, [x9, #0xc0]`, `fmov s2, w8`, an i32 phi); that needs a
+// call (the post parm element fetch) between its store and its first read, which the repeated `unknown120[unknown1c98]` and `postParm` give.
+// `scaled`, `strength`, `low` and `high` place the loads in the game's order (`ldr s3, [unknown188]` before `ldr s4, [0xf60]`,
+// `ldr s8, [0xf64]`) and `minimum` places the select before the `fadd` that gives `tone` its register.
+void DrPixlMan::setToneStr(f32 toneStr, f32 unknown1, f32 unknown2) {
+  unknown7f0->unknown188 = toneStr;
+  unknown7f0->unknown18c = unknown1;
+  unknown7f0->unknown190 = unknown2;
+  f32 ratio = m_drMan->unknown120[m_drMan->unknown1c98]->unknownf5c;
+  f32 tone = m_drMan->unknown120[m_drMan->unknown1c98]->unknownc0[0];
+  if (ratio < 1.0f) {
+    DrPixlPostParm *postParm = m_drMan->unknown120[m_drMan->unknown1c98];
+    f32 scaled = tone * (1.0f - ratio);
+    f32 strength = unknown7f0->unknown188;
+    f32 low = postParm->unknownf60;
+    f32 high = postParm->unknownf64;
+    f32 minimum = low > high ? high : low;
+    tone = scaled / strength + tone * ratio;
+    tone = mm::clamp(tone, minimum, high);
+  }
+  unknown7f0->unknown19c = tone;
 }
 
 grlib::CGLibDepthTarget *DrPixlMan::getSeparateTransDepthObj() {

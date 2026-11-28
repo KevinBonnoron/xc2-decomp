@@ -6,6 +6,7 @@
 // Layout evidence: the pool getters (vmIdPoolGet 0x7100786c74 ...), vmThreadCreate 0x71007873b0, vmPush 0x7100787e2c
 // and the opcode table at 0x71011b05a0 (96 entries, the strings of the table name every VMC_ opcode).
 #include <assert.h>
+#include <stdio.h>
 #include <string.h>
 
 #include "types.h"
@@ -59,6 +60,20 @@ struct unknown003 {
   u16 unknown0a; // Inferred role: unused here; original member name unknown.
   int unknown0c; // Inferred role: entry address of the code; original member name unknown.
   int unknown10; // Inferred role: unused here; original member name unknown.
+};
+
+// Inferred role: header of the static data pool and of an entry of the local pool of a script binary (u32 offset of the
+// values, signed count; vmLink reads the count with a signed compare); original name unknown.
+struct unknown023 {
+  u32 unknown00; // Inferred role: offset of the values from the header; original member name unknown.
+  int num;       // Inferred role: number of values; original member name unknown.
+};
+
+// Inferred role: entry of the plugin and far function pools of a script binary (package or plugin index, function index);
+// original name unknown.
+struct unknown022 {
+  u16 unknown00; // Inferred role: package or plugin index; original member name unknown.
+  u16 unknown02; // Inferred role: function index; original member name unknown.
 };
 
 // sSbCode of the original: header of the code block of a script binary.
@@ -215,6 +230,156 @@ static unknown014 unknown017;
 // Inferred macro name; macros leave no trace in the binary. The original is a C file: its assertion texts show NULL
 // expanded to ((void*)0), which a C++ file cannot spell through the assert macro.
 #define VM_ASSERT_TEXT(condition, text) ((condition) || (__assert_fail(text, __FILE__, __LINE__, __func__), 0))
+
+// Object types of the script VM. `OT_SYS` is named by the assertion text `type < OT_SYS` of vmCodeExecSub; the other
+// names are derived from the type name table of getScTypeName (0x71011b0a20): `OT_` plus the string in upper case.
+enum {
+  OT_NIL = 0,
+  OT_TRUE = 1,
+  OT_FALSE = 2,
+  OT_INT = 3,
+  OT_FIXED = 4,
+  OT_STRING = 5,
+  OT_ARRAY = 6,
+  OT_FUNCTION = 7,
+  OT_PLUGIN = 8,
+  OT_OC = 9,
+  OT_SYS = 10,
+};
+
+// Opcodes of the script VM, named after the strings of the opcode table at 0x71011b05a0 (`VMC_` plus the string, the
+// prefix being the one of the assertion text `code < VMC_MAX`). VMC_MAX is the number of entries of the table.
+enum {
+  VMC_NOP = 0x00,
+  VMC_CONST_0 = 0x01,
+  VMC_CONST_1 = 0x02,
+  VMC_CONST_2 = 0x03,
+  VMC_CONST_3 = 0x04,
+  VMC_CONST_4 = 0x05,
+  VMC_CONST_I = 0x06,
+  VMC_CONST_I_W = 0x07,
+  VMC_POOL_INT = 0x08,
+  VMC_POOL_INT_W = 0x09,
+  VMC_POOL_FIXED = 0x0a,
+  VMC_POOL_FIXED_W = 0x0b,
+  VMC_POOL_STR = 0x0c,
+  VMC_POOL_STR_W = 0x0d,
+  VMC_LD = 0x0e,
+  VMC_ST = 0x0f,
+  VMC_LD_ARG = 0x10,
+  VMC_ST_ARG = 0x11,
+  VMC_ST_ARG_OMIT = 0x12,
+  VMC_LD_0 = 0x13,
+  VMC_LD_1 = 0x14,
+  VMC_LD_2 = 0x15,
+  VMC_LD_3 = 0x16,
+  VMC_ST_0 = 0x17,
+  VMC_ST_1 = 0x18,
+  VMC_ST_2 = 0x19,
+  VMC_ST_3 = 0x1a,
+  VMC_LD_ARG_0 = 0x1b,
+  VMC_LD_ARG_1 = 0x1c,
+  VMC_LD_ARG_2 = 0x1d,
+  VMC_LD_ARG_3 = 0x1e,
+  VMC_ST_ARG_0 = 0x1f,
+  VMC_ST_ARG_1 = 0x20,
+  VMC_ST_ARG_2 = 0x21,
+  VMC_ST_ARG_3 = 0x22,
+  VMC_LD_STATIC = 0x23,
+  VMC_LD_STATIC_W = 0x24,
+  VMC_ST_STATIC = 0x25,
+  VMC_ST_STATIC_W = 0x26,
+  VMC_LD_AR = 0x27,
+  VMC_ST_AR = 0x28,
+  VMC_LD_NIL = 0x29,
+  VMC_LD_TRUE = 0x2a,
+  VMC_LD_FALSE = 0x2b,
+  VMC_LD_FUNC = 0x2c,
+  VMC_LD_FUNC_W = 0x2d,
+  VMC_LD_PLUGIN = 0x2e,
+  VMC_LD_PLUGIN_W = 0x2f,
+  VMC_LD_FUNC_FAR = 0x30,
+  VMC_LD_FUNC_FAR_W = 0x31,
+  VMC_MINUS = 0x32,
+  VMC_NOT = 0x33,
+  VMC_L_NOT = 0x34,
+  VMC_ADD = 0x35,
+  VMC_SUB = 0x36,
+  VMC_MUL = 0x37,
+  VMC_DIV = 0x38,
+  VMC_MOD = 0x39,
+  VMC_OR = 0x3a,
+  VMC_AND = 0x3b,
+  VMC_R_SHIFT = 0x3c,
+  VMC_L_SHIFT = 0x3d,
+  VMC_EQ = 0x3e,
+  VMC_NE = 0x3f,
+  VMC_GT = 0x40,
+  VMC_LT = 0x41,
+  VMC_GE = 0x42,
+  VMC_LE = 0x43,
+  VMC_L_OR = 0x44,
+  VMC_L_AND = 0x45,
+  VMC_JMP = 0x46,
+  VMC_JPF = 0x47,
+  VMC_CALL = 0x48,
+  VMC_CALL_W = 0x49,
+  VMC_CALL_IND = 0x4a,
+  VMC_RET = 0x4b,
+  VMC_NEXT = 0x4c,
+  VMC_PLUGIN = 0x4d,
+  VMC_PLUGIN_W = 0x4e,
+  VMC_CALL_FAR = 0x4f,
+  VMC_CALL_FAR_W = 0x50,
+  VMC_GET_OC = 0x51,
+  VMC_GET_OC_W = 0x52,
+  VMC_GETTER = 0x53,
+  VMC_GETTER_W = 0x54,
+  VMC_SETTER = 0x55,
+  VMC_SETTER_W = 0x56,
+  VMC_SEND = 0x57,
+  VMC_SEND_W = 0x58,
+  VMC_TYPEOF = 0x59,
+  VMC_SIZEOF = 0x5a,
+  VMC_SWITCH = 0x5b,
+  VMC_INC = 0x5c,
+  VMC_DEC = 0x5d,
+  VMC_EXIT = 0x5e,
+  VMC_BP = 0x5f,
+  VMC_MAX = 0x60,
+};
+
+#pragma pack(push, 4)
+
+// Inferred role: entry of the opcode table, 12 bytes (the 8-byte pointer sits at a 4-byte aligned offset, so the type is
+// packed to 4); original name unknown.
+struct unknown019 {
+  const char *unknown00; // Inferred role: name of the opcode; original member name unknown.
+  s16 unknown08;         // Inferred role: size of the operand in bytes; original member name unknown.
+  s16 unknown0a;         // Inferred role: change of the stack pointer; original member name unknown.
+};
+
+#pragma pack(pop)
+
+static_assert(sizeof(unknown019) == 0xc, "opcode table entry size");
+
+// Inferred role: opcode table, indexed by opcode (0x71011b05a0); original name unknown.
+static const unknown019 unknown020[VMC_MAX] = {
+    {"NOP", 0, 0},         {"CONST_0", 0, 1},       {"CONST_1", 0, 1},      {"CONST_2", 0, 1},      {"CONST_3", 0, 1},     {"CONST_4", 0, 1},    {"CONST_I", 1, 1},      {"CONST_I_W", 2, 1},
+    {"POOL_INT", 1, 1},    {"POOL_INT_W", 2, 1},    {"POOL_FIXED", 1, 1},   {"POOL_FIXED_W", 2, 1}, {"POOL_STR", 1, 1},    {"POOL_STR_W", 2, 1}, {"LD", 1, 1},           {"ST", 1, -1},
+    {"LD_ARG", 1, 1},      {"ST_ARG", 1, -1},       {"ST_ARG_OMIT", 1, -1}, {"LD_0", 0, 1},         {"LD_1", 0, 1},        {"LD_2", 0, 1},       {"LD_3", 0, 1},         {"ST_0", 0, -1},
+    {"ST_1", 0, -1},       {"ST_2", 0, -1},         {"ST_3", 0, -1},        {"LD_ARG_0", 0, 1},     {"LD_ARG_1", 0, 1},    {"LD_ARG_2", 0, 1},   {"LD_ARG_3", 0, 1},     {"ST_ARG_0", 0, -1},
+    {"ST_ARG_1", 0, -1},   {"ST_ARG_2", 0, -1},     {"ST_ARG_3", 0, -1},    {"LD_STATIC", 1, 1},    {"LD_STATIC_W", 2, 1}, {"ST_STATIC", 1, -1}, {"ST_STATIC_W", 2, -1}, {"LD_AR", 0, -1},
+    {"ST_AR", 0, -3},      {"LD_NIL", 0, 1},        {"LD_TRUE", 0, 1},      {"LD_FALSE", 0, 1},     {"LD_FUNC", 1, 1},     {"LD_FUNC_W", 2, 1},  {"LD_PLUGIN", 1, 1},    {"LD_PLUGIN_W", 2, 1},
+    {"LD_FUNC_FAR", 1, 1}, {"LD_FUNC_FAR_W", 2, 1}, {"MINUS", 0, 0},        {"NOT", 0, -1},         {"L_NOT", 0, -1},      {"ADD", 0, -1},       {"SUB", 0, -1},         {"MUL", 0, -1},
+    {"DIV", 0, -1},        {"MOD", 0, -1},          {"OR", 0, -1},          {"AND", 0, -1},         {"R_SHIFT", 0, -1},    {"L_SHIFT", 0, -1},   {"EQ", 0, -1},          {"NE", 0, -1},
+    {"GT", 0, -1},         {"LT", 0, -1},           {"GE", 0, -1},          {"LE", 0, -1},          {"L_OR", 0, -1},       {"L_AND", 0, -1},     {"JMP", 2, 0},          {"JPF", 2, -1},
+    {"CALL", 1, 0},        {"CALL_W", 2, 0},        {"CALL_IND", 0, 0},     {"RET", 0, 0},          {"NEXT", 0, 0},        {"PLUGIN", 1, 0},     {"PLUGIN_W", 2, 0},     {"CALL_FAR", 1, 0},
+    {"CALL_FAR_W", 2, 0},  {"GET_OC", 1, 0},        {"GET_OC_W", 2, 0},     {"GETTER", 1, 0},       {"GETTER_W", 2, 0},    {"SETTER", 1, -1},    {"SETTER_W", 2, -1},    {"SEND", 1, 0},
+    {"SEND_W", 2, 0},      {"TYPEOF", 0, 0},        {"SIZEOF", 0, 0},       {"SWITCH", 1, 0},       {"INC", 0, 0},         {"DEC", 0, 0},        {"EXIT", 0, 0},         {"BP", 0, 0},
+};
+
+static_assert(sizeof(unknown020) == VMC_MAX * 0xc, "opcode table size");
 
 extern "C" {
 
@@ -373,17 +538,97 @@ void vmInit() { memset(&unknown017, 0, sizeof(unknown017)); }
 
 void vmDestory() { memset(&unknown017, 0, sizeof(unknown017)); }
 
+// Prototypes of functions defined further down (the original C file has them in its header).
+int vmSbChk(const char *pSb);
+unknown008 *vmPackageSearch(sSbHeader *pSb);
+int vmPackageRegist(sSbHeader *pSb);
+int vmPluginSearch(const char *mName, const char *fName);
+int vmOCSearch(const char *name);
+char *vmSysAtrSearch(sSbHeader *pSb, int no);
+int vmFuncFarSearch(const char *mName, const char *fName);
+void vmInitDataLink(sSbHeader *pSb, unknown004 *pData);
+void encodeScramble(sSbHeader *pSb);
+
+// The local pool loop reads the pool header and the entry of the pool by hand instead of calling vmLocalPoolGet: the game
+// has no vmLocalPoolGet assertion (yvm2.c:1561) in this loop; the call form gives 389 instructions against the game's 378
+// (measured), the loop written as a while loop with the entry read by hand gives 378 and matches.
+#line 135
+int vmLink(void *vm) {
+  sSbHeader *pSb = static_cast<sSbHeader *>(vm);
+  if (!vmSbChk(static_cast<const char *>(vm))) {
+    vmMlAssert("[VM] INFINITY_LOOP", __FILE__, __LINE__);
+  }
+  if (!vmPackageRegist(pSb)) {
+    return 0;
+  }
+  if (pSb->unknown07 & 1) {
+    return 1;
+  }
+  pSb->unknown07 |= 1;
+  if (pSb->unknown06 & 1) {
+    vmHalt();
+    return 0;
+  }
+  if (pSb->unknown06 & 2) {
+    encodeScramble(pSb);
+  }
+  unknown001 *pPlugin = VM_OFFSET(unknown001, pSb, pSb->unknown20);
+  unknown022 *pPluginEntries = VM_OFFSET(unknown022, pPlugin, pPlugin->unknown00);
+  for (int i = 0; i < VM_OFFSET(unknown001, pSb, pSb->unknown20)->num; i++) {
+    int result = vmPluginSearch(vmIdPoolGet(pSb, pPluginEntries[i].unknown00), vmIdPoolGet(pSb, pPluginEntries[i].unknown02));
+    if (result == -1) {
+      return 0;
+    }
+    pPluginEntries[i].unknown00 = result >> 16;
+    pPluginEntries[i].unknown02 = result;
+  }
+  unknown001 *pOC = VM_OFFSET(unknown001, pSb, pSb->unknown24);
+  u16 *pOCEntries = VM_OFFSET(u16, pOC, pOC->unknown00);
+  for (int i = 0; i < VM_OFFSET(unknown001, pSb, pSb->unknown24)->num; i++) {
+    int result = vmOCSearch(vmIdPoolGet(pSb, pOCEntries[i]));
+    if (result == -1) {
+      return 0;
+    }
+    pOCEntries[i] = result;
+  }
+  unknown001 *pFar = VM_OFFSET(unknown001, pSb, pSb->unknown28);
+  unknown022 *pFarEntries = VM_OFFSET(unknown022, pFar, pFar->unknown00);
+  for (int i = 0; i < VM_OFFSET(unknown001, pSb, pSb->unknown28)->num; i++) {
+    int result = vmFuncFarSearch(vmIdPoolGet(pSb, pFarEntries[i].unknown00), vmIdPoolGet(pSb, pFarEntries[i].unknown02));
+    if (result == -1) {
+      return 0;
+    }
+    pFarEntries[i].unknown00 = result >> 16;
+    pFarEntries[i].unknown02 = result;
+  }
+  unknown023 *pStatic = VM_OFFSET(unknown023, pSb, pSb->unknown2c);
+  unknown004 *pStaticData = VM_OFFSET(unknown004, pStatic, pStatic->unknown00);
+  for (int i = 0; i < VM_OFFSET(unknown023, pSb, pSb->unknown2c)->num; i++) {
+    vmInitDataLink(pSb, pStaticData);
+    pStaticData++;
+  }
+  int i = 0;
+  while (i < static_cast<int>(VM_OFFSET(unknown002, pSb, pSb->unknown30)->num)) {
+    unknown002 *pLocalPool = VM_OFFSET(unknown002, pSb, pSb->unknown30);
+    char *pEntries = VM_OFFSET(char, pLocalPool, pLocalPool->unknown00);
+    int offset = pLocalPool->unknown08 == 2 ? *reinterpret_cast<u16 *>(pEntries + pLocalPool->unknown08 * i) : *reinterpret_cast<int *>(pEntries + pLocalPool->unknown08 * i);
+    unknown023 *pLocal = reinterpret_cast<unknown023 *>(pEntries + offset);
+    unknown004 *pLocalData = VM_OFFSET(unknown004, pLocal, pLocal->unknown00);
+    for (int j = 0; j < pLocal->num; j++) {
+      vmInitDataLink(pSb, pLocalData);
+      pLocalData++;
+    }
+    i++;
+  }
+  vmPackageSearch(pSb)->unknown08 = vmSysAtrSearch(pSb, 1);
+  return 1;
+}
+
 u8 vmDataGet1(unknown007 *pThread, int pc) { return pThread->unknown40[pc]; }
 
-u16 vmDataGet2(unknown007 *pThread, int pc) {
-  const u8 *code = pThread->unknown40 + pc;
-  return (code[0] << 8) | code[1];
-}
+u16 vmDataGet2(unknown007 *pThread, int pc) { return (pThread->unknown40[pc] << 8) | pThread->unknown40[pc + 1]; }
 
-u32 vmDataGet4(unknown007 *pThread, int pc) {
-  const u8 *code = pThread->unknown40 + pc;
-  return (code[0] << 24) | (code[1] << 16) | (code[2] << 8) | code[3];
-}
+u32 vmDataGet4(unknown007 *pThread, int pc) { return (pThread->unknown40[pc] << 24) | (pThread->unknown40[pc + 1] << 16) | (pThread->unknown40[pc + 2] << 8) | pThread->unknown40[pc + 3]; }
 
 VMData vmDataGet(unknown007 *pThread, int pc, u32 size) {
   switch (size) {
@@ -901,5 +1146,95 @@ unknown007 *vmThreadCreate(sSbHeader *pSb, int func) {
     }
   }
   return 0;
+}
+
+void vmExceptionProc(unknown007 *pThread) {
+  vmDataGet(pThread, pThread->unknown10 + 1, unknown020[pThread->unknown40[pThread->unknown10]].unknown08);
+  pThread->reg.pc = pThread->unknown10;
+  vmHalt();
+}
+
+void vmExceptionThrow(unknown007 *pThread, int kind) {
+  pThread->unknown0c = kind;
+  pThread->unknown10 = pThread->reg.pc;
+  vmExceptionProc(pThread);
+}
+
+void vmPluginExceptionThrow(unknown007 *pThread) {
+  pThread->unknown0c = 1;
+  pThread->unknown10 = pThread->reg.pc;
+  vmExceptionProc(pThread);
+}
+
+void vmOCExceptionThrow(unknown007 *pThread) {
+  pThread->unknown14 = pThread->unknown50[pThread->reg.sp];
+  pThread->unknown0c = 2;
+  pThread->unknown10 = pThread->reg.pc;
+  vmExceptionProc(pThread);
+}
+
+void vmArgErr() {
+  unknown007 *pThread = unknown017.unknown200;
+  u8 code = pThread->unknown40[pThread->reg.pc];
+  if (code == VMC_PLUGIN || code == VMC_PLUGIN_W) {
+    vmPluginExceptionThrow(pThread);
+  } else {
+    vmOCExceptionThrow(pThread);
+  }
+  vmExceptionProc(pThread);
+}
+
+void vmInitDataLink(sSbHeader *pSb, unknown004 *pData) {
+  switch (pData->unknown00) {
+  case OT_STRING:
+    pData->unknown04_2 = vmStringPoolGet(pSb, pData->unknown04);
+    break;
+  case OT_PLUGIN: {
+    unknown001 *pPool = VM_OFFSET(unknown001, pSb, pSb->unknown20);
+    unknown022 *pEntry = VM_OFFSET(unknown022, pPool, pPool->unknown00) + pData->unknown04;
+    pData->unknown02 = pEntry->unknown00;
+    pData->unknown04 = pEntry->unknown02;
+    break;
+  }
+  case OT_FUNCTION:
+    if (pData->unknown02 == 0) {
+      pData->unknown02 = vmPackageSearchIdx(pSb);
+    } else {
+      unknown001 *pPool = VM_OFFSET(unknown001, pSb, pSb->unknown28);
+      unknown022 *pEntry = VM_OFFSET(unknown022, pPool, pPool->unknown00) + pData->unknown04;
+      pData->unknown02 = pEntry->unknown00;
+      pData->unknown04 = pEntry->unknown02;
+    }
+    break;
+  }
+}
+
+const char *scobjectToString(unknown004 *pObject, char *pBuffer) {
+  switch (pObject->unknown00) {
+  case OT_NIL:
+    return "(nil)";
+  case OT_TRUE:
+    return "(true)";
+  case OT_FALSE:
+    return "(false)";
+  case OT_INT:
+    sprintf(pBuffer, "%d", pObject->unknown04);
+    return pBuffer;
+  case OT_FIXED:
+    sprintf(pBuffer, "%f", pObject->unknown04_1);
+    return pBuffer;
+  case OT_STRING:
+    return pObject->unknown04_2;
+  case OT_ARRAY:
+    return "(array)";
+  case OT_FUNCTION:
+    return "(function)";
+  case OT_PLUGIN:
+    return "(plugin)";
+  case OT_OC:
+    return "(oc)";
+  default:
+    return "(unknown)";
+  }
 }
 }

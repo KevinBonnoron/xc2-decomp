@@ -1,20 +1,36 @@
 #include "dr/dr_shd_lgt_global_ibl.h"
 
 #include <algorithm> // IWYU pragma: keep
+#include <math.h>
 #include <string.h>
 
+#include "dr/dr_ap_cache.h"
+#include "dr/dr_ap_gx_type.h"
+#include "dr/dr_calc_man.h"
+#include "dr/dr_calc_view_work.h"
 #include "dr/dr_light_obj_global_ibl.h"
 #include "dr/dr_man.h"
 #include "dr/dr_pixl_man.h"
 #include "dr/dr_pixl_post_man.h"
 #include "dr/dr_pixl_post_obj_cube_map_multi_ibl.h"
 #include "dr/dr_pixl_post_parm.h"
+#include "dr/dr_pixl_render_target.h"
+#include "dr/dr_shd_lgt_man.h"
+#include "dr/dr_shd_lgt_obj.h"
+#include "grlib/cglib_color_ctl.h"
 #include "grlib/cglib_ctl_shader.h"
+#include "grlib/cglib_ctl_texture.h"
 #include "grlib/cglib_dbl_uniform_block.h"
+#include "grlib/cglib_depth_target.h"
+#include "grlib/cglib_render_target.h"
+#include "grlib/cglib_shader.h"
+#include "grlib/cglib_uni_base_utility.h"
 #include "grlib/shd_util.h"
 #include "mm_math/mm_vec3.h"
+#include "mm_math/mm_vec4.h"
 #include "mm_mtl/fixed_array.h"
 #include "mm_mtl/fixed_list.h" // IWYU pragma: keep
+#include "mm_mtl/vector.h"
 #include "types.h"
 
 namespace ml {
@@ -168,6 +184,156 @@ void DrShdLgtGlobalIBL::removeObj(DrLightObjGlobalIBL *obj, int viewNum) {
   }
 }
 
+void DrShdLgtGlobalIBL::setShaderGlobalIBLListFadeParameter(DrShdLgtObj *shader, u32 index, const mm::Mat44 &world, const mm::Vec4 &fadeMul, const mm::Vec4 &fadeCenter,
+                                                            grlib::CGLibDblUniformBlock &block, u32 blockIndex) {
+  u8 *buffer = static_cast<u8 *>(block.getBuff());
+  DrCalcViewWork *viewWork = m_drMan->m_drCalcMan->m_drCalcViewWork;
+  u32 offset = (shader->unknown38 + shader->unknown58)->getUniformBlockValOfs(blockIndex, "gWVP");
+  if (offset != 0xffffffff) {
+    mm::Mat44 worldViewProj;
+    worldViewProj.unknown009(world, viewWork->unknown200);
+    grlib::ShdMat44SetMat44(reinterpret_cast<f32 *>(buffer + offset), worldViewProj);
+  }
+  offset = (shader->unknown38 + shader->unknown58)->getUniformBlockValOfs(blockIndex, "gIndex");
+  if (offset != 0xffffffff) {
+    int indexValue[4] = {};
+    indexValue[0] = index;
+    grlib::ShdS32SetIVec4(reinterpret_cast<int *>(buffer + offset), indexValue);
+  }
+  u32 widthValue;
+  u32 heightValue;
+  if (m_drMan->isIBLHalfRes()) {
+    widthValue = m_drMan->m_drPixlMan->getPixlObj(10)->unknownbc;
+    heightValue = m_drMan->m_drPixlMan->getPixlObj(10)->unknownc0;
+  } else {
+    widthValue = m_drMan->m_drPixlMan->getPixlObj(14)->unknownbc;
+    heightValue = m_drMan->m_drPixlMan->getPixlObj(14)->unknownc0;
+  }
+  f32 width = static_cast<f32>(widthValue);
+  f32 height = static_cast<f32>(heightValue);
+  offset = (shader->unknown38 + shader->unknown58)->getUniformBlockValOfs(blockIndex, "gFragToUV");
+  if (offset != 0xffffffff) {
+    mm::Vec4 value;
+    value.x = 1.0f / width;
+    value.y = 1.0f / height;
+    value.z = 0.0f;
+    value.w = 0.0f;
+    grlib::ShdVec4SetVec4(reinterpret_cast<f32 *>(buffer + offset), value);
+  }
+  offset = (shader->unknown38 + shader->unknown58)->getUniformBlockValOfs(blockIndex, "gFragToScreen");
+  if (offset != 0xffffffff) {
+    mm::Vec4 value;
+    value.x = 2.0f / width;
+    value.y = -2.0f / height;
+    value.z = -1.0f;
+    value.w = 1.0f;
+    grlib::ShdVec4SetVec4(reinterpret_cast<f32 *>(buffer + offset), value);
+  }
+  offset = (shader->unknown38 + shader->unknown58)->getUniformBlockValOfs(blockIndex, "gScreenToViewPos");
+  if (offset != 0xffffffff) {
+    mm::Vec4 value;
+    value.y = tanf(viewWork->unknown4c4 * 0.5f);
+    value.x = value.y * viewWork->unknown4c0;
+    value.w = 0.0f;
+    value.z = 0.0f;
+    grlib::ShdVec4SetVec4(reinterpret_cast<f32 *>(&buffer[offset]), value);
+  }
+  offset = (shader->unknown38 + shader->unknown58)->getUniformBlockValOfs(blockIndex, "gToLocal");
+  if (offset != 0xffffffff) {
+    mm::Mat44 toLocal = viewWork->unknown00;
+    mm::Mat44 inverse;
+    inverse.unknown014(world);
+    toLocal.unknown009(toLocal, inverse);
+    grlib::ShdMat44SetMat44(reinterpret_cast<f32 *>(buffer + offset), toLocal);
+  }
+  offset = (shader->unknown38 + shader->unknown58)->getUniformBlockValOfs(blockIndex, "gFadeParamMul");
+  if (offset != 0xffffffff) {
+    grlib::ShdVec4SetVec4(reinterpret_cast<f32 *>(&buffer[offset]), fadeMul);
+  }
+  offset = (shader->unknown38 + shader->unknown58)->getUniformBlockValOfs(blockIndex, "gFadeParamCenter");
+  if (offset != 0xffffffff) {
+    grlib::ShdVec4SetVec4(reinterpret_cast<f32 *>(buffer + offset), fadeCenter);
+  }
+  u32 depLocation = (shader->unknown38 + shader->unknown58)->getTextureLocation("gTDep");
+  DrAPCache *apCache = m_drMan->m_drAPCache;
+  apCache->beginTexSampling(2, 0);
+  apCache->setTexture(*m_drMan->m_drPixlMan->getPixlObj(4)->unknown70, depLocation);
+}
+
+// 0x7100898274 (487 instructions). `view` is the alias of `unknown10[viewIndex]` that the other functions of this unit take (getSHMatrix, getSHAverage, getLowestPrioritySH...) and is used
+// by the loop bounds, the stencil argument, hasNext and the fade call. Measured without it (`unknown10[viewIndex]` written out) or with `pixlMan` declared before `viewIndex`: 487
+// instructions, the one difference being x19 and x23 swapped between pixlMan and viewIndex (0x71008982a0); with the alias taken right after viewIndex the registers are the game's.
+void DrShdLgtGlobalIBL::renderDirect(DrShdLgtMan *man) {
+  int viewIndex = m_drMan->unknown1c98;
+  const unknown001 &view = unknown10[viewIndex];
+  DrPixlMan *pixlMan = m_drMan->m_drPixlMan;
+  {
+    int clearColor[4] = {0, 0, 0, 0};
+    pixlMan->unknown7f0->unknown1e8->clearIntTexture(clearColor, static_cast<GrlClaerMask>(0xf));
+    pixlMan->unknown7f0->unknown1e0->clearIntTexture(clearColor, static_cast<GrlClaerMask>(0xf));
+  }
+  DrPixlRenderTarget *target = m_drMan->m_drPixlMan->getPixlObj(14);
+  DrPixlRenderTarget *second = m_drMan->m_drPixlMan->getPixlObj(9);
+  target->setRenderTarget(*pixlMan->getDepthObj()->unknown120, *second);
+  for (s64 i = 0; i < static_cast<int>(view.unknown1b40.size()); i++) {
+    DrLightObjGlobalIBL *obj = view.unknown1b40[i];
+    for (u32 j = 0; j < obj->unknown18; j++) {
+      obj->bindVertex(j);
+      grlib::CGLibColorCtl::setColorBufferOff();
+      DrAPGxType::setupCullingFront();
+      DrAPGxType::setupStencilTestWriteMask(true, false, i == view.unknown1b40.size() - 1 ? 7 : 6, true, 0x40, 0x40, 0x40, 7, 2, 0, 0);
+      DrShdLgtObj *shader = man->getGlobalIBLShader(DrShdLgtMan::GIBL_SHADER_TYPE_UNKNOWN_0);
+      shader->setDeclarationIdx(shader->getDeclarationOfs("USE_PIXL_COUNTER"), 2);
+      man->setupGlobalIBLShader(shader);
+      {
+        grlib::CGLibUniformEtcUtility uniform(shader);
+        uniform.setUseUniformBlock("UB_VS");
+        shader->setShaderGlobalIBLIndexVS(m_drMan, obj->unknown20[j].unknown50, uniform.getBuff(), (shader->unknown38 + shader->unknown58)->getUniformBlockOfs("UB_VS"));
+        uniform.updateData();
+        uniform.setUniformBlock();
+        obj->drawVertex();
+      }
+      bool hasNext = m_drMan->unknown120[m_drMan->unknown1c98]->unknown105f && i != view.unknown1b40.size() - 1;
+      obj->beginOccQuery();
+      grlib::CGLibColorCtl::setColorBufferOn();
+      grlib::CGLibColorCtl::setBlendControl(GRL_BLEND_FUNC_UNKNOWN_8, GRL_BLEND_FUNC_ONE, GRL_BLEND_COMBINE_ADD, GRL_LOGIC_TYPE_COPY);
+      DrAPGxType::setupCullingBack();
+      DrAPGxType::setupStencilTestWriteMask(true, false, 3, true, 0x40, 0x40, 0x40, 2, 1, 1, 1);
+      u8 fadeDir = obj->unknown20[j].unknown11a;
+      u8 fadeShape = obj->unknown20[j].unknown11b;
+      u8 fadePos = obj->unknown20[j].unknown11c;
+      bool fadeInvert = obj->unknown20[j].unknown11d;
+      shader = man->getGlobalIBLShader(DrShdLgtMan::GIBL_SHADER_TYPE_UNKNOWN_3);
+      shader->setDeclarationIdx(shader->getDeclarationOfs("FADE_SHAPE"), fadeShape);
+      u32 fadeDirIndex = hasNext ? fadeDir + 1 : 1;
+      shader->setDeclarationIdx(shader->getDeclarationOfs("FADE_DIR"), fadeDirIndex);
+      u32 fadeInvertIndex = fadeInvert ? 1 : 2;
+      shader->setDeclarationIdx(shader->getDeclarationOfs("FADE_INVERT"), fadeInvertIndex);
+      u32 fadePosIndex = fadePos + 1;
+      shader->setDeclarationIdx(shader->getDeclarationOfs("FADE_POS"), fadePosIndex);
+      man->setupGlobalIBLShader(shader);
+      {
+        grlib::CGLibUniformEtcUtility viewUniform(shader);
+        viewUniform.setUseUniformBlock("UB_VS");
+        grlib::CGLibUniformEtcUtility fadeUniform(shader);
+        fadeUniform.setUseUniformBlock("UB_PS");
+        setShaderGlobalIBLDirectFadeParameter(shader, view.unknown003(i), obj->unknown20[j].unknown50, obj->unknown20[j].unknown130, obj->unknown20[j].unknown140, viewUniform, fadeUniform);
+        viewUniform.updateData();
+        viewUniform.setUniformBlock();
+        fadeUniform.updateData();
+        fadeUniform.setUniformBlock();
+        grlib::CGLibCtlTexture::setUAVTexture(*pixlMan->unknown7f0->unknown1e8->unknown70, 0, 0, 0);
+      }
+      obj->drawVertex();
+      DrAPGxType::setupCullingFront();
+      DrAPGxType::setupStencilTestWriteMask(false, false, 3, true, 0x40, 0x40, 0x40, 2, 1, 1, 1);
+      obj->drawVertex();
+      obj->endOccQuery();
+    }
+  }
+  grlib::CGLibColorCtl::setColorBufferOn();
+  DrAPGxType::setupCullingBack();
+}
 } // namespace ml
 
 template mm::mtl::FixedList<ml::DrShdLgtGlobalIBL::SlotCandidate, 32>::iterator
