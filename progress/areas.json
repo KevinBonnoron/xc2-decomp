@@ -104,6 +104,14 @@
     }
   },
   {
+    "name": "minigame",
+    "code": {
+      "total": 70956,
+      "matching": 63552,
+      "non_matching": 0
+    }
+  },
+  {
     "name": "mcl",
     "code": {
       "total": 61924,
@@ -124,14 +132,6 @@
     "code": {
       "total": 19760,
       "matching": 17300,
-      "non_matching": 0
-    }
-  },
-  {
-    "name": "minigame",
-    "code": {
-      "total": 70956,
-      "matching": 16516,
       "non_matching": 0
     }
   },

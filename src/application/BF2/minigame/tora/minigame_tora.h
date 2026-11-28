@@ -53,8 +53,8 @@ struct _sTask {
   u8 unknown35;                  // Inferred role: hit result written by check_dmg_map_obj and check_atk_obj; original member name unknown.
   s16 unknown36;                 // Signed 16-bit offset added to the shifted x in get_coli_xy; original member name unknown.
   s16 unknown38;                 // Signed 16-bit offset added to the shifted y in get_coli_xy; original member name unknown.
-  u8 unknown3a;                  // Inferred role: width of the hit box; original member name unknown.
-  u8 unknown3b;                  // Inferred role: height of the hit box; original member name unknown.
+  u8 unknown3a;                  // Inferred role: width of the hit box, added to the x of get_coli_xy by check_dmg_map_obj and check_atk_obj; original member name unknown.
+  u8 unknown3b;                  // Inferred role: height of the hit box, added to the y of get_coli_xy by check_dmg_map_obj and check_atk_obj; original member name unknown.
   u8 _3c[0x40 - 0x3c];
 };
 
@@ -99,7 +99,7 @@ struct unknown022 : _sTask {
   u8 unknown41;  // Inferred role: frames left of the stun after a hit, set to 0x20; the player blinks while it is odd and bubbles appear above 0x18; original member name unknown.
   u8 unknown42;  // Inferred role: frame of the body, set by player_move from the direction; original member name unknown.
   u8 unknown43;  // Inferred role: frame counter, bit 4 alternates the frame of the body; original member name unknown.
-  u8 unknown44;  // Inferred role: set to 1 while the player is held at the upper limit of the screen; original member name unknown.
+  u8 unknown44;  // Inferred role: set to 1 while the player is held at its limit unknown56 of the y position (y grows downward, so the lower edge of the play area); original member name unknown.
   u8 unknown45;  // Inferred role: frame of the attack, 0 when idle, counts up to 15; original member name unknown.
   u8 unknown46;  // Inferred role: direction of the player, index of 9 directions; original member name unknown.
   u8 unknown47;  // Inferred role: set to 1 when the attack bounced; original member name unknown.
@@ -115,8 +115,8 @@ struct unknown022 : _sTask {
   u16 unknown56; // Inferred role: limit of the y position, in pixels; original member name unknown.
   s16 unknown58; // Signed 16-bit offset added to the shifted x in get_pc_atk_xy; original member name unknown.
   s16 unknown5a; // Signed 16-bit offset added to the shifted y in get_pc_atk_xy; original member name unknown.
-  u8 unknown5c;  // Unsigned 8-bit value subtracted from x in get_pc_atk_xy; original member name unknown.
-  u8 unknown5d;  // Unsigned 8-bit value subtracted from y in get_pc_atk_xy; original member name unknown.
+  u8 unknown5c;  // Unsigned 8-bit value subtracted from x in get_pc_atk_xy; also half the width of the attack box in check_atk_obj (the attack is skipped when it is 0); original member name unknown.
+  u8 unknown5d;  // Unsigned 8-bit value subtracted from y in get_pc_atk_xy; also half the height of the attack box in check_atk_obj; original member name unknown.
 };
 
 static_assert(offsetof(unknown022, unknown58) == 0x58, "");
@@ -230,14 +230,16 @@ public:
   void *get_res(int index);
   int get_res_sz(int index);
 
-  u32 *unknown00; // Inferred role: archive data, a table of offsets followed by the resources; original member name unknown.
+  u8 *unknown00; // Inferred role: archive data, a table of 32-bit offsets followed by the resources (get_res reads the table through a u32 pointer); original member name unknown.
 };
 
 static_assert(sizeof(archive) == 0x08, "");
 
 // Inferred role: resource of the archive that holds a map; original type name unknown.
 struct unknown001 {
-  u8 _00[0x10];
+  u16 unknown00; // Inferred role: width in tiles; original member name unknown.
+  u16 unknown02; // Inferred role: height in tiles; original member name unknown.
+  u8 _04[0x10 - 0x04];
   u8 unknown10[]; // Inferred role: map tiles, 16 per row; original member name unknown.
 };
 
@@ -304,34 +306,7 @@ static_assert(offsetof(unknown013, unknown08) == 0x08, "");
 static_assert(offsetof(unknown013, unknown04) == 0x04, "");
 static_assert(sizeof(unknown013) == 0x18, "");
 
-// Inferred role: screen buffers of the minigame; original type name unknown.
-struct unknown004 {
-  u8 _00[0x10];
-  u8 unknown10; // Inferred role: brightness level written by update_palt; original member name unknown.
-  u8 _11[0x1c - 0x11];
-  s16 unknown1c; // Inferred role: horizontal offset of the sprites; original member name unknown.
-  s16 unknown1e; // Inferred role: vertical offset of the sprites; original member name unknown.
-  u8 _20[0x26 - 0x20];
-  s16 unknown26; // Inferred role: vertical scroll of the map in pixels; original member name unknown.
-  u8 _28[0x100 - 0x28];
-  u8 unknown100[0x20000]; // Inferred role: tile memory, 0x1000 tiles of 32 bytes written by decode_4bpp_sprt; original member name unknown.
-  u8 unknown20100[0xc00]; // Inferred role: faded copy of the palettes of minigame::unknown65c, 64 palettes of 16 entries of 3 bytes, written by update_palt; original member name unknown.
-  u8 _20d00[0x21100 - 0x20d00];
-  unknown003 unknown21100[0x40]; // Inferred role: sprites; original member name unknown.
-  u8 _21500[0x25500 - 0x21500];
-  u16 unknown25500[0x800]; // Inferred role: text screen, 64 by 32 characters; original member name unknown.
-  u8 _26500[0x4bd00 - 0x26500];
-};
-
-static_assert(offsetof(unknown004, unknown1c) == 0x1c, "");
-static_assert(offsetof(unknown004, unknown1e) == 0x1e, "");
-static_assert(offsetof(unknown004, unknown26) == 0x26, "");
-static_assert(offsetof(unknown004, unknown21100) == 0x21100, "");
-static_assert(offsetof(unknown004, unknown10) == 0x10, "");
-static_assert(offsetof(unknown004, unknown100) == 0x100, "");
-static_assert(offsetof(unknown004, unknown20100) == 0x20100, "");
-static_assert(offsetof(unknown004, unknown25500) == 0x25500, "");
-static_assert(sizeof(unknown004) == 0x4bd00, "");
+struct unknown004;
 
 // Inferred role: entry of the table of the rank list of the save data; original type name unknown.
 struct unknown005 {
@@ -343,15 +318,19 @@ static_assert(sizeof(unknown005) == 0x08, "");
 
 // Inferred role: save data of the minigame; original type name unknown.
 struct unknown006 {
-  u8 unknown00; // Inferred role: set to 1 when the save data is valid; initialize tests the first three bytes as one 24-bit word (0x71006a2148, ldr w + and #0xffffff); original member name unknown.
-  u8 unknown01; // Inferred role: tested against 0 by initialize with unknown00 and unknown02; original member name unknown.
-  u8 unknown02; // Inferred role: tested against 0 by initialize with unknown00 and unknown01; original member name unknown.
-  u8 _03[0x08 - 0x03];
+  u8 unknown00;  // Inferred role: set to 1 when the save data is valid; initialize tests the first three bytes as one 24-bit word (0x71006a2148, ldr w + and #0xffffff); original member name unknown.
+  u8 unknown01;  // Inferred role: tested against 0 by initialize with unknown00 and unknown02; original member name unknown.
+  u8 unknown02;  // Inferred role: tested against 0 by initialize with unknown00 and unknown01; original member name unknown.
+  u8 unknown03;  // Inferred role: counter, grows by one for each 300 seconds since the time of unknown04 up to 3 (phase_boot); phase_title stores the credits left (unknown32f0) in it when a game
+                 // starts; original member name unknown.
+  u32 unknown04; // Inferred role: time of the last start in seconds of the year (phase_boot); original member name unknown.
   unknown005 unknown08[5]; // Inferred role: ranking; original member name unknown.
   union {
     struct {
       u64 unknown30; // Inferred role: total score; original member name unknown.
-      u8 _38[0x44 - 0x38];
+      int unknown38; // Inferred role: non-zero when phase_title offers the second menu entry; the game compares it with 0 as a 32-bit word (0x71006a3c4c); original member name unknown.
+      int unknown3c; // Inferred role: counter increased when the clear phase starts (phase_clear, 0x71006aae48 to 0x71006aae54: `ldr; add; str` of the word at 0x401c); original member name unknown.
+      int unknown40; // Inferred role: counter incremented when the game over screen starts (phase_over, 0x71006ac910); original member name unknown.
       int unknown44; // Inferred role: number of bonus items obtained, incremented by item_move; original member name unknown.
       int unknown48; // Inferred role: number of items obtained; original member name unknown.
       u8 _4c[0xd0 - 0x4c];
@@ -363,6 +342,8 @@ struct unknown006 {
 };
 
 static_assert(offsetof(unknown006, unknown08) == 0x08, "");
+static_assert(offsetof(unknown006, unknown3c) == 0x3c, "");
+static_assert(offsetof(unknown006, unknown40) == 0x40, "");
 static_assert(sizeof(unknown006) == 0xd0, "");
 
 // Inferred role: treasure and condition of a treasure box; original type name unknown.
@@ -460,10 +441,10 @@ static_assert(sizeof(unknown017) == 0x10, "");
 
 // Inferred role: row of the MIN_TT_Stage sheet; original type name unknown.
 struct unknown018 {
-  s16 unknown00; // Inferred role: SpdD column scaled by 256/100; original member name unknown.
-  s16 unknown02; // Inferred role: SpdU column scaled by 256/100; original member name unknown.
-  s16 unknown04; // Inferred role: AccU column scaled by 1024/1000; original member name unknown.
-  s16 unknown06; // Inferred role: MaxU column scaled by 256/100; original member name unknown.
+  u16 unknown00; // Inferred role: SpdD column scaled by 256/100; phase_game loads it with ldrh (0x71006a6080); original member name unknown.
+  u16 unknown02; // Inferred role: SpdU column scaled by 256/100; phase_game loads it with ldrh (0x71006a60a0); original member name unknown.
+  u16 unknown04; // Inferred role: AccU column scaled by 1024/1000; phase_game loads it with ldrh (0x71006a60b0); original member name unknown.
+  u16 unknown06; // Inferred role: MaxU column scaled by 256/100; phase_game loads it with ldrh (0x71006a60d0); original member name unknown.
   u16 unknown08; // Inferred role: Scroll column; original member name unknown.
   u16 unknown0a; // Inferred role: Bonus column; original member name unknown.
   u16 unknown0c; // Inferred role: StarRate column; original member name unknown.
@@ -487,10 +468,10 @@ static_assert(sizeof(unknown018) == 0x28, "");
 struct unknown019 {
   u8 unknown00;  // Inferred role: sprite sheet plus one, zero when the slot is free; original member name unknown.
   u8 unknown01;  // Inferred role: frame; original member name unknown.
-  u16 unknown02; // Inferred role: x in 1/256 pixel; original member name unknown.
-  u16 unknown04; // Inferred role: y in 1/256 pixel; original member name unknown.
-  u8 unknown06;  // Inferred role: palette; original member name unknown.
-  u8 unknown07;  // Inferred role: flip; original member name unknown.
+  u16 unknown02; // Inferred role: x in 1/64 pixel (phase_title draws it shifted right by 6, 0x71006a47cc, and title_vm adds signed bytes times 0x40); original member name unknown.
+  u16 unknown04; // Inferred role: y in 1/64 pixel (phase_title draws it shifted right by 6, 0x71006a47d0); original member name unknown.
+  u8 unknown06;  // Inferred role: flip, xor-ed with the mirroring flags of the frame by phase_title (0x71006a47a0, passed as the flip of draw_obj); original member name unknown.
+  u8 unknown07;  // Inferred role: palette, passed as the palette of draw_obj by phase_title (0x71006a47a8); original member name unknown.
   u8 unknown08;  // Inferred role: frames left in the current step; original member name unknown.
   u8 unknown09;  // Inferred role: offset of the current step in the animation; original member name unknown.
   u8 _0a[0x10 - 0x0a];
@@ -510,6 +491,27 @@ struct unknown027 {
 
 static_assert(offsetof(unknown027, unknown0a) == 0x0a, "");
 static_assert(sizeof(unknown027) == 0x10, "");
+
+// Inferred role: object of the map, an entry of the list that phase_game builds from the map tiles; original type name unknown.
+struct unknown088 {
+  u8 unknown00; // Role not yet identified (cleared by phase_game); original member name unknown.
+  u8 unknown01; // Role not yet identified (cleared by phase_game); original member name unknown.
+  u8 unknown02; // Inferred role: tile of the object, zero ends the list; original member name unknown.
+  u8 _03;
+  u16 unknown04; // Inferred role: x in pixels; original member name unknown.
+  u16 unknown06; // Inferred role: y in pixels; original member name unknown.
+};
+
+static_assert(sizeof(unknown088) == 0x08, "");
+
+// Inferred role: position of a stage on the stage select screen, read from the csv of the archive by phase_select; original type name unknown. The game indexes the table with `lsl #1` and reads
+// the two bytes at +0 and +1 (0x71006a4ba8, 0x71006a5190).
+struct unknown089 {
+  u8 unknown00; // Inferred role: x in pixels; original member name unknown.
+  u8 unknown01; // Inferred role: y in pixels; original member name unknown.
+};
+
+static_assert(sizeof(unknown089) == 0x02, "");
 
 class minigame : public mm::mtl::PtrSingleton<minigame> {
 public:
@@ -531,13 +533,21 @@ public:
   void initialize();
   void finalize();
   void update_pad();
+  void phase_boot();
+  void phase_title();
+  void phase_select();
+  void phase_game();
+  void phase_clear();
+  void phase_over();
+  void phase_name();
   void get_pc_dxdy(int x, int y, int &dx, int &dy);
   void get_coli_xy(int &x, int &y, _sTask *task);
   void get_pc_atk_xy(int &x, int &y, _sTask *task);
   u8 *get_map_bin();
   u8 check_map(int x, int y);
   u8 get_tbox_type(int index);
-  bool check_rank();
+  // 1 when the score unknown3410 is not below the entry of the stage unknown33e0 in the rank list, 0 for a stage out of range; an `int` for the join in phase_name (see there).
+  int check_rank();
   void sprite_reset();
   unknown003 *sprite_get();
   void reset_save();
@@ -553,7 +563,27 @@ public:
   void get_score_text(char *text, u32 score);
   void draw_mesh_box(u8 *dst, int stride, int x, int y, int width, int height, const _sPalette *palette);
   u32 decode_4bpp_sprt(u32 tile, const u8 *res);
-  void decode_4bpp_sprt(u32 tile, int sheet);
+  u32 decode_4bpp_sprt(u32 tile, int sheet);
+  // Inferred role: resets the position, bank and tile records of the layers of the screen buffers (0x00 to 0x35), inlined by the first sub phase of every phase; original name unknown.
+  void unknown025();
+  // Inferred role: clears the sprite widths and the line offsets (0x20d00) of the screen buffers, inlined by the first sub phase of every phase after unknown025; original name unknown.
+  void unknown032();
+  // Inferred name; single-user helper of phase_title (see its definition). Clears the counters of the menu of the title screen (unknown32f4, unknown32f8, unknown32fc).
+  void clearMenuCounters();
+  // Inferred role: clears the first layer of the screen buffers, decodes the sprite sheet 2 from tile 0x80 and clears the first palette entry (unknown65c[0]); inlined by the first sub phase of the
+  // title, clear and game over screens; original name unknown.
+  void unknown074();
+  // Inferred role: one frame of the count-up of the clear screen (the step unknown3d88 lasts unknown3d89 frames), inlined by sub phases 3, 5, 8, 9 and 11 of phase_clear; original name unknown.
+  void unknown075();
+  // Inferred role: ends the frame of a phase: resets the number of sprites used, runs the draw functions of the tasks and clears the width of the sprites that they did not use; inlined by
+  // phase_game, phase_over and phase_name; original name unknown.
+  void unknown076();
+  // Inferred role: one frame of the bubbles of the game screen: every 16th frame of unknown648 creates a bubble (create_awa) with a random x and the bottom y, then the move functions of the tasks
+  // run; inlined by sub phases 1 to 11 of phase_game; original name unknown.
+  void unknown087();
+  // Inferred role: decodes the next sprite sheet of a chain (the end of the previous one, masked to 16 bits, plus a page), returns the end of the new sheet; inlined by phase_title and phase_game;
+  // original name unknown.
+  u32 unknown077(u32 tile, u32 page, int sheet);
   void debug_hex(int x, int y, u32 value, int digits);
   u8 check_map(_sTask *task);
   _sTask *check_dmg_map_obj(_sTask *task, u8 &mapHit);
@@ -601,14 +631,17 @@ public:
   u32 unknown64c;               // Inferred role: phase to run; original member name unknown.
   u32 unknown650;               // Inferred role: phase to run after unknown64c; original member name unknown.
   u8 _654[0x658 - 0x654];
+  // The game loads it with `ldrh` and does not widen the load (phase_over 0x71006ac1ec). With the palettes typed _sPalette and update_palt called, a direct member keeps that load (without the typed
+  // palettes and with the loop written out, GVN widened it to 64 bits as a member aligned to 8).
   s16 unknown658; // Inferred role: fade level of the palettes, 0 to 0xff in steps of 0x10; original member name unknown.
-  u8 unknown65a;  // Role not yet identified (set by phase_boot, phase_title and phase_select); original member name unknown.
+  u8 unknown65a;  // Role not yet identified (set by phase_boot, phase_title and phase_select; phase_clear and phase_over pass it to tora_cell_anime_setup); original member name unknown.
   u8 _65b[0x65c - 0x65b];
-  u8 unknown65c[0xc00]; // Inferred role: palettes, 64 palettes of 16 entries of 3 bytes: decode_4bpp_sprt writes the palette of a sheet at ((tile >> 8) & 0x3f0) * 3 and update_palt reads 0xc00 bytes
-                        // from here; original member name unknown.
-  unknown001 *unknown1260; // Inferred role: map resource; original member name unknown.
-  u64 unknown1268;         // Role not yet identified (read by phase_game); original member name unknown.
-  u32 unknown1270;         // Inferred role: handle of the playing background music; original member name unknown.
+  _sPalette unknown65c[0x400]; // Inferred role: palettes, 64 palettes of 16 entries: decode_4bpp_sprt writes the palette of a sheet at entry (tile >> 8) & 0x3f0 and update_palt reads 0x400 entries
+                               // from here, a pointer walk over _sPalette entries (a byte offset walk matches the standalone update_palt only, the inlined copies get another base register); original
+                               // member name unknown.
+  unknown001 *unknown1260;     // Inferred role: map resource; original member name unknown.
+  unknown002 *unknown1268;     // Inferred role: tile data of the map, a resource of the archive; original member name unknown.
+  u32 unknown1270;             // Inferred role: handle of the playing background music; original member name unknown.
   u8 _1274[0x1278 - 0x1274];
   // Inferred role: the tables that initialize reads from the BDAT sheets (MIN_TT_PC, MIN_TT_Enemy, MIN_TT_Tbox, MIN_TT_Tdef, MIN_TT_Crystal, MIN_TT_Stage, ITM_EtherCrystal, BTL_SystemBalance), one
   // nested object that starts at 0x1278; choice_tbox (0x71006afaa0) reads unknown1688 and unknown1928 from the shared base `this + 0x1278`, which only members of a nested object give (a scratch with
@@ -619,9 +652,9 @@ public:
     u8 unknown127b;  // Inferred role: HitH column of MIN_TT_PC; original member name unknown.
     u8 unknown127c;  // Inferred role: AtkW column of MIN_TT_PC; original member name unknown.
     u8 unknown127d;  // Inferred role: AtkH column of MIN_TT_PC; original member name unknown.
-    s16 unknown127e; // Inferred role: SpdU column of MIN_TT_PC scaled by 256/100; original member name unknown.
-    s16 unknown1280; // Inferred role: SpdLR column of MIN_TT_PC scaled by 256/100; original member name unknown.
-    s16 unknown1282; // Inferred role: SpdD column of MIN_TT_PC scaled by 256/100; original member name unknown.
+    u16 unknown127e; // Inferred role: SpdU column of MIN_TT_PC scaled by 256/100 (read with ldrh by phase_game); original member name unknown.
+    u16 unknown1280; // Inferred role: SpdLR column of MIN_TT_PC scaled by 256/100 (read with ldrh by phase_game); original member name unknown.
+    u16 unknown1282; // Inferred role: SpdD column of MIN_TT_PC scaled by 256/100 (read with ldrh by phase_game, 0x71006a5af8); original member name unknown.
     u8 _1284[0x1288 - 0x1284];
     unknown014 unknown1288[32];  // Inferred role: enemy table, the MIN_TT_Enemy sheet read by initialize; original member name unknown.
     unknown007 unknown1688[16];  // Inferred role: treasure box table, the MIN_TT_Tbox sheet; original member name unknown.
@@ -629,12 +662,13 @@ public:
     unknown017 unknown3158[4];   // Inferred role: crystal table, the MIN_TT_Crystal sheet; original member name unknown.
     unknown018 unknown3198[8];   // Inferred role: stage table, the MIN_TT_Stage sheet; original member name unknown.
     u16 unknown32d8[8];          // Inferred role: Score column of ITM_EtherCrystal for the eight ether crystals; original member name unknown.
-    u16 unknown32e8;             // Inferred role: Param column of BTL_SystemBalance row 0x8b; original member name unknown.
-    u16 unknown32ea;             // Inferred role: Param column of BTL_SystemBalance row 0x8c; original member name unknown.
-    u16 unknown32ec;             // Inferred role: Param column of BTL_SystemBalance row 0x8d; original member name unknown.
-    u16 unknown32ee;             // Inferred role: Param column of BTL_SystemBalance row 0x8e; original member name unknown.
+    s16 unknown32e8;             // Inferred role: Param column of BTL_SystemBalance row 0x8b, read as signed by phase_clear (ldrsh); original member name unknown.
+    s16 unknown32ea;             // Inferred role: Param column of BTL_SystemBalance row 0x8c, read as signed by phase_clear (ldrsh); original member name unknown.
+    s16 unknown32ec;             // Inferred role: Param column of BTL_SystemBalance row 0x8d, read as signed by phase_clear (ldrsh); original member name unknown.
+    s16 unknown32ee;             // Inferred role: Param column of BTL_SystemBalance row 0x8e, read as signed by phase_clear (ldrsh); original member name unknown.
   };
-  u32 unknown32f0; // Role not yet identified (phase_boot, phase_title); original member name unknown.
+  int unknown32f0; // Inferred role: number of credits shown by phase_title, decremented when a game starts; the game compares it signed (cmp w8, #2; csel lt, 0x71006a46dc); original member name
+                   // unknown.
   u32 unknown32f4; // Role not yet identified (phase_title); original member name unknown.
   u32 unknown32f8; // Role not yet identified (phase_title); original member name unknown.
   u8 unknown32fc;  // Role not yet identified (phase_title); original member name unknown.
@@ -644,13 +678,16 @@ public:
   const u8 *unknown3318;     // Inferred role: instruction pointer of title_vm, null when the script ended; original member name unknown.
   unknown019 unknown3320[8]; // Inferred role: sprites animated by title_vm; original member name unknown.
   int unknown33e0;           // Inferred role: rank of the stage; original member name unknown.
-  u8 unknown33e4;            // Role not yet identified (phase_select, read as one word together with unknown33e6); original member name unknown.
+  u8 unknown33e4; // Inferred role: number of stages shown on the stage select screen, 1 to 8 (phase_select counts the stages of unknown3198 whose condition is met; the game reads it as one word
+                  // together with unknown33e6); original member name unknown.
   u8 _33e5[0x33e6 - 0x33e5];
-  u16 unknown33e6;                 // Role not yet identified (phase_select); original member name unknown.
-  u16 unknown33e8;                 // Role not yet identified (phase_select); original member name unknown.
-  u8 unknown33ea[0x3400 - 0x33ea]; // Inferred role: pairs of coordinates indexed by unknown65a (phase_select); original member name unknown.
-  u8 unknown3400;                  // Role not yet identified (phase_game, read as a halfword together with unknown3401); original member name unknown.
-  u8 unknown3401;                  // Role not yet identified (phase_game); original member name unknown.
+  s16 unknown33e6; // Inferred role: x of the cursor of the stage select screen, moves half way to the stage under it each frame; the game sign-extends it (sxth, 0x71006a54c0); original member name
+                   // unknown.
+  s16 unknown33e8; // Inferred role: y of the cursor of the stage select screen; the game loads it with ldrsh (0x71006a54b8); original member name unknown.
+  unknown089 unknown33ea[(0x3400 - 0x33ea) / sizeof(unknown089)]; // Inferred role: positions of the stages on the stage select screen, indexed by unknown65a; the game addresses them from `this +
+                                                                  // index * 2 + 0x33ea`; original member name unknown.
+  u8 unknown3400;                                                 // Role not yet identified (phase_game, read as a halfword together with unknown3401); original member name unknown.
+  u8 unknown3401;                                                 // Role not yet identified (phase_game); original member name unknown.
   u8 _3402[0x3404 - 0x3402];
   u16 unknown3404; // Role not yet identified (phase_game); original member name unknown.
   u8 _3406[0x3408 - 0x3406];
@@ -659,41 +696,83 @@ public:
   u8 _340a[0x340b - 0x340a];
   u8 unknown340b;  // Role not yet identified (phase_game, phase_clear, enemy_damage); original member name unknown.
   u16 unknown340c; // Role not yet identified (phase_game, phase_clear, add_air); original member name unknown.
-  u16 unknown340e; // Role not yet identified (phase_game); original member name unknown.
+  u16 unknown340e; // Inferred role: air shown by the gauge, trails unknown340c by a share per frame while unknown3408 counts down (phase_game); original member name unknown.
   u32 unknown3410; // Inferred role: score; original member name unknown.
-  u32 unknown3414; // Role not yet identified (phase_game); original member name unknown.
-  u16 unknown3418; // Inferred role: bonus item of the result; original member name unknown.
-  u8 _341a[0x3420 - 0x341a];
+  u32 unknown3414; // Inferred role: score shown on the screen, catches up with unknown3410 by a share per frame while unknown3409 counts down, at most 999999 (phase_game); original member name
+                   // unknown.
+  u16 unknown3418; // Inferred role: ether count, the bonus items (class 0x60) picked up, incremented by item_move; phase_clear compares it with unknown356a and adds unknown341a to it; original member
+                   // name unknown.
+  u16 unknown341a; // Inferred role: second part of the ether count, added to unknown3418 by phase_game for the display under the ETHER label and by phase_clear; no other function of the unit writes
+                   // it; original member name unknown.
+  u8 _341c[0x3420 - 0x341c];
   unknown011 unknown3420[16]; // Inferred role: items waiting to be dropped; original member name unknown.
   void *unknown3520;          // Inferred role: item dropped by the next defeated enemy; original member name unknown.
   _sTask *m_sTask;            // Task whose 0x2c/0x30 fields get_pc_pos and get_pc_dxdy read; original member name unknown.
-  u64 unknown3530;            // Role not yet identified (phase_game); original member name unknown.
-  u32 unknown3538;            // Role not yet identified (phase_game); original member name unknown.
-  u32 unknown353c;            // Role not yet identified (phase_game); original member name unknown.
-  u32 unknown3540;            // Role not yet identified (phase_game); original member name unknown.
-  u32 unknown3544;            // Role not yet identified (phase_game); original member name unknown.
-  u16 unknown3548;            // Role not yet identified (phase_game); original member name unknown.
-  u16 unknown354a;            // Role not yet identified (phase_game, enemy_damage); original member name unknown.
-  u16 unknown354c;            // Role not yet identified (phase_game, enemy_damage); original member name unknown.
-  u8 unknown354e;             // Role not yet identified (phase_game); original member name unknown.
+  unknown021 *unknown3530;    // Inferred role: item task of the treasure box that is kept in the map until it is opened; original member name unknown.
+  int unknown3538; // Inferred role: scroll speed of the stage in 1/65536 pixel per frame, the SpdD column of the stage row (unknown018::unknown00) shifted left by 8; unknown3558 takes it in sub
+                   // phases 0 and 4 of phase_game; original member name unknown.
+  int unknown353c; // Inferred role: scroll speed while the scroll goes back to 0, the SpdU column (unknown018::unknown02) negated and shifted left by 8; unknown3558 takes it in sub phase 2 of
+                   // phase_game; original member name unknown.
+  int unknown3540; // Inferred role: change of the scroll speed per frame in sub phase 3 of phase_game, the AccU column (unknown018::unknown04) negated and shifted left by 6; original member name
+                   // unknown.
+  int unknown3544; // Inferred role: lower limit of the scroll speed in sub phase 3 of phase_game, the MaxU column (unknown018::unknown06) negated and shifted left by 8; original member name unknown.
+  u16 unknown3548; // Inferred role: Scroll column of the stage row (unknown018::unknown08); non-zero lets sub phase 1 of phase_game change the scroll speed by the level unknown355c, and phase_game
+                   // stores it in unknown56 of the player task; original member name unknown.
+  u16 unknown354a; // Inferred role: StarRate column of the stage row (unknown018::unknown0c), the chance in 10000 that enemy_damage leaves a star (item kind 0); original member name unknown.
+  u16 unknown354c; // Inferred role: BotRate column of the stage row (unknown018::unknown0e), the chance in 10000 after StarRate that enemy_damage leaves a bottle (item kind 1); original member name
+                   // unknown.
+  u8 unknown354e;  // Inferred role: BotVal column of the stage row (unknown018::unknown10), the air that a bottle gives (item_move passes it to add_air); original member name unknown.
   u8 _354f[0x3550 - 0x354f];
-  u16 unknown3550; // Role not yet identified (phase_game); original member name unknown.
-  u16 unknown3552; // Role not yet identified (phase_game); original member name unknown.
-  u8 unknown3554;  // Role not yet identified (phase_game); original member name unknown.
-  u8 unknown3555;  // Role not yet identified (phase_game); original member name unknown.
+  u16 unknown3550; // Inferred role: BonusTime column of the stage row (unknown018::unknown12), the frames of the bonus scene (sub phase 8 of phase_game copies it to unknown3d6e); original member name
+                   // unknown.
+  u16 unknown3552; // Inferred role: UniRate column of the stage row (unknown018::unknown14), the chance in 10000 that the bonus object of sub phase 9 of phase_game has sheet 0x35 and no score;
+                   // original member name unknown.
+  u8 unknown3554;  // Inferred role: EthRate column of the stage row (unknown018::unknown16), stored by sub phase 9 of phase_game as the score (unknown6c) of the other bonus object, sheet 0x30;
+                   // original member name unknown.
+  u8 unknown3555;  // Inferred role: BonusEntry column of the stage row (unknown018::unknown17), stored by phase_game in unknown78 of the enemy tasks with move type 0xa; original member name unknown.
   u8 _3556[0x3558 - 0x3556];
   int unknown3558; // Signed (effect_move divides it by 256 and subtracts it from the y speed of a bubble; phase_game); original member name unknown.
-  u8 unknown355c;  // Role not yet identified (phase_game); original member name unknown.
+  s8 unknown355c;  // Role not yet identified (phase_game); original member name unknown.
   u8 _355d[0x3560 - 0x355d];
-  int unknown3560;                 // Divided by 256 and added to the y of m_sTask in get_pc_pos and get_pc_dxdy; original member name unknown.
-  u16 unknown3564;                 // Role not yet identified (phase_game, read as one word together with unknown3566); original member name unknown.
-  u16 unknown3566;                 // Inferred role: height of the map in pixels minus the screen height; original member name unknown.
-  u16 unknown3568;                 // Role not yet identified (phase_game, phase_clear); original member name unknown.
-  u16 unknown356a;                 // Role not yet identified (phase_game, phase_clear); original member name unknown.
-  u8 unknown356c[0x3d6c - 0x356c]; // Role not yet identified (phase_game reads records of 8 bytes from 0x356c and halfwords at 0x3570 and 0x3572); original member name unknown.
-  u8 unknown3d6c[0x3d78 - 0x3d6c]; // Role not yet identified (phase_game); original member name unknown.
-  unknown027 unknown3d78;          // Inferred role: state of the cell animation, set by tora_cell_anime_setup; original member name unknown.
-  u8 _3d88[0x3de0 - 0x3d88];
+  int unknown3560; // Divided by 256 and added to the y of m_sTask in get_pc_pos and get_pc_dxdy; original member name unknown.
+  union {
+    int unknown3564; // Inferred role: scroll limit in 1/65536 pixel; original member name unknown.
+    struct {
+      u16 unknown3564_16; // Inferred role: low half of unknown3564, the part below one pixel; original member name unknown.
+      u16 unknown3566;    // Inferred role: height of the map in pixels minus the screen height, the high half of unknown3564; original member name unknown.
+    };
+  };
+  u16 unknown3568;               // Role not yet identified (phase_game, phase_clear); original member name unknown.
+  u16 unknown356a;               // Role not yet identified (phase_game, phase_clear); original member name unknown.
+  unknown088 unknown356c[0x100]; // Inferred role: objects of the map in the order of their position, ended by an entry whose unknown02 is zero; original member name unknown.
+  u8 unknown3d6c;                // Inferred role: sub phase (unknown650) to run when the fade-in after the bonus scene ends; original member name unknown.
+  u8 unknown3d6d;                // Inferred role: set to end the bonus scene early; original member name unknown.
+  u16 unknown3d6e;               // Inferred role: frames left of the bonus scene; original member name unknown.
+  u16 unknown3d70;               // Inferred role: x of the player in pixels, saved during the bonus scene; original member name unknown.
+  u16 unknown3d72;               // Inferred role: y of the player in pixels, saved during the bonus scene; original member name unknown.
+  u16 unknown3d74;               // Inferred role: unknown56 of the player task, saved during the bonus scene; original member name unknown.
+  u8 _3d76[0x3d78 - 0x3d76];
+  unknown027 unknown3d78; // Inferred role: state of the cell animation, set by tora_cell_anime_setup; original member name unknown.
+  u8 unknown3d88;         // Inferred role: step of the count-up of phase_clear, set to 0 with unknown3d89 by phase_over and phase_clear when the fade-in ends; original member name unknown.
+  u8 unknown3d89;         // Inferred role: frames left in the step of phase_clear, set to 30 when the fade-in ends (phase_over, phase_clear); original member name unknown.
+  u8 unknown3d8a;         // Role not yet identified (cleared by phase_clear); original member name unknown.
+  u8 _3d8b;
+  u32 unknown3d8c; // Inferred role: pool that phase_clear still has to move, a share per frame, into the score (unknown3410) or the ether count (unknown3418): the bonus of the step; original member
+                   // name unknown.
+  u32 unknown3d90; // Inferred role: second pool of sub phase 9 of phase_clear, moved into the ether count (unknown3418) with unknown3d8c; set to the Score of ITM_EtherCrystal row 4 (unknown32d8[4]);
+                   // original member name unknown.
+  u8 unknown3d94[8];    // Role not yet identified (cleared by phase_clear, with unknown3d9c and unknown3da1[0] as one 14 byte store run); original member name unknown.
+  u8 unknown3d9c[5];    // Inferred role: bonus given, one per bonus of the clear phase; original member name unknown.
+  u8 unknown3da1[5];    // Inferred role: bonus earned, one per bonus of the clear phase; original member name unknown.
+  u16 unknown3da6;      // Inferred role: item of the treasure box shown by phase_clear; original member name unknown.
+  u8 unknown3da8[16];   // Inferred role: treasure boxes picked up, 0xff ends the list; original member name unknown.
+  u8 unknown3db8[0x18]; // Inferred role: state of each treasure box of the list (phase_clear); phase_over clears the 0x18 bytes as three 64-bit stores, 0x71006ac920; original member name unknown.
+  u64 unknown3dd0;      // Role not yet identified (cleared by phase_name, 0x71006ad894); original member name unknown.
+  u8 unknown3dd8;       // Inferred role: blink timer of the name entry, incremented every frame (phase_name); original member name unknown.
+  u8 unknown3dd9;       // Inferred role: index of the letter being entered (phase_name); original member name unknown.
+  u8 unknown3dda;       // Inferred role: index in the alphabet of the letter being entered (phase_name); original member name unknown.
+  u8 unknown3ddb;       // Inferred role: set when the score enters the ranking, the player then enters initials (phase_name); original member name unknown.
+  char unknown3ddc[4];  // Inferred role: name being entered, three letters and the end of string (phase_name); original member name unknown.
   unknown008 unknown3de0[0x80]; // Inferred role: result table, one entry per item; original member name unknown.
   unknown006 unknown3fe0;       // Inferred role: save data; original member name unknown.
   u8 unknown40b0;               // Inferred role: number of sprites used in the frame; original member name unknown.
@@ -707,6 +786,7 @@ static_assert(offsetof(minigame, m_archive) == 0x20, "");
 static_assert(offsetof(minigame, unknown28) == 0x28, "");
 static_assert(offsetof(minigame, unknown30) == 0x30, "");
 static_assert(offsetof(minigame, unknown64c) == 0x64c, "");
+static_assert(offsetof(minigame, unknown650) == 0x650, "");
 static_assert(offsetof(minigame, unknown1260) == 0x1260, "");
 static_assert(offsetof(minigame, unknown1270) == 0x1270, "");
 static_assert(offsetof(minigame, unknown1688) == 0x1688, "");
@@ -724,6 +804,7 @@ static_assert(offsetof(minigame, unknown40b0) == 0x40b0, "");
 static_assert(offsetof(minigame, m_mytask) == 0x40b8, "");
 static_assert(offsetof(minigame, unknown658) == 0x658, "");
 static_assert(offsetof(minigame, unknown65c) == 0x65c, "");
+static_assert(offsetof(minigame, unknown65a) == 0x65a, "");
 static_assert(offsetof(minigame, unknown1278) == 0x1278, "");
 static_assert(offsetof(minigame, unknown1282) == 0x1282, "");
 static_assert(offsetof(minigame, unknown1288) == 0x1288, "");
@@ -743,7 +824,71 @@ static_assert(offsetof(minigame, unknown3558) == 0x3558, "");
 static_assert(offsetof(minigame, unknown356c) == 0x356c, "");
 static_assert(offsetof(minigame, unknown3d6c) == 0x3d6c, "");
 static_assert(offsetof(minigame, unknown3d78) == 0x3d78, "");
+static_assert(offsetof(minigame, unknown3d88) == 0x3d88, "");
+static_assert(offsetof(minigame, unknown3d8c) == 0x3d8c, "");
+static_assert(offsetof(minigame, unknown3d90) == 0x3d90, "");
+static_assert(offsetof(minigame, unknown3d94) == 0x3d94, "");
+static_assert(offsetof(minigame, unknown3d9c) == 0x3d9c, "");
+static_assert(offsetof(minigame, unknown3da1) == 0x3da1, "");
+static_assert(offsetof(minigame, unknown3da6) == 0x3da6, "");
+static_assert(offsetof(minigame, unknown3da8) == 0x3da8, "");
+static_assert(offsetof(minigame, unknown3db8) == 0x3db8, "");
+static_assert(offsetof(minigame, unknown3dd0) == 0x3dd0, "");
+static_assert(offsetof(minigame, unknown3dd8) == 0x3dd8, "");
+static_assert(offsetof(minigame, unknown3ddb) == 0x3ddb, "");
+static_assert(offsetof(minigame, unknown3ddc) == 0x3ddc, "");
 static_assert(sizeof(minigame) == 0x40c8, "");
+
+// Inferred role: screen buffers of the minigame; original type name unknown.
+struct unknown004 {
+  u8 *unknown00;       // Inferred role: bitmap of 256 by 256 pixels of one byte, an index in unknown08, used by update when unknown11 is set; original member name unknown.
+  const u8 *unknown08; // Inferred role: palette of the bitmap, 3 bytes per entry; original member name unknown.
+  u8 unknown10;        // Inferred role: brightness level written by update_palt, brightness of the bitmap pixels in update; original member name unknown.
+  u8 unknown11;        // Inferred role: set when the bitmap is shown; original member name unknown.
+  u8 _12[0x18 - 0x12];
+  u8 unknown18; // Inferred role: palette bank of the sprites; original member name unknown.
+  u8 _19;
+  u16 unknown1a; // Inferred role: first tile of the sprites; original member name unknown.
+  s16 unknown1c; // Inferred role: horizontal offset of the sprites; original member name unknown.
+  s16 unknown1e; // Inferred role: vertical offset of the sprites; original member name unknown.
+  u8 unknown20;  // Inferred role: palette bank of the first layer; original member name unknown.
+  u8 _21;
+  u16 unknown22; // Inferred role: first tile of the first layer; original member name unknown.
+  s16 unknown24; // Inferred role: horizontal scroll of the first layer; original member name unknown.
+  s16 unknown26; // Inferred role: vertical scroll of the map in pixels; original member name unknown.
+  u8 unknown28;  // Inferred role: palette bank of the second layer; original member name unknown.
+  u8 _29;
+  u16 unknown2a; // Inferred role: first tile of the second layer; original member name unknown.
+  s16 unknown2c; // Inferred role: horizontal scroll of the second layer; original member name unknown.
+  s16 unknown2e; // Inferred role: vertical scroll of the second layer; original member name unknown.
+  u8 unknown30;  // Inferred role: palette bank of the text layer; original member name unknown.
+  u8 _31;
+  u16 unknown32; // Inferred role: first tile of the text layer; original member name unknown.
+  s8 unknown34;  // Inferred role: width in tiles of the text layer on the left (positive) or on the right (negative); original member name unknown.
+  s8 unknown35;  // Inferred role: height in tiles of the text layer at the top (positive) or at the bottom (negative); original member name unknown.
+  u8 _36[0x38 - 0x36];
+  u8 unknown38; // Inferred role: reduction of the colours of the frame, 0 for none to 3; original member name unknown.
+  u8 _39[0x100 - 0x39];
+  u8 unknown100[0x20000]; // Inferred role: tile memory, 0x1000 tiles of 32 bytes written by decode_4bpp_sprt; phase_game (0x71006a61f4) and tora_cell_anime also write eight rows of 64
+                          // big-endian words each, at 0x3000 and 0x2800; original member name unknown.
+  minigame::_sPalette unknown20100[0x400]; // Inferred role: faded copy of the palettes of minigame::unknown65c, written by update_palt; original member name unknown.
+  s16 unknown20d00[0x200];                 // Inferred role: horizontal offsets per line, 0x100 entries for the first layer then 0x100 for the second; original member name unknown.
+  unknown003 unknown21100[0x40];           // Inferred role: sprites; original member name unknown.
+  u16 unknown21500[0x1000];                // Inferred role: map of 64 by 64 tiles of the first layer; original member name unknown.
+  u16 unknown23500[0x1000];                // Inferred role: map of 64 by 64 tiles of the second layer; original member name unknown.
+  u16 unknown25500[0x800];                 // Inferred role: text screen, 64 by 32 characters; original member name unknown.
+  u16 unknown26500[0xf0][0x140];           // Inferred role: pixels of the sprites, the 4 bits of priority, the 8 bits of the palette bank and the 4 bits of the colour; original member name unknown.
+};
+
+static_assert(offsetof(unknown004, unknown1c) == 0x1c, "");
+static_assert(offsetof(unknown004, unknown1e) == 0x1e, "");
+static_assert(offsetof(unknown004, unknown26) == 0x26, "");
+static_assert(offsetof(unknown004, unknown21100) == 0x21100, "");
+static_assert(offsetof(unknown004, unknown10) == 0x10, "");
+static_assert(offsetof(unknown004, unknown100) == 0x100, "");
+static_assert(offsetof(unknown004, unknown20100) == 0x20100, "");
+static_assert(offsetof(unknown004, unknown25500) == 0x25500, "");
+static_assert(sizeof(unknown004) == 0x4bd00, "");
 
 class MinigameUpdatableObject : public fw::UpdatableObject {
 public:
